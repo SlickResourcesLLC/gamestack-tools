@@ -97,7 +97,6 @@
 
             overflow:scroll;
 
-
         }
 
 
@@ -173,7 +172,13 @@
 
         }
 
+        nav.top-menu{
 
+            height:45px;
+
+            max-height:45px;
+
+        }
 
         nav.top-menu  .button-top {
 
@@ -690,19 +695,14 @@
 
             <input id="width" type="range"  value="0" step="10" name="width" min="0" max="4000" />
 
-            <label>0</label>
 
             <label>Height</label>
 
             <input id="height" type="range"  value="0"  step="10" name="height" min="0" max="4000" />
 
-            <label>0</label>
-
             <label>Intended Game Scale</label>
 
             <input id="gameScale" type="range"  value="0" name="gameScale" min="0" max="100" />
-
-            <label>2.0</label>
 
             <button id="apply_map_settings" class="ok">Apply</button>
 
@@ -753,32 +753,29 @@
 
                 <input id="width" type="range"  value="0" step="10" name="width" min="0" max="4000" />
 
-                <label>0</label>
+
 
                 <label>Height</label>
 
                 <input id="height" type="range"  value="0"  step="10" name="height" min="0" max="4000" />
-                <label>0</label>
+
 
                 <label>FrameX Position</label>
 
                 <input id="frameX" type="range"  value="0" name="frameX" min="0" max="4000" />
-                <label>0</label>
 
                 <label>FrameY Position</label>
 
                 <input id="frameY" type="range"  value="0" name="frameY"  min="0" max="4000"  />
-                <label>0</label>
 
                 <label>FrameWidth</label>
 
                 <input id="framewidth" type="range"  value="64" name="framewidth" min="0" max="4000" />
-                <label>0</label>
 
                 <label>FrameHeight</label>
 
                 <input id="frameheight" type="range"  value="64" name="frameheight"  min="0" max="4000"  />
-                <label>0</label>
+            
 
                 <input id="create_object" type="button"  value="update" />
 
@@ -1722,6 +1719,7 @@
             //log the completion of the ready function
 
 
+
             $.each(levelMaker.mapElements, function (ix, item) {
 
                 //  alert('map element:' + item.tag);
@@ -1885,7 +1883,32 @@
           // levelMaker.save();
 
 
-           $('div').click(function(evt){
+
+            $.each($('input[type="range"]'), function(ix, item){
+
+                $(item).change(function(evt){
+
+                    var value = $(this).val(),
+
+                        label = $(this).prev('label');
+
+                    var lblVal = $(label).text() + "";
+
+                    if(!lblVal.indexOf('-') >= 0)
+                    {
+                        $(label).text($(label).text() + '-');
+
+                    }
+
+                  $(label).text(lblVal.substring(0, ($(label).text() + "").indexOf('-')) + '-' +  value);
+
+                });
+
+            });
+
+
+
+            $('div').click(function(evt){
 
                 // $('form').hide();
 
@@ -1893,11 +1916,14 @@
 
                //alert(type);
 
-               if(type !== 'A' && type !== 'IMG' && type !== 'BUTTON' && !$(evt.target).parents('form').length >= 1)
-               {
+                if(!$(evt.target).find('form').length) {
 
-                   $('form').hide();
-               }
+                    if (type !== 'A' && type !== 'IMG' && type !== 'BUTTON' && !$(evt.target).parents('form').length >= 1) {
+
+                        $('form').hide();
+                    }
+
+                }
 
            });
 
