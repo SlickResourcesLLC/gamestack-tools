@@ -160,32 +160,39 @@ var GameImage = function () {
     function GameImage(src, onCreate) {
         _classCallCheck(this, GameImage);
 
-        if (src) {
+        Quazar.log('initializing image');
+
+        if (src instanceof Object) {
+
+            alert('getting image from image');
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src.src;
+        } else if (typeof src == 'string') {
+
+            var ext = src.substring(src.lastIndexOf('.'), src.length);
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src;
 
             this.src = src;
-
-            var parts = src.split('.'),
-                ext = parts[parts.length - 1];
-
-            if (['png', 'jpg', 'gif'].indexOf(ext) >= 0) {
-
-                this.image = document.createElement('IMG');
-
-                this.image.src = src;
-
-                Quazar.log('initializing image');
-
-                this.domElement = this.image;
-
-                this.image.onload = function () {
-
-                    if (typeof this.onCreate == 'function') {
-
-                        this.onCreate(this.image);
-                    }
-                };
-            }
         }
+
+        if (!this.image) {
+            this.image = { error: "Image not instantiated, set to object by default" };
+        }
+
+        this.domElement = this.image;
+
+        this.image.onload = function () {
+
+            if (typeof this.onCreate == 'function') {
+
+                this.onCreate(this.image);
+            }
+        };
     }
 
     _createClass(GameImage, [{
@@ -207,6 +214,12 @@ var __gameInstance = __gameInstance || {};
 var Quazar = {
 
     DEBUG: false,
+
+    __gameWindow: {},
+
+    __sprites: [],
+
+    __animations: [],
 
     samples: {},
 
@@ -255,6 +268,32 @@ var Quazar = {
         //  console.log('Quazar:' + m); //info is logged like "program guide"
 
 
+    },
+
+    animation_types: function animation_types() {
+        var types = [];
+
+        this.each(this.__animations, function (ix, item) {
+
+            if (!types.indexOf(item.type) >= 0) {
+                types.push(item.type);
+            }
+        });
+
+        return types;
+    },
+
+    sprite_types: function sprite_types() {
+        var types = [];
+
+        this.each(this.__sprites, function (ix, item) {
+
+            if (!types.indexOf(item.type) >= 0) {
+                types.push(item.type);
+            }
+        });
+
+        return types;
     },
 
     mustHave: function mustHave(obj, keytypes, callback) {

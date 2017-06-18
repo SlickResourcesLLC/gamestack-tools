@@ -181,40 +181,52 @@ class GameImage {
 
     constructor(src, onCreate) {
 
-        if (src) {
+        Quazar.log('initializing image');
+
+        if (src instanceof Object) {
+
+            alert('getting image from image');
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src.src;
+
+        }
+
+        else if (typeof(src) == 'string') {
+
+        let ext = src.substring(src.lastIndexOf('.'), src.length);
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src;
 
             this.src = src;
 
-            let parts = src.split('.'), ext = parts[parts.length - 1];
 
-            if (['png', 'jpg', 'gif'].indexOf(ext) >= 0) {
+        }
 
-                this.image = document.createElement('IMG');
+        if(!this.image)
+        {
+            this.image = {error:"Image not instantiated, set to object by default"};
 
-                this.image.src = src;
+        }
 
-                Quazar.log('initializing image');
+        this.domElement = this.image;
 
+        this.image.onload = function () {
 
-                this.domElement = this.image;
+            if (typeof(this.onCreate) == 'function') {
 
-                this.image.onload = function () {
-
-                    if (typeof(this.onCreate) == 'function') {
-
-                        this.onCreate(this.image);
-
-                    }
-
-
-                }
-
+                this.onCreate(this.image);
 
             }
+
 
         }
 
     }
+
 
     getImage() {
 
@@ -239,7 +251,11 @@ let Quazar = {
 
     DEBUG: false,
 
+    __gameWindow:{},
 
+    __sprites:[],
+
+    __animations:[],
 
     samples: {},
 
@@ -304,6 +320,45 @@ let Quazar = {
 
     },
 
+    animation_types:function()
+    {
+        let types = [];
+
+      this.each(this.__animations, function(ix, item){
+
+          if(!types.indexOf(item.type) >= 0)
+          {
+              types.push(item.type);
+
+          }
+
+      });
+
+
+      return types;
+
+    },
+
+
+    sprite_types:function()
+    {
+        let types = [];
+
+        this.each(this.__sprites, function(ix, item){
+
+            if(!types.indexOf(item.type) >= 0)
+            {
+                types.push(item.type);
+
+            }
+
+        });
+
+        return types;
+
+    },
+
+
 
     mustHave: function (obj, keytypes, callback) {
 
@@ -318,7 +373,6 @@ let Quazar = {
         callback(true);
 
     },
-
 
 
     TWEEN: TWEEN,

@@ -20,7 +20,7 @@ grunt.initConfig({
                 expand: true,
                 cwd: 'ecma/',
                 src: ['**/*.js'],
-                dest: 'dist/'
+                dest: 'client/dist/'
             }
         ]
         }

@@ -8,6 +8,8 @@
         <title>2D Level Mapper</title>
         <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
 
+        <script src="../assets/js/dat.gui.css"></script>
+
         <script src="../assets/js/dat.gui.js"></script>
 
         <script src="../assets/js/Tween.js"></script>
@@ -48,10 +50,48 @@
 
         }
 
+        label
+        {
+
+
+            float:left;
+
+        }
+
+        .add_object
+        {
+            position:relative;
+
+            float:left;
+
+        }
+
+        div.dg.main
+        {
+            border:2px inset teal;
+
+            height:200px;
+
+            overflow:scroll;
+
+        }
+
+        div.dg.ac
+        {
+            position:fixed;
+
+            z-index:9999;
+
+            top:200px;
+
+            bottom:50px;
+
+        }
+
         canvas
         {
 
-            position:absolute;
+            position:relative;
 
             z-index:900;
 
@@ -60,6 +100,8 @@
             width:100%;
 
             height:100%;
+
+            border:1px inset teal;
 
         }
 
@@ -71,6 +113,8 @@
 
             width:100%;
 
+            min-width:750px;
+
             height:50px;
 
             background-color:white;
@@ -80,6 +124,17 @@
             margin:0px;
 
             top:0px;
+
+            left:0px;
+
+            white-space: nowrap;
+
+            background: #e2e2e2; /* Old browsers */
+            background: -moz-linear-gradient(top, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
+
 
         }
 
@@ -100,11 +155,29 @@
         }
 
 
+        .illustration {
+            text-align:center;
+            padding:15px 0 20px;
+            font-size:100px;
+            color:#2980ef;
+        }
+
+        form input {
+            background:none;
+            border:none;
+            border-bottom:1px solid #434a52;
+            border-radius:0;
+            box-shadow:none;
+            outline:none;
+            color:inherit;
+        }
+
+
         ul#options-dock-main
         {
             position:fixed;
 
-            z-index:999;
+            z-index:997;
 
             width:40%;
 
@@ -127,7 +200,7 @@
 
             color:black;
 
-            z-index:999;
+            z-index:997;
 
             height:40px;
 
@@ -153,7 +226,6 @@
 
             font-weight:bold;
 
-
         }
 
 
@@ -162,7 +234,7 @@
 
             position:fixed;
 
-            z-index:999;
+            z-index:997;
 
             top:0px;
 
@@ -174,11 +246,17 @@
 
         nav.top-menu{
 
+            width:100%;
+
             height:45px;
 
             max-height:45px;
 
+            margin:0; padding:0;
+
         }
+
+
 
         nav.top-menu  .button-top {
 
@@ -216,19 +294,18 @@
 
             border-radius: 4px;
 
-            background: #fac695; /* Old browsers */
-            background: -moz-linear-gradient(top, #fac695 0%, #f5ab66 47%, #ef8d31 100%); /* FF3.6-15 */
-            background: -webkit-linear-gradient(top, #fac695 0%,#f5ab66 47%,#ef8d31 100%); /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to bottom, #fac695 0%,#f5ab66 47%,#ef8d31 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fac695', endColorstr='#ef8d31',GradientType=0 ); /* IE6-9 */
-            /* IE6-9 */
+            background: #b5bdc8; /* Old browsers */
+            background: -moz-linear-gradient(top, #b5bdc8 0%, #828c95 0%, #28343b 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #b5bdc8 0%,#828c95 0%,#28343b 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #b5bdc8 0%,#828c95 0%,#28343b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#28343b',GradientType=0 ); /* IE6-9 */
             border: none;
             color: #FFFFFF;
             text-align: center;
             font-size: 20px;
             padding: 10px;
 
-            padding-right:5px;
+            padding-right:12px;
 
             height:40px;
             width:40px;
@@ -302,7 +379,7 @@
 
             position:fixed;
 
-            z-index:999;
+            z-index:997;
 
             top:0px;
 
@@ -323,9 +400,11 @@
 
             position:absolute;
 
-            z-index:999;
+            z-index:997;
 
             padding: 0;
+
+            left:-110%;
 
 
         }
@@ -424,15 +503,11 @@
 
             left:25%;
 
-            background-color:lightcyan;
+            background-color:#1e2833;
 
-
+            color:white;
 
         }
-
-
-
-
 
 
 
@@ -453,7 +528,7 @@
 
             display:block;
 
-            text-align:center;
+            text-align:left;
 
             margin-left:10%;
 
@@ -463,12 +538,13 @@
 
              font-weight:normal;
 
+
+
         }
 
         form input[type="file"]
         {
 
-            max-width:48%; float:left;
 
             font-weight:normal;
 
@@ -524,7 +600,7 @@
 
             position:absolute;
 
-            left:5%;
+            left:10%;
            background-color:#333333;
 
            color:white;
@@ -532,7 +608,7 @@
 
            border-radius: 4px;
 
-
+           margin-top:7px;
 
 
            background: #45484d; /* Old browsers */
@@ -548,8 +624,8 @@
            font-size: 15px;
 
 
-           height:30px;
-           width:40%;
+           height:25px;
+           width:30%;
 
            vertical-align: middle;
 
@@ -569,7 +645,7 @@
 
             border-radius: 4px;
 
-
+                margin-top:7px;
 
             background: #da8452; /* Old browsers */
             background: -moz-linear-gradient(top, #da8452 0%, #c26732 50%, #d67842 100%); /* FF3.6-15 */
@@ -583,10 +659,10 @@
             font-size: 15px;
 
 
-            height:30px;
-            width:40%;
+            height:25px;
+            width:30%;
 
-            left:55%;
+            left:60%;
 
             vertical-align: middle;
 
@@ -599,9 +675,11 @@
         #logo
         {
 
-            height:30px;
 
-            width:auto;
+
+            width:150px;
+
+            height:auto;
 
            margin-bottom:-10px;
 
@@ -609,7 +687,7 @@
 
         #map-item-space
         {
-            z-index:999;
+            z-index:997;
 
         }
 
@@ -628,13 +706,12 @@
 
             <button id="my-objects" class="button-top"  ><span>Map-Objects</span></button> <button id="create_map_object" class="button-add"  >+</button>
 
-            <a id="download" class="button-top"  href='data:text/json;charset=utf-8,'>Save to File<img src="img/save.png" alt="save data" ></a>
+            <a id="download" class="button-top" target="_blank" href='data:text/json;charset=utf-8,'>Save to File<img src="img/save.png" alt="save data" ></a>
 
 
             <a id="map_settings_show" class="button-top"  href='#' onclick="$('#settings-space form').show();">Map-Settings<img src="img/settings.png" alt="settings image"  ></a>
 
-
-          </nav>
+             </nav>
 
     </div>
 
@@ -663,23 +740,23 @@
 
             <label>Name</label>
 
-            <input type="text"  value="name" id="name" name="name"  />
+            <input type="text"  placeholder="name" id="map_name" name="name"  />
 
             <label>Description</label>
 
-            <input type="text"  value="description" id="description" name="description" />
+            <input type="text"  placeholder="description" id="map_description" name="description" />
 
             <label>Type</label>
 
-            <input type="text"  value="type" id="type" name="type" />
+            <input type="text"  placeholder="type" id="map_type" name="type" />
 
             <label>Map_Id</label>
 
-            <input type="text"  value="map_id" id="map_id" name="id" />
+            <input type="text"  placeholder="map_id" id="map_id" name="id" />
 
             <label>Pixel Snap</label>
 
-            <select onchange="levelMaker.applySettings({pixelSnap:$(this).val()});">
+            <select id="map_pixel_snap" onchange="levelMaker.applySettings({pixelSnap:$(this).val()});">
 
                 <option selected="true" id="1" >1px</option>
 
@@ -693,20 +770,20 @@
 
             <label>Width</label>
 
-            <input id="width" type="range"  value="0" step="10" name="width" min="0" max="4000" />
-
+            <input id="map_level_size_x" type="range"  value="0" step="10" name="width" min="0" max="4000" />
 
             <label>Height</label>
 
-            <input id="height" type="range"  value="0"  step="10" name="height" min="0" max="4000" />
+            <input id="map_level_size_y" type="range"  value="0"  step="10" name="height" min="0" max="4000" />
 
             <label>Intended Game Scale</label>
 
-            <input id="gameScale" type="range"  value="0" name="gameScale" min="0" max="100" />
+            <input id="map_game_scale" type="range"  value="0" name="gameScale" min="0" max="100" />
 
-            <button id="apply_map_settings" class="ok">Apply</button>
 
-            <button id="cancel_map_settings" class="cancel">Cancel</button>
+            <button id="apply_map_settings" class="ok" onclick="levelMaker.applySettings();" >Apply</button>
+
+            <button id="cancel_map_settings" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
 
         </form>
 
@@ -722,7 +799,7 @@
 
                 <div class="form-pair" >
 
-                <input type="file"  value="Select Image File" name="file" onchange="levelMaker.getPreviewImageFile(this);"  />
+                <input type="file"  value="Select Image File" name="file" onchange="levelMaker.getRawImageFile(this);"  />
 
                     <img style="display:none;" />
 
@@ -734,26 +811,24 @@
 
                 <label>Name</label>
 
-                <input type="text"  value="name" id="name" name="name"  />
+                <input type="text"  placeholder="name" id="name" name="name"  />
 
                 <label>Description</label>
 
-                <input type="text"  value="description" id="description" name="description" />
+                <input type="text"  placeholder="description" id="description" name="description" />
 
                 <label>Type</label>
 
-                <input type="text"  value="type" id="type" name="type" />
+                <input type="text"  placeholder="type" id="type" name="type" />
 
                 <label>ID</label>
 
-                <input type="text"  value="id" id="id" name="id" />
+                <input type="text"  placeholder="id" id="id" name="id" />
 
 
                 <label>Width</label>
 
                 <input id="width" type="range"  value="0" step="10" name="width" min="0" max="4000" />
-
-
 
                 <label>Height</label>
 
@@ -775,15 +850,163 @@
                 <label>FrameHeight</label>
 
                 <input id="frameheight" type="range"  value="64" name="frameheight"  min="0" max="4000"  />
-            
 
-                <input id="create_object" type="button"  value="update" />
+
+                <label>Animations</label> <button class="add_object">+</button>
+
+                <label>Motions</label> <button class="add_object">+</button>
+
+                <label>Hidden Settings Are Below...Handle Before Shipping Program</label>
+
+                <div id="hidden-settings" style="display:none;" >
+
+                <label>Systemic-Positional-Motion Model</label>
+
+                <select id="motion-models" name="motion-models">
+
+                    <option>None</option>
+
+                    <option>Directional</option>
+
+                    <option>Curve</option>
+
+                    <option>Generate These From Javascript Settings</option>
+
+                </select>
+
+                <label>Systemic-Rotation-Motion for-Model</label>
+
+                <select id="motion-models" name="motion-models">
+
+                    <option>None</option>
+
+                    <option>Directional</option>
+
+                    <option>Curve</option>
+
+                    <option>Generate These From Javascript Settings</option>
+
+                </select>
+
+                <label>Systemic-Rotation-Motion for-Object</label>
+
+                <select id="motion-models" name="motion-models">
+
+                    <option>None</option>
+
+                    <option>Directional</option>
+
+                    <option>Curve</option>
+
+                    <option>Generate These From Javascript Settings</option>
+
+                </select>
+
+                <label>Systemic-Motion: Position Movement Speed</label>
+
+                <div class="nested-settings">
+                 <input type="checkbox" value="fixed-texture"  /><label for="">Fixed Texture</label>
+                    <input class="hidden-form" type="checkbox" value="particle-texture"  /><label for="">Continuous Particle Birth</label>
+
+
+                <label>Birth Rate Per Second</label>
+                <input id="bps" type="range"  value="4" name="bps"  min="0" max="100"  />
+
+                <label>Max Members</label>
+                <input id="mm" type="range"  value="64" name="mm"  min="0" max="100"  />
+
+
+                <label>Decay Rate</label>
+                <input id="dr" type="range"  value="4" name="dr"  min="0" max="100"  />
+
+                <label>Max Speed</label>
+                <input id="ms" type="range"  value="64" name="ms"  min="0" max="100"  />
+
+                <label>Acceleration Model</label>
+
+                <select id="motion-models" name="motion-models">
+
+                    <option>None</option>
+
+                    <option>Directional</option>
+
+                    <option>Curve</option>
+
+                    <option>Generate These From Javascript Settings</option>
+
+                </select>
+
+
+                    <label>Formation Model</label>
+
+                    <select id="motion-models" name="motion-models">
+
+                        <option>None</option>
+
+                        <option>Directional</option>
+
+                        <option>Curve</option>
+
+                        <option>Generate These From Javascript Settings</option>
+
+                    </select>
+
+
+                <label>Birth Animation</label>
+
+                <select id="animations" name="animations">
+
+                    <option>Animation 1</option>
+
+                    <option>Animation 2</option>
+
+                    <option>Animation 3</option>
+
+                </select>
+
+
+                    <label>Life Animation</label>
+
+                    <select id="animations" name="animations">
+
+                        <option>Animation 1</option>
+
+                        <option>Animation 2</option>
+
+                        <option>Animation 3</option>
+
+                    </select>
+
+                <label>Death Animation</label>
+
+                <select id="animations" name="animations">
+
+                    <option>Animation Type 1</option>
+
+                    <option>Animation Type 2</option>
+
+                    <option>Animation Type 3</option>
+
+                </select>
+
+                </div>
+
+                </div>
+
+                <button  id="create_object" class="ok"  >Apply</button>
+
+                <button id="cancel_map_settings" class="cancel" >Cancel</button>
 
             </form>
 
         </div>
 
     <script>
+
+
+
+
+
 
         var ui_funx_assembler = function ()
         {
@@ -885,7 +1108,7 @@
 
                 var id = $(this).attr('id').replace('-', '_');
 
-                var x = $(this).offset().left, y = $(this).offset().top + $(this).height() + 10;
+                var x = 0, y = 0;
 
                 dialog(_UI_OPTION_MAP[id],
                         x, y, function () {
@@ -1057,6 +1280,10 @@
 
         var levelMaker = {
 
+            selected_image_src:{},
+
+            selected_sprite:{},
+
             pixelSnap:10,
 
             settings:{
@@ -1075,43 +1302,34 @@
 
             },
 
-            applySettings:function(args)
+            applySettings:function()
             {
-              for(var x in args)
-              {
-                  if(this.hasOwnProperty(x))
-                  {
 
-                      this[x] = args[x];
+                var obj = levelMaker.settings;
 
-                      try{
 
-                         var number = parseFloat(args[x].replace('px', ''));
+                obj.name = $('#map_name').val();
+                obj.description = $('#map_description').val();
+                obj.type = $('#map_type').val();
+                obj.pixelSnap = parseFloat($('#map_name').val());
 
-                         if(!isNaN(number))
-                         {
-                             this[x] = number;
+                obj.levelSizeX = parseFloat($('#map_level_size_x').val());
 
-                         }
+                obj.levelSizeY = parseFloat($('#map_level_size_y').val());
 
-                      }
-                      catch(e)
-                      {
-                          console.log(e);
-
-                      }
-
-                  }
-
-              }
 
             },
 
-
-
             showObjectDialog:function(){
 
-                $('#map-item-space form').show();
+             //   levelMaker.selected_sprite = new Sprite();
+
+            //    DatGui.get(levelMaker.selected_sprite);
+
+             //   DatGui.expandOnArray(levelMaker.selected_sprite, 'animations', 'Animation');
+
+
+               $('#map-item-space form').show();
 
 
             },
@@ -1146,14 +1364,24 @@
 
                     //alert('Creating Map Object');
 
+                    levelMaker.selected_image_src = image_data;
 
+                    console.log('Making objects in create event');
 
-
-                   var map_item = levelMaker.MapElement(name, image_data, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                    levelMaker.selected_sprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
                         {type:type, description:description });
 
 
-                    levelMaker.addLevelObjectToUI(map_item);
+
+                    levelMaker.selected_sprite.img.onload = function()
+                    {
+                        alert('new object loaded');
+                        levelMaker.addLevelObjectToUI(levelMaker.selected_sprite);
+
+                    }
+
+
+
 
                 $('#map-item-space form').hide();
                     
@@ -1209,9 +1437,9 @@
 
 
 
-                $('#frameX').val(x);
+                $('#frameX').val(frameX);
 
-                $('#frameY').val(y);
+                $('#frameY').val(frameY);
 
                 $('#width').val(mapWidth);
 
@@ -1219,11 +1447,11 @@
 
                 $('#framewidth').val(frameWidth);
 
-                $('#framewidth').attr('max', frameWidth);
+               // $('#framewidth').attr('max', frameWidth);
 
                 $('#frameheight').val(frameHeight);
 
-                $('#frameheight').attr('max', frameHeight);
+               // $('#frameheight').attr('max', frameHeight);
 
 
                 ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight,x, y, mapWidth, mapHeight);
@@ -1237,15 +1465,19 @@
 
             },
 
-            getPreviewImageFile:function(input)
+            getRawImageFile:function(input, callback)
             {
 
                 var preview =  $(input).parent().find('img')[0];
                 var file  = input.files[0];
                 var reader  = new FileReader();
 
+
+
                 reader.addEventListener("load", function () {
                     preview.src = reader.result;
+
+                    levelMaker.selected_image_src = preview.src;
 
                     $('#image_data').val(reader.result);
 
@@ -1261,6 +1493,11 @@
 
                         levelMaker.sizeImage(x, y, mapWidth, mapHeight,  mapWidth, mapHeight);
 
+                        if(typeof(callback) == 'function')
+                        {
+                            callback(this);
+
+                        }
 
                     }
 
@@ -1341,12 +1578,11 @@
                 }
 
             },
-            MapElement: function (tag, path, frameSize, mapSize, extras)
+            MapElement: function (tag, imgPath, frameSize, mapSize, extras)
             {
-
-
                 var img = document.createElement('IMG');
-                img.src = path;
+                img.src = imgPath;
+
                // alert("El image:" + JSON.stringify(img.src));
 
                 var element = {
@@ -1358,7 +1594,7 @@
                 {
                     element[x] = extras[x];
 
-                }
+                };
 
 
                 this.mapElements.push(element);
@@ -1436,15 +1672,30 @@
             leftClick: function (x, y)
             {
 
+                alert('left click');
+
+                var notSelection = function(obj)
+                {
+                    return obj !== levelMaker.hover_selection_sprite &&
+
+                        obj !== levelMaker.selection_sprite;
+
+                };
+
+
 
                 var selection = false;
                 Quazar.each(Game.sprites, function (ix, item) {
 
-                    if (x > item.pos.x && x < item.pos.x + item.size.x &&
+                    if (notSelection(item) && x > item.pos.x && x < item.pos.x + item.size.x &&
                             y > item.pos.y && y < item.pos.y + item.size.y + $('.level-maker-canvas').offset().top)
                     {
 
+
+
                         item.selected = true;
+
+
 
                         item.hover_selected = false;
                         selection = true;
@@ -1513,7 +1764,7 @@
             plantMapElement: function (mapElement, x, y)
             {
 
-                console.log("Selected Element:" + JSON.stringify(mapElement));
+               // console.log("Selected Element:" + JSON.stringify(mapElement));
                 var img = mapElement.img;
                 console.log("Img src:" + img.src);
                 var sprite = new Sprite('MapElement', 'A level-builder element');
@@ -1524,11 +1775,12 @@
 
 
                 var fs = mapElement.frameSize;
-                
-                sprite.setAnimation(new Animation({src: img.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+                sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
 
-                console.log(JSON.stringify(sprite));
+
+               // console.log(JSON.stringify(sprite));
 
                 sprite.pos.x = Math.floor(x - sprite.size.x / 2);
                 sprite.pos.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
@@ -1554,7 +1806,7 @@
 
                     var value = $(element).text();
 
-                    //  alert('click on:' + value);
+                      alert('click on:' + value);
 
                     levelMaker.selectedElement = levelMaker.get(value);
 
@@ -1729,7 +1981,7 @@
 
                     var value = $(element).text();
 
-                  //  alert('click on:' + value);
+                    alert('click on:' + value);
 
                     levelMaker.selectedElement = levelMaker.get(value);
 
@@ -1863,10 +2115,7 @@
 
             TWEEN.update(time);
 
-        }
-
-
-
+        };
 
 
         Quazar.ready(function(lib){
@@ -1881,6 +2130,17 @@
             levelMaker.objectMakerFormEvents();
 
           // levelMaker.save();
+
+           // DatGui.get(new Animation());
+
+
+            $('.add_object').click(function(){
+
+
+
+
+            });
+
 
 
 
@@ -1906,8 +2166,6 @@
 
             });
 
-
-
             $('div').click(function(evt){
 
                 // $('form').hide();
@@ -1926,7 +2184,6 @@
                 }
 
            });
-
 
         });
 

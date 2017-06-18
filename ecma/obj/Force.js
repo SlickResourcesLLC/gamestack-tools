@@ -3,3 +3,22 @@
  *
  */
 
+
+
+class Force
+{
+
+    constructor()
+    {
+
+
+    }
+
+    clastic()
+    {
+
+
+    }
+
+}
+

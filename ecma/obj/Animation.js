@@ -18,17 +18,23 @@ class Animation {
 
         args = args || {};
 
+
         this.frames = $Q.getArg(args, 'frames', []);
 
-        this.src = $Q.getArg(args, 'src', '!MISSING_ARG');
 
-        this.image = $Q.getArg(args, 'image', new GameImage(this.src));
+        this.image = new GameImage( $Q.getArg(args, 'src',  $Q.getArg(args, 'image', false)));
+
+        this.domElement = this.image.domElement;
+
+
+
 
         this.attack_level = $Q.getArg(args, 'attack_level', 0);
 
         this.heal_level = $Q.getArg(args, 'heal_level', 0);
 
 
+        this.type = $Q.getArg(args, 'type', 'basic');
 
         this.delay = $Q.getArg(args, 'delay', 0);
 

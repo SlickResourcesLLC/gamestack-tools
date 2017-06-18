@@ -8,6 +8,7 @@ class Sprite {
 
         this.description = description || "__";
 
+        this.type = $Q.getArg(args, 'type', 'basic');
 
         this.animations = {};
 
@@ -15,7 +16,7 @@ class Sprite {
         this.sounds = {};
 
 
-        this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', 'ERROR_NO_SRC_ARG')));
+        this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
 
 
         this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
@@ -28,6 +29,12 @@ class Sprite {
         this.selected_animation = {};
 
         this.onGround = false;
+
+
+        this.clasticTo = []; //an array of sprite types
+
+
+        this.damagedBy = []; //an array of animation types
 
 
     }
