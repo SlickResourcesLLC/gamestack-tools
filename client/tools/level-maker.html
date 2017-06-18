@@ -101,56 +101,7 @@
 
             height:100%;
 
-            border:1px inset teal;
-
-        }
-
-        #ctrl-space-top
-        {
-            position:fixed;
-
-            z-index:998;
-
-            width:100%;
-
-            min-width:750px;
-
-            height:50px;
-
-            background-color:white;
-
-            padding:0px;
-
-            margin:0px;
-
-            top:0px;
-
-            left:0px;
-
-            white-space: nowrap;
-
-            background: #e2e2e2; /* Old browsers */
-            background: -moz-linear-gradient(top, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6-15 */
-            background: -webkit-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
-
-
-        }
-
-        #container{
-
-            position:absolute;
-
-            top:50px;
-
-            z-index:800;
-
-            width:5000px;
-
-            height:5000px;
-
-            overflow:scroll;
+            border:3px inset teal;
 
         }
 
@@ -690,6 +641,53 @@
             z-index:997;
 
         }
+        #ctrl-space-top
+        {
+            position:fixed;
+
+            z-index:998;
+
+            width:100%;
+
+            min-width:750px;
+
+            height:50px;
+
+            background-color:white;
+
+            padding:0px;
+
+            margin:0px;
+
+            top:0px;
+
+            left:0px;
+
+            white-space: nowrap;
+
+            background: #e2e2e2; /* Old browsers */
+            background: -moz-linear-gradient(top, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
+
+
+        }
+
+        #container{
+
+            position:absolute;
+
+            background:#333333;
+
+            top:50px;
+
+            z-index:800;
+
+            overflow:scroll;
+
+        }
+
 
 
 
@@ -740,23 +738,23 @@
 
             <label>Name</label>
 
-            <input type="text"  placeholder="name" id="map_name" name="name"  />
+            <input type="text"  placeholder="name" id="map_name" name="map_name"  />
 
             <label>Description</label>
 
-            <input type="text"  placeholder="description" id="map_description" name="description" />
+            <input type="text"  placeholder="description" id="map_description" name="map_description" />
 
             <label>Type</label>
 
-            <input type="text"  placeholder="type" id="map_type" name="type" />
+            <input type="text"  placeholder="type" id="map_type" name="map_type" />
 
             <label>Map_Id</label>
 
-            <input type="text"  placeholder="map_id" id="map_id" name="id" />
+            <input type="text"  placeholder="map_id" id="map_id" name="map_id" />
 
             <label>Pixel Snap</label>
 
-            <select id="map_pixel_snap" onchange="levelMaker.applySettings({pixelSnap:$(this).val()});">
+            <select id="pixel_snap">
 
                 <option selected="true" id="1" >1px</option>
 
@@ -770,15 +768,15 @@
 
             <label>Width</label>
 
-            <input id="map_level_size_x" type="range"  value="0" step="10" name="width" min="0" max="4000" />
+            <input id="map_level_size_x" type="range"  value="5000" step="10" name="width" min="0" max="10000" />
 
             <label>Height</label>
 
-            <input id="map_level_size_y" type="range"  value="0"  step="10" name="height" min="0" max="4000" />
+            <input id="map_level_size_y" type="range"  value="5000"  step="10" name="height" min="0" max="10000" />
 
             <label>Intended Game Scale</label>
 
-            <input id="map_game_scale" type="range"  value="0" name="gameScale" min="0" max="100" />
+            <input id="map_game_scale" type="range"  value="1.5" name="gameScale" min="0" max="100" />
 
 
             <button id="apply_map_settings" class="ok" onclick="levelMaker.applySettings();" >Apply</button>
@@ -1214,6 +1212,16 @@
             init:function()
             {
 
+                levelMaker.applySettings();
+
+
+                $('#settings-space input').change(function(){
+
+                   levelMaker.applySettings();
+
+                });
+
+
 
                 $('#create_map_object').click(function(){
 
@@ -1235,6 +1243,21 @@
                     levelMaker.save(levelMaker.settings.name.replace('.json', '').replace('.', '') + '.json');
 
                 });
+
+                $('form').submit(function(evt){
+
+
+                    evt.preventDefault();
+
+                    return false;
+
+
+
+                });
+
+
+
+                levelMaker.htmlSettings();
 
 
               //  document.getElementById('container').innerHTML += "<canvas></canvas>";
@@ -1298,7 +1321,26 @@
 
                 levelSizeY:5000,
 
-                levelSizeZ:0
+                levelSizeZ:0,
+
+                game_scale:2.0
+
+            },
+
+            htmlSettings:function()
+            {
+                var obj = levelMaker.settings;
+
+                  $('#map_name').val(obj.name);
+                $('#map_description').val(obj.description);
+                $('#map_type').val(obj.type);
+                $('#map_snap_size').val(obj.pixelSnap);
+
+                $('#map_level_size_x').val(obj.levelSizeX);
+                $('#map_level_size_y').val(obj.levelSizeX);
+
+                $('#map_game_scale').val(obj.game_scale);
+
 
             },
 
@@ -1311,12 +1353,21 @@
                 obj.name = $('#map_name').val();
                 obj.description = $('#map_description').val();
                 obj.type = $('#map_type').val();
-                obj.pixelSnap = parseFloat($('#map_name').val());
+                obj.pixelSnap = parseFloat($('#pixel_snap').val().replace('px', ''));
 
-                obj.levelSizeX = parseFloat($('#map_level_size_x').val());
+                obj.levelSizeX = parseInt($('#map_level_size_x').val());
 
-                obj.levelSizeY = parseFloat($('#map_level_size_y').val());
+                obj.levelSizeY = parseInt($('#map_level_size_y').val());
 
+
+                $('.level-maker-canvas').width(obj.levelSizeX);
+                $('.level-maker-canvas').height(obj.levelSizeY);
+
+
+
+                Game.canvas.width = obj.levelSizeX;
+
+                Game.canvas.height = obj.levelSizeY;
 
             },
 
