@@ -1,0 +1,400 @@
+{
+  "settings": {
+    "name": "nextLevel",
+    "description": "",
+    "type": "",
+    "pixelSnap": 10,
+    "levelSizeX": 5000,
+    "levelSizeY": 5000
+  },
+  "map": [
+    {
+      "name": "Selection Sprite",
+      "description": "Shows selected area",
+      "type": "basic",
+      "animations": {
+        "default": {
+          "frames": [
+            {
+              "image": {
+                "image": {},
+                "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+                "domElement": {}
+              },
+              "frameSize": {
+                "x": 191,
+                "y": 192
+              },
+              "framePos": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ],
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+            "domElement": {}
+          },
+          "domElement": {},
+          "attack_level": 0,
+          "heal_level": 0,
+          "type": "basic",
+          "delay": 0,
+          "cix": 0,
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "selected_frame": {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 191,
+              "y": 192
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "flipX": false,
+          "priority": 0,
+          "earlyTerm": false,
+          "hang": false,
+          "timer": 0
+        }
+      },
+      "sounds": {},
+      "image": {
+        "image": {
+          "error": "Image not instantiated, set to object by default"
+        },
+        "domElement": {
+          "error": "Image not instantiated, set to object by default"
+        }
+      },
+      "size": {
+        "x": 100,
+        "y": 100
+      },
+      "pos": {
+        "x": 100,
+        "y": 100
+      },
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "selected_animation": {
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 191,
+              "y": 192
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+          "domElement": {}
+        },
+        "domElement": {},
+        "attack_level": 0,
+        "heal_level": 0,
+        "type": "basic",
+        "delay": 0,
+        "cix": 0,
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+        "frameSize": {
+          "x": 191,
+          "y": 192
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "flipX": false,
+        "priority": 0,
+        "earlyTerm": false,
+        "hang": false,
+        "timer": 0
+      },
+      "onGround": false,
+      "clasticTo": [],
+      "damagedBy": [],
+      "speed": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "accel": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rot_speed": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rot_accel": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "selected": false,
+      "hover_selected": false,
+      "active": false
+    },
+    {
+      "name": "Selection Sprite",
+      "description": "Shows selected area",
+      "type": "basic",
+      "animations": {
+        "default": {
+          "frames": [
+            {
+              "image": {
+                "image": {},
+                "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+                "domElement": {}
+              },
+              "frameSize": {
+                "x": 191,
+                "y": 192
+              },
+              "framePos": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ],
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+            "domElement": {}
+          },
+          "domElement": {},
+          "attack_level": 0,
+          "heal_level": 0,
+          "type": "basic",
+          "delay": 0,
+          "cix": 0,
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "selected_frame": {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 191,
+              "y": 192
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "flipX": false,
+          "priority": 0,
+          "earlyTerm": false,
+          "hang": false,
+          "timer": 0
+        }
+      },
+      "sounds": {},
+      "image": {
+        "image": {
+          "error": "Image not instantiated, set to object by default"
+        },
+        "domElement": {
+          "error": "Image not instantiated, set to object by default"
+        }
+      },
+      "size": {
+        "x": 50,
+        "y": 50
+      },
+      "pos": {
+        "x": 445,
+        "y": 55
+      },
+      "position": {
+        "x": 445,
+        "y": 55
+      },
+      "selected_animation": {
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 191,
+              "y": 192
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+          "domElement": {}
+        },
+        "domElement": {},
+        "attack_level": 0,
+        "heal_level": 0,
+        "type": "basic",
+        "delay": 0,
+        "cix": 0,
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+        "frameSize": {
+          "x": 191,
+          "y": 192
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "flipX": false,
+        "priority": 0,
+        "earlyTerm": false,
+        "hang": false,
+        "timer": 0
+      },
+      "onGround": false,
+      "clasticTo": [],
+      "damagedBy": [],
+      "speed": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "accel": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rot_speed": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rot_accel": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "selected": false,
+      "hover_selected": false,
+      "active": true
+    }
+  ]
+}

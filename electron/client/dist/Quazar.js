@@ -694,8 +694,8 @@ var Canvas = {
                 throw new Error('Sprite is missing arguments');
             }
 
-            var x = sprite.pos.x;
-            var y = sprite.pos.y;
+            var x = sprite.position.x;
+            var y = sprite.position.y;
 
             var camera = $Q.camera || { pos: { x: 0, y: 0, z: 0 } };
 
@@ -878,10 +878,13 @@ var GameWindow = function () {
 
         Quazar.ctx = ctx;
 
-        this.update = update || function () {};
+        this.extraUpdate = update || function () {};
     }
 
     _createClass(GameWindow, [{
+        key: 'extraUpdate',
+        value: function extraUpdate() {}
+    }, {
         key: 'add',
         value: function add(object) {
 
@@ -939,11 +942,6 @@ var GameWindow = function () {
         key: 'render',
         value: function render() {
 
-            Quazar.each(this.sprite_set.list, function (ix, item) {
-
-                item.update();
-            });
-
             Quazar.each(this.force_set.list, function (ix, item) {
 
                 item.update();
@@ -957,7 +955,15 @@ var GameWindow = function () {
 
             Quazar.each(this.sprite_set.list, function (ix, item) {
 
-                item.update();
+                if (typeof item.update == 'function') {
+                    item.update();
+                }
+
+                if (typeof item.def_update == 'function') {
+                    //  console.log('def_update');
+
+                    item.def_update();
+                }
             });
         }
     }, {

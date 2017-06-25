@@ -846,9 +846,8 @@ var Canvas = {
 
             }
 
-
-            var x = sprite.pos.x;
-            var y = sprite.pos.y;
+            var x = sprite.position.x;
+            var y = sprite.position.y;
 
             var camera = $Q.camera || {pos: {x: 0, y: 0, z: 0}};
 
@@ -1052,9 +1051,14 @@ class GameWindow {
         Quazar.ctx = ctx;
 
 
-        this.update = update || function () {
+        this.extraUpdate = update || function () {
             };
 
+
+    }
+
+    extraUpdate()
+    {
 
     }
 
@@ -1129,13 +1133,6 @@ class GameWindow {
     render() {
 
 
-        Quazar.each(this.sprite_set.list, function (ix, item) {
-
-
-           item.update();
-
-        });
-
 
         Quazar.each(this.force_set.list, function (ix, item) {
 
@@ -1155,7 +1152,21 @@ class GameWindow {
         Quazar.each(this.sprite_set.list, function (ix, item) {
 
 
-            item.update();
+            if(typeof(item.update) == 'function')
+            {
+                item.update();
+
+            }
+
+            if(typeof(item.def_update) == 'function')
+            {
+              //  console.log('def_update');
+
+                item.def_update();
+
+            }
+
+
 
         });
 

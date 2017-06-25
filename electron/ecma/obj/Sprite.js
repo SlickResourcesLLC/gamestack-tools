@@ -37,15 +37,17 @@ class Sprite {
         this.damagedBy = []; //an array of animation types
 
 
-        this.speed = new Vector3(0, 0, 0); //store constant speed value
+        this.speed =  $Q.getArg(args, 'speed', new Vector3(0, 0, 0)); //store constant speed value
 
 
-        this.accel = new Vector3(0, 0, 0); //store constant accel value
+        this.accel =  $Q.getArg(args, 'accel', new Vector3(0, 0, 0)); //store constant accel value
 
 
-        this.rot_speed = new Vector3(0, 0, 0);
+        this.rot_speed =  $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
-        this.rot_accel = new Vector3(0, 0, 0);
+        this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+
+
 
 
     }
@@ -56,7 +58,11 @@ class Sprite {
 
     }
 
-    update() {
+
+
+    update() {}
+
+    def_update() {
 
 
         for(var x in this.speed)
@@ -77,7 +83,7 @@ class Sprite {
             if(this.accel[x] > 0 || this.accel[x] < 0)
             {
 
-                this.position[x] += this.accel[x];
+                this.speed[x] += this.accel[x];
 
             }
 
@@ -89,7 +95,7 @@ class Sprite {
             if(this.rot_speed[x] > 0 || this.rot_speed[x] < 0)
             {
 
-                this.position[x] += this.rot_speed[x];
+                this.rotation[x] += this.rot_speed[x];
 
             }
 
@@ -103,7 +109,7 @@ class Sprite {
             if(this.rot_accel[x] > 0 || this.rot_accel[x] < 0)
             {
 
-                this.position[x] += this.rot_accel[x];
+                this.rot_speed[x] += this.rot_accel[x];
 
             }
 

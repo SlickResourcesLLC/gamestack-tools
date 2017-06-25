@@ -15,13 +15,6 @@ module.exports = function(portNumber, callback) {
 
             callback: callback,
 
-            isAuthenticated: function (user) {
-
-            console.log("Allowing all requests, until Authentication is implemented.");
-
-            return true;
-
-        },
 
         get:function(key, callback)
         {
@@ -55,17 +48,11 @@ module.exports = function(portNumber, callback) {
             // Allow some files to be server over HTTP
             this.app.use(this.express.static(__dirname + '/client'));
 
-            this.app.listen(this.port);
-
             console.log("Express Server / SlickApi was initialized: Listening on port:" + this.port);
 
             this.isInit = true;
 
 
-            if (typeof(this.callback) == 'function') {
-                callback(false, this.app)
-            }
-            ;
 
         }
 
@@ -74,7 +61,17 @@ module.exports = function(portNumber, callback) {
 
     app.expressInit();
 
-    return app;
+    app.app.port = app.port;
+
+    if (typeof(callback) == 'function') {
+        callback(false, app.app)
+    }
+    ;
+
+
+
+
+    return app.app;
 
 }
 

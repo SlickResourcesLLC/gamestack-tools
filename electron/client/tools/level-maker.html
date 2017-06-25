@@ -61,6 +61,15 @@
 
         }
 
+        select
+        {
+            color:#333333;
+
+        }
+
+
+
+
         label
         {
 
@@ -105,7 +114,11 @@
         }
 
 
+        input#level-loader
+        {
 
+
+        }
 
         .multi-space input[type='radio']
         {
@@ -356,6 +369,15 @@
 
         }
 
+         .dropdown
+         {
+
+             float:left;
+
+             margin-top:7px;
+
+         }
+
 
         nav.top-menu a img
         {
@@ -450,7 +472,7 @@
 
         }
 
-        .dropdown {
+        .dropdown.rc {
             position: absolute;
 
             z-index:9999;
@@ -497,6 +519,8 @@
 
             border-top:none;
 
+            width:99%;
+
         }
 
         .free-select li:last-child {
@@ -522,12 +546,14 @@
 
         }
 
-        .free-select li:hover
-        {
+        .free-select li:hover {
 
-            border-top:2px solid goldenrod;
 
-            border-bottom:2px solid goldenrod;
+            background: #3b4253; /* Old browsers */
+            background: -moz-linear-gradient(top, #3b4253 0%, #272f41 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #3b4253 0%,#272f41 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #3b4253 0%,#272f41 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b4253', endColorstr='#272f41',GradientType=0 );
 
 
         }
@@ -741,7 +767,11 @@
 
             height:auto;
 
-           margin-bottom:0px;
+           margin-top:12px;
+
+            float:left;
+
+            margin-right:7px;
 
         }
 
@@ -783,6 +813,42 @@
 
         }
 
+
+        .save-map-options
+        {
+
+            border-radius: 4px;
+
+            background: #45484d; /* Old browsers */
+            background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+
+            border: none;
+
+            position:absolute;
+
+            top:0px;
+
+            left:100%;
+
+            font-size:0.9em;
+
+            white-space: nowrap;
+
+            color:white;
+
+        }
+
+        .save-map-options img {
+
+            width:20px;
+
+            height:auto;
+
+        }
+
         #container{
 
             position:absolute;
@@ -802,12 +868,24 @@
 
     <body>
 
+    <input type="file" name="level-file-input" id="level-file-input" />
+
     <div id="ctrl-space-top" >
         <nav class="top-menu" >
 
             <img id="logo" src="img/logo-main.png"  />
 
-            <button id="my-objects" class="button-top"  ><span>Map-Objects</span></button> <button id="create_map_object" class="button-add"  >+</button>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li role="presentation"><a href="#" id="new-level">New</a></li>
+
+                    <li role="presentation"><a href="#" id="load-level">Load</a></li>
+
+                 </ul>
+            </div>
+
+            <button id="my-objects" class="button-top"  ><span>Choose-Object</span></button> <button id="create_map_object" class="button-add"  >+</button>
 
             <a id="download" class="button-top" target="_blank" href='data:text/json;charset=utf-8,'>Save to File<img src="img/save.png" alt="save data" ></a>
 
@@ -824,6 +902,9 @@
 
             <ul></ul>
 
+                <button class="save-map-options"  >Save Options<img src="img/save.png" alt="save data" ></button>
+
+
             </div>
 
 
@@ -832,7 +913,7 @@
 
 
 
-            <div class="dropdown">
+            <div class="dropdown rc">
                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">RightClick: Sprite Action
                     <span class="caret"></span></button>
                 <ul class="dropdown-menu">
@@ -875,7 +956,7 @@
 
             <input  type="hidden"  value="image_data" id="image_data" name="image_data" />
 
-            <label>Name</label>
+            <label>File-Name</label>
 
             <input type="text"  placeholder="name" id="map_name" name="map_name"  />
 
@@ -918,7 +999,7 @@
             <input id="map_game_scale" type="range"  value="1.5" name="gameScale" min="0" max="100" />
 
 
-            <button id="apply_map_settings" class="ok" onclick="levelMaker.applySettings();" >Apply</button>
+            <button id="apply_map_settings" class="ok"  >Apply</button>
 
             <button id="cancel_map_settings" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
 
@@ -1174,6 +1255,136 @@
 
             DEVMODE:false,
 
+            newLevel:function()
+            {
+
+                localStorage.setItem('focus-file', false);
+
+                window.location.reload();
+
+            },
+
+            loadLevelReady:function()
+            {
+
+
+                    $('#level-file-input').change(function(evt){
+
+
+                        levelMaker.getRawLevelFile($(evt.target), function(result){
+
+
+                            levelMaker.level_file_str = result;
+
+                            levelMaker.applySettings(result);
+
+
+                       });
+
+
+                    });
+
+                    $('#load-level').click(function(){
+
+
+                        $('#level-file-input').click();
+
+                    });
+
+
+
+
+
+            },
+
+            MapOptions(elements)
+            {
+
+
+              return {elements:elements}
+
+            },
+
+
+            getMapElements:function(callback)
+            {
+
+                $.getJSON("http://localhost:3137/assets/system-data/level-maker-2d-options.json", function(data){
+
+                    var myObject = data;
+
+
+
+                    var elements = myObject.elements;
+
+                    for(var x = 0; x < elements.length; x++)
+                    {
+                        if(elements[x].src)
+                        {
+
+
+                            elements[x].img = new Image();
+
+                            elements[x].img.src =  elements[x].src;
+
+                        }
+
+
+
+
+                    }
+
+                    levelMaker.mapElements = myObject.elements;
+
+                  
+                    if(typeof(callback) == 'function')
+                    {
+                        callback();
+
+                    }
+
+                });
+
+            },
+
+            triggerDownload:function(filename, content){
+
+                $.post( "http://localhost:3137/save", {filename:filename, content:content})
+                    .done(function( data ) {
+
+                        if(typeof(callback) == 'function')
+                        {
+
+                            callback();
+
+                        }
+
+                        alert( "Data Saved: " + data );
+                    });
+
+
+            },
+
+
+
+            saveMapOptions:function(data, callback)
+            {
+
+                $.post( "http://localhost:3137/save-map-options", {data:data})
+                    .done(function( data ) {
+
+                        if(typeof(callback) == 'function')
+                        {
+
+                            callback();
+
+                        }
+
+                        alert( "Data Saved: " + data );
+                    });
+
+            },
+
             createDemo : function (lib) {
 
 
@@ -1248,12 +1459,12 @@
 
                 if(visible)
                 {
-                    $('.dropdown').show();
+                    $('.dropdown.rc').show();
 
                 }
                 else
                 {
-                    $('.dropdown').hide();
+                    $('.dropdown.rc').hide();
 
                 }
 
@@ -1261,7 +1472,7 @@
                 var ct = 0;
 
 
-                var d = $('.dropdown')[0];
+                var d = $('.dropdown.rc')[0];
 
                 $(d).css('left', x);
 
@@ -1473,6 +1684,43 @@
 
         $(document).ready(function () {
 
+
+
+
+            $('#apply_map_settings').click(function(){
+
+                levelMaker.applySettings();
+
+                alert('applied map settings: with :' + levelMaker.settings.name);
+
+
+            });
+
+            $('#new-level').click(function(){
+
+
+                App.newLevel();
+
+
+            });
+
+
+            $('.save-map-options').click(function(){
+
+                var data = App.MapOptions(levelMaker.mapElements, levelMaker.settings);
+
+                App.saveMapOptions(JSON.stringify(data), function(){
+
+                    alert('Map options saved.');
+
+                });
+
+
+            });
+
+
+            App.loadLevelReady();
+
             $('#auto-place').on("click", function(e){
 
                 var blink = false;
@@ -1480,8 +1728,6 @@
                if($('.up').data('on') == 'on')
                {
                    alert('got the up class');
-
-
 
                    levelMaker.leftClickExtra = function() {
 
@@ -1748,7 +1994,7 @@
 
                 }
 
-                console.log('Game Update');
+               // console.log('Game Update');
 
                 this.GameWindow.update();
 
@@ -1799,6 +2045,8 @@
 
                 $('#download').click(function(){
 
+
+
                     levelMaker.save(levelMaker.settings.name.replace('.json', '').replace('.', '') + '.json');
 
                 });
@@ -1833,7 +2081,7 @@
 
                 this.GameWindow = new GameWindow({canvas:this.canvas, ctx: this.ctx, sprites: this.sprites, collective_forces: this.collective_forces}, function(){
 
-                    console.log('Game Update passed');
+                 //   console.log('Game Update passed');
 
                 });
 
@@ -1856,7 +2104,61 @@
                 };
 
 
+
                 this.is_init = true;
+
+
+                var usingFile = true;
+
+                if(usingFile)
+                {
+
+                    App.getMapElements(function(){
+
+
+                        $.each(levelMaker.mapElements, function (ix, item) {
+
+                            App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                                console.log('1');
+
+                                var value = $(element).text();
+
+
+                                levelMaker.selectedElement = levelMaker.get(value);
+
+                            }));
+
+                        });
+
+
+
+                    });
+
+
+                }
+                else
+
+                {
+
+                    $.each(levelMaker.mapElements, function (ix, item) {
+
+                        App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                            console.log('1');
+
+                            var value = $(element).text();
+
+
+                            levelMaker.selectedElement = levelMaker.get(value);
+
+                        }));
+
+                    });
+
+
+                }
+
+
+
 
             }
 
@@ -1886,6 +2188,8 @@
             lastPlantedCountRecordArray:[],
 
             pixelSnap:10,
+
+            recent_files:[],
 
             settings:{
 
@@ -1979,29 +2283,48 @@
 
             },
 
-            applySettings:function()
+            applySettings:function(data)
             {
 
-                var obj = levelMaker.settings;
+                if(typeof(data) == 'string')
+                {
+                    data = JSON.parse(data);
 
-
-                obj.name = $('#map_name').val();
-                obj.description = $('#map_description').val();
-                obj.type = $('#map_type').val();
-                obj.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
-
-                obj.levelSizeX = parseInt($('#map_level_size_x').val());
-
-                obj.levelSizeY = parseInt($('#map_level_size_y').val());
-
-                $('.level-maker-canvas').width(obj.levelSizeX);
-                $('.level-maker-canvas').height(obj.levelSizeY);
+                }
 
 
 
-                Game.canvas.width = obj.levelSizeX;
 
-                Game.canvas.height = obj.levelSizeY;
+
+                if(!data) {
+
+                    data ={};
+
+                 data.name =  $('#map_name').val();
+
+                 data.description =  $('#map_description').val();
+
+                 data.type = $('#map_type').val();;
+
+                 data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
+
+                 data.levelSizeX = parseInt($('#map_level_size_x').val());
+
+                    data.levelSizeY = parseInt($('#map_level_size_y').val());
+
+
+
+                }
+
+                levelMaker.settings = data;
+
+                $('.level-maker-canvas').width(data.levelSizeX);
+                $('.level-maker-canvas').height(data.levelSizeY);
+
+
+                Game.canvas.width = data.levelSizeX;
+
+                Game.canvas.height = data.levelSizeY;
 
 
 
@@ -2024,7 +2347,6 @@
                 App.setMotionVectorGui();
 
 
-
                 $('#create_object').click(function(){
 
                     var   fx  =  parseFloat($('#frameX').val()),
@@ -2042,9 +2364,9 @@
 
                     var name = $('#name').val(),
 
-                        type = $('#type').val(),
+                     type = $('#type').val(),
 
-                        description = $('#description').val(),
+                    description = $('#description').val(),
 
                     id = $('#id').val(),
 
@@ -2056,15 +2378,22 @@
 
                     console.log('Making objects in create event');
 
-                    levelMaker.assembled_sprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
-                        {type:type, description:description });
+                    var args = {type:type, description:description };
+
+
+                    args.size = new Vector3(w, h, 0);
+
+
+                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                       args );
 
 
 
-                    levelMaker.assembled_sprite.img.onload = function()
+
+                    levelMaker.selectedSprite.img.onload = function()
                     {
                        // alert('new object loaded');
-                        levelMaker.addLevelObjectToUI(levelMaker.assembled_sprite);
+                        levelMaker.addLevelObjectToUI( levelMaker.selectedSprite);
 
                     }
 
@@ -2109,6 +2438,9 @@
 
                 var x = 0, y = 0;
 
+
+                var width = mapWidth, height = mapHeight;
+
                 var portion = mapWidth / mapHeight;
 
                 mapHeight = canvas.height;
@@ -2125,9 +2457,9 @@
 
                 $('#frameY').val(frameY);
 
-                $('#width').val(mapWidth);
+                $('#width').val(width);
 
-                $('#height').val(mapHeight);
+                $('#height').val(height);
 
                 $('#framewidth').val(frameWidth);
 
@@ -2190,6 +2522,71 @@
 
             },
 
+            addRecentFile:function(filename)
+            {
+
+                var files = localStorage.getItem('recent-files');
+
+                if(files)
+                {
+
+                    levelMaker.recent_files = JSON.parse(files);
+
+
+                }
+                else
+                {
+                    levelMaker.recent_files = [];
+
+                }
+
+                if(file_name){
+
+                    levelMaker.recent_files.push(file_name);
+
+                };
+
+                if(levelMaker.recent_files.length >= 4)
+                {
+                    levelMaker.recent_files.shift();
+
+                }
+
+                localStorage.setItem('recent-files', JSON.stringify(levelMaker.recent_files));
+
+
+            },
+
+
+            getRawLevelFile:function(input, callback)
+            {
+
+                var filename = $(input).val().split('\\').pop();
+
+
+
+                if(filename.toLowerCase().indexOf('.json') >= 0)
+                {
+
+                    app.addRecentFile(filename);
+
+                var file  = input.files[0];
+                var reader  = new FileReader();
+
+
+
+                reader.addEventListener("load", function () {
+
+                    callback(reader.result)
+
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+
+                }
+            },
 
 
 
@@ -2206,13 +2603,21 @@
 
                 var str = JSON.stringify({settings:this.settings, map:Game.sprites}, null, 2); // spacing level = 2
 
-                var downloadHRefValue = $('#download').attr('href');
+              //  var downloadHRefValue = $('#download').attr('href');
 
-                $('#download').attr('name', filename);
 
-                $('#download').attr('href', downloadHRefValue + str);
+                App.triggerDownload(this.settings.name + ".json", str);
 
-                $('#download').attr('download', this.meta.name + ".json");
+              //  $('#download').attr('name', filename);
+
+
+
+              //  $('#download').attr('href', downloadHRefValue + str);
+
+              //  $('#download').attr('download', this.meta.name + ".json");
+
+
+
 
             },
 
@@ -2274,13 +2679,13 @@
                // alert("El image:" + JSON.stringify(img.src));
 
                 var element = {
-                    tag: tag, img: img, frameSize: frameSize, mapSize: mapSize
+                    tag: tag, img: img, src:imgPath, frameSize: frameSize, mapSize: mapSize
 
                 };
 
                 for(var x in extras)
                 {
-                    element[x] = extras[x];
+                    element[x] = JSON.parse(JSON.stringify(extras[x]));
 
                 };
 
@@ -2329,12 +2734,12 @@
 
             centerPos:function(sprite, x, y)
             {
-                sprite.pos.x = Math.floor(x - sprite.size.x / 2);
-                sprite.pos.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.pos.x = sprite.pos.x - ( sprite.pos.x % levelMaker.settings.pixelSnap);
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
 
-                sprite.pos.y = sprite.pos.y - ( sprite.pos.y % levelMaker.settings.pixelSnap);
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
 
 
             },
@@ -2393,8 +2798,8 @@
                 Quazar.each(Game.sprites, function (ix, item) {
 
 
-                    if (notSelection(item) && x > item.pos.x && x < item.pos.x + item.size.x &&
-                            y > item.pos.y && y < item.pos.y + item.size.y + $('.level-maker-canvas').offset().top)
+                    if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
+                            y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
                         {
 
                            item.selected = true;
@@ -2429,12 +2834,12 @@
 
                         Quazar.each(Game.sprites, function (ix, item) {
 
-                    if ( x > item.pos.x && x < item.pos.x + item.size.x &&
-                            y > item.pos.y && y < item.pos.y + item.size.y + $('.level-maker-canvas').offset().top)
+                    if ( x > item.position.x && x < item.position.x + item.size.x &&
+                            y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
                     {
 
-                        item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
-                        selection = true;
+                      //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
+                     //   selection = true;
                     }
 
                 });
@@ -2451,8 +2856,8 @@
             {
                 Quazar.each(Game.sprites, function (ix, item) {
 
-                    if (x > item.pos.x && x < item.pos.x + item.size.x &&
-                            y > item.pos.y && y < item.pos.y + item.size.y)
+                    if (x > item.position.x && x < item.position.x + item.size.x &&
+                            y > item.position.y && y < item.position.y + item.size.y)
                     {
 
                         var ix = Game.sprites.indexOf(item);
@@ -2466,15 +2871,16 @@
             simpleMapObject:function(object, x, y)
             {
 
-              var x = Math.floor(x - object.size.x / 2);
-                var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
 
-               x = x - ( object.pos.x % levelMaker.settings.pixelSnap);
+                    var x = Math.floor(x - object.size.x / 2);
+                    var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
 
-                y = y - ( object.pos.y % levelMaker.settings.pixelSnap);
+                    x = x - ( object.position.x % levelMaker.settings.pixelSnap);
+
+                    y = y - ( object.position.y % levelMaker.settings.pixelSnap);
 
 
-                return {size:object.size, pos:{x:x, y:y} };
+                    return {size: object.size, position: {x: x, y: y}};
 
             },
 
@@ -2490,6 +2896,8 @@
 
                 sprite.size = mapElement.mapSize;
 
+                mapElement.src = img.src;
+
 
                 var fs = mapElement.frameSize;
 
@@ -2499,12 +2907,12 @@
 
                 // console.log(JSON.stringify(sprite));
 
-                sprite.pos.x = Math.floor(x - sprite.size.x / 2);
-                sprite.pos.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.pos.x = sprite.pos.x - ( sprite.pos.x % levelMaker.settings.pixelSnap);
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
 
-                sprite.pos.y = sprite.pos.y - ( sprite.pos.y % levelMaker.settings.pixelSnap);
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
 
                 this.selectedSprite = sprite;
 
@@ -2517,12 +2925,29 @@
 
                // console.log("Selected Element:" + JSON.stringify(mapElement));
                 var img = mapElement.img;
-                console.log("Img src:" + img.src);
-                var sprite = new Sprite('MapElement', 'A level-builder element');
+              //  console.log("Img src:" + img.src);
+
+
+                if(levelMaker.assembled_sprite.speed)
+                {
+
+                    alert(JSON.stringify(levelMaker.assembled_sprite.speed));
+
+                }
+
+                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(levelMaker.assembled_sprite)));
 
                 sprite.active = true;
 
                 sprite.size = mapElement.mapSize;
+
+
+                if(sprite.speed)
+                {
+
+                    alert("sprite-speed:" + JSON.stringify(sprite.speed));
+
+                }
 
 
                 var fs = mapElement.frameSize;
@@ -2533,14 +2958,16 @@
 
                // console.log(JSON.stringify(sprite));
 
-                sprite.pos.x = Math.floor(x - sprite.size.x / 2);
-                sprite.pos.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.pos.x = sprite.pos.x - ( sprite.pos.x % levelMaker.settings.pixelSnap);
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
 
-                sprite.pos.y = sprite.pos.y - ( sprite.pos.y % levelMaker.settings.pixelSnap);
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
 
                 this.selectedSprite = sprite;
+
+                sprite.def_update = function(){}; //turn off the motion, we are just mapping
 
 
                 Game.sprites.push(sprite);
@@ -2637,21 +3064,6 @@
 
             //log the completion of the ready function
 
-            $.each(levelMaker.mapElements, function (ix, item) {
-
-                //  alert('map element:' + item.tag);
-
-                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
-                    console.log('1');
-
-                    var value = $(element).text();
-
-
-                    levelMaker.selectedElement = levelMaker.get(value);
-
-                }));
-
-            });
 
 
             window.setTimeout(function () {
@@ -2680,11 +3092,11 @@
                 cSprite.size.y = aSprite.size.y + 10;
 
 
-                var x = Math.floor(aSprite.pos.x + aSprite.size.x / 2 - cSprite.size.x / 2),
-                    y = Math.floor(aSprite.pos.y + aSprite.size.y / 2 - cSprite.size.y / 2);
+                var x = Math.floor(aSprite.position.x + aSprite.size.x / 2 - cSprite.size.x / 2),
+                    y = Math.floor(aSprite.position.y + aSprite.size.y / 2 - cSprite.size.y / 2);
 
-                cSprite.pos.x = x;
-                cSprite.pos.y = y;
+                cSprite.position.x = x;
+                cSprite.position.y = y;
 
             }
 
@@ -2726,26 +3138,10 @@
 
                 Quazar.each(Game.sprites, function (ix, item) {
 
-                    if (item.hover_selected && notSelection(item))
-                    {
-
-                        console.log('Sprite Selected!');
-
-                        centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item);
-
-                      if(!levelMaker.blink){  levelMaker.hover_selection_sprite.active = true };
-
-                        hoverSelect = true;
-
-
-                    }
-
-
-
                     if (item.selected && notSelection(item))
                     {
 
-                        console.log('Sprite Selected!');
+                      //  console.log('Sprite Selected!');
 
                         centerSizeSpriteToSprite(levelMaker.selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
@@ -2763,14 +3159,15 @@
 
                     var item = {position:{x:levelMaker.mouse.x, y:levelMaker.mouse.y, z:0}, size:levelMaker.selectedSprite.size};
 
-                    item.pos = item.position;
 
-                    item = levelMaker.simpleMapObject(item, levelMaker.mouse.x, levelMaker.mouse.y);
+                        item = levelMaker.simpleMapObject(item, levelMaker.mouse.x, levelMaker.mouse.y);
 
-                    centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
+                        centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
-                    if(!levelMaker.blink){  levelMaker.hover_selection_sprite.active = true };
-
+                        if (!levelMaker.blink) {
+                            levelMaker.hover_selection_sprite.active = true
+                        }
+                        ;
 
                 }
 
@@ -2846,12 +3243,12 @@
             });
 
 
-            $('.dropdown input[type="radio"]').click(function(evt) {
+            $('.dropdown.rc input[type="radio"]').click(function(evt) {
 
 
                 alert('hi');
 
-                $('.dropdown input[type="radio"]').attr('checked', false);
+                $('.dropdown.rc input[type="radio"]').attr('checked', false);
 
                 $(evt.target).attr('checked', true);
 
