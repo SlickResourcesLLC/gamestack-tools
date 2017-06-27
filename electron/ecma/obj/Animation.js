@@ -10,10 +10,25 @@ class Animation {
         args = args || {};
 
 
-        this.frames = $Q.getArg(args, 'frames', []);
+        var _anime = this;
 
 
-        this.image = new GameImage( $Q.getArg(args, 'src',  $Q.getArg(args, 'image', false)));
+        Quazar.each(args, function (ix, item) {
+
+            if (ix !== 'parent' ) {
+                _anime[ix] = item;
+            }
+
+
+        });
+
+
+     this.frames = $Q.getArg(args, 'frames', []);
+
+
+      this.image = new GameImage( $Q.getArg(args, 'src',  $Q.getArg(args, 'image', false)));
+
+        this.src = this.image.domElement.src;
 
         this.domElement = this.image.domElement;
 
@@ -32,33 +47,22 @@ class Animation {
 
         this.cix = 0;
 
-        var _anime = this;
+
+        this.frameSize = $Q.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+
+        this.frameBounds = $Q.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
 
-        Quazar.each(args, function (ix, item) {
-
-            if (ix !== 'parent') {
-                _anime[ix] = item;
-            }
-
-
-        });
-
-        this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
-
-        this.frameBounds = this.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
-
-
-        this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
+        this.frameOffset = $Q.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
 
         this.apply2DFrames(args.parent || {});
 
 
-        this.flipX = this.getArg(args, 'flipX', false);
+        this.flipX = $Q.getArg(args, 'flipX', false);
 
 
-        this.priority = this.getArg(args, 'priority', 0);
+        this.priority = $Q.getArg(args, 'priority', 0);
 
 
         this.cix = 0;
@@ -67,12 +71,14 @@ class Animation {
         this.selected_frame = this.frames[0];
 
 
-        this.earlyTerm = this.getArg(args, 'earlyTerm', false);
+        this.earlyTerm = $Q.getArg(args, 'earlyTerm', false);
 
-        this.hang =this.getArg(args, 'hang', false);
+        this.hang =$Q.getArg(args, 'hang', false);
 
 
         this.timer = 0;
+
+
 
 
     }

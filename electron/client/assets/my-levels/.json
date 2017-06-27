@@ -1,12 +1,11 @@
 {
   "settings": {
-    "name": "myLevel",
-    "description": "the default level for our game",
+    "name": "",
+    "description": "",
+    "type": "",
     "pixelSnap": 10,
     "levelSizeX": 5000,
-    "levelSizeY": 5000,
-    "levelSizeZ": 0,
-    "game_scale": 2
+    "levelSizeY": 5000
   },
   "map": [
     {
@@ -293,12 +292,12 @@
         "y": 50
       },
       "pos": {
-        "x": 435,
-        "y": 185
+        "x": 465,
+        "y": -15
       },
       "position": {
-        "x": 435,
-        "y": 185
+        "x": 465,
+        "y": -15
       },
       "selected_animation": {
         "frames": [

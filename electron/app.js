@@ -34,22 +34,15 @@ module.exports = function() {
 
        app.post('/save', function(req, res){
 
-         var content = req.body.content;
+           var content = req.body.content;
 
-         var name = req.body.filename;
+           var filename = req.body.filename;
 
-         console.log('got download request for:' + name + ":" + content);
+           var writer = fs.createWriteStream(filename);
 
+           res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':'attachment; filename='+filename});
 
-           fs.writeFile(__dirname + "/client/assets/my-levels/" + name, content, function (err) {
-               if (err) return console.log(err);
-               console.log('File:' + name + ' was saved');
-
-               res.end('done');
-
-           });
-
-        res.end();
+           res.end(content);
 
        });
 

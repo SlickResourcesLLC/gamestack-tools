@@ -16,6 +16,15 @@ var Sprite = function () {
 
                 this.description = description || "__";
 
+                var _spr = this;
+
+                Quazar.each(args, function (ix, item) {
+
+                        if (ix !== 'parent') {
+                                _spr[ix] = item;
+                        }
+                });
+
                 this.type = $Q.getArg(args, 'type', 'basic');
 
                 this.animations = {};

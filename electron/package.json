@@ -24,6 +24,7 @@
     "grunt-babel": "^6.0.0",
     "load-grunt-tasks": "^3.5.2",
     "express":"latest",
-    "opn":"latest"
+    "opn":"latest",
+    "stream":"latest"
   }
 }

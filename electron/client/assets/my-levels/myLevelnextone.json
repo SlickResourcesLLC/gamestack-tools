@@ -1,7 +1,7 @@
 {
   "settings": {
-    "name": "nextLevel",
-    "description": "",
+    "name": "myLevelnextone",
+    "description": "the default level for our game",
     "type": "",
     "pixelSnap": 10,
     "levelSizeX": 5000,
@@ -14,6 +14,21 @@
       "type": "basic",
       "animations": {
         "default": {
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0
+            }
+          },
           "frames": [
             {
               "image": {
@@ -42,21 +57,6 @@
           "type": "basic",
           "delay": 0,
           "cix": 0,
-          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
-          "frameSize": {
-            "x": 191,
-            "y": 192
-          },
-          "frameBounds": {
-            "min": {
-              "x": 0,
-              "y": 0
-            },
-            "max": {
-              "x": 0,
-              "y": 0
-            }
-          },
           "frameOffset": {
             "x": 0,
             "y": 0,
@@ -106,6 +106,21 @@
         "y": 100
       },
       "selected_animation": {
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
+        "frameSize": {
+          "x": 191,
+          "y": 192
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0
+          }
+        },
         "frames": [
           {
             "image": {
@@ -134,21 +149,6 @@
         "type": "basic",
         "delay": 0,
         "cix": 0,
-        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/selection.png",
-        "frameSize": {
-          "x": 191,
-          "y": 192
-        },
-        "frameBounds": {
-          "min": {
-            "x": 0,
-            "y": 0
-          },
-          "max": {
-            "x": 0,
-            "y": 0
-          }
-        },
         "frameOffset": {
           "x": 0,
           "y": 0,
@@ -198,9 +198,9 @@
         "y": 0,
         "z": 0
       },
+      "active": false,
       "selected": false,
-      "hover_selected": false,
-      "active": false
+      "hover_selected": false
     },
     {
       "name": "Selection Sprite",
@@ -208,6 +208,21 @@
       "type": "basic",
       "animations": {
         "default": {
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+          "frameSize": {
+            "x": 191,
+            "y": 192
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0
+            }
+          },
           "frames": [
             {
               "image": {
@@ -236,21 +251,6 @@
           "type": "basic",
           "delay": 0,
           "cix": 0,
-          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
-          "frameSize": {
-            "x": 191,
-            "y": 192
-          },
-          "frameBounds": {
-            "min": {
-              "x": 0,
-              "y": 0
-            },
-            "max": {
-              "x": 0,
-              "y": 0
-            }
-          },
           "frameOffset": {
             "x": 0,
             "y": 0,
@@ -293,13 +293,28 @@
       },
       "pos": {
         "x": 445,
-        "y": 55
+        "y": -55
       },
       "position": {
         "x": 445,
-        "y": 55
+        "y": -55
       },
       "selected_animation": {
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
+        "frameSize": {
+          "x": 191,
+          "y": 192
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0
+          }
+        },
         "frames": [
           {
             "image": {
@@ -328,21 +343,6 @@
         "type": "basic",
         "delay": 0,
         "cix": 0,
-        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/electron/client/assets/builder/hover_selection.png",
-        "frameSize": {
-          "x": 191,
-          "y": 192
-        },
-        "frameBounds": {
-          "min": {
-            "x": 0,
-            "y": 0
-          },
-          "max": {
-            "x": 0,
-            "y": 0
-          }
-        },
         "frameOffset": {
           "x": 0,
           "y": 0,
@@ -392,9 +392,9 @@
         "y": 0,
         "z": 0
       },
+      "active": true,
       "selected": false,
-      "hover_selected": false,
-      "active": true
+      "hover_selected": false
     }
   ]
 }

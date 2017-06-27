@@ -691,7 +691,7 @@ var Canvas = {
                 frame = sprite.selected_animation.selected_frame;
             } else {
 
-                throw new Error('Sprite is missing arguments');
+                console.error('Sprite is missing arguments');
             }
 
             var x = sprite.position.x;

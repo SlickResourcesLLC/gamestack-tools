@@ -842,7 +842,7 @@ var Canvas = {
             }
             else {
 
-                throw new Error('Sprite is missing arguments');
+                console.error('Sprite is missing arguments');
 
             }
 
