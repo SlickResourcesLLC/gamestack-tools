@@ -1384,6 +1384,8 @@
 
                 if(data) {
 
+
+
                     levelMaker.restoreInstance(data.map, data.settings, function () {
 
                         levelMaker.htmlSettings();
@@ -1391,6 +1393,8 @@
                         levelMaker.applySettings(levelMaker.settings);
 
                         start_level();
+
+                        create_selections();
 
 
                     });
@@ -1466,7 +1470,7 @@
             saveLevel:function(filename)
             {
 
-                this.map = this.mapElements;
+
 
                 var str = JSON.stringify({settings:levelMaker.settings, map:Game.sprites}, null, 2); // spacing level = 2
 
@@ -1500,6 +1504,7 @@
                             levelMaker.applySettings(result);
 
                             var level = JSON.parse(result);
+
 
 
 
@@ -2274,6 +2279,46 @@
 
                 $('#download').click(function(){
 
+
+                    var sprites = Game.sprites;
+
+
+                    var remove = function(list, my_item)
+                    {
+
+
+                        $.each(list, function(ix, item){
+
+                            if(item == my_item)
+                            {
+                                alert('removing sprite');
+
+                                list.splice(ix, 1);
+
+                            }
+
+                        });
+
+                    };
+
+                    remove(Game.sprites, levelMaker.selection_sprite);
+
+                    remove(Game.sprites, levelMaker.hover_selection_sprite);
+
+
+                    $.each(sprites, function(ix, item){
+
+                        if(item == levelMaker.selection_sprite || item == levelMaker.hover_selection_sprite)
+                        {
+                            alert('removing sprite');
+
+                            Game.sprites = Game.sprites.splice(ix, 1);
+
+                        }
+
+                    });
+
+
                     $(this).prop('download', levelMaker.settings.name + '.json');
 
                     $(this).prop('target', '_blank');
@@ -2336,6 +2381,8 @@
                 topScroll:0,
 
                 selected_image_src:{},
+
+                discluded_sprites:[],
 
                 assembled_sprite:{},
 
@@ -2999,7 +3046,7 @@
                     y = y - ( object.position.y % levelMaker.settings.pixelSnap);
 
 
-                    return {size: object.size, position: {x: x, y: y}};
+                    return {size: new Vector3(object.size.x, object.size.y, 0), position: {x: x, y: y}};
 
                 },
 
@@ -3172,6 +3219,51 @@
         var levelMaker = LevelMaker(filename);
 
 
+
+        var create_selections = function()
+        {
+
+
+            var pathPref = levelMaker.url_prefix;
+
+
+
+            var selectionImg = document.createElement('IMG');
+
+            selectionImg.src = pathPref +  "selection.png";
+
+
+            var hoverSelectionImg = document.createElement('IMG');
+
+            hoverSelectionImg.src =  pathPref +  "hover_selection.png";
+
+
+
+            levelMaker.hover_selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+
+            levelMaker.discluded_sprites.push(levelMaker.hover_selection_sprite);
+
+            var fs = new Size(191, 192);
+
+            levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+            levelMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+
+            var fs = new Size(191, 192);
+
+            levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
+
+
+            levelMaker.discluded_sprites.push(levelMaker.selection_sprite);
+
+            Game.sprites.push(levelMaker.selection_sprite);
+
+            Game.sprites.push(levelMaker.hover_selection_sprite);
+
+
+        };
+
+
         window.setTimeout(function () {
 
 
@@ -3214,28 +3306,16 @@
             }, 100);
 
 
-            var pathPref = levelMaker.url_prefix;
-
-            var selectionImg = document.createElement('IMG');
-
-            selectionImg.src = pathPref +  "selection.png";
-
-
-            var hoverSelectionImg = document.createElement('IMG');
-
-            hoverSelectionImg.src =  pathPref +  "hover_selection.png";
-
-
 
             var centerSizeSpriteToSprite = function (cSprite, aSprite)
             {
-                cSprite.size.x = aSprite.size.x + 10;
+                cSprite.size.x = aSprite.size.x + 20;
 
-                cSprite.size.y = aSprite.size.y + 10;
+                cSprite.size.y = aSprite.size.y + 20;
 
 
-                var x = Math.floor(aSprite.position.x + aSprite.size.x / 2 - cSprite.size.x / 2),
-                    y = Math.floor(aSprite.position.y + aSprite.size.y / 2 - cSprite.size.y / 2);
+                var x = Math.floor((aSprite.position.x + aSprite.size.x / 2) - cSprite.size.x / 2),
+                    y = Math.floor((aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);
 
                 cSprite.position.x = x;
                 cSprite.position.y = y;
@@ -3243,26 +3323,13 @@
             }
 
 
-
-        levelMaker.hover_selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
-
-        var fs = new Size(191, 192);
-
-        levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
-
-            levelMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
-
-            var fs = new Size(191, 192);
-
-            levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
-
-            Game.sprites.push(levelMaker.selection_sprite);
-
-            Game.sprites.push(levelMaker.hover_selection_sprite);
+            create_selections();
 
             console.log(levelMaker.selection_sprite);
 
             window.setInterval(function(){
+
+
 
                 if(!levelMaker.blink){  levelMaker.hover_selection_sprite.active = false; }
                 levelMaker.selection_sprite.active = false;
@@ -3276,18 +3343,29 @@
 
                 };
 
+
+                var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+
                 var hoverSelect = false;
 
                 Quazar.each(Game.sprites, function (ix, item) {
 
-                    if (item.selected && notSelection(item))
+                    if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
                     {
 
                       //  console.log('Sprite Selected!');
 
                         centerSizeSpriteToSprite(levelMaker.selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
+                        centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
+
+
                         levelMaker.selection_sprite.active = true;
+
+                        levelMaker.hover_selection_sprite.active = true;
+
+                        hoverSelect = true;
 
                     }
 
@@ -3298,15 +3376,14 @@
                 if(!hoverSelect)
                 {
 
-
                     var item = {position:{x:levelMaker.mouse.x, y:levelMaker.mouse.y, z:0}, size:levelMaker.selectedSprite.size};
-
 
                         item = levelMaker.simpleMapObject(item, levelMaker.mouse.x, levelMaker.mouse.y);
 
                         centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
                         if (!levelMaker.blink) {
+
                             levelMaker.hover_selection_sprite.active = true
                         }
                         ;
