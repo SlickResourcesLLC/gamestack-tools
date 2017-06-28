@@ -12,6 +12,8 @@ var DatGui = {
 
     gui:false,
 
+    latest_folder:false,
+
     options:{},
 
     getArg:function(args, key, fallback)
@@ -23,16 +25,22 @@ var DatGui = {
 
     expandables:[],
 
-    saveable:function(save_callback)
+    saveable:function(save_callback, remove_callback)
     {
 
 
         var guiHTML = $('div.dg.main li'),
         last = $(guiHTML).last();
 
-        $('<button id="save_current_object">Save</button>').insertAfter(last);
+        $('<button id="save_current_object">Save</button><button id="cancel_current_object">Cancel</button>').insertAfter(last);
+
+        $('#save_current_object').click(function(){  save_callback(); });
+
+        $('#cancel_current_object').click(function(){ $('div.dg.main').last().remove(); remove_callback();  });
 
     },
+
+
 
     expandOnArray:function(parent, key, cl, save_callback)
     {
@@ -43,25 +51,64 @@ var DatGui = {
 
         var __instance = this;
 
+        this.latest_folder = this.main_gui.addFolder(key);
+
         var obj = {
             add_animation:
             function(){
 
-                parent[key] = new window[cl]();
+                alert('hello');
 
-                DatGui.expand(parent[key]);
+                if(cl == Animation)
+                {
+                    parent[key].push(new Animation());
 
-                __instance.saveable( function(){
 
-                    alert('SAVE CODE GO HERE');
+                    var len = parent[key].length - 1;
 
-                });
+
+
+                    var name = parent[key][len].name || 'Animation_' + len;
+
+
+                    DatGui.expand(parent[key][len], name);
+
+                    __instance.saveable( function(){
+
+                        alert('SAVE CODE GO HERE');
+
+                        $('span').each(function(ix, item){
+
+                            if($(this).text() == 'add_animation')
+                            {
+
+                                $(this).parent().append('<button class="sprite_prop">'+name+'</button>');
+
+                            }
+
+                        });
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
 
 
             }
         };
 
-        this.main_gui.add(obj,'add_animation');
+       this.latest_folder.add(obj,'add_animation');
+
+
+
+
 
     },
 
@@ -450,6 +497,7 @@ var DatGui = {
         }
 
 
+        /*
 
         if(isParent([TweenStack]))
         {
@@ -462,6 +510,8 @@ var DatGui = {
             return true;
 
         }
+
+        */
 
 
 
@@ -518,10 +568,9 @@ var DatGui = {
 
             //anything numeric:
 
+
             if(typeof(obj) == 'object')
             {
-
-
 
                 var complete;
 
@@ -545,6 +594,7 @@ var DatGui = {
                 if(obj instanceof Animation)
                 {
 
+
                     var lastBox = $('.dg.ac');
 
                     var lists = $('div.main');
@@ -558,7 +608,7 @@ var DatGui = {
 
                         var id = this.create_id();
 
-                        $(ul).prepend( "<img alt='animation-image' src=''  /><input type='file' id='"+id+"' class='dat_gui_file' value='Src File'>");
+                        $(ul).prepend( "<input   type='file' id='"+id+"' class='dat_gui_file' value='animation-image'>");
 
                         $('#' + id).change(function(){
 
@@ -615,8 +665,10 @@ var DatGui = {
 
     guis:[],
 
-    expand:function(object, name)
+    expand:function(object, name, callback)
     {
+
+        alert('hello');
 
 
         this.guis.push(this.main_gui);
@@ -624,18 +676,21 @@ var DatGui = {
         this.main_gui = new dat.GUI();
 
 
-        return this.addGuiByKeys(name, object);
+
+        return this.addGuiByKeys(name, object, this.latest_folder);
 
 
     },
 
 
-    get: function (object, name) {
+    get: function (object, name, gui) {
 
+         this.selectedObject = object;
 
          $('.dg.main').remove();
 
-         this.main_gui = new dat.GUI();
+
+         this.main_gui = gui || new dat.GUI();
 
         $('.dg.main').attr('z-index', '9999');
 

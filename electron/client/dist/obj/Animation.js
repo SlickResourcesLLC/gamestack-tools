@@ -24,6 +24,10 @@ var Animation = function () {
                         }
                 });
 
+                this.name = $Q.getArg(args, 'name', false);
+
+                this.description = $Q.getArg(args, 'description', '_blank');
+
                 this.frames = $Q.getArg(args, 'frames', []);
 
                 this.image = new GameImage($Q.getArg(args, 'src', $Q.getArg(args, 'image', false)));

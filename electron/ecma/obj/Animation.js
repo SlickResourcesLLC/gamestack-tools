@@ -22,6 +22,10 @@ class Animation {
 
         });
 
+        this.name =  $Q.getArg(args, 'name', false);
+
+        this.description =  $Q.getArg(args, 'description', '_blank');
+
 
      this.frames = $Q.getArg(args, 'frames', []);
 

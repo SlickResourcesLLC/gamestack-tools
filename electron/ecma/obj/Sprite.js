@@ -25,7 +25,7 @@ class Sprite {
 
         this.type = $Q.getArg(args, 'type', 'basic');
 
-        this.animations = {};
+        this.animations = [];
 
 
         this.sounds = {};
@@ -36,9 +36,9 @@ class Sprite {
 
         this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
 
-        this.pos = $Q.getArg(args, 'pos', new Vector2(100, 100));
 
-        this.position = $Q.getArg(args, 'position', this.pos);
+
+        this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
 
         this.selected_animation = {};

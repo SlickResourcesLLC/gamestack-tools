@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>2D Level Mapper</title>
+        <title>2D Sprite Builder</title>
         <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
         <!-- Insert this line above script imports  -->
@@ -69,9 +69,6 @@
 
         }
 
-
-
-
         label
         {
 
@@ -116,7 +113,7 @@
         }
 
 
-        input#level-loader
+        input#sprite-loader
         {
 
 
@@ -878,12 +875,53 @@
 
         }
 
+        .dat_gui_file
+        {
+
+            color:snow;
+
+        }
+
+        li.folder
+        {
+            padding:0px;
+
+        }
+
+        #save_current_object
+        {
+
+            background:#333333;
+            color:snow;
+
+
+            width:30%;
+
+        }
+
+        #cancel_current_object
+        {
+
+
+            background: #da8452; /* Old browsers */
+            background: -moz-linear-gradient(top, #da8452 0%, #c26732 50%, #d67842 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #da8452 0%,#c26732 50%,#d67842 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #da8452 0%,#c26732 50%,#d67842 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#da8452', endColorstr='#d67842',GradientType=0 ); /* IE6-9 */
+
+            border: none;
+            color: #FFFFFF;
+
+            width:30%;
+
+            margin-left:30%;
+        }
 
     </style>
 
     <body>
 
-    <input type="file" name="level-file-input" id="level-file-input" />
+    <input type="file" name="sprite-file-input" id="sprite-file-input" />
 
     <div id="ctrl-space-top" >
         <nav class="top-menu" >
@@ -891,18 +929,18 @@
             <img id="logo" src="img/logo-main.png"  />
 
             <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Sprite<span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li role="presentation"><a href="#" id="new-level">New</a></li>
+                    <li role="presentation"><a href="#" id="new-sprite">New</a></li>
 
-                    <li role="presentation"><a href="#" id="load-level">Load</a></li>
+                    <li role="presentation"><a href="#" id="load-sprite">Load</a></li>
 
                  </ul>
             </div>
 
             <button id="my-objects" class="button-top"  ><span>Choose-Object</span></button> <button id="create_map_object" class="button-add"  >+</button>
 
-            <a id="download" class="button-top"   name="level" href="#" ><span>Save to File</span><img src="img/save.png" alt="save data" ></a>
+            <a id="download" class="button-top"   name="sprite" href="#" ><span>Save to File</span><img src="img/save.png" alt="save data" ></a>
 
 
             <a id="map_settings_show" class="button-top"  href='#' onclick="$('#settings-space form').show();">Map-Settings<img src="img/settings.png" alt="settings image"  ></a>
@@ -919,11 +957,10 @@
 
                 <button class="save-map-options"  >Save Options<img src="img/save.png" alt="save data" ></button>
 
-
             </div>
 
 
-            <canvas id="myCanvas" class="level-maker-canvas">
+            <canvas id="myCanvas" class="sprite-maker-canvas">
             </canvas>
 
 
@@ -1003,11 +1040,11 @@
 
             <label>Width</label>
 
-            <input id="map_level_size_x" type="range"  value="5000" step="10" name="width" min="0" max="10000" />
+            <input id="map_sprite_size_x" type="range"  value="5000" step="10" name="width" min="0" max="10000" />
 
             <label>Height</label>
 
-            <input id="map_level_size_y" type="range"  value="5000"  step="10" name="height" min="0" max="10000" />
+            <input id="map_sprite_size_y" type="range"  value="5000"  step="10" name="height" min="0" max="10000" />
 
             <label>Intended Game Scale</label>
 
@@ -1032,7 +1069,7 @@
 
                 <div class="form-pair" >
 
-                <input type="file"  value="Select Image File" name="file" onchange="levelMaker.getRawImageFile(this);"  />
+                <input type="file"  value="Select Image File" name="file" onchange="spriteMaker.getRawImageFile(this);"  />
 
                     <img style="display:none;" />
 
@@ -1084,148 +1121,7 @@
 
                 <input id="frameheight" type="range"  value="64" name="frameheight"  min="0" max="4000"  />
 
-                <label>*Hidden Settings</label>
 
-                <div id="hidden-settings" style="display:none;" >
-
-                    <label>Animations</label> <button class="add_object">+</button>
-
-                    <label>Motions</label> <button class="add_object">+</button>
-
-                <label>Systemic-Positional-Motion Model</label>
-
-                <select id="motion-models" name="motion-models">
-
-                    <option>None</option>
-
-                    <option>Directional</option>
-
-                    <option>Curve</option>
-
-                    <option>Generate These From Javascript Settings</option>
-
-                </select>
-
-                <label>Systemic-Rotation-Motion for-Model</label>
-
-                <select id="motion-models" name="motion-models">
-
-                    <option>None</option>
-
-                    <option>Directional</option>
-
-                    <option>Curve</option>
-
-                    <option>Generate These From Javascript Settings</option>
-
-                </select>
-
-                <label>Systemic-Rotation-Motion for-Object</label>
-
-                <select id="motion-models" name="motion-models">
-
-                    <option>None</option>
-
-                    <option>Directional</option>
-
-                    <option>Curve</option>
-
-                    <option>Generate These From Javascript Settings</option>
-
-                </select>
-
-                <label>Systemic-Motion: Position Movement Speed</label>
-
-                <div class="nested-settings">
-                 <input type="checkbox" value="fixed-texture"  /><label for="">Fixed Texture</label>
-                    <input class="hidden-form" type="checkbox" value="particle-texture"  /><label for="">Continuous Particle Birth</label>
-
-
-                <label>Birth Rate Per Second</label>
-                <input id="bps" type="range"  value="4" name="bps"  min="0" max="100"  />
-
-                <label>Max Members</label>
-                <input id="mm" type="range"  value="64" name="mm"  min="0" max="100"  />
-
-
-                <label>Decay Rate</label>
-                <input id="dr" type="range"  value="4" name="dr"  min="0" max="100"  />
-
-                <label>Max Speed</label>
-                <input id="ms" type="range"  value="64" name="ms"  min="0" max="100"  />
-
-                <label>Acceleration Model</label>
-
-                <select id="motion-models" name="motion-models">
-
-                    <option>None</option>
-
-                    <option>Directional</option>
-
-                    <option>Curve</option>
-
-                    <option>Generate These From Javascript Settings</option>
-
-                </select>
-
-
-                    <label>Formation Model</label>
-
-                    <select id="motion-models" name="motion-models">
-
-                        <option>None</option>
-
-                        <option>Directional</option>
-
-                        <option>Curve</option>
-
-                        <option>Generate These From Javascript Settings</option>
-
-                    </select>
-
-
-                <label>Birth Animation</label>
-
-                <select id="animations" name="animations">
-
-                    <option>Animation 1</option>
-
-                    <option>Animation 2</option>
-
-                    <option>Animation 3</option>
-
-                </select>
-
-
-                    <label>Life Animation</label>
-
-                    <select id="animations" name="animations">
-
-                        <option>Animation 1</option>
-
-                        <option>Animation 2</option>
-
-                        <option>Animation 3</option>
-
-                    </select>
-
-                <label>Death Animation</label>
-
-                <select id="animations" name="animations">
-
-                    <option>Animation Type 1</option>
-
-                    <option>Animation Type 2</option>
-
-                    <option>Animation Type 3</option>
-
-                </select>
-
-                </div>
-
-                </div>
-
-                <label>Motion Calls</label>
 
                 <label class="minor">Speed</label>
 
@@ -1252,6 +1148,14 @@
                 </div>
 
 
+                <label class="minor">Animations</label>
+
+
+                <div class="multi-animation-gui" id="multi-animation-gui">
+
+                </div>
+
+
                 <button  id="create_object" class="ok"  >Apply</button>
 
                 <button id="cancel_map_settings" class="cancel" >Cancel</button>
@@ -1274,7 +1178,7 @@
 
             dir:{
 
-              level:"../assets/my-levels/" ,
+              sprite:"../assets/my-sprites/" ,
                 sprite:"../assets/my-sprites/" ,
                motion:"../assets/my-motions/"
 
@@ -1282,135 +1186,47 @@
 
 
 
-          create_level : function(data, callback)
-            {
+            addSpriteGui : function(sprite, name, container){
 
+                var agui = new dat.GUI( { autoPlace: false } );
 
-                var start_level = function()
-                {
+                DatGui.get(sprite, name, agui);
 
+                $(container).append($(agui.domElement));
 
-
-                    levelMaker.htmlSettings();
-
-
-                    levelMaker.applySettings(levelMaker.settings);
-
-
-                    var _inst = Game;
-
-                    _inst.canvas = document.getElementById('myCanvas');
-
-                    _inst.ctx = _inst.canvas.getContext('2d');
-
-                    _inst.collective_forces = [];
-
-                    //2. create a GameWindow to be sychronizd
-
-                    _inst.GameWindow = new GameWindow({
-                        canvas: _inst.canvas,
-                        ctx: _inst.ctx,
-                        sprites: _inst.sprites,
-                        collective_forces: _inst.collective_forces
-                    }, function () {
-
-
-                    });
-
-
-                    levelMaker.selectedElement = levelMaker.get();
-
-                    levelMaker.selectedSprite = levelMaker.createMapSprite(levelMaker.get(), levelMaker.mouse.x, levelMaker.mouse.y);
-
-
-                    _inst.is_init = true;
-
-
-                    var usingOptFile = true;
-
-                    if (usingOptFile) {
-
-                        App.getMapElements(function () {
-
-
-                            $.each(levelMaker.mapElements, function (ix, item) {
-
-                                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
-                                    console.log('1');
-
-                                    var value = $(element).text();
-
-
-                                    levelMaker.selectedElement = levelMaker.get(value);
-
-                                }));
-
-                            });
-
-
-                        });
-
-
-                    }
-                    else {
-
-                        $.each(levelMaker.mapElements, function (ix, item) {
-
-                            App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
-                                console.log('1');
-
-                                var value = $(element).text();
-
-
-                                levelMaker.selectedElement = levelMaker.get(value);
-
-                            }));
-
-                        });
-
-
-                    }
-
-
-                    if (typeof(callback) == 'function') {
-
-                        callback();
-
-                    }
-
-                };
-
-
-
-                if(data) {
-
-
-
-                    levelMaker.restoreInstance(data.map, data.settings, function () {
-
-                        levelMaker.htmlSettings();
-
-                        levelMaker.applySettings(levelMaker.settings);
-
-                        start_level();
-
-                        create_selections();
-
-
-                    });
-
-                }
-                else
-                {
-
-
-                    start_level();
-                }
 
             },
 
+          create_sprite:function()
+          {
+
+              spriteMaker.selectedSprite = new Sprite();
+
+              spriteMaker.selectedSprite.selected_animation = new Animation();
+
+              var refresh = function()
+              {
+
+                  DatGui.get(spriteMaker.selectedSprite, 'New Sprite', DatGui.main_gui);
+
+                  DatGui.expandOnArray(spriteMaker.selectedSprite, 'animations', Animation, function(item){
+
+                      alert('item saved');
+
+                  });
+
+              };
 
 
+              refresh();
+
+
+
+
+
+
+
+          },
 
             applyRecentFiles:function()
             {
@@ -1467,20 +1283,20 @@
 
 
 
-            saveLevel:function(filename)
+            saveSprite:function(filename)
             {
 
 
 
-                var str = JSON.stringify({settings:levelMaker.settings, map:Game.sprites}, null, 2); // spacing level = 2
+                var str = JSON.stringify({settings:spriteMaker.settings, map:Game.sprites}, null, 2); // spacing sprite = 2
 
                // App.addRecentFile(this.settings.name + ".json");
 
-                App.triggerDownload(levelMaker.settings.name + ".json", str);
+                App.triggerDownload(spriteMaker.settings.name + ".json", str);
 
             },
 
-            newLevel:function()
+            newSprite:function()
             {
 
 
@@ -1488,27 +1304,27 @@
 
             },
 
-            loadLevelReady:function()
+            loadSpriteReady:function()
             {
 
 
-                    $('#level-file-input').change(function(evt){
+                    $('#sprite-file-input').change(function(evt){
 
 
 
-                        levelMaker.getRawLevelFile(this, function(result){
+                        spriteMaker.getRawSpriteFile(this, function(result){
 
 
-                            levelMaker.level_file_str = result;
+                            spriteMaker.sprite_file_str = result;
 
-                            levelMaker.applySettings(result);
+                            spriteMaker.applySettings(result);
 
-                            var level = JSON.parse(result);
-
-
+                            var sprite = JSON.parse(result);
 
 
-                            App.create_level(level);
+
+
+                            App.create_sprite(sprite);
 
 
 
@@ -1517,10 +1333,10 @@
 
                     });
 
-                    $('#load-level').click(function(){
+                    $('#load-sprite').click(function(){
 
 
-                        $('#level-file-input').click();
+                        $('#sprite-file-input').click();
 
                     });
 
@@ -1542,7 +1358,7 @@
             getMapElements:function(callback)
             {
 
-                $.getJSON("http://localhost:3137/assets/system-data/level-maker-2d-options.json", function(data){
+                $.getJSON("http://localhost:3137/assets/system-data/sprite-maker-2d-options.json", function(data){
 
                     var myObject = data;
 
@@ -1567,7 +1383,7 @@
 
                     }
 
-                    levelMaker.mapElements = myObject.elements;
+                    spriteMaker.mapElements = myObject.elements;
 
 
                     if(typeof(callback) == 'function')
@@ -1638,7 +1454,7 @@
                  *
                  *****************************************************/
 
-                var pathPref = levelMaker.url_prefix;
+                var pathPref = spriteMaker.url_prefix;
 
                 //add mapItems
 
@@ -1654,23 +1470,23 @@
                 //5. boss points
 
 
-                //6. portals :: of level
+                //6. portals :: of sprite
 
 
                 //7. portals::end portal
 
 
 
-                levelMaker.MapElement('ground', pathPref + 'ground.png', {x: 100, y: 100}, {x:  Math.round(40), y:  Math.round(40)});
-                levelMaker.MapElement('platform', pathPref + 'mushplat.png', {x: 490, y: 299}, {x: Math.round(490 / 4), y: Math.round(299 / 4)});
-                levelMaker.MapElement('prop', pathPref + 'prop.png', {x: 550, y: 400}, {x: Math.round(550 / 4), y: Math.round(400 / 4)});
+                spriteMaker.MapElement('ground', pathPref + 'ground.png', {x: 100, y: 100}, {x:  Math.round(40), y:  Math.round(40)});
+                spriteMaker.MapElement('platform', pathPref + 'mushplat.png', {x: 490, y: 299}, {x: Math.round(490 / 4), y: Math.round(299 / 4)});
+                spriteMaker.MapElement('prop', pathPref + 'prop.png', {x: 550, y: 400}, {x: Math.round(550 / 4), y: Math.round(400 / 4)});
 
 
 
-                var saveLevel = function ()
+                var saveSprite = function ()
                 {
 
-                    $.post('/levelmaker', level, function (data) {
+                    $.post('/spritemaker', sprite, function (data) {
 
 
                         console.log("response:" + JSON.stringify(data));
@@ -1720,17 +1536,17 @@
                 lib.InputEvents.extend('leftclick', function (x, y) {
 
 
-                    levelMaker.leftClick(x,y);
+                    spriteMaker.leftClick(x,y);
 
-                    levelMaker.mouse.down = true;
+                    spriteMaker.mouse.down = true;
 
                 }, function (x, y) {
 
                     //button was released
 
-                    levelMaker.deselectAll();
+                    spriteMaker.deselectAll();
 
-                    levelMaker.mouse.down = false;
+                    spriteMaker.mouse.down = false;
 
                 });
                 //2DO add this to the main engine: don't need a context menu
@@ -1740,7 +1556,7 @@
                container.oncontextmenu = function (e) {
 
 
-                   App.placeRCMenu(levelMaker.mouse.x, levelMaker.mouse.y - 40, true);
+                   App.placeRCMenu(spriteMaker.mouse.x, spriteMaker.mouse.y - 40, true);
 
                     if(!App.DEVMODE)
                     {
@@ -1757,7 +1573,7 @@
 
                 lib.InputEvents.extend('rightclick', function (x, y) {
 
-                    levelMaker.rightClick(x, y);
+                    spriteMaker.rightClick(x, y);
                 }, function (x, y) {
 
                     //button was released
@@ -1765,12 +1581,12 @@
                 });
                 lib.InputEvents.extend('mousemove', function (x, y) {
 
-                    levelMaker.mouse.x = x;
-                    levelMaker.mouse.y = y;
+                    spriteMaker.mouse.x = x;
+                    spriteMaker.mouse.y = y;
 
-                    levelMaker.moveSelected(levelMaker.mouse.x, levelMaker.mouse.y);
+                    spriteMaker.moveSelected(spriteMaker.mouse.x, spriteMaker.mouse.y);
 
-                    levelMaker.hoverSelect(levelMaker.mouse.x, levelMaker.mouse.y);
+                    spriteMaker.hoverSelect(spriteMaker.mouse.x, spriteMaker.mouse.y);
 
 
                 });
@@ -1783,9 +1599,9 @@
 
                 var sgui = new dat.GUI( { autoPlace: false } );
 
-                sgui.add(levelMaker.assembled_sprite.speed, 'x').min(-50).max(50);
-                sgui.add(levelMaker.assembled_sprite.speed, 'y').min(-50).max(50);
-                sgui.add(levelMaker.assembled_sprite.speed, 'z').min(-50).max(50);
+                sgui.add(spriteMaker.assembled_sprite.speed, 'x').min(-50).max(50);
+                sgui.add(spriteMaker.assembled_sprite.speed, 'y').min(-50).max(50);
+                sgui.add(spriteMaker.assembled_sprite.speed, 'z').min(-50).max(50);
 
 
                 $('.motion-speed-gui').append($(sgui.domElement));
@@ -1793,9 +1609,9 @@
                 var agui = new dat.GUI( { autoPlace: false } );
 
 
-                agui.add(levelMaker.assembled_sprite.accel, 'x').min(-50).max(50);
-                agui.add(levelMaker.assembled_sprite.accel, 'y').min(-50).max(50);
-                agui.add(levelMaker.assembled_sprite.accel, 'z').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.accel, 'x').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.accel, 'y').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.accel, 'z').min(-50).max(50);
 
 
                 $('.motion-accel-gui').append($(agui.domElement));
@@ -1803,18 +1619,18 @@
 
                 var rsgui = new dat.GUI( { autoPlace: false } );
 
-                rsgui.add(levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
-                rsgui.add(levelMaker.assembled_sprite.rot_speed, 'y').min(-50).max(50);
-                rsgui.add(levelMaker.assembled_sprite.rot_speed, 'z').min(-50).max(50);
+                rsgui.add(spriteMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
+                rsgui.add(spriteMaker.assembled_sprite.rot_speed, 'y').min(-50).max(50);
+                rsgui.add(spriteMaker.assembled_sprite.rot_speed, 'z').min(-50).max(50);
 
 
                 $('.rotation-speed-gui').append($(rsgui.domElement));
 
                 var agui = new dat.GUI( { autoPlace: false } );
 
-                agui.add(levelMaker.assembled_sprite.rot_accel, 'x').min(-50).max(50);
-                agui.add(levelMaker.assembled_sprite.rot_accel, 'y').min(-50).max(50);
-                agui.add(levelMaker.assembled_sprite.rot_accel, 'z').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.rot_accel, 'x').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.rot_accel, 'y').min(-50).max(50);
+                agui.add(spriteMaker.assembled_sprite.rot_accel, 'z').min(-50).max(50);
 
                 $('.rotation-accel-gui').append($(agui.domElement));
 
@@ -1916,17 +1732,17 @@
 
             $('#apply_map_settings').click(function(){
 
-                levelMaker.applySettings();
+                spriteMaker.applySettings();
 
-                alert('applied map settings: with :' + levelMaker.settings.name);
+                alert('applied map settings: with :' + spriteMaker.settings.name);
 
 
             });
 
-            $('#new-level').click(function(){
+            $('#new-sprite').click(function(){
 
 
-                App.newLevel();
+                App.newSprite();
 
 
             });
@@ -1934,7 +1750,7 @@
 
             $('.save-map-options').click(function(){
 
-                var data = App.MapOptions(levelMaker.mapElements, levelMaker.settings);
+                var data = App.MapOptions(spriteMaker.mapElements, spriteMaker.settings);
 
                 App.saveMapOptions(JSON.stringify(data), function(){
 
@@ -1946,7 +1762,7 @@
             });
 
 
-            App.loadLevelReady();
+            App.loadSpriteReady();
 
             $('#auto-place').on("click", function(e){
 
@@ -1956,13 +1772,13 @@
                {
                    alert('got the up class');
 
-                   levelMaker.leftClickExtra = function() {
+                   spriteMaker.leftClickExtra = function() {
 
-                       var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                       var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                       levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true)
+                       spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true)
 
-                       window.clearInterval(levelMaker.blink);
+                       window.clearInterval(spriteMaker.blink);
 
                    };
 
@@ -1976,13 +1792,13 @@
 
 
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true, false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true, false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -1993,13 +1809,13 @@
                 if($('.left').data('on') == 'on')
                 {
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2011,13 +1827,13 @@
                 {
 
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2028,13 +1844,13 @@
                 if($('.down').data('on') == 'on')
                 {
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2045,13 +1861,13 @@
                 if($('.down-right').data('on') == 'on')
                 {
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true, false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, true, false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2062,13 +1878,13 @@
                 if($('.right').data('on') == 'on')
                 {
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, false, false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), false, false, false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2079,14 +1895,14 @@
                 if($('.up-right').data('on') == 'on')
                 {
 
-                    levelMaker.leftClickExtra = function(){
+                    spriteMaker.leftClickExtra = function(){
 
-                        var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                        var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
 
-                    levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true, false, false, true)
+                    spriteMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true, false, false, true)
 
-                        window.clearInterval(levelMaker.blink);
+                        window.clearInterval(spriteMaker.blink);
 
                     };
 
@@ -2101,9 +1917,9 @@
                 {
 
 
-                    levelMaker.blink = window.setInterval(function(){
+                    spriteMaker.blink = window.setInterval(function(){
 
-                        levelMaker.hover_selection_sprite.active = levelMaker.hover_selection_sprite.active ? false : true;
+                        spriteMaker.hover_selection_sprite.active = spriteMaker.hover_selection_sprite.active ? false : true;
 
                     }, 350);
 
@@ -2114,7 +1930,7 @@
 
             $('.delete').on("click", function(e){
 
-                levelMaker.removeLast();
+                spriteMaker.removeLast();
 
                 e.preventDefault();
 
@@ -2135,7 +1951,7 @@
 
                 var id = $(this).attr('id').replace('-', '_');
 
-                var x = 0, y = 0 + levelMaker.topScroll;
+                var x = 0, y = 0 + spriteMaker.topScroll;
 
                 App.dialog(App._UI_OPTION_MAP[id],
                         x, y, function () {
@@ -2147,7 +1963,7 @@
             var flipSelectedX = function ()
             {
 
-                var s = levelMaker.getSelected();
+                var s = spriteMaker.getSelected();
 
 
                 if (s)
@@ -2206,9 +2022,9 @@
             update:function()
             {
 
-                this.WIDTH = levelMaker.settings.levelSizeX;
+                this.WIDTH = spriteMaker.settings.spriteSizeX;
 
-                this.HEIGHT = levelMaker.settings.levelSizeY;
+                this.HEIGHT = spriteMaker.settings.spriteSizeY;
 
                 if(!this.is_init)
                 {
@@ -2238,16 +2054,16 @@
             init:function(callback)
             {
 
-                App.applyRecentFiles();
+             //   App.applyRecentFiles();
 
-                var filename = App.recent_files[App.recent_files.length - 1];
+              //  var filename = App.recent_files[App.recent_files.length - 1];
 
 
-                App.create_level(false, function(){
+                App.create_sprite(false, function(){
 
                     if(typeof(callback) == 'function')
                     {
-                        callback();
+                     //   callback();
 
                     }
 
@@ -2256,7 +2072,7 @@
 
                 $('#settings-space input').change(function(){
 
-                   levelMaker.applySettings();
+                   spriteMaker.applySettings();
 
                 });
 
@@ -2264,7 +2080,7 @@
 
                 $('#create_map_object').click(function(){
 
-                    levelMaker.showObjectDialog(this);
+                    spriteMaker.showObjectDialog(this);
 
                 });
 
@@ -2301,14 +2117,14 @@
 
                     };
 
-                    remove(Game.sprites, levelMaker.selection_sprite);
+                    remove(Game.sprites, spriteMaker.selection_sprite);
 
-                    remove(Game.sprites, levelMaker.hover_selection_sprite);
+                    remove(Game.sprites, spriteMaker.hover_selection_sprite);
 
 
                     $.each(sprites, function(ix, item){
 
-                        if(item == levelMaker.selection_sprite || item == levelMaker.hover_selection_sprite)
+                        if(item == spriteMaker.selection_sprite || item == spriteMaker.hover_selection_sprite)
                         {
                             alert('removing sprite');
 
@@ -2319,13 +2135,13 @@
                     });
 
 
-                    $(this).prop('download', levelMaker.settings.name + '.json');
+                    $(this).prop('download', spriteMaker.settings.name + '.json');
 
                     $(this).prop('target', '_blank');
 
-                    $(this).prop('href', "data:text/json," + jstr(levelMaker.MapData(Game.sprites, levelMaker.settings)));
+                    $(this).prop('href', "data:text/json," + jstr(spriteMaker.MapData(Game.sprites, spriteMaker.settings)));
 
-                    $(this).prop('name', levelMaker.settings.name+ '.json');
+                    $(this).prop('name', spriteMaker.settings.name+ '.json');
 
                     $.fileDownload($(this).prop('href'), {
                         preparingMessageHtml: "We are preparing your report, please wait...",
@@ -2354,8 +2170,8 @@
          ************/
 
         /***********************************************
-         * levelMaker
-         * extends functionality of qui, to allow building of game levels
+         * spriteMaker
+         * extends functionality of qui, to allow building of game sprites
          * -map out sprites of various types on the canvas
          * -save them to a json file (2do)
          *********************************************/
@@ -2372,7 +2188,7 @@
 
 
 
-        function LevelMaker(filename, settings)
+        function SpriteMaker(filename, settings)
         {
 
 
@@ -2392,17 +2208,17 @@
 
                 settings:settings || {
 
-                    name:filename || "myLevel",
+                    name:filename || "mySprite",
 
-                    description:"the default level for our game",
+                    description:"the default sprite for our game",
 
                     pixelSnap:10,
 
-                    levelSizeX:5000,
+                    spriteSizeX:5000,
 
-                    levelSizeY:5000,
+                    spriteSizeY:5000,
 
-                    levelSizeZ:0,
+                    spriteSizeZ:0,
 
                     game_scale:2.0
 
@@ -2414,7 +2230,7 @@
 
                     if(typeof(settings) == "object")
                     {
-                        levelMaker.settings = settings;
+                        spriteMaker.settings = settings;
 
                     }
 
@@ -2474,7 +2290,7 @@
                 removeLast:function()
                 {
 
-                    var number = levelMaker.lastPlantedCountRecordArray[levelMaker.lastPlantedCountRecordArray.length -1];
+                    var number = spriteMaker.lastPlantedCountRecordArray[spriteMaker.lastPlantedCountRecordArray.length -1];
 
                     for(var x = 0; x < number; x++) {
 
@@ -2511,7 +2327,7 @@
 
                 htmlSettings:function()
                 {
-                    var obj = levelMaker.settings;
+                    var obj = spriteMaker.settings;
 
                     $('#map_name').val(obj.name);
                     $('#map_description').val(obj.description);
@@ -2521,8 +2337,8 @@
 
                     $('#map_snap_size').val(obj.pixelSnap + 'px');
 
-                    $('#map_level_size_x').val(obj.levelSizeX);
-                    $('#map_level_size_y').val(obj.levelSizeX);
+                    $('#map_sprite_size_x').val(obj.spriteSizeX);
+                    $('#map_sprite_size_y').val(obj.spriteSizeX);
 
                     $('#map_game_scale').val(obj.game_scale);
 
@@ -2550,23 +2366,23 @@
 
                         data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
 
-                        data.levelSizeX = parseInt($('#map_level_size_x').val());
+                        data.spriteSizeX = parseInt($('#map_sprite_size_x').val());
 
-                        data.levelSizeY = parseInt($('#map_level_size_y').val());
+                        data.spriteSizeY = parseInt($('#map_sprite_size_y').val());
 
 
 
                     }
 
-                    levelMaker.settings = data;
+                    spriteMaker.settings = data;
 
-                    $('.level-maker-canvas').width(data.levelSizeX);
-                    $('.level-maker-canvas').height(data.levelSizeY);
+                    $('.sprite-maker-canvas').width(data.spriteSizeX);
+                    $('.sprite-maker-canvas').height(data.spriteSizeY);
 
 
-                    Game.canvas.width = data.levelSizeX;
+                    Game.canvas.width = data.spriteSizeX;
 
-                    Game.canvas.height = data.levelSizeY;
+                    Game.canvas.height = data.spriteSizeY;
 
 
 
@@ -2584,7 +2400,7 @@
                 objectMakerFormEvents:function()
                 {
 
-                    levelMaker.assembled_sprite = new Sprite();
+                    spriteMaker.assembled_sprite = new Sprite();
 
                     App.setMotionVectorGui();
 
@@ -2615,7 +2431,7 @@
 
                         //alert('Creating Map Object');
 
-                        levelMaker.selected_image_src = image_data;
+                        spriteMaker.selected_image_src = image_data;
 
                         console.log('Making objects in create event');
 
@@ -2625,13 +2441,13 @@
                         args.size = new Vector3(w, h, 0);
 
 
-                        levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                        spriteMaker.selectedSprite = spriteMaker.MapElement(name, spriteMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
                             args );
 
-                        levelMaker.selectedSprite.img.onload = function()
+                        spriteMaker.selectedSprite.img.onload = function()
                         {
 
-                            levelMaker.addLevelObjectToUI( levelMaker.selectedSprite);
+                            spriteMaker.addSpriteObjectToUI( spriteMaker.selectedSprite);
 
                         }
 
@@ -2656,7 +2472,7 @@
                             fh  =  parseFloat($('#frameheight').val());
 
 
-                        levelMaker.sizeImage(fx, fy, w, h, fw, fh);
+                        spriteMaker.sizeImage(fx, fy, w, h, fw, fh);
 
 
                     });
@@ -2719,7 +2535,7 @@
                     reader.addEventListener("load", function () {
                         preview.src = reader.result;
 
-                        levelMaker.selected_image_src = preview.src;
+                        spriteMaker.selected_image_src = preview.src;
 
                         $('#image_data').val(reader.result);
 
@@ -2733,7 +2549,7 @@
                             var x = 0, y = 0;
 
 
-                            levelMaker.sizeImage(x, y, mapWidth, mapHeight,  mapWidth, mapHeight);
+                            spriteMaker.sizeImage(x, y, mapWidth, mapHeight,  mapWidth, mapHeight);
 
                             if(typeof(callback) == 'function')
                             {
@@ -2753,7 +2569,7 @@
                 },
 
              
-                getRawLevelFile:function(input, callback)
+                getRawSpriteFile:function(input, callback)
                 {
 
                     var filename = $(input).val().split('\\').pop();
@@ -2804,14 +2620,14 @@
                 },
                 scrollAdjust: function () {
                     var winheight = window.innerHeight || (document.documentElement || document.body).clientHeight
-                    var docheight = levelMaker.getDocHeight();
+                    var docheight = spriteMaker.getDocHeight();
                     var scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
                     var trackLength = docheight - winheight
                     var pctScrolled = Math.floor(scrollTop / trackLength * 100) // gets percentage scrolled (ie: 80 or NaN if tracklength == 0)
                     console.log(pctScrolled + '% scrolled');
 
 
-                    levelMaker.topScroll = Game.canvas.height * (pctScrolled / 100);
+                    spriteMaker.topScroll = Game.canvas.height * (pctScrolled / 100);
 
                     return Game.canvas.height * (pctScrolled / 100);
 
@@ -2865,7 +2681,7 @@
                 selectedSprite: false,
                 selectedTag: "",
                 selectedElement: {},
-                levelObjects: [],
+                spriteObjects: [],
                 deselectAll: function ()
                 {
 
@@ -2903,9 +2719,9 @@
                     sprite.position.x = Math.floor(x - sprite.size.x / 2);
                     sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                    sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+                    sprite.position.x = sprite.position.x - ( sprite.position.x % spriteMaker.settings.pixelSnap);
 
-                    sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+                    sprite.position.y = sprite.position.y - ( sprite.position.y % spriteMaker.settings.pixelSnap);
 
 
                 },
@@ -2918,11 +2734,11 @@
                         if (item.selected)
                         {
 
-                            var x1 = x - (x% levelMaker.settings.pixelSnap) ,
-                                y1 = y - (y  % levelMaker.settings.pixelSnap);
+                            var x1 = x - (x% spriteMaker.settings.pixelSnap) ,
+                                y1 = y - (y  % spriteMaker.settings.pixelSnap);
 
 
-                            levelMaker.centerPos(item, x1, y1);
+                            spriteMaker.centerPos(item, x1, y1);
 
                         }
 
@@ -2952,9 +2768,9 @@
 
                     var notSelection = function(obj)
                     {
-                        return obj !== levelMaker.hover_selection_sprite &&
+                        return obj !== spriteMaker.hover_selection_sprite &&
 
-                            obj !== levelMaker.selection_sprite;
+                            obj !== spriteMaker.selection_sprite;
 
                     };
 
@@ -2965,7 +2781,7 @@
 
 
                         if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
-                            y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
+                            y > item.position.y && y < item.position.y + item.size.y + $('.sprite-maker-canvas').offset().top)
                         {
 
                             item.selected = true;
@@ -2977,9 +2793,9 @@
                     if (!selection)
                     {
 
-                        levelMaker.plantMapSprite(levelMaker.selectedElement, x - (x % levelMaker.settings.pixelSnap), y - (y % levelMaker.settings.pixelSnap))
+                        spriteMaker.plantMapSprite(spriteMaker.selectedElement, x - (x % spriteMaker.settings.pixelSnap), y - (y % spriteMaker.settings.pixelSnap))
 
-                        levelMaker.lastPlantedCountRecordArray.push(1);
+                        spriteMaker.lastPlantedCountRecordArray.push(1);
                     }
 
                 },
@@ -3001,7 +2817,7 @@
                     Quazar.each(Game.sprites, function (ix, item) {
 
                         if ( x > item.position.x && x < item.position.x + item.size.x &&
-                            y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
+                            y > item.position.y && y < item.position.y + item.size.y + $('.sprite-maker-canvas').offset().top)
                         {
 
                             //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
@@ -3011,8 +2827,8 @@
                     });
 
 
-                    if (!selection && !(levelMaker.mouse.down) ) {
-                        levelMaker.deselectAll()
+                    if (!selection && !(spriteMaker.mouse.down) ) {
+                        spriteMaker.deselectAll()
                     }
                     ;
 
@@ -3041,9 +2857,9 @@
                     var x = Math.floor(x - object.size.x / 2);
                     var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
 
-                    x = x - ( object.position.x % levelMaker.settings.pixelSnap);
+                    x = x - ( object.position.x % spriteMaker.settings.pixelSnap);
 
-                    y = y - ( object.position.y % levelMaker.settings.pixelSnap);
+                    y = y - ( object.position.y % spriteMaker.settings.pixelSnap);
 
 
                     return {size: new Vector3(object.size.x, object.size.y, 0), position: {x: x, y: y}};
@@ -3056,7 +2872,7 @@
                     // console.log("Selected Element:" + JSON.stringify(mapElement));
                     var img = mapElement.img;
                     console.log("Img src:" + img.src);
-                    var sprite = new Sprite('MapElement', 'A level-builder element');
+                    var sprite = new Sprite('MapElement', 'A sprite-builder element');
 
                     sprite.active = true;
 
@@ -3076,9 +2892,9 @@
                     sprite.position.x = Math.floor(x - sprite.size.x / 2);
                     sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                    sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+                    sprite.position.x = sprite.position.x - ( sprite.position.x % spriteMaker.settings.pixelSnap);
 
-                    sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+                    sprite.position.y = sprite.position.y - ( sprite.position.y % spriteMaker.settings.pixelSnap);
 
                     this.selectedSprite = sprite;
 
@@ -3094,14 +2910,14 @@
                     //  console.log("Img src:" + img.src);
 
 
-                    if(levelMaker.assembled_sprite.speed)
+                    if(spriteMaker.assembled_sprite.speed)
                     {
 
-                        alert(JSON.stringify(levelMaker.assembled_sprite.speed));
+                        alert(JSON.stringify(spriteMaker.assembled_sprite.speed));
 
                     }
 
-                    var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(levelMaker.assembled_sprite)));
+                    var sprite = new Sprite('MapElement', 'A sprite-builder element', JSON.parse(JSON.stringify(spriteMaker.assembled_sprite)));
 
                     sprite.active = true;
 
@@ -3127,9 +2943,9 @@
                     sprite.position.x = Math.floor(x - sprite.size.x / 2);
                     sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                    sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+                    sprite.position.x = sprite.position.x - ( sprite.position.x % spriteMaker.settings.pixelSnap);
 
-                    sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+                    sprite.position.y = sprite.position.y - ( sprite.position.y % spriteMaker.settings.pixelSnap);
 
                     this.selectedSprite = sprite;
 
@@ -3143,7 +2959,7 @@
                 simulateVerticalMouseMove: function (top) {
 
 
-                    levelMaker.moveSelected(levelMaker.mouse.x, top);
+                    spriteMaker.moveSelected(spriteMaker.mouse.x, top);
                 },
 
                 placeGroup : function(x1, y1, dist, n, north, south, east, west)
@@ -3156,24 +2972,24 @@
 
                         var x2 = 0, y2 = 0;
 
-                        if(east){    x2 = x * levelMaker.selectedElement.mapSize.x  * -1; }
+                        if(east){    x2 = x * spriteMaker.selectedElement.mapSize.x  * -1; }
 
-                        if(west){    x2  = x * levelMaker.selectedElement.mapSize.x   }
+                        if(west){    x2  = x * spriteMaker.selectedElement.mapSize.x   }
 
-                        if(north){    y2 =  x * levelMaker.selectedElement.mapSize.y  * -1 }
+                        if(north){    y2 =  x * spriteMaker.selectedElement.mapSize.y  * -1 }
 
-                        if(south){    y2 =  x * levelMaker.selectedElement.mapSize.y; }
+                        if(south){    y2 =  x * spriteMaker.selectedElement.mapSize.y; }
 
-                        levelMaker.plantMapSprite(levelMaker.selectedElement, x1+ x2, y1+y2);
+                        spriteMaker.plantMapSprite(spriteMaker.selectedElement, x1+ x2, y1+y2);
 
-                        levelMaker.lastPlantedCountRecordArray.push(n - 1);
+                        spriteMaker.lastPlantedCountRecordArray.push(n - 1);
 
                     }
 
                 },
 
 
-                addLevelObjectToUI:function(item)
+                addSpriteObjectToUI:function(item)
                 {
 
                     App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
@@ -3183,7 +2999,7 @@
 
                         // alert('click on:' + value);
 
-                        levelMaker.selectedElement = levelMaker.get(value);
+                        spriteMaker.selectedElement = spriteMaker.get(value);
 
                     }));
 
@@ -3216,7 +3032,7 @@
 
         alert('opening:' + filename);
 
-        var levelMaker = LevelMaker(filename);
+        var spriteMaker = SpriteMaker(filename);
 
 
 
@@ -3224,7 +3040,7 @@
         {
 
 
-            var pathPref = levelMaker.url_prefix;
+            var pathPref = spriteMaker.url_prefix;
 
 
 
@@ -3239,26 +3055,26 @@
 
 
 
-            levelMaker.hover_selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+            spriteMaker.hover_selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
 
-            levelMaker.discluded_sprites.push(levelMaker.hover_selection_sprite);
-
-            var fs = new Size(191, 192);
-
-            levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
-
-            levelMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+            spriteMaker.discluded_sprites.push(spriteMaker.hover_selection_sprite);
 
             var fs = new Size(191, 192);
 
-            levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
+            spriteMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+            spriteMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+
+            var fs = new Size(191, 192);
+
+            spriteMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
 
 
-            levelMaker.discluded_sprites.push(levelMaker.selection_sprite);
+            spriteMaker.discluded_sprites.push(spriteMaker.selection_sprite);
 
-            Game.sprites.push(levelMaker.selection_sprite);
+            Game.sprites.push(spriteMaker.selection_sprite);
 
-            Game.sprites.push(levelMaker.hover_selection_sprite);
+            Game.sprites.push(spriteMaker.hover_selection_sprite);
 
 
         };
@@ -3280,10 +3096,10 @@
 
 
             window.addEventListener("scroll", function () {
-               var topScroll = levelMaker.scrollAdjust();
+               var topScroll = spriteMaker.scrollAdjust();
 
 
-                levelMaker.simulateVerticalMouseMove(topScroll);
+                spriteMaker.simulateVerticalMouseMove(topScroll);
 
             }, false);
 
@@ -3315,7 +3131,7 @@
 
 
                 var x = Math.floor((aSprite.position.x + aSprite.size.x / 2) - cSprite.size.x / 2),
-                    y = Math.floor(aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);
+                    y = Math.floor((aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);
 
                 cSprite.position.x = x;
                 cSprite.position.y = y;
@@ -3325,49 +3141,48 @@
 
             create_selections();
 
-            console.log(levelMaker.selection_sprite);
+            console.log(spriteMaker.selection_sprite);
+
+            if(false)
+            {
 
             window.setInterval(function(){
 
 
 
-                if(!levelMaker.blink){  levelMaker.hover_selection_sprite.active = false; }
-                levelMaker.selection_sprite.active = false;
+                if(!spriteMaker.blink){  spriteMaker.hover_selection_sprite.active = false; }
+                spriteMaker.selection_sprite.active = false;
 
 
                 var notSelection = function(obj)
                 {
-                    return obj !== levelMaker.hover_selection_sprite &&
+                    return obj !== spriteMaker.hover_selection_sprite &&
 
-                        obj !== levelMaker.selection_sprite;
+                        obj !== spriteMaker.selection_sprite;
 
                 };
 
 
-                var x = levelMaker.mouse.x, y = levelMaker.mouse.y;
+                var x = spriteMaker.mouse.x, y = spriteMaker.mouse.y;
 
                 var hoverSelect = false;
 
                 Quazar.each(Game.sprites, function (ix, item) {
 
                     if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
-                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
+                        y > item.position.y && y < item.position.y + item.size.y + $('.sprite-maker-canvas').offset().top)
                     {
 
                       //  console.log('Sprite Selected!');
 
-                        centerSizeSpriteToSprite(levelMaker.selection_sprite, item, item.size.x + 20, item.size.y + 20);
+                        centerSizeSpriteToSprite(spriteMaker.selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
-                        centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
+                        centerSizeSpriteToSprite(spriteMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
 
-                        levelMaker.selection_sprite.active = true;
+                        spriteMaker.selection_sprite.active = true;
 
-                        levelMaker.hover_selection_sprite.active = true;
-
-                        levelMaker.selection_sprite.size = new Vector3(item.size.x, item.size.y, 0);
-
-                        levelMaker.hover_selection_sprite.size  = new Vector3(item.size.x, item.size.y, 0);
+                        spriteMaker.hover_selection_sprite.active = true;
 
                         hoverSelect = true;
 
@@ -3380,15 +3195,15 @@
                 if(!hoverSelect)
                 {
 
-                    var item = {position:{x:levelMaker.mouse.x, y:levelMaker.mouse.y, z:0}, size:levelMaker.selectedSprite.size};
+                    var item = {position:{x:spriteMaker.mouse.x, y:spriteMaker.mouse.y, z:0}, size:spriteMaker.selectedSprite.size};
 
-                        item = levelMaker.simpleMapObject(item, levelMaker.mouse.x, levelMaker.mouse.y);
+                        item = spriteMaker.simpleMapObject(item, spriteMaker.mouse.x, spriteMaker.mouse.y);
 
-                        centerSizeSpriteToSprite(levelMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
+                        centerSizeSpriteToSprite(spriteMaker.hover_selection_sprite, item, item.size.x + 20, item.size.y + 20);
 
-                        if (!levelMaker.blink) {
+                        if (!spriteMaker.blink) {
 
-                            levelMaker.hover_selection_sprite.active = true
+                            spriteMaker.hover_selection_sprite.active = true
                         }
                         ;
 
@@ -3396,7 +3211,12 @@
 
             }, 10);
 
+
+            }
+
         });
+
+
         /********************************
          * Game Init / ready
          *******************************/
@@ -3422,14 +3242,14 @@
 
             Game.init(function(){
                 App.setInputEvents(lib);
-                levelMaker.objectMakerFormEvents();
+                spriteMaker.objectMakerFormEvents();
 
-                animate();
+               animate();
             });
 
 
 
-            // levelMaker.save();
+            // spriteMaker.save();
 
             // DatGui.get(new Animation());
 
@@ -3523,7 +3343,7 @@
 
                             $('.free-select').hide('slow');
 
-                            App.placeRCMenu(levelMaker.mouse.x, levelMaker.mouse.y - $(Game.canvas).offset().top  + levelMaker.topScroll, false);
+                            App.placeRCMenu(spriteMaker.mouse.x, spriteMaker.mouse.y - $(Game.canvas).offset().top  + spriteMaker.topScroll, false);
                         }
 
 
