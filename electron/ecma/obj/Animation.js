@@ -10,21 +10,16 @@ class Animation {
         args = args || {};
 
 
+
         var _anime = this;
 
 
-        Quazar.each(args, function (ix, item) {
+        this.data = {
 
-            if (ix !== 'parent' ) {
-                _anime[ix] = item;
-            }
+          name:$Q.getArg(args, 'name', false),
 
-
-        });
-
-        this.name =  $Q.getArg(args, 'name', false);
-
-        this.description =  $Q.getArg(args, 'description', '_blank');
+            description :  $Q.getArg(args, 'description', '_blank')
+        };
 
 
      this.frames = $Q.getArg(args, 'frames', []);
@@ -52,12 +47,12 @@ class Animation {
         this.cix = 0;
 
 
-        this.frameSize = $Q.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+        this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
 
-        this.frameBounds = $Q.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+        this.frameBounds = this.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
 
-        this.frameOffset = $Q.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
+        this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
 
         this.apply2DFrames(args.parent || {});
@@ -75,14 +70,14 @@ class Animation {
         this.selected_frame = this.frames[0];
 
 
-        this.earlyTerm = $Q.getArg(args, 'earlyTerm', false);
+        this.earlyTerm = this.getArg(args, 'earlyTerm', false);
 
-        this.hang =$Q.getArg(args, 'hang', false);
+        this.hang =this.getArg(args, 'hang', false);
 
 
         this.timer = 0;
 
-
+       // alert('construct complete');
 
 
     }
@@ -163,6 +158,8 @@ class Animation {
                     }
                 }
 
+              //  alert('adding frame');
+
             }
 
         }
@@ -178,7 +175,7 @@ class Animation {
 
     }
 
-    reset() //special reset function:: frames are re-rendered each reset()
+    resetFrames() //special reset function:: frames are re-rendered each reset()
     {
 
         //1. reset the GameImage
@@ -186,7 +183,7 @@ class Animation {
 
         //2. apply the frames
 
-        this.apply2DFrames(this.parent);
+        this.apply2DFrames();
 
     }
 
@@ -199,6 +196,8 @@ class Animation {
 
     reset()
 {
+
+    this.resetFrames();
 
     this.cix = 0;
 
@@ -228,6 +227,8 @@ class Animation {
             }
             else
             {
+
+
                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
             }
 

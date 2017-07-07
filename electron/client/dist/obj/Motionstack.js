@@ -9,61 +9,148 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *
  */
 
-var MotionStack = function () {
-        function MotionStack() {
-                _classCallCheck(this, MotionStack);
+var Motionstack = function () {
+        function Motionstack(args) {
+                _classCallCheck(this, Motionstack);
 
-                this.tweens = [];
+                this.object_id = this.getArg(args, 'object_id', this.getArg(args, 'object_ids', false));
+
+                if (this.object_id instanceof Array) {} else {
+                        this.object_id = [this.object_id];
+                }
+
+                this.distance = this.getArg(args, 'distance', this.getArg(args, 'distances', false));
+
+                this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
+
+                this.curvesList = this.curvesObject();
+
+                this.name = this.getArg(args, 'name', false);
+
+                this.curveString = this.getArg(args, 'curveString', false);
+
+                this.line = this.getArg(args, 'line', false);
+
+                this.dispersionAngle = this.getArg(args, 'dispersionAngle', false);
+
+                this.duration = this.getArg(args, 'duration', false);
+
+                this.delay = this.getArg(args, 'delay', false);
+
+                this.delayPerMember = this.getArg(args, 'delayPerMember', false);
         }
 
-        _createClass(MotionStack, [{
-                key: 'getCurveFromKey',
-                value: function getCurveFromKey(key) {
+        _createClass(Motionstack, [{
+                key: 'getArg',
+                value: function getArg(args, key, fallback) {
 
-                        var keys = key.split('.');
+                        if (args.hasOwnProperty(key)) {
 
-                        var curves = JSON.parse(JSON.stringify(this.Curves()));
-
-                        for (var x in keys) {
-
-                                if (curves[x]) {
-                                        curves = curves[x];
-                                }
+                                return args[key];
+                        } else {
+                                return fallback;
                         }
-
-                        return curves;
                 }
         }, {
-                key: 'custom_tween',
-                value: function custom_tween(args) {
+                key: 'curvesObject',
+                value: function curvesObject() {
 
-                        return args;
+                        var c = [];
+
+                        Quazar.each(TWEEN.Easing, function (ix, easing) {
+
+                                Quazar.each(easing, function (iy, easeType) {
+
+                                        if (['in', 'out', 'inout'].indexOf(iy.toLowerCase()) >= 0) {
+
+                                                c.push(ix + "_" + iy);
+                                        }
+                                });
+                        });
+
+                        return c;
                 }
         }, {
-                key: 'add',
-                value: function add(args) {
+                key: 'setCurve',
+                value: function setCurve(c) {
 
-                        // create the tween
+                        var cps = c.split('_');
 
+                        var s1 = cps[0],
+                            s2 = cps[1];
 
-                        var property = Quazar.getArg(args, 'prop', Quazar.getArg(args, 'property', false));
+                        var curve = TWEEN.Easing.Quadratic.InOut;
 
-                        var target = Quazar.getArg(args, 'target', false);
-                        var object = Quazar.getArg(args, 'object', false);
+                        $.each(TWEEN.Easing, function (ix, easing) {
 
-                        var duration = Quazar.getArg(args, 'duration', false);
+                                $.each(TWEEN.Easing[ix], function (iy, easeType) {
 
-                        var cancel = Quazar.getArg(args, 'cancel', false);
+                                        if (ix == s1 && iy == s2) {
 
-                        var repeat = Quazar.getArg(args, 'repeat', false);
+                                                curve = TWEEN.Easing[ix][iy];
+                                        }
+                                });
+                        });
 
-                        var curve = Quazar.getArg(args, 'curve', 'Linear');
+                        this.curve = curve;
 
-                        var targetObject = {};
+                        return curve;
+                }
+        }, {
+                key: 'engageTween',
+                value: function engageTween() {
 
-                        targetObject[property] = target;
+                        var tweens = [];
 
-                        this.tweens.push({ object: object, targetObject: targetObject, property: property, duration: duration, curve: curve });
+                        //construct a tween::
+
+                        var __inst = this;
+
+                        var objects = {};
+
+                        $.each(Game.sprites, function (ix, item) {
+
+                                $.each(__inst.object_id, function (iy, id_item) {
+
+                                        if (item.id == id_item) {
+
+                                                alert('mathc');
+
+                                                objects[ix] = item;
+                                        }
+                                });
+                        });
+
+                        var target = {
+
+                                x: __inst.distance.x + objects[0].position.x,
+                                y: __inst.distance.y + objects[0].position.y,
+                                z: __inst.distance.z + objects[0].position.z
+
+                        };
+
+                        //we have a target
+                        tweens[0] = new TWEEN.Tween(objects[0].position).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to(target, 500).onUpdate(function () {
+                                console.log(objects[0].position.x, objects[0].position.y);
+                        }).onComplete(function () {
+                                console.log(objects[0].position.x, objects[0].position.y);
+                        });
+
+                        return {
+
+                                tweens: tweens,
+
+                                fire: function fire() {
+
+                                        this.tweens[0].start();
+                                }
+
+                        };
+                }
+        }, {
+                key: 'start',
+                value: function start() {
+                        this.engageTween().fire();
                 }
         }, {
                 key: 'simultan',
@@ -79,55 +166,15 @@ var MotionStack = function () {
                 key: 'synchro',
                 value: function synchro() {}
         }, {
-                key: 'start',
-                value: function start() {
-
-                        this.tweenObject.start();
-                }
-        }, {
                 key: 'onUpdate',
                 value: function onUpdate(callback) {}
         }, {
                 key: 'onComplete',
                 value: function onComplete(callback) {}
-        }, {
-                key: 'resolveCurve',
-                value: function resolveCurve(key) {}
-        }, {
-                key: 'Curves',
-                value: function Curves() {
-
-                        return $Q.TWEEN.Easing;
-                }
-        }, {
-                key: 'curveOptionsToArray',
-                value: function curveOptionsToArray() {
-                        var cs = [];
-
-                        Quazar.each(TWEEN.Easing, function (ix, item) {
-
-                                if (item.hasOwnProperty('In')) {
-                                        cs.push(ix + '.In');
-                                }
-
-                                if (item.hasOwnProperty('Out')) {
-                                        cs.push(ix + '.Out');
-                                }
-                                if (item.hasOwnProperty('InOut')) {
-                                        cs.push(ix + '.InOut');
-                                }
-                        });
-
-                        return cs;
-                }
         }]);
 
-        return MotionStack;
+        return Motionstack;
 }();
-
-;
-
-var Game = Game || {};
 
 var Motion = function Motion(key_members, value) {
 
@@ -156,71 +203,5 @@ var Motion = function Motion(key_members, value) {
                 id: id
 
         };
-};
-
-var TweenMotion = function TweenMotion(_ref) {
-        var object = _ref.object,
-            name = _ref.name,
-            speed = _ref.speed,
-            direction = _ref.direction,
-            accel_curve = _ref.accel_curve,
-            dispersionAngle = _ref.dispersionAngle,
-            duration = _ref.duration,
-            delay = _ref.delay,
-            delayPerMember = _ref.delayPerMember;
-
-
-        var directions_avail = ['up', 'upleft', 'left', 'downleft', 'down', 'downright', 'right', 'upright'];
-
-        if (this.directions_avail.indexOf(direction.replace(' ', '').replace('-', '').replace('_', '').toLowerCase()) >= 0) {
-
-                return {
-
-                        movement_name: movement_name,
-
-                        direction: direction,
-
-                        accel_curve: accel_curve,
-
-                        dispersionAngle: dispersionAngle,
-
-                        delay: delay,
-
-                        delayPerMember: delayPerMember,
-
-                        fire: function fire() {
-
-                                for (var x = 0; x <= speed; x++) {
-
-                                        for (var y = 0; y <= speed; y++) {
-
-                                                for (var z = 0; z <= speed; z++) {}
-                                        }
-                                }
-
-                                switch (name) {}
-                        }
-
-                };
-        }
-};
-
-Game.motion_actions = {
-
-        zigzag: new MotionAction({
-                name: 'zigzag',
-                speed: 3,
-                direction: 'left',
-                accel_curve: TWEEN.Easing().Quadratic.InOut,
-                dispersionAngle: 15,
-                duration: 20,
-                delay: 0,
-
-                delayPerMember: 10,
-
-                repeat: true
-
-        }, 3)
-
 };
 //# sourceMappingURL=Motionstack.js.map

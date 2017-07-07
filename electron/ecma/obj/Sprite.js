@@ -13,7 +13,6 @@ class Sprite {
 
 
 
-
         Quazar.each(args, function (ix, item) {
 
             if (ix !== 'parent') {
@@ -26,6 +25,8 @@ class Sprite {
         this.type = $Q.getArg(args, 'type', 'basic');
 
         this.animations = [];
+
+        this.motionstacks = [];
 
 
         this.sounds = {};
@@ -42,6 +43,10 @@ class Sprite {
 
 
         this.selected_animation = {};
+
+        this.selected_motionstack = {};
+
+        this.selected_physics = {};
 
         this.onGround = false;
 
@@ -62,10 +67,22 @@ class Sprite {
 
         this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
-
+        this.id = this.setid();
 
 
     }
+
+    setid()
+     {
+         return new Date().getUTCMilliseconds();
+
+     }
+
+     get_id()
+     {
+
+         return this.id;
+     }
 
     onScreen(w, h) {
         return this.position.x + this.size.x >= 0 && this.position.x < w
@@ -364,11 +381,37 @@ class Sprite {
 
     }
 
-    gravity(options) {
+    velocityY(accel, max) {
 
-        this.prep_key = 'gravity';
+        this.assertSpeed();
+
+        if(this.speed.y < max.y)
+        {
+            this.speed.y += accel;
+
+        }
+
+        this.position.y += this.speed.y;
+
+
 
     }
+
+    collide(item)
+    {
+
+        var max_y = item.max ? item.max.y : item.position.y;
+
+        if(this.position.y + this.size.y >= max_y)
+        {
+
+            this.position.y = max_y - this.size.y;
+
+        }
+
+    }
+
+
 
     assertSpeed() {
         if (!this.speed) {

@@ -14,10 +14,15 @@
 
     <script src="../dist/obj/Animation.js"></script>
 
+
     <script src="../dist/obj/Force.js"></script>
-    <script src="../dist/obj/GameMedia.js"></script>
 
     <script src="../dist/Quazar.js"></script>
+
+
+
+    <script src="../dist/obj/Motionstack.js"></script>
+
 
     <script src="../dist/obj/Sprite.js"></script>
 
@@ -48,6 +53,12 @@
             overflow: hidden;
 
             padding:5px;
+
+            position:absolute;
+
+            width:100%;
+
+            height:100%;
         }
         #info {
             position: absolute;
@@ -65,15 +76,40 @@
 
     <style>
         
-        /*
-        
-        #reqs: 
-            1. object-interface
-        
-        */
+
+        canvas
+        {
+
+            position:relative;
+
+            z-index:1;
+
+            background:black;
+
+            width:100%;
+
+            height:100%;
+
+            border:none;
+
+            top:0px;
+
+        }
 
 
 
+        button.test-button
+        {
+            position:relative;
+
+            background: #4c4c4c; /* Old browsers */
+            background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 );
+            color:white;
+
+        }
 
         ul.controllable, ul.options
         {
@@ -83,7 +119,9 @@
 
             z-index:990;
 
-            top:0px;
+            left:0px;
+
+            top:50px;
 
             padding:7px;
 
@@ -136,7 +174,13 @@
         }
 
 
+        #container
+        {
+            position:absolute;
 
+            top:50px;
+
+        }
 
 
         button.test
@@ -150,11 +194,15 @@
         .main
         {
 
-            margin-top:150px;
+           position:relative;
+
+            top:0px;
+
+            right:0px;
+
+            float:right;
 
         }
-
-
 
         .selected_object
         {
@@ -225,12 +273,28 @@
 
             height:18px;
 
-            background-color:grey;
-
+            background-color:black;
 
             border:1px solid grey;
 
             margin:-3px;
+
+        }
+
+        img.ctrl.eye
+        {
+
+            width:18px;
+
+            height:18px;
+
+            background-color:lightgrey;
+
+            border:1px solid grey;
+
+            margin:-3px;
+
+            margin-top:-19px;
 
         }
 
@@ -240,10 +304,26 @@
 
             background-color:grey;
 
+            border:1px solid grey;
+
+            margin:-3px;
+
+        }
+
+        img.top-left
+        {
+
+            background-color:grey;
 
             border:1px solid grey;
 
             margin:-3px;
+
+            position:absolute;
+
+            left:0; top:0;
+
+
 
         }
 
@@ -329,8 +409,24 @@
 
         }
 
+        #gui-container
+        {
+
+            position:absolute;
 
 
+            top:0px; right:0;
+
+            left:0;
+
+
+            width:100%;
+
+            height:50px;
+
+            z-index:9999;
+
+        }
 
         span#floating-hint
         {
@@ -355,6 +451,63 @@
 
         }
 
+        .bottom-ctrl
+        {
+
+            position:absolute;
+
+            top:0px;
+
+            right:40px;
+
+        }
+
+
+
+        #forceSelect
+        {
+            position:absolute;
+
+            z-index:9999;
+
+            left:0;
+
+            top:0;
+
+            margin:0;
+
+            background: #4c4c4c; /* Old browsers */
+            background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 );
+            color:white;
+
+        }
+
+        #forceSelect option
+        {
+
+            background: black; /* Old browsers */
+
+            color:white;
+
+        }
+
+        #top-gui
+        {
+
+            position:absolute;
+
+
+            width:100%;
+
+            height:40px;
+
+            z-index:9999;
+
+        }
+
 
     </style>
 
@@ -363,37 +516,45 @@
 <body>
 
 
-<img id="add_tween_stack_ctrl" class="main-add ctrl top-right"  style="position:absolute; right:15px;    width:35px; height:35px; background-image: url(&quot;img/add_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>
 
-<img id="add_tween_stack_ctrl" class="main-play ctrl top-right"  style="position:absolute; right:55px;    width:35px; height:35px; background-image: url(&quot;img/play.png&quot;);   background-position: center center; background-size: 100% auto;"></img>
+<div id="container">
 
-<div id="container"></div>
+
+    <div id="gui-container">
+
+    </div>
+
+</div>
 <div id="info"></div>
 
-<h1>Data Controller</h1>
+<div id="top-gui">
 
-<span id="floating-hint">A Floating Hint</span>
+    <select id="forceSelect">
+        <option>Strong Gravity</option>
+        <option>Medium Gravity</option>
+        <option>Weak Gravity</option>
 
-<p class="description">
-    Allows control for a system of objects
-</p>
+    </select>
 
+    <img id="add_tween_stack_ctrl" class="main-add bottom-ctrl"  style="  width:35px; height:35px; background-image: url(&quot;img/add_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>
+
+    <img id="add_tween_stack_ctrl" class="main-play bottom-ctrl"  style="   width:35px; height:35px; background-image: url(&quot;img/play.png&quot;);   background-position: center center; background-size: 100% auto;"></img>
+
+
+</div>
+
+
+
+
+<span id="floating-hint">Live for today and let forever be free.</span>
 
 <ul class="controllable selected_object"  >
     <span id="*" class="tree-open open" style="position:relative;  top:20px; left:0px; width:20px; height:20px; ">&psi;</span>
-    <li>Selected Object</li>
+    <li>Selected Sprite:</li>
 </ul>
 
-
-
-
-
-<ul class="options" >
-
-</ul>
 
 <script>
-
 
     /*************************************
      *
@@ -408,6 +569,812 @@
      *
      * ********************************/
 
+
+
+
+    function LevelMaker(filename, settings)
+    {
+
+
+        return{
+
+            topScroll:0,
+
+            selected_image_src:{},
+
+            discluded_sprites:[],
+
+            assembled_sprite:{},
+
+            lastPlantedCountRecordArray:[],
+
+            pixelSnap:10,
+
+            settings:settings || {
+
+                name:filename || "myLevel",
+
+                description:"the default level for our game",
+
+                pixelSnap:10,
+
+                levelSizeX:5000,
+
+                levelSizeY:5000,
+
+                levelSizeZ:0,
+
+                game_scale:2.0
+
+            },
+
+
+            restoreInstance:function(sprites, settings, callback)
+            {
+
+                if(typeof(settings) == "object")
+                {
+                    levelMaker.settings = settings;
+
+                }
+
+                if(sprites instanceof Array)
+                {
+
+                   // alert('sprite []');
+
+                    Game.sprites = sprites;
+
+                    Quazar.each(Game.sprites, function(ix, item){
+
+                        Game.sprites[ix] = new Sprite('', '', item);
+
+                        if(item.selected_animation && item.selected_animation.src)
+                        {
+
+                            Game.sprites[ix].selected_animation = new Animation(item.selected_animation);
+
+
+
+                        }
+
+
+                    });
+
+
+                }
+
+
+                callback();
+
+
+            },
+
+
+            objectMemberToArray:function(object, key)
+            {
+
+                var list = [];
+
+                for(var x in object)
+                {
+
+                    list.push(object[key]);
+
+                }
+
+                return list;
+
+            },
+
+            removeLast:function()
+            {
+
+                var number = levelMaker.lastPlantedCountRecordArray[levelMaker.lastPlantedCountRecordArray.length -1];
+
+                for(var x = 0; x < number; x++) {
+
+                    Game.sprites.pop();
+
+                }
+            },
+
+
+            arrayToSelect:function(containerId, selectId, values)
+            {
+
+                var myDiv = document.getElementById(containerId);
+
+                //Create array of options to be added
+                var array = values;
+
+                //Create and append select list
+                var selectList = document.createElement("select");
+                selectList.id = selectId;
+                myDiv.appendChild(selectList);
+
+                //Create and append the options
+                for (var i = 0; i < array.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = array[i];
+                    option.text = array[i];
+                    selectList.appendChild(option);
+                }
+
+            }
+
+            ,
+
+            htmlSettings:function()
+            {
+                var obj = levelMaker.settings;
+
+                $('#map_name').val(obj.name);
+                $('#map_description').val(obj.description);
+                $('#map_type').val(obj.type);
+
+
+
+                $('#map_snap_size').val(obj.pixelSnap + 'px');
+
+                $('#map_level_size_x').val(obj.levelSizeX);
+                $('#map_level_size_y').val(obj.levelSizeX);
+
+                $('#map_game_scale').val(obj.game_scale);
+
+            },
+
+            applySettings:function(data)
+            {
+
+                if(typeof(data) == 'string')
+                {
+                    data = JSON.parse(data).settings;
+
+                };
+
+
+                if(!data) {
+
+                    data ={};
+
+                    data.name =  $('#map_name').val();
+
+                    data.description =  $('#map_description').val();
+
+                    data.type = $('#map_type').val();;
+
+                    data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
+
+                    data.levelSizeX = parseInt($('#map_level_size_x').val());
+
+                    data.levelSizeY = parseInt($('#map_level_size_y').val());
+
+
+
+                }
+
+                levelMaker.settings = data;
+
+                $('.level-maker-canvas').width(data.levelSizeX);
+                $('.level-maker-canvas').height(data.levelSizeY);
+
+
+                Game.canvas.width = data.levelSizeX;
+
+                Game.canvas.height = data.levelSizeY;
+
+
+
+                $('#map-item-space form').hide('slow');
+
+            },
+
+            showObjectDialog:function(){
+
+                $('#map-item-space form').show();
+
+
+            },
+
+            objectMakerFormEvents:function()
+            {
+
+                levelMaker.assembled_sprite = new Sprite();
+
+                App.setMotionVectorGui();
+
+                $('#create_object').click(function(){
+
+                    var   fx  =  parseFloat($('#frameX').val()),
+
+                        fy  =  parseFloat($('#frameY').val()),
+
+                        w = parseFloat($('#width').val()),
+
+                        h =  parseFloat($('#height').val()),
+
+                        fw  =  parseFloat($('#framewidth').val()),
+
+                        fh  =  parseFloat($('#frameheight').val());
+
+
+                    var name = $('#name').val(),
+
+                        type = $('#type').val(),
+
+                        description = $('#description').val(),
+
+                        id = $('#id').val(),
+
+                        image_data = $('#image_data').val();
+
+                    //alert('Creating Map Object');
+
+                    levelMaker.selected_image_src = image_data;
+
+                    console.log('Making objects in create event');
+
+                    var args = {type:type, description:description };
+
+
+                    args.size = new Vector3(w, h, 0);
+
+
+                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                        args );
+
+                    levelMaker.selectedSprite.img.onload = function()
+                    {
+
+                        levelMaker.addLevelObjectToUI( levelMaker.selectedSprite);
+
+                    }
+
+                    $('#map-item-space form').hide();
+
+                });
+
+
+                $("#object-maker input").change(function(evt)
+                {
+
+                    var   fx  =  parseFloat($('#frameX').val()),
+
+                        fy  =  parseFloat($('#frameY').val()),
+
+                        w = parseFloat($('#width').val()),
+
+                        h =  parseFloat($('#height').val()),
+
+                        fw  =  parseFloat($('#framewidth').val()),
+
+                        fh  =  parseFloat($('#frameheight').val());
+
+
+                    levelMaker.sizeImage(fx, fy, w, h, fw, fh);
+
+
+                });
+
+            },
+
+            sizeImage:function(frameX, frameY, mapWidth, mapHeight,  frameWidth, frameHeight)
+            {
+
+                var canvas = document.getElementById('testCanvas');
+
+                var ctx = canvas.getContext('2d');
+
+                var image = $(canvas).parent().find('img')[0];
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                var x = 0, y = 0;
+
+
+                var width = mapWidth, height = mapHeight;
+
+                var portion = mapWidth / mapHeight;
+
+                mapHeight = canvas.height;
+
+                mapWidth = mapHeight * portion;
+
+                x = (canvas.width / 2) - mapWidth / 2;
+
+                y = (canvas.height / 2) - mapHeight / 2;
+
+                $('#frameX').val(frameX);
+
+                $('#frameY').val(frameY);
+
+                $('#width').val(width);
+
+                $('#height').val(height);
+
+                $('#framewidth').val(frameWidth);
+
+
+
+                $('#frameheight').val(frameHeight);
+
+
+                ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight,x, y, mapWidth, mapHeight);
+
+
+            },
+
+            getRawImageFile:function(input, callback)
+            {
+
+               // var preview =  $(input).parent().find('img')[0];
+                var file  = input.files[0];
+                var reader  = new FileReader();
+
+                reader.addEventListener("load", function () {
+                 //   preview.src = reader.result;
+
+                 //   levelMaker.selected_image_src = preview.src;
+
+                 //   $('#image_data').val(reader.result);
+
+                    if(typeof(callback) == 'function')
+                    {
+                        callback(reader.result);
+
+                    }
+
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+
+
+            },
+
+
+            getRawLevelFile:function(input, callback)
+            {
+
+                var filename = $(input).val().split('\\').pop();
+
+                if(filename.toLowerCase().indexOf('.json') >= 0)
+                {
+
+                    var file  = input.files[0];
+                    var reader  = new FileReader();
+
+                    reader.addEventListener("load", function () {
+
+                        callback(reader.result)
+
+                    }, false);
+
+                    if (file) {
+                        reader.readAsText(file);
+                    }
+
+                }
+            },
+
+
+
+            MapData:function(map, settings)
+            {
+
+                return {map:map, settings:settings};
+            },
+
+
+
+            selection_sprite: {},
+            mouse: {
+                x: 0, y: 0,
+
+                down:false
+
+            },
+            getDocHeight: function () {
+                var D = document;
+                return Math.max(
+                    D.body.scrollHeight, D.documentElement.scrollHeight,
+                    D.body.offsetHeight, D.documentElement.offsetHeight,
+                    D.body.clientHeight, D.documentElement.clientHeight
+                )
+            },
+            scrollAdjust: function () {
+                var winheight = window.innerHeight || (document.documentElement || document.body).clientHeight
+                var docheight = levelMaker.getDocHeight();
+                var scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
+                var trackLength = docheight - winheight
+                var pctScrolled = Math.floor(scrollTop / trackLength * 100) // gets percentage scrolled (ie: 80 or NaN if tracklength == 0)
+                console.log(pctScrolled + '% scrolled');
+
+
+                levelMaker.topScroll = Game.canvas.height * (pctScrolled / 100);
+
+                return Game.canvas.height * (pctScrolled / 100);
+
+            },
+            mapElements: [],
+            get: function (tag)
+            {
+                if(!tag)
+                {
+                    return this.mapElements[0];
+
+                }
+
+                for (var x = 0; x < this.mapElements.length; x++)
+                {
+
+                    if (this.mapElements[x].tag.toLowerCase() === tag.toLowerCase())
+                    {
+
+                        return this.mapElements[x];
+                    }
+
+                }
+
+            },
+            MapElement: function (tag, imgPath, frameSize, mapSize, extras)
+            {
+                var img = document.createElement('IMG');
+                img.src = imgPath;
+
+                // alert("El image:" + JSON.stringify(img.src));
+
+                var element = {
+                    tag: tag, img: img, src:imgPath, frameSize: frameSize, mapSize: mapSize
+
+                };
+
+                for(var x in extras)
+                {
+                    element[x] = JSON.parse(JSON.stringify(extras[x]));
+
+                };
+
+
+                this.mapElements.push(element);
+
+
+                return element;
+
+            },
+            selectedSprite: false,
+            selectedTag: "",
+            selectedElement: {},
+            levelObjects: [],
+            deselectAll: function ()
+            {
+
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    item.selected = false;
+
+                    item.hover_selected = false;
+
+                });
+            },
+            getSelected: function ()
+            {
+
+                var getSpr = false;
+
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    if (item.hover_selected || item.selected)
+                    {
+
+                        getSpr = item;
+
+                    }
+
+                });
+
+
+                return getSpr;
+
+            },
+
+            centerPos:function(sprite, x, y)
+            {
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+
+            },
+
+            moveSelected: function (x, y)
+            {
+
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    if (item.selected)
+                    {
+
+                        var x1 = x - (x% levelMaker.settings.pixelSnap) ,
+                            y1 = y - (y  % levelMaker.settings.pixelSnap);
+
+
+                        levelMaker.centerPos(item, x1, y1);
+
+                    }
+
+                });
+            },
+
+            leftClickExtra:function()
+            {
+
+
+            },
+
+            leftClick: function (x, y)
+            {
+
+                //  alert('left click');
+
+                if(typeof(this.leftClickExtra) == 'function')
+                {
+                    this.leftClickExtra();
+
+                    this.leftClickExtra = false;
+
+                    return false;
+
+                };
+
+                var notSelection = function(obj)
+                {
+                    return obj !== levelMaker.hover_selection_sprite &&
+
+                        obj !== levelMaker.selection_sprite;
+
+                };
+
+
+
+                var selection = false;
+                Quazar.each(Game.sprites, function (ix, item) {
+
+
+                    if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
+                    {
+
+                        item.selected = true;
+                        selection = true;
+                    }
+
+                });
+
+                if (!selection)
+                {
+
+                    levelMaker.plantMapSprite(levelMaker.selectedElement, x - (x % levelMaker.settings.pixelSnap), y - (y % levelMaker.settings.pixelSnap))
+
+                    levelMaker.lastPlantedCountRecordArray.push(1);
+                }
+
+            },
+            hoverSelect: function (x, y)
+            {
+
+                var selection = false, basic_selection = false;
+
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    if(item.selected )
+                    {
+                        basic_selection = true;
+
+                    }
+
+                });
+
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    if ( x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
+                    {
+
+                        //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
+                        //   selection = true;
+                    }
+
+                });
+
+
+                if (!selection && !(levelMaker.mouse.down) ) {
+                    levelMaker.deselectAll()
+                }
+                ;
+
+
+            },
+            rightClick: function (x, y)
+            {
+                Quazar.each(Game.sprites, function (ix, item) {
+
+                    if (x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y)
+                    {
+
+                        var ix = Game.sprites.indexOf(item);
+                        Game.sprites.splice(ix, 1);
+                    }
+
+
+                });
+            },
+
+            simpleMapObject:function(object, x, y)
+            {
+
+
+                var x = Math.floor(x - object.size.x / 2);
+                var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
+
+                x = x - ( object.position.x % levelMaker.settings.pixelSnap);
+
+                y = y - ( object.position.y % levelMaker.settings.pixelSnap);
+
+
+                return {size: new Vector3(object.size.x, object.size.y, 0), position: {x: x, y: y}};
+
+            },
+
+            createMapSprite:function(mapElement, x, y)
+            {
+
+                // console.log("Selected Element:" + JSON.stringify(mapElement));
+                var img = mapElement.img;
+                console.log("Img src:" + img.src);
+                var sprite = new Sprite('MapElement', 'A level-builder element');
+
+                sprite.active = true;
+
+                sprite.size = mapElement.mapSize;
+
+                mapElement.src = img.src;
+
+
+                var fs = mapElement.frameSize;
+
+                sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+
+
+                // console.log(JSON.stringify(sprite));
+
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+                this.selectedSprite = sprite;
+
+                return sprite;
+
+            },
+
+            plantMapSprite: function (mapElement, x, y)
+            {
+
+                // console.log("Selected Element:" + JSON.stringify(mapElement));
+                var img = mapElement.img;
+                //  console.log("Img src:" + img.src);
+
+
+                if(levelMaker.assembled_sprite.speed)
+                {
+
+                    alert(JSON.stringify(levelMaker.assembled_sprite.speed));
+
+                }
+
+                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(levelMaker.assembled_sprite)));
+
+                sprite.active = true;
+
+                sprite.size = mapElement.mapSize;
+
+
+                if(sprite.speed)
+                {
+
+                    alert("sprite-speed:" + JSON.stringify(sprite.speed));
+
+                }
+
+
+                var fs = mapElement.frameSize;
+
+                sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+
+
+                // console.log(JSON.stringify(sprite));
+
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+                this.selectedSprite = sprite;
+
+                sprite.def_update = function(){}; //turn off the motion, we are just mapping
+
+
+                Game.sprites.push(sprite);
+
+
+            },
+            simulateVerticalMouseMove: function (top) {
+
+
+                levelMaker.moveSelected(levelMaker.mouse.x, top);
+            },
+
+            placeGroup : function(x1, y1, dist, n, north, south, east, west)
+            {
+
+
+
+                for(var x = 0; x < n; x++)
+                {
+
+                    var x2 = 0, y2 = 0;
+
+                    if(east){    x2 = x * levelMaker.selectedElement.mapSize.x  * -1; }
+
+                    if(west){    x2  = x * levelMaker.selectedElement.mapSize.x   }
+
+                    if(north){    y2 =  x * levelMaker.selectedElement.mapSize.y  * -1 }
+
+                    if(south){    y2 =  x * levelMaker.selectedElement.mapSize.y; }
+
+                    levelMaker.plantMapSprite(levelMaker.selectedElement, x1+ x2, y1+y2);
+
+                    levelMaker.lastPlantedCountRecordArray.push(n - 1);
+
+                }
+
+            },
+
+
+            addLevelObjectToUI:function(item)
+            {
+
+                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                    console.log('1');
+
+                    var value = $(element).text();
+
+                    // alert('click on:' + value);
+
+                    levelMaker.selectedElement = levelMaker.get(value);
+
+                }));
+
+            },
+
+            url_prefix:'../assets/builder/'
+        }
+
+    };
 
 
 
@@ -433,43 +1400,67 @@
         is_init:false,
 
 
-        size:function(x, y)
+        centerPos:function(sprite)
         {
 
-            this.canvas.width =x;
-
-            this.canvas.height = y;
+            sprite.position.x = Game.WIDTH / 2 - sprite.size.x / 2;
+            sprite.position.y = Game.HEIGHT / 2 - sprite.size.y / 2;
 
         },
+
+
+
+        size:function(width, height)
+        {
+
+            if(typeof(width) == 'string')
+            {
+
+                alert('str r');
+
+                width = parseFloat(width);
+
+            }
+
+            if(typeof(height) == 'string')
+            {
+
+                alert('str r');
+
+                height = parseFloat(height);
+
+            }
+
+
+            this.WIDTH = width;
+
+            this.HEIGHT = height;
+
+
+
+            this.canvas.width = width;
+
+            this.canvas.height = height;
+
+
+        },
+
 
         update:function()
         {
 
-            if(!this.is_init)
-            {
-                return 0;
-
-            }
-
-            console.log('Game Update');
-
-            this.GameWindow.render();
-
+            Game.selected_force.gravitateY();
 
         },
-
 
         render:function()
         {
 
+            this.update();
 
-            if(!this.is_init)
-            {
-                return 0;
+            console.log('render');
 
-            }
-
-            this.size(400, 400);
+            this.GameWindow.update();
 
             this.GameWindow.draw();
 
@@ -480,7 +1471,7 @@
         init:function()
         {
 
-            document.getElementById('container').innerHTML += "<canvas></canvas>";
+            $('#container').append("<canvas></canvas>");
 
             // 1. demonstrate that the threejs canvas can be intercepted at runtime
 
@@ -489,7 +1480,145 @@
             this.ctx = this.canvas.getContext('2d');
 
 
-            this.forces = [];
+            //3. the player sprite
+
+
+            this.player = new Sprite('Samus-Like Character', 'a video game sprite', {
+                position: new Vector3(100, 120),
+                size: new Vector3(50, 52)
+            });
+
+
+            this.player.jump_anime = new Animation({
+                src: "image/samus2.png",
+                delay: 7,
+                frameSize: new Vector3(50, 50, 0),
+                frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
+            });
+
+
+this.player.jumpmotion = new Motionstack({
+
+    name:"jump",
+
+    description:"the jump movmement.",
+
+    object_id:this.player.id,
+    name:"jump",
+
+    distance:new Vector3(0, -200, 0),
+    curve:TWEEN.Easing.Bounce.InOut,
+    line:false,
+    dispersionAngle:0,
+    duration:400,
+    delay:0,
+    delayPerMember:0
+        });
+
+
+            this.player.selected_motionstack = new Motionstack(this.player.jumpmotion);
+
+            this.player.animations.push(this.player.jump_anime);
+
+            this.player.motionstacks.push(this.player.jumpmotion);
+
+
+            this.player.selected_animation = new Animation( this.player.jump_anime);
+
+
+
+            this.player.update = function()
+            {
+
+
+
+                this.selected_animation.animate();
+
+
+            };
+
+
+            this.player.active = true;
+
+            this.sprites.push(this.player);
+
+            $('canvas').width(500);
+
+            $('canvas').height(500);
+
+
+            this.canvas.width = 500;
+
+            this.canvas.height = 500;
+
+
+            this.WIDTH = 500;
+
+            this.HEIGHT = 500;
+
+            Game.forceProfile = {};
+
+            Game.forceProfile.forces = [];
+
+
+
+            var wgrav = new Force({
+                name:"weak_grav",
+
+                accel:1.3,
+
+                max:new Vector3(0, 5, 0),
+                subjects:[Game.sprites[0]],
+
+                massObjects:[new VectorBounds(new Vector3(-3000, 300, -3000), new Vector3(-3000, 400, 3000))]
+
+            });
+
+            Game.forceProfile.forces.push(wgrav);
+
+
+            var mgrav = new Force({
+
+                name:"medium_grav",
+
+                accel:1.3,
+
+                max:new Vector3(0, 5, 0),
+                subjects:[Game.sprites[0]],
+
+                massObjects:[new VectorBounds(new Vector3(-3000, 300, -3000), new Vector3(-3000, 400, 3000))]
+
+            });
+
+            Game.forceProfile.forces.push(mgrav);
+
+            var sgrav = new Force({
+
+                name:"strong_grav",
+
+                accel:1.3,
+
+                max:new Vector3(0, 5, 0),
+                subjects:[Game.sprites[0]],
+
+                massObjects:[new VectorBounds(new Vector3(-3000, 300, -3000), new Vector3(-3000, 400, 3000))]
+
+            });
+
+            Game.forceProfile.forces.push(sgrav);
+
+
+            Game.selected_force = Game.forceProfile.forces[0];
+
+            $('#forceSelect').change(function(evt){
+
+                var ix = evt.target.selectedIndex;
+
+                Game.selected_force =   Game.forceProfile.forces[ix];
+
+                alert('changed to:' + ix + Game.selected_force.name);
+
+            });
 
 
 
@@ -501,56 +1630,7 @@
             });
 
 
-            //3. the player sprite
-
-
-            this.player = new Sprite('Samus-Like Character', 'a video game sprite', {
-                pos: new Vector2(200, 120),
-                size: new Vector2(50, 52)
-            });
-
-
-            this.player.jump_anime = new Animation({
-                src: "image/samus2.png",
-                delay: 7,
-                frameSize: new Vector3(50, 50, 0),
-                frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
-            });
-
-            this.player.animations.push(this.player.jump_anime);
-
-            this.player.selected_animation = this.player.jump_anime;
-
-
-            // this.player.movement('jump', new Movement('../assets/sound/effect/ribbit.mp3'));
-
-            var sound = new GameSound('../assets/sound/effect/ribbit.mp3');
-
-            this.player.add(sound);
-
-
-
-
-            this.player.update = function()
-            {
-
-                this.selected_animation.animate();
-
-
-            }
-
-
-
-
-
-            this.player.active = true;
-
-            this.sprites.push(this.player);
-
-
-            this.canvas.width = 1260;
-
-            this.canvas.height = 720;
+            this.centerPos(this.sprites[0]);
 
             this.is_init = true;
 
@@ -558,6 +1638,10 @@
         }
 
     };
+
+
+
+    var levelMaker = LevelMaker(false);
 
 
     /******************
@@ -577,6 +1661,19 @@
     var App = {
 
         locked:false,
+
+
+        onType:function(obj, type, callback)
+        {
+
+            if(obj instanceof type)
+            {
+
+                callback();
+
+            }
+
+        },
 
 
         lock_events:function()
@@ -812,7 +1909,7 @@
 
             __selectedObject:{},
 
-            listmemberkeys:['animations'],
+            listmemberkeys:['animations', 'motionstacks', 'forces'],
 
             renderObjectControllable:function(object_members, container, options)
             {
@@ -839,14 +1936,12 @@
 
                     var element =  element_object instanceof Array ? element_object : element_object.hasOwnProperty('list') && element_object.list  instanceof Array ? element_object.list : element_object;
 
-
-
                     if(element instanceof Array ) {
 
-                        alert('processing array of len:' + element.length);
+                      //  alert('processing array of len:' + element.length);
 
-                        var eye_icon = '<img data-name="*"  class="tree-edit ctrl xcl__" style="position:absolute; right:2px;   background-image: url(&quot;image/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                        var cross_icon = '<img data-name="*"  class="tree-delete ctrl xcl__" style="position:absolute; right:25px;   background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                        var eye_icon = '<img data-name="*"  class="tree-edit ctrl eye xcl__" style="visibility: hidden; position:absolute; right:2px; background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                        var cross_icon = '<img data-name="*"  class="tree-delete ctrl xcl__" style=" visibility: hidden; position:absolute; right:25px;    background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
 
                         html += '<ul class="' + ix + '">' + App.listToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, cross_icon]) + '</ul>';
 
@@ -857,8 +1952,8 @@
                     {
 
 
-                        var eye_icon = '<img data-name="*" class="tree-edit ctrl xcl__"  style="position:absolute; right:2px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                        var cross_icon = '<img data-name="*"  class="tree-delete ctrl xcl__" style="position:absolute; right:25px;  background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                        var eye_icon = '<img data-name="*" class="tree-edit ctrl eye xcl__"  style="visibility: hidden; position:absolute;  right:2px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                        var cross_icon = '<img data-name="*"  class="tree-delete ctrl xcl__" style="visibility: hidden; position:absolute; right:25px;  background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
 
 
                         html += '<ul class="' + ix + '">' + App.listToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, cross_icon]) + '</ul>';
@@ -942,10 +2037,6 @@
                         id: my_id,html: add_button_html,
                         callback:function(list, clName){
 
-                     //  alert('event for: add ' + element);
-
-                          //  alert('Adding object of type:' + element[0].constructor);
-
                             App.lock_events();
 
                             var instantiator;
@@ -956,8 +2047,6 @@
                             if(element instanceof  Array )
                             {
                                 instantiator =  element[0] && element[0].constructor ? element[0].constructor.name : false;
-
-
 
                             }
                             else
@@ -1001,54 +2090,19 @@
 
                                     }
 
-
                                     renderListMembers(element, clName);
 
                                 }
 
                             }
 
+                            if(window[instantiator]) {
 
-                            if(instantiator &&  Quazar.samples[instantiator] && Quazar.samples[instantiator][0]) {
+                               // alert('adding the object');
 
-
-                                if(window[instantiator]) {
-
-                                    alert('adding by inst');
-
-                                    // create Deep copy
-                                    var myNewObject = Quazar.samples[instantiator][0]();
-                                    /*
-                                *
-                                *
-                                *
-                                *
-                                *
-                                *
-                                * */
+                                 myNewObject = new window[instantiator](element[0]);
 
                                 addElement();
-
-                                };
-
-
-                            }
-                            else
-                            {
-                               // alert('Using alternate means of instantiation. With element:' + jstr(element));
-
-                                // create Deep copy
-
-                               if(window[instantiator]) {
-
-                                   alert('adding');
-
-                                   var myNewObject = new window[instantiator];
-
-                                   addElement();
-
-                               }
-
 
                             }
 
@@ -1157,7 +2211,7 @@
 
                            // alert('processing array');
 
-                       var eye_icon = '<img id="*" class="tree-edit ctrl" style="position:absolute; right:5px;    background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                       var eye_icon = '<img id="*" class="tree-edit ctrl eye" style=" visibility: hidden; position:absolute; right:5px;    background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
                        var cross_icon = '<img id="*" class="tree-delete ctrl" style="position:absolute; right:25px; background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
 
                       html = App.listToUL(clName, list /*INSERT Members of actual array(s)*/, [eye_icon, cross_icon]) + '</ul>';
@@ -1257,7 +2311,7 @@
                 $.each(object_members /*This is where our 'MainGame' Object would go*/, function(ix, element){
 
 
-                    var eye_icon = '<img id="*" class="tree-edit ctrl" style="position:relative;  top:2px; right:-30px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
+                    var eye_icon = '<img id="*" class="tree-edit ctrl eye" style="position:relative;  top:2px; right:-30px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
                     var cross_icon = '<img id="*" class="tree-delete ctrl" style="position:relative;  top:2px; right:-30px;  background-image: url(&quot;img/cross_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
 
                     html +=  '<ul class="'+element+'">' + App.listToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, cross_icon]) + '</ul>';
@@ -1377,9 +2431,6 @@
         ,
 
 
-
-
-
         init:function()
         {
 
@@ -1468,18 +2519,23 @@
 
             $(document).on('click', 'img.tree-edit' ,function (evt) {
 
+                $('img.tree-edit').hide();
+
+
+                $(evt.target).show('fast');
+
+                $(evt.target).css('visibility', 'visible');
+
 
                 var prt = $(evt.target).parent(),parentObjectName = $(prt).prop('class');
 
                 parentObjectName = parentObjectName.replace('_member', '');
 
-
-                alert(parentObjectName);
-
+              //  alert(parentObjectName);
 
                 var index = $(prt).index();
 
-                alert('Got click on edit button for::' + parentObjectName + ': member number::' + index);
+              //  alert('Got click on edit button for::' + parentObjectName + ': member number::' + index);
 
                 var selectedObject =  Game.sprites[0][parentObjectName],
 
@@ -1487,7 +2543,52 @@
                     sprop = selectedObject[index];
 
 
+              //  alert('index:' + index);
+
+                if(sprop instanceof Animation)
+                {
+
+                   // alert(JSON.stringify(sprop));
+
+                    var str = JSON.stringify(sprop);
+
+                 //   alert(str);
+
+                    Game.sprites[0].selected_animation = new Animation(JSON.parse(str));
+
+                    App.selectedItem =  Game.sprites[0].selected_animation;
+
+            }
+
+                if(sprop instanceof Motionstack)
+                {
+
+                    Game.sprites[0].selected_motionstack = new Motionstack(sprop);
+
+                    App.selectedItem =  Game.sprites[0].selected_motionstack;
+
+                    sprop = Game.sprites[0].selected_motionstack;
+
+                }
+
+
+                if(sprop instanceof Force)
+                {
+
+                    var str = JSON.stringify(sprop);
+
+                    Game.selected_force = new Force(JSON.parse(str));
+
+                    sprop = Game.selected_force;
+
+                };
+
+
+
+
                 if(sprop){alert('we have an object of:' + sprop.constructor.name);}
+
+
 
                 DatGui.get(sprop, index + "");
 
@@ -1522,21 +2623,20 @@
 
                     x+= 1;
 
-
-
                 });
-
-
-               // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
-
 
             });
 
 
             $(document).on('click', 'img.main-play' ,function (evt) {
 
+                App.onType(App.selectedItem, Motionstack, function(){
 
-                alert('::clicked the play (main-play) button :: tests the selected object animations will test-play and return to start');
+                    alert('starting motion stack');
+
+                    Game.sprites[0].selected_motionstack.start();
+
+                });
 
             });
 
@@ -1558,15 +2658,18 @@
 
     function animate(time) {
 
-        Game.update();
+        TWEEN.update(time);
 
-        Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
-
-        Game.render();
 
         requestAnimationFrame(animate);
 
-        TWEEN.update(time);
+
+        Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+
+
+        Game.render();
+
+
 
     }
 
@@ -1576,6 +2679,8 @@
 
     Quazar.ready(function(lib){
 
+
+      //  alert('hi');
 
 
         $.fn.animateRotate = function(startAngle, angle, duration, easing, complete) {
@@ -1596,12 +2701,11 @@
 
         Game.init();
 
+
+       App.init();
+
+
         animate();
-
-
-        App.init();
-
-
 
         // var gui = DatGui.get(lib.samples['Animation'][0]);
 

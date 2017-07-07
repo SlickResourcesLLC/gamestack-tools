@@ -17,16 +17,12 @@ var Animation = function () {
 
                 var _anime = this;
 
-                Quazar.each(args, function (ix, item) {
+                this.data = {
 
-                        if (ix !== 'parent') {
-                                _anime[ix] = item;
-                        }
-                });
+                        name: $Q.getArg(args, 'name', false),
 
-                this.name = $Q.getArg(args, 'name', false);
-
-                this.description = $Q.getArg(args, 'description', '_blank');
+                        description: $Q.getArg(args, 'description', '_blank')
+                };
 
                 this.frames = $Q.getArg(args, 'frames', []);
 
@@ -46,11 +42,11 @@ var Animation = function () {
 
                 this.cix = 0;
 
-                this.frameSize = $Q.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+                this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
 
-                this.frameBounds = $Q.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+                this.frameBounds = this.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
-                this.frameOffset = $Q.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
+                this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
                 this.apply2DFrames(args.parent || {});
 
@@ -62,11 +58,14 @@ var Animation = function () {
 
                 this.selected_frame = this.frames[0];
 
-                this.earlyTerm = $Q.getArg(args, 'earlyTerm', false);
+                this.earlyTerm = this.getArg(args, 'earlyTerm', false);
 
-                this.hang = $Q.getArg(args, 'hang', false);
+                this.hang = this.getArg(args, 'hang', false);
 
                 this.timer = 0;
+
+                // alert('construct complete');
+
         }
 
         _createClass(Animation, [{
@@ -130,6 +129,8 @@ var Animation = function () {
                                                         return 0;
                                                 }
                                         }
+
+                                        //  alert('adding frame');
                                 }
                         }
 
@@ -142,8 +143,8 @@ var Animation = function () {
                         this.selected_frame = this.frames[0];
                 }
         }, {
-                key: 'reset',
-                value: function reset() //special reset function:: frames are re-rendered each reset()
+                key: 'resetFrames',
+                value: function resetFrames() //special reset function:: frames are re-rendered each reset()
                 {
 
                         //1. reset the GameImage
@@ -151,7 +152,7 @@ var Animation = function () {
 
                         //2. apply the frames
 
-                        this.apply2DFrames(this.parent);
+                        this.apply2DFrames();
                 }
         }, {
                 key: 'update',
@@ -162,6 +163,8 @@ var Animation = function () {
         }, {
                 key: 'reset',
                 value: function reset() {
+
+                        this.resetFrames();
 
                         this.cix = 0;
                 }
@@ -182,6 +185,7 @@ var Animation = function () {
                                                 this.cix = this.frames.length - 1;
                                         }
                                 } else {
+
                                         this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
                                 }
 

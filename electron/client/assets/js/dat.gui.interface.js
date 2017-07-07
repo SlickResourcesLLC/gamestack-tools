@@ -90,25 +90,12 @@ var DatGui = {
 
                     });
 
-
-
-
-
-
-
                 }
-
-
-
 
             }
         };
 
        this.latest_folder.add(obj,'add_animation');
-
-
-
-
 
     },
 
@@ -129,7 +116,6 @@ var DatGui = {
 
         else if(typeof(list) == 'object')
         {
-
 
             for(var x in list)
             {
@@ -196,103 +182,6 @@ var DatGui = {
 
 
     },
-
-    TweenSelect:function(obj, desprops, tweenstack, gui)
-    {
-
-        var props = [], selected_property = false;
-
-
-
-        for(var x1 = 0; x1 < desprops.length; x1++)
-        {
-            if(obj.hasOwnProperty(desprops[x1]))
-            {
-
-                var x = desprops[x1];
-
-                if(!isNaN(obj[x]))
-                {
-
-                    props.push(x);
-
-                }
-
-
-
-                for(var y in obj[x])
-                {
-
-                    if(!isNaN(obj[x][y]))
-                    {
-
-                        props.push([x,y].join('.'));
-
-                    }
-
-
-
-                    for(var z in obj[x][y])
-                    {
-
-
-                        if(!isNaN(obj[x][y][z]))
-                        {
-
-                            props.push([x,y,z].join('.'));
-
-                        }
-
-
-
-                    }
-
-
-
-                }
-
-            }
-
-
-        };
-
-        var t;
-
-        if(tweenstack.tweens.length == 1)
-        {
-            t = tweenstack.tweens[0];
-
-        }
-
-
-        alert(jstr(t));
-
-
-        gui.add(t, 'property', props).setValue(t.property );
-
-        var n = parseInt(t.targetObject[t.property]);
-
-        if(isNaN(n))
-        {
-            n = 0;
-        }
-
-
-        gui.add(t.targetObject, t.property, 1).min(-800).max(800).setValue(n);
-
-
-        var curveOptions = new TweenStack().curveOptionsToArray();
-
-        gui.add(t, 'curve', curveOptions).setValue(t.curve || curveOptions[0]);
-
-
-
-
-        return gui;
-
-    },
-
-
 
 
 
@@ -468,14 +357,50 @@ var DatGui = {
         else if(type == Vector3)
         {
 
-            //add all numerics
-
-
               fui =  DatGui.main_gui.addFolder(ix + '');
 
             DatGui.addEachNumeric(o, fui );
 
         }
+        else if(type == Motionstack)
+        {
+
+            //add main text values
+
+           var fui =  DatGui.main_gui.addFolder('Info');
+
+            DatGui.addEachText(obj, fui );
+
+            //todo = add folder for min
+
+            var fuicurve =  DatGui.main_gui.addFolder('curve');
+
+            var c = fuicurve.add(obj, 'curve', obj.curvesList );
+
+            
+
+            c.onChange(function(value){
+
+            obj.setCurve(value);
+
+
+            });
+
+            var  fuidist =  DatGui.main_gui.addFolder('distance');
+
+            var d =  DatGui.addEachNumeric(o.distance, fuidist );
+
+        }
+
+        else if(type == Force)
+        {
+
+
+            this.main_gui.add(parent, 'selected_force', Game.forces );
+
+        }
+
+        'selected_force', Game.forces
 
 
         if([Sprite,  TextDisplay, VideoDisplay].indexOf(type) >= 0)
@@ -497,24 +422,6 @@ var DatGui = {
         }
 
 
-        /*
-
-        if(isParent([TweenStack]))
-        {
-
-
-
-
-            this.showTweenStack(Game.player, obj);
-
-            return true;
-
-        }
-
-        */
-
-
-
         if(fui && parent) {
 
             fui.onChange = function (f) {
@@ -524,11 +431,7 @@ var DatGui = {
             };
 
 
-
             if (isParent([Animation])) {
-
-
-
 
                 $('#selected_object_src').click(function(){
 
@@ -561,8 +464,6 @@ var DatGui = {
 
     },
 
-
-
         addGuiByKeys:function(ix, obj)
         {
 
@@ -583,9 +484,6 @@ var DatGui = {
                   //#typeHandler
 
               if(!complete){ complete = _inst.typeHandler(ix, o, obj)};
-
-
-
 
 
                 });
@@ -610,17 +508,29 @@ var DatGui = {
 
                         $(ul).prepend( "<input   type='file' id='"+id+"' class='dat_gui_file' value='animation-image'>");
 
+
                         $('#' + id).change(function(){
 
-                          var file =  levelMaker.getRawImageFile(this, function(image){
+                          var file =  levelMaker.getRawImageFile(this, function(imagesrc){
 
-                              obj.image = image;
+                              obj.src = imagesrc;
+
+
+                              obj.image = new GameImage(imagesrc);
+
+                              obj = new Animation(obj);
+
+
+                              Game.sprites[0].selected_animation = obj;
+
+
 
                           });
 
                         });
 
                     }
+
 
 
                 }
@@ -683,16 +593,15 @@ var DatGui = {
     },
 
 
-    get: function (object, name, gui) {
+    get: function (object, name, gui, cont) {
 
          this.selectedObject = object;
 
          $('.dg.main').remove();
 
+         this.main_gui = gui || new dat.GUI({autoPlace:false});
 
-         this.main_gui = gui || new dat.GUI();
-
-        $('.dg.main').attr('z-index', '9999');
+        $('#gui-container').append($(this.main_gui.domElement));
 
          //TODO: build the container to display images, etc..
 
@@ -706,6 +615,8 @@ var DatGui = {
          object, 0);
 
          * *****************************/
+
+        alert('calling');
 
         return this.addGuiByKeys(name, object);
 

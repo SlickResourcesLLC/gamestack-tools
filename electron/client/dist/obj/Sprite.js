@@ -29,6 +29,8 @@ var Sprite = function () {
 
                 this.animations = [];
 
+                this.motionstacks = [];
+
                 this.sounds = {};
 
                 this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
@@ -38,6 +40,10 @@ var Sprite = function () {
                 this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
                 this.selected_animation = {};
+
+                this.selected_motionstack = {};
+
+                this.selected_physics = {};
 
                 this.onGround = false;
 
@@ -56,9 +62,22 @@ var Sprite = function () {
                 this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+
+                this.id = this.setid();
         }
 
         _createClass(Sprite, [{
+                key: "setid",
+                value: function setid() {
+                        return new Date().getUTCMilliseconds();
+                }
+        }, {
+                key: "get_id",
+                value: function get_id() {
+
+                        return this.id;
+                }
+        }, {
                 key: "onScreen",
                 value: function onScreen(w, h) {
                         return this.position.x + this.size.x >= 0 && this.position.x < w && this.position.y + this.size.y >= 0 && this.position.y < h;
@@ -274,10 +293,27 @@ var Sprite = function () {
                         return this;
                 }
         }, {
-                key: "gravity",
-                value: function gravity(options) {
+                key: "velocityY",
+                value: function velocityY(accel, max) {
 
-                        this.prep_key = 'gravity';
+                        this.assertSpeed();
+
+                        if (this.speed.y < max.y) {
+                                this.speed.y += accel;
+                        }
+
+                        this.position.y += this.speed.y;
+                }
+        }, {
+                key: "collide",
+                value: function collide(item) {
+
+                        var max_y = item.max ? item.max.y : item.position.y;
+
+                        if (this.position.y + this.size.y >= max_y) {
+
+                                this.position.y = max_y - this.size.y;
+                        }
                 }
         }, {
                 key: "assertSpeed",
