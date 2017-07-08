@@ -10,7 +10,7 @@ class Motionstack {
 
 
 
-        this.object_id =  this.getArg(args, 'object_id', this.getArg(args, 'object_ids', false));
+        this.object_id =  this.getArg(args, 'object_id', this.getArg(args, 'object_ids', '__0'));
 
         if(this.object_id instanceof Array)
         {
@@ -29,26 +29,28 @@ class Motionstack {
 
         this.distance =  this.getArg(args, 'distance', this.getArg(args, 'distances', false));
 
-
+        this.curvesList =  this.curvesObject();
 
         this.curve =  this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
-        this.curvesList =  this.curvesObject();
+
 
         this.name =  this.getArg(args, 'name', false);
 
+        this.description =  this.getArg(args, 'description', false);
 
-        this.curveString = this.getArg(args, 'curveString', false);
+
+        this.curveString = this.getCurveString();
+
+
+        this.setCurve(this.curveString);
+
 
         this.line =  this.getArg(args, 'line', false);
 
-        this.dispersionAngle =  this.getArg(args, 'dispersionAngle', false);
+        this.duration =  this.getArg(args, 'duration', 500);
 
-        this.duration =  this.getArg(args, 'duration', false);
-
-        this.delay =  this.getArg(args, 'delay',false);
-
-        this.delayPerMember =  this.getArg(args, 'delayPerMember', false);
+        this.delay =  this.getArg(args, 'delay', 0);
 
 
     }
@@ -95,8 +97,40 @@ class Motionstack {
 }
 
 
+getCurveString()
+{
+
+    var __inst = this;
+
+    var c;
+
+    $.each(TWEEN.Easing, function(ix, easing){
+
+        $.each(TWEEN.Easing[ix], function(iy, easeType){
+
+
+            if(__inst.curve == TWEEN.Easing[ix][iy])
+            {
+
+
+
+                c = ix + "_" + iy;
+
+            }
+
+        });
+
+    });
+
+
+    return c;
+
+}
+
+
 setCurve(c)
 {
+
 
 
     var cps = c.split('_');
@@ -106,13 +140,16 @@ setCurve(c)
 
     var curve = TWEEN.Easing.Quadratic.InOut;
 
+
     $.each(TWEEN.Easing, function(ix, easing){
 
         $.each(TWEEN.Easing[ix], function(iy, easeType){
 
+
             if(ix == s1 && iy == s2)
             {
 
+                alert('setting curve');
 
                 curve = TWEEN.Easing[ix][iy];
 
@@ -175,7 +212,6 @@ setCurve(c)
         };
 
 
-
         //we have a target
         tweens[0] = new TWEEN.Tween(objects[0].position)
             .easing(__inst.curve || TWEEN.Easing.Elastic.InOut)
@@ -188,15 +224,29 @@ setCurve(c)
                 console.log(objects[0].position.x, objects[0].position.y);
             });
 
+       __inst.delay  = !isNaN(__inst.delay) && __inst.delay > 0 ?  __inst.delay : 0;
+
+
+
+
+
 
         return{
 
                tweens:tweens,
 
+               delay:__inst.delay,
+
                 fire:function() {
 
+                   var __tweenObject = this;
 
-                   this.tweens[0].start();
+                   window.setTimeout(function(){
+
+                       __tweenObject.tweens[0].start();
+
+                   }, this.delay);
+
 
                 }
 

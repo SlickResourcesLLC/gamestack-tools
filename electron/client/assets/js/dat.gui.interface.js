@@ -3,7 +3,7 @@
 /*
  DatGui
     -implements dat.gui
-    -live update of properties
+    -live update of objects/properties
 
 * */
 
@@ -133,7 +133,7 @@ var DatGui = {
     isNumeric(item)
     {
 
-        return !isNaN(item);
+        return typeof item == 'number' && !isNaN(item);
     },
 
     showTweenStack(obj, tween)
@@ -206,11 +206,7 @@ var DatGui = {
 
             }, /*watch-for*/ ['frameBounds', 'min', 'max'], []);
 
-
-
         });
-
-
 
         return rels;
 
@@ -253,9 +249,10 @@ var DatGui = {
     addEachNumeric:function(obj, fui)
     {
 
-        this.each(obj, function(ix, o){
+        $.each(obj, function(ix, o){
 
-            if (DatGui.isNumeric(obj[ix])) {
+            if ( DatGui.isNumeric(obj[ix])) {
+
 
              var g =  fui.add(obj, ix, -1000, 1000).step(0.2);
 
@@ -377,18 +374,36 @@ var DatGui = {
 
             var c = fuicurve.add(obj, 'curve', obj.curvesList );
 
-            
-
             c.onChange(function(value){
 
-            obj.setCurve(value);
+                obj.setCurve(value);
 
 
             });
 
+            window.setTimeout(function(){
+
+                $('.c select').val(obj.getCurveString());
+
+
+            }, 100);
+
+
+
+            var  fuitiming =  DatGui.main_gui.addFolder('timing');
+
+            var n =  DatGui.addEachNumeric(obj, fuitiming );
+
+
+
+
             var  fuidist =  DatGui.main_gui.addFolder('distance');
 
+
+
             var d =  DatGui.addEachNumeric(o.distance, fuidist );
+
+
 
         }
 
