@@ -25,6 +25,8 @@ var Motionstack = function () {
 
                 this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
+                this.targetRotation = this.getArg(args, 'targetRotation', 0);
+
                 this.name = this.getArg(args, 'name', false);
 
                 this.description = this.getArg(args, 'description', false);
@@ -152,12 +154,33 @@ var Motionstack = function () {
 
                         };
 
-                        //we have a target
-                        tweens[0] = new TWEEN.Tween(objects[0].position).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to(target, 500).onUpdate(function () {
-                                console.log(objects[0].position.x, objects[0].position.y);
-                        }).onComplete(function () {
-                                console.log(objects[0].position.x, objects[0].position.y);
-                        });
+                        if (__inst.targetRotation > 0) {
+
+                                target = __inst.targetRotation + objects[0].rotation.x;
+
+                                //we have a target
+                                tweens[0] = new TWEEN.Tween(objects[0].rotation).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to({ x: target }, 500).onUpdate(function () {
+                                        //console.log(objects[0].position.x,objects[0].position.y);
+
+
+                                }).onComplete(function () {
+                                        //console.log(objects[0].position.x, objects[0].position.y);
+
+
+                                });
+                        } else {
+
+                                //we have a target
+                                tweens[0] = new TWEEN.Tween(objects[0].position).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to(target, 500).onUpdate(function () {
+                                        //console.log(objects[0].position.x,objects[0].position.y);
+
+
+                                }).onComplete(function () {
+                                        //console.log(objects[0].position.x, objects[0].position.y);
+
+
+                                });
+                        }
 
                         __inst.delay = !isNaN(__inst.delay) && __inst.delay > 0 ? __inst.delay : 0;
 

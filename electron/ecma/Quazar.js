@@ -118,6 +118,11 @@ class GameImage {
 
             this.image.src = src.src;
 
+            this.src = src.src;
+
+
+
+
         }
 
         else if (typeof(src) == 'string') {
@@ -126,12 +131,16 @@ class GameImage {
 
             this.image = document.createElement('IMG');
 
+
             this.image.src = src;
 
             this.src = src;
 
 
         }
+
+
+
 
         if(!this.image)
         {
@@ -154,8 +163,7 @@ class GameImage {
 
     }
 
-
-    getImage() {
+     getImage() {
 
         return this.image;
 
@@ -812,8 +820,21 @@ var Canvas = {
 
             }
 
+            var rotation;
 
-            var rotation = sprite.rotation;
+            if(typeof(sprite.rotation) == 'object')
+            {
+
+                rotation = sprite.rotation.x;
+
+
+            }
+            else
+            {
+                rotation = sprite.rotation;
+
+            }
+
 
 
             this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);

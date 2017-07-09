@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>HTML-CSS Test</title>
 
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
 
     <link rel="stylesheet" href="../assets/js/dat.gui.css">
 
@@ -40,13 +42,14 @@
 
 
 
-    <link rel="stylesheet" href="../assets/js/dat.gui.css" />
+
+    <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
 
     <style>
         body {
             color: #888888;
-            font-family:Monospace;
+            
             font-size:13px;
             background-color: #000;
             margin: 0px;
@@ -113,7 +116,7 @@
 
         ul.controllable, ul.options
         {
-            position:fixed;
+            position:absolute;
 
             width:150px;
 
@@ -174,11 +177,39 @@
         }
 
 
+
+
+        .dat_gui_file
+        {
+            display:none;
+
+        }
+
+        label.file_special
+        {
+
+            padding:4px;
+
+            background: #4c4c4c; /* Old browsers */
+            background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 );
+            color:white;
+
+            border:1px solid teal;
+
+
+        }
+
+
         #container
         {
             position:absolute;
 
             top:50px;
+
+            overflow:hidden;
 
         }
 
@@ -213,7 +244,6 @@
 
         .options
         {
-
 
             left:420px;
 
@@ -509,6 +539,26 @@
         }
 
 
+        #centerContainer
+        {
+
+            position:absolute;
+
+            top:40px;
+
+            left:40px;
+
+            right:40px;
+
+            bottom:40px;
+
+
+
+        }
+
+
+
+
     </style>
 
 
@@ -516,6 +566,33 @@
 <body>
 
 
+<input type="file" name="level-file-input" id="level-file-input" />
+
+<div id="ctrl-space-top" >
+    <nav class="top-menu" >
+
+        <img id="logo" src="img/logo-main.png"  />
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Sprite<span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a href="#" id="new-level">New</a></li>
+
+                <li role="presentation"><a href="#" id="load-level">Load</a></li>
+
+            </ul>
+        </div>
+
+        <div style="margin-top:7px;" >
+        <a id="download" class="button-top"   name="level" href="#" ><span>Save to File</span><img src="img/save.png" alt="save data" ></a>
+        </div>
+    </nav>
+
+</div>
+
+
+
+<div id="centerContainer">
 
 <div id="container">
 
@@ -543,16 +620,12 @@
 
 </div>
 
-
-
-
-<span id="floating-hint">Live for today and let forever be free.</span>
-
 <ul class="controllable selected_object"  >
     <span id="*" class="tree-open open" style="position:relative;  top:20px; left:0px; width:20px; height:20px; ">&psi;</span>
     <li>Selected Sprite:</li>
 </ul>
 
+</div>
 
 <script>
 
@@ -1249,7 +1322,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
 
 
@@ -1300,9 +1373,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
-
-
+                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
                 // console.log(JSON.stringify(sprite));
 
@@ -1492,6 +1563,7 @@
             this.player.jump_anime = new Animation({
                 src: "image/samus2.png",
                 delay: 7,
+                tool:true,
                 frameSize: new Vector3(50, 50, 0),
                 frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
             });
@@ -1531,6 +1603,7 @@ this.player.jumpmotion = new Motionstack({
             {
 
 
+               // this.rotation.x += 0.5;
 
                 this.selected_animation.animate();
 
@@ -1661,6 +1734,8 @@ this.player.jumpmotion = new Motionstack({
     var App = {
 
         locked:false,
+
+
 
 
         onType:function(obj, type, callback)
@@ -2220,8 +2295,6 @@ this.player.jumpmotion = new Motionstack({
                        var container =  $('.' + clName);
 
                        $(container).html( html);
-
-
 
 
                         arrayListEvents(list, clName);

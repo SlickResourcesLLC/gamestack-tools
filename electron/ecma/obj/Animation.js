@@ -10,29 +10,24 @@ class Animation {
         args = args || {};
 
 
-
         var _anime = this;
 
+        this.name = $Q.getArg(args, 'name', '_blank'),
 
-        this.data = {
-
-          name:$Q.getArg(args, 'name', false),
-
-            description :  $Q.getArg(args, 'description', '_blank')
-        };
+            this.description =  $Q.getArg(args, 'description', '_blank')
 
 
      this.frames = $Q.getArg(args, 'frames', []);
 
 
+
+
       this.image = new GameImage( $Q.getArg(args, 'src',  $Q.getArg(args, 'image', false)));
+
 
         this.src = this.image.domElement.src;
 
         this.domElement = this.image.domElement;
-
-
-
 
         this.attack_level = $Q.getArg(args, 'attack_level', 0);
 

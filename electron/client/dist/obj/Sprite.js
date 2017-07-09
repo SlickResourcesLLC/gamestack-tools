@@ -39,6 +39,8 @@ var Sprite = function () {
 
                 this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
+                this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
+
                 this.selected_animation = {};
 
                 this.selected_motionstack = {};

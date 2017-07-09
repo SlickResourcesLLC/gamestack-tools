@@ -278,9 +278,11 @@ var DatGui = {
     addEachText:function(obj, fui)
     {
 
+        var discludedKeys = ['src', 'curveString'];
+
         this.each(obj, function(ix, o){
 
-            if (typeof(obj[ix])=='string') {
+            if (discludedKeys.indexOf(ix) == -1 && typeof(obj[ix])=='string') {
 
                 fui.add(obj, ix, obj[ix]);
 
@@ -368,6 +370,8 @@ var DatGui = {
 
             DatGui.addEachText(obj, fui );
 
+            var t = DatGui.main_gui.add(obj, 'targetRotation', -720, 720 );
+
             //todo = add folder for min
 
             var fuicurve =  DatGui.main_gui.addFolder('curve');
@@ -406,6 +410,18 @@ var DatGui = {
 
 
         }
+
+
+
+        else if(type == Animation)
+    {
+
+        var fui =  DatGui.main_gui.addFolder('data');
+
+        DatGui.addEachText(obj, fui );
+
+
+    }
 
         else if(type == Force)
         {
@@ -514,6 +530,8 @@ var DatGui = {
 
                     var my_list = $(lists)[lists.length - 1];
 
+
+
                     if(!$(my_list).find('input[type="file"]').length)
                     {
                         var ul = $(my_list).first('ul');
@@ -521,7 +539,9 @@ var DatGui = {
 
                         var id = this.create_id();
 
-                        $(ul).prepend( "<input   type='file' id='"+id+"' class='dat_gui_file' value='animation-image'>");
+                        $(ul).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/><label class='file_special' for='"+id+"'>Select file</label>");
+
+
 
 
                         $('#' + id).change(function(){
@@ -538,6 +558,13 @@ var DatGui = {
 
                               Game.sprites[0].selected_animation = obj;
 
+                                DatGui.get(obj);
+
+                                if(!$('.file-notic').length) {
+
+                                    $('.dg.main').prepend('<p class="file-notice">Raw File Applied</p>');
+
+                                }
 
 
                           });

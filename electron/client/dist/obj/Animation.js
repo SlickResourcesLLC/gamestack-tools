@@ -17,12 +17,7 @@ var Animation = function () {
 
                 var _anime = this;
 
-                this.data = {
-
-                        name: $Q.getArg(args, 'name', false),
-
-                        description: $Q.getArg(args, 'description', '_blank')
-                };
+                this.name = $Q.getArg(args, 'name', '_blank'), this.description = $Q.getArg(args, 'description', '_blank');
 
                 this.frames = $Q.getArg(args, 'frames', []);
 

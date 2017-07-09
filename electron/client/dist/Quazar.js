@@ -105,6 +105,8 @@ var GameImage = function () {
             this.image = document.createElement('IMG');
 
             this.image.src = src.src;
+
+            this.src = src.src;
         } else if (typeof src == 'string') {
 
             var ext = src.substring(src.lastIndexOf('.'), src.length);
@@ -664,7 +666,14 @@ var Canvas = {
                 y += sprite.selected_animation.offset.y;
             }
 
-            var rotation = sprite.rotation;
+            var rotation;
+
+            if (_typeof(sprite.rotation) == 'object') {
+
+                rotation = sprite.rotation.x;
+            } else {
+                rotation = sprite.rotation;
+            }
 
             this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + realWidth / 2), Math.round(y + realHeight / 2), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
         }
