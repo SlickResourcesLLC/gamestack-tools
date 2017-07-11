@@ -1616,9 +1616,10 @@
 
 
 
+
                         levelMaker.getImageFileCallback(fitem, function(name, w, h, result){
 
-
+                        alert('name:' + name);
 
                             levelMaker.selected_image_src = result;
 
@@ -1634,13 +1635,17 @@
                             if(args.name && args.description) {
 
 
-                                levelMaker.selectedSprite = levelMaker.MapElement(args.name, levelMaker.selected_image_src, new Vector3(w, h, 0), new Vector3(w, h, 0),
+                               var  sprite = levelMaker.MapElement(args.name, levelMaker.selected_image_src, new Vector3(w, h, 0), new Vector3(w, h, 0),
                                     args);
 
 
-                                levelMaker.selectedSprite.img.onload = function () {
+                                sprite.img.onload = function () {
 
-                                    levelMaker.addLevelObjectToUI(levelMaker.selectedSprite);
+                                    sprite.mapSize = new Vector3(this.width, this.height, 0);
+
+                                    sprite.frameSize = new Vector3(this.width, this.height, 0);
+
+                                    levelMaker.addLevelObjectToUI(sprite);
 
                                 }
 
