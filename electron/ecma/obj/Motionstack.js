@@ -213,7 +213,7 @@ setCurve(c)
 
         };
 
-        if(__inst.targetRotation > 0)
+        if(__inst.targetRotation > 0 || __inst.targetRotation < 0)
         {
 
 
@@ -354,6 +354,11 @@ var Motion = function(key_members, value)
 
 
 };
+
+
+
+
+
 
 
 

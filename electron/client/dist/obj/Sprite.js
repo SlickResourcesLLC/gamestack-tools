@@ -27,9 +27,11 @@ var Sprite = function () {
 
                 this.type = $Q.getArg(args, 'type', 'basic');
 
-                this.animations = [];
+                this.animations = $Q.getArg(args, 'animations', []);
 
-                this.motionstacks = [];
+                this.motionstacks = $Q.getArg(args, 'motionstacks', []);
+
+                var __inst = this;
 
                 this.sounds = {};
 
@@ -65,7 +67,25 @@ var Sprite = function () {
 
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
+                this.travel_mode_keys = ['none', 'topscroll_freeflight', 'tsidescroll_freeflight', 'sidescroll_runner'];
+
+                this.travel_modes = [this.create_travel_mode('topscroll_freeflight', 0.3, 0.3, 5.0), this.create_travel_mode('sidescroll_freeflight', 0.3, 0.3, 5.0), this.create_travel_mode('sidescroll_runner', 0.3, 0.3, 7.0)];
+
+                this.travel_mode = this.create_travel_mode('none', 0, 0, 0);
+
+                this.stats = this.create_stats();
+
                 this.id = this.setid();
+
+                $.each(this.motionstacks, function (ix, item) {
+
+                        __inst.motionstacks[ix] = new Motionstack(item);
+                });
+
+                $.each(this.animations, function (ix, item) {
+
+                        __inst.animations[ix] = new Animation(item);
+                });
         }
 
         _createClass(Sprite, [{
@@ -83,6 +103,30 @@ var Sprite = function () {
                 key: "onScreen",
                 value: function onScreen(w, h) {
                         return this.position.x + this.size.x >= 0 && this.position.x < w && this.position.y + this.size.y >= 0 && this.position.y < h;
+                }
+        }, {
+                key: "type_options",
+                value: function type_options() {
+
+                        return ['player', 'enemy', 'powerup', 'attachment', 'projectile'];
+                }
+        }, {
+                key: "create_travel_mode",
+                value: function create_travel_mode(key, accel, decel, max_speed) {
+
+                        return { key: key, accel: accel, decel: decel, max_speed: max_speed };
+                }
+        }, {
+                key: "create_stats",
+                value: function create_stats() {
+                        return {
+
+                                "health": 100,
+                                "magic": 10,
+                                "strength": 20,
+                                "ammo": 10,
+                                "max_speed": 5.0
+                        };
                 }
         }, {
                 key: "update",

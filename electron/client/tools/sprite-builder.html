@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HTML-CSS Test</title>
+    <title>Sprite-Prep</title>
 
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-
 
     <link rel="stylesheet" href="../assets/js/dat.gui.css">
 
@@ -40,22 +39,16 @@
 
     <script src="../assets/js/jquery.fileDownload.js"></script>
 
-
-
-
     <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
+    <script src="../assets/js/jquery.fileDownload.js"></script>
 
     <style>
         body {
             color: #888888;
-            
+
             font-size:13px;
             background-color: #000;
-            margin: 0px;
-            overflow: hidden;
-
-            padding:5px;
 
             position:absolute;
 
@@ -63,22 +56,22 @@
 
             height:100%;
         }
-        #info {
-            position: absolute;
-            top: 0px;
-            width: 400px;
-            left: calc(50% - 200px);
-            text-align: center;
+
+        div.slider
+        {
+            position:absolute;
+
+            right:0px;
+
         }
-        a {
-            color: #00f;
-        }
+
     </style>
 
 
 
+
     <style>
-        
+
 
         canvas
         {
@@ -100,6 +93,19 @@
         }
 
 
+        .dg .c input[type=text] {
+            border-left: 1px solid silver;
+            width: 100%;
+
+            padding:0px;
+
+            padding-left:3px;
+
+            margin:0px;
+
+            background:none;
+
+        }
 
         button.test-button
         {
@@ -176,12 +182,11 @@
 
         }
 
-
-
-
         .dat_gui_file
         {
             display:none;
+
+            visibility:hidden;
 
         }
 
@@ -210,6 +215,8 @@
             top:50px;
 
             overflow:hidden;
+
+            background:black;
 
         }
 
@@ -439,6 +446,14 @@
 
         }
 
+        #ctrl-space-top
+        {
+
+            z-index:9999;
+
+
+        }
+
         #gui-container
         {
 
@@ -454,7 +469,7 @@
 
             height:50px;
 
-            z-index:9999;
+            z-index:9990;
 
         }
 
@@ -532,9 +547,11 @@
 
             width:100%;
 
-            height:40px;
+            height:30px;
 
-            z-index:9999;
+            z-index:9991;
+
+            top:10px;
 
         }
 
@@ -566,7 +583,7 @@
 <body>
 
 
-<input type="file" name="level-file-input" id="level-file-input" />
+<input type="file" name="sprite-file-input" id="sprite-file-input" />
 
 <div id="ctrl-space-top" >
     <nav class="top-menu" >
@@ -576,9 +593,9 @@
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Sprite<span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a href="#" id="new-level">New</a></li>
+                <li role="presentation"><a href="#" id="new-sprite">New</a></li>
 
-                <li role="presentation"><a href="#" id="load-level">Load</a></li>
+                <li role="presentation"><a href="#" id="load-sprite">Load</a></li>
 
             </ul>
         </div>
@@ -648,7 +665,6 @@
     function LevelMaker(filename, settings)
     {
 
-
         return{
 
             topScroll:0,
@@ -711,18 +727,13 @@
 
                         }
 
-
                     });
-
 
                 }
 
-
                 callback();
 
-
             },
-
 
             objectMemberToArray:function(object, key)
             {
@@ -751,7 +762,6 @@
 
                 }
             },
-
 
             arrayToSelect:function(containerId, selectId, values)
             {
@@ -968,13 +978,9 @@
 
                 $('#framewidth').val(frameWidth);
 
-
-
                 $('#frameheight').val(frameHeight);
 
-
                 ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight,x, y, mapWidth, mapHeight);
-
 
             },
 
@@ -1004,35 +1010,7 @@
                     reader.readAsDataURL(file);
                 }
 
-
             },
-
-
-            getRawLevelFile:function(input, callback)
-            {
-
-                var filename = $(input).val().split('\\').pop();
-
-                if(filename.toLowerCase().indexOf('.json') >= 0)
-                {
-
-                    var file  = input.files[0];
-                    var reader  = new FileReader();
-
-                    reader.addEventListener("load", function () {
-
-                        callback(reader.result)
-
-                    }, false);
-
-                    if (file) {
-                        reader.readAsText(file);
-                    }
-
-                }
-            },
-
-
 
             MapData:function(map, settings)
             {
@@ -1292,7 +1270,6 @@
             simpleMapObject:function(object, x, y)
             {
 
-
                 var x = Math.floor(x - object.size.x / 2);
                 var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
 
@@ -1451,7 +1428,7 @@
 
     var jstr = function(obj){
 
-        return JSON.stringify(obj);
+        return JSON.stringify(obj, null, 2);
 
     };
 
@@ -1539,7 +1516,7 @@
 
 
 
-        init:function()
+        init:function(sprite)
         {
 
             $('#container').append("<canvas></canvas>");
@@ -1551,59 +1528,70 @@
             this.ctx = this.canvas.getContext('2d');
 
 
-            //3. the player sprite
-
-
-            this.player = new Sprite('Samus-Like Character', 'a video game sprite', {
-                position: new Vector3(100, 120),
-                size: new Vector3(50, 52)
-            });
-
-
-            this.player.jump_anime = new Animation({
-                src: "image/samus2.png",
-                delay: 7,
-                tool:true,
-                frameSize: new Vector3(50, 50, 0),
-                frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
-            });
-
-
-this.player.jumpmotion = new Motionstack({
-
-    name:"jump",
-
-    description:"the jump movmement.",
-
-    object_id:this.player.id,
-    name:"jump",
-
-    distance:new Vector3(0, -200, 0),
-    curve:TWEEN.Easing.Bounce.InOut,
-    line:false,
-    dispersionAngle:0,
-    duration:400,
-    delay:0,
-    delayPerMember:0
-        });
-
-
-            this.player.selected_motionstack = new Motionstack(this.player.jumpmotion);
-
-            this.player.animations.push(this.player.jump_anime);
-
-            this.player.motionstacks.push(this.player.jumpmotion);
-
-
-            this.player.selected_animation = new Animation( this.player.jump_anime);
-
-
-
-            this.player.update = function()
+            if(sprite)
             {
+                alert('hello');
+
+                this.player = sprite;
+
+            }
+            else {
+
+                //3. the player sprite
 
 
-               // this.rotation.x += 0.5;
+                this.player = new Sprite('Samus-Like Character', 'a video game sprite', {
+                    position: new Vector3(100, 120),
+                    size: new Vector3(50, 52)
+                });
+
+
+                this.player.jump_anime = new Animation({
+                    src: "image/samus2.png",
+                    delay: 7,
+                    tool: true,
+                    frameSize: new Vector3(50, 50, 0),
+                    frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
+                });
+
+
+                this.player.jumpmotion = new Motionstack({
+
+                    name: "jump",
+
+                    description: "the jump movmement.",
+
+                    object_id: this.player.id,
+                    name: "jump",
+
+                    distance: new Vector3(0, -200, 0),
+                    curve: TWEEN.Easing.Bounce.InOut,
+                    line: false,
+                    dispersionAngle: 0,
+                    duration: 400,
+                    delay: 0,
+                    delayPerMember: 0
+                });
+
+
+                this.player.selected_motionstack = new Motionstack(this.player.jumpmotion);
+
+                this.player.animations.push(this.player.jump_anime);
+
+                this.player.motionstacks.push(this.player.jumpmotion);
+
+
+
+            }
+
+
+            this.player.selected_animation = new Animation(this.player.jump_anime);
+
+
+            this.player.update = function () {
+
+
+                // this.rotation.x += 0.5;
 
                 this.selected_animation.animate();
 
@@ -1611,9 +1599,10 @@ this.player.jumpmotion = new Motionstack({
             };
 
 
+
             this.player.active = true;
 
-            this.sprites.push(this.player);
+            this.sprites[0] = this.player;
 
             $('canvas').width(500);
 
@@ -1735,6 +1724,55 @@ this.player.jumpmotion = new Motionstack({
 
         locked:false,
 
+        createNewSprite:function()
+        {
+
+           window.location.reload();
+
+        },
+
+
+        download:function(input, filename, contentObject)
+        {
+
+            $(input).prop('download', filename);
+
+            $(input).prop('target', '_blank');
+
+            $(input).prop('href', "data:text/json," + jstr(contentObject));
+
+            $(input).prop('name', filename);
+
+            $.fileDownload($(input).prop('href'), {
+                preparingMessageHtml: "We are preparing your report, please wait...",
+                failMessageHtml: "There was a problem generating your report, please try again."
+            });
+
+        },
+
+        getRawFile:function(input, callback)
+        {
+
+            var filename = $(input).val().split('\\').pop();
+
+            if(filename.toLowerCase().indexOf('.json') >= 0)
+            {
+
+                var file  = input.files[0];
+                var reader  = new FileReader();
+
+                reader.addEventListener("load", function () {
+
+                    callback(reader.result)
+
+                }, false);
+
+                if (file) {
+                    reader.readAsText(file);
+                }
+
+            }
+        },
 
 
 
@@ -1877,7 +1915,7 @@ this.player.jumpmotion = new Motionstack({
         },
 
 
-      
+
 
 
         GTUI:{
@@ -2039,7 +2077,7 @@ this.player.jumpmotion = new Motionstack({
 
 
                    }
-                    
+
                 });
 
                 var mainElement = $(container);
@@ -2516,12 +2554,7 @@ this.player.jumpmotion = new Motionstack({
 
             App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
 
-
-
-
             $(document).on('change', 'input' ,function (e) {
-
-
 
                 App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
 
@@ -2586,9 +2619,6 @@ this.player.jumpmotion = new Motionstack({
 
 
             });
-
-
-
 
             $(document).on('click', 'img.tree-edit' ,function (evt) {
 
@@ -2656,12 +2686,7 @@ this.player.jumpmotion = new Motionstack({
 
                 };
 
-
-
-
                 if(sprop){alert('we have an object of:' + sprop.constructor.name);}
-
-
 
                 DatGui.get(sprop, index + "");
 
@@ -2720,14 +2745,6 @@ this.player.jumpmotion = new Motionstack({
 
 
 
-    $(document).ready(function() {
-        
-        
-      
-
-
-    });
-
 
     function animate(time) {
 
@@ -2745,6 +2762,8 @@ this.player.jumpmotion = new Motionstack({
 
 
     }
+
+
 
 
 
@@ -2780,9 +2799,49 @@ this.player.jumpmotion = new Motionstack({
 
         animate();
 
+
+        $('#new-sprite').click(function(){
+
+            App.createNewSprite();
+
+
+        });
+
+        $('#sprite-file-input').change(function(){
+
+
+            App.getRawFile(this, function(result){
+
+               var sprite = JSON.parse(result);
+
+               Game.sprites[0] = new Sprite(sprite.name, sprite.description, sprite);
+
+               Game.init(Game.sprites[0]);
+
+            });
+
+
+        });
+
+        $('#load-sprite').click(function(){
+
+           $('#sprite-file-input').click();
+
+        });
+
+
+        $('#download').click(function(){
+
+            App.download(this, "my-ready-sprite.json", Game.sprites[0]);
+
+            return false; //this is critical to stop the click event which will trigger a normal file download!
+
+        });
+
         // var gui = DatGui.get(lib.samples['Animation'][0]);
 
     });
+
 
 
 

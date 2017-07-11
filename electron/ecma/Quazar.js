@@ -998,6 +998,10 @@ class GameWindow {
 
         Quazar.ctx = ctx;
 
+        this.camera = new Vector3(0, 0, 0);
+
+        this.spriteOptions = this.uniques(this.sprite_set.list);
+
 
         this.extraUpdate = update || function () {
             };
@@ -1005,77 +1009,37 @@ class GameWindow {
 
     }
 
+    uniques(list)
+    {
+
+        var listout = [];
+
+        $.each(list, function(ix, item){
+
+            if(!listout.indexOf(item.id) >= 0)
+            {
+
+                var str = item.name;
+
+                listout.push({"sprite":item});
+
+            }
+
+
+        });
+
+
+        return listout;
+
+    }
+
+
+
     extraUpdate()
     {
 
     }
 
-    add(object)
-    {
-
-        var c = object.constructor;
-
-        switch(c)
-        {
-
-            case Sprite:
-
-                this.sprite_set.add(object);
-
-                break;
-
-            case Background:
-
-                this.background_set.add(object);
-
-                break;
-
-            case Interactive:
-
-                this.interactive_set.add(object);
-
-                break;
-
-            case Force:
-
-                this.force_set.add(object);
-
-                break;
-
-
-            case ActionStack:
-
-                this.actionstack_set.add(object);
-
-                break;
-
-
-        }
-
-    }
-
-    all_checkables() {
-        let stackables = [
-
-            this.sound_set.list,
-
-            this.animation_set.list,
-
-            this.tweenstack_set.list
-
-        ];
-
-        let allchecks = [];
-
-        for (let x in stackables) {
-
-            allchecks = allchecks.concat(stackables[x]);
-
-        }
-
-        return allchecks;
-
-    }
 
 
     render() {

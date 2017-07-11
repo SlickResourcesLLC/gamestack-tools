@@ -154,7 +154,7 @@ var Motionstack = function () {
 
                         };
 
-                        if (__inst.targetRotation > 0) {
+                        if (__inst.targetRotation > 0 || __inst.targetRotation < 0) {
 
                                 target = __inst.targetRotation + objects[0].rotation.x;
 

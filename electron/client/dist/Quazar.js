@@ -823,66 +823,34 @@ var GameWindow = function () {
 
         Quazar.ctx = ctx;
 
+        this.camera = new Vector3(0, 0, 0);
+
+        this.spriteOptions = this.uniques(this.sprite_set.list);
+
         this.extraUpdate = update || function () {};
     }
 
     _createClass(GameWindow, [{
+        key: 'uniques',
+        value: function uniques(list) {
+
+            var listout = [];
+
+            $.each(list, function (ix, item) {
+
+                if (!listout.indexOf(item.id) >= 0) {
+
+                    var str = item.name;
+
+                    listout.push({ "sprite": item });
+                }
+            });
+
+            return listout;
+        }
+    }, {
         key: 'extraUpdate',
         value: function extraUpdate() {}
-    }, {
-        key: 'add',
-        value: function add(object) {
-
-            var c = object.constructor;
-
-            switch (c) {
-
-                case Sprite:
-
-                    this.sprite_set.add(object);
-
-                    break;
-
-                case Background:
-
-                    this.background_set.add(object);
-
-                    break;
-
-                case Interactive:
-
-                    this.interactive_set.add(object);
-
-                    break;
-
-                case Force:
-
-                    this.force_set.add(object);
-
-                    break;
-
-                case ActionStack:
-
-                    this.actionstack_set.add(object);
-
-                    break;
-
-            }
-        }
-    }, {
-        key: 'all_checkables',
-        value: function all_checkables() {
-            var stackables = [this.sound_set.list, this.animation_set.list, this.tweenstack_set.list];
-
-            var allchecks = [];
-
-            for (var x in stackables) {
-
-                allchecks = allchecks.concat(stackables[x]);
-            }
-
-            return allchecks;
-        }
     }, {
         key: 'render',
         value: function render() {

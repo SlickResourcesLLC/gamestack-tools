@@ -40,7 +40,6 @@
 
         <script src="../assets/js/jquery.fileDownload.js"></script>
 
-
         <!-- Insert this line after script imports -->
         <script>if (window.module) module = window.module;</script>
 
@@ -471,7 +470,7 @@
         div.free-select
         {
 
-            position:absolute;
+            position:fixed;
 
             z-index:997;
 
@@ -484,6 +483,12 @@
             background-color:#1e2833;
 
             border:1px inset teal;
+
+            overflow:visible;
+
+            overflow-y:scroll;
+
+            max-height:50%;
 
         }
 
@@ -663,9 +668,9 @@
 
             left:50%;
 
-            height:50px;
+            height:100px;
 
-            width:48%;
+            width:100px;
 
         }
 
@@ -842,11 +847,11 @@
 
             border: none;
 
-            position:absolute;
+            position:relative;
 
             top:0px;
 
-            left:100%;
+            left:0px;
 
             font-size:0.9em;
 
@@ -879,11 +884,83 @@
         }
 
 
+        #top-gui
+        {
+
+            position:fixed;
+
+            width:100%;
+
+            height:40px;
+
+            z-index:9991;
+
+            top:50px;
+
+        }
+
+
+        #forceSelect
+        {
+            position:absolute;
+
+            z-index:9999;
+
+            left:0;
+
+            top:0;
+
+            margin:0;
+
+            background: #4c4c4c; /* Old browsers */
+            background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 );
+            color:white;
+
+        }
+
+        #forceSelect option
+        {
+
+            background: black; /* Old browsers */
+
+            color:white;
+
+        }
+
+        img.main-play
+        {
+            float:right;
+
+        }
+
+
+
     </style>
 
     <body>
 
+
+
+    <div id="top-gui">
+
+        <select id="forceSelect">
+            <option>Strong Gravity</option>
+            <option>Medium Gravity</option>
+            <option>Weak Gravity</option>
+
+        </select>
+
+        <img id="add_tween_stack_ctrl" class="main-play bottom-ctrl"  style="   width:35px; height:35px; background-image: url(&quot;img/play.png&quot;);   background-position: center center; background-size: 100% auto;"></img>
+
+
+    </div>
+
     <input type="file" name="level-file-input" id="level-file-input" />
+
+    <input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple />
 
     <div id="ctrl-space-top" >
         <nav class="top-menu" >
@@ -893,9 +970,11 @@
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li role="presentation"><a href="#" id="new-level">New</a></li>
+                    <li role="presentation"><a href="#" id="new-level">New Level</a></li>
 
-                    <li role="presentation"><a href="#" id="load-level">Load</a></li>
+                    <li role="presentation"><a href="#" id="load-level">Load Level</a></li>
+
+                    <li role="presentation"><a href="#" id="load-map-objects">Load Map Objects</a></li>
 
                  </ul>
             </div>
@@ -912,15 +991,6 @@
     </div>
 
         <div id="container" >
-
-            <div  class="free-select center" >
-
-            <ul></ul>
-
-                <button class="save-map-options"  >Save Options<img src="img/save.png" alt="save data" ></button>
-
-
-            </div>
 
 
             <canvas id="myCanvas" class="level-maker-canvas">
@@ -1233,6 +1303,12 @@
 
                 </div>
 
+                <label class="minor">Travel Mode</label>
+
+                <div class="travel-mode-gui" id="travel-mode-gui">
+
+                </div>
+
                 <label class="minor">Acceleration</label>
 
                 <div class="motion-accel-gui" id="motion-accel-gui">
@@ -1259,6 +1335,18 @@
             </form>
 
         </div>
+
+
+    <div  class="free-select center" >
+
+        <ul></ul>
+
+        <button class="save-map-options"  >Save Options<img src="img/save.png" alt="save data" ></button>
+
+
+    </div>
+
+
 
     <script>
 
@@ -1461,20 +1549,14 @@
 
                 localStorage.setItem('recent-files', JSON.stringify(App.recent_files));
 
-                alert(localStorage.getItem('recent-files'));
+              //  alert(localStorage.getItem('recent-files'));
 
             },
-
-
 
             saveLevel:function(filename)
             {
 
-
-
                 var str = JSON.stringify({settings:levelMaker.settings, map:Game.sprites}, null, 2); // spacing level = 2
-
-               // App.addRecentFile(this.settings.name + ".json");
 
                 App.triggerDownload(levelMaker.settings.name + ".json", str);
 
@@ -1523,6 +1605,65 @@
                         $('#level-file-input').click();
 
                     });
+
+
+                $('#multi-map-object-file-input').change(function(evt){
+
+
+                    var files = evt.target.files;
+
+                    $.each(files, function(ix, fitem){
+
+
+
+                        levelMaker.getImageFileCallback(fitem, function(name, w, h, result){
+
+
+
+                            levelMaker.selected_image_src = result;
+
+                            console.log('Making objects in create event');
+
+                            var args = {type:"game object", description:"multi-loaded object" };
+
+
+                            args.size = new Vector3(w, h, 0);
+
+                            args.name = name;
+
+                            if(args.name && args.description) {
+
+
+                                levelMaker.selectedSprite = levelMaker.MapElement(args.name, levelMaker.selected_image_src, new Vector3(w, h, 0), new Vector3(w, h, 0),
+                                    args);
+
+
+                                levelMaker.selectedSprite.img.onload = function () {
+
+                                    levelMaker.addLevelObjectToUI(levelMaker.selectedSprite);
+
+                                }
+
+                            }
+
+
+                    });
+
+
+                    });
+
+
+
+                });
+
+
+                $('#load-map-objects').click(function(){
+
+
+                    $('#multi-map-object-file-input').click();
+
+                });
+
 
 
 
@@ -1592,7 +1733,7 @@
 
                         }
 
-                        alert( "Data Saved: " + data );
+                      //  alert( "Data Saved: " + data );
                     });
 
             },
@@ -1610,7 +1751,7 @@
 
                         }
 
-                        alert( "Data Saved: " + data );
+                      //  alert( "Data Saved: " + data );
                     });
 
             },
@@ -1779,6 +1920,23 @@
 
             },
 
+            setTravelModeGui:function()
+            {
+
+                var sgui = new dat.GUI( { autoPlace: false } );
+
+                sgui.add(levelMaker.assembled_sprite.travel_mode, 'key', levelMaker.assembled_sprite.travel_mode_keys);
+                sgui.add(levelMaker.assembled_sprite.travel_mode, 'accel').min(0.002).max(2.0).step(0.05);
+
+                sgui.add(levelMaker.assembled_sprite.travel_mode, 'decel').min(0.002).max(2.0).step(0.05);
+
+                sgui.add(levelMaker.assembled_sprite.travel_mode, 'max_speed').min(0.1).max(20.0).step(0.05);
+
+
+                $('.travel-mode-gui').append($(sgui.domElement));
+
+            },
+
             setMotionVectorGui : function(){
 
                 var sgui = new dat.GUI( { autoPlace: false } );
@@ -1850,7 +2008,13 @@
 
                     $('.free-select').show();
 
-                    $('.free-select').animate({top: targetPY, left: targetPX}, "fast");
+
+
+                    $('.free-select').css('top', targetPY);
+
+                    $('.free-select').css('left', targetPX);
+
+
 
                 };
 
@@ -1914,11 +2078,24 @@
 
         $(document).ready(function () {
 
+            $(document).on('click', 'img.main-play' ,function (evt) {
+
+               $.each(Game.sprites, function(ix, item){
+
+                   //rehook motion functions
+
+                   Game.sprites[ix].def_update = new Sprite().def_update;
+
+               });
+
+            });
+
+
             $('#apply_map_settings').click(function(){
 
                 levelMaker.applySettings();
 
-                alert('applied map settings: with :' + levelMaker.settings.name);
+              //  alert('applied map settings: with :' + levelMaker.settings.name);
 
 
             });
@@ -1938,7 +2115,7 @@
 
                 App.saveMapOptions(JSON.stringify(data), function(){
 
-                    alert('Map options saved.');
+                  //  alert('Map options saved.');
 
                 });
 
@@ -1954,7 +2131,7 @@
 
                if($('.up').data('on') == 'on')
                {
-                   alert('got the up class');
+                 //  alert('got the up class');
 
                    levelMaker.leftClickExtra = function() {
 
@@ -1972,7 +2149,7 @@
 
                 if($('.up-left').data('on') == 'on')
                 {
-                    alert('got the up-left class');
+                  //  alert('got the up-left class');
 
 
 
@@ -2135,7 +2312,7 @@
 
                 var id = $(this).attr('id').replace('-', '_');
 
-                var x = 0, y = 0 + levelMaker.topScroll;
+                var x = 0, y =  120;
 
                 App.dialog(App._UI_OPTION_MAP[id],
                         x, y, function () {
@@ -2147,7 +2324,7 @@
             var flipSelectedX = function ()
             {
 
-                var s = levelMaker.getSelected();
+                var s = levelMaker.getHoverSelected();
 
 
                 if (s)
@@ -2157,14 +2334,43 @@
 
                 }
 
-            }
+            };
+
+
+            var rotate = function ()
+            {
+
+                var s = levelMaker.getHoverSelected();
+
+                if (s)
+                {
+
+                    s.rotation.x += 45;
+
+                }
+
+            };
 
 
             $(document).on('keydown', function (e) {
 
                 console.log('got key of:' + event.which);
 
-                if (event.which == '70')
+
+                if (event.which == '114' ||event.which == '82' )
+                {
+
+                    rotate();
+                }
+
+            });
+
+
+            $(document).on('keydown', function (e) {
+
+                console.log('got key of:' + event.which);
+
+                if (event.which == '70' ||event.which == '102' )
                 {
 
                     flipSelectedX();
@@ -2233,6 +2439,10 @@
 
                 this.GameWindow.draw();
 
+               Canvas.draw(levelMaker.selection_sprite, this.GameWindow.ctx);
+
+                Canvas.draw(levelMaker.hover_selection_sprite, this.GameWindow.ctx);
+
             },
 
             init:function(callback)
@@ -2291,7 +2501,7 @@
 
                             if(item == my_item)
                             {
-                                alert('removing sprite');
+                             //   alert('removing sprite');
 
                                 list.splice(ix, 1);
 
@@ -2310,7 +2520,7 @@
 
                         if(item == levelMaker.selection_sprite || item == levelMaker.hover_selection_sprite)
                         {
-                            alert('removing sprite');
+                          //  alert('removing sprite');
 
                             Game.sprites = Game.sprites.splice(ix, 1);
 
@@ -2421,13 +2631,13 @@
                     if(sprites instanceof Array)
                     {
 
-                        alert('sprite []');
+                     //   alert('sprite []');
 
                         Game.sprites = sprites;
 
                         Quazar.each(Game.sprites, function(ix, item){
 
-                            alert('spr');
+                          //  alert('spr');
 
 
                             Game.sprites[ix] = new Sprite('', '', item);
@@ -2588,6 +2798,8 @@
 
                     App.setMotionVectorGui();
 
+                    App.setTravelModeGui();
+
                     $('#create_object').click(function(){
 
                         var   fx  =  parseFloat($('#frameX').val()),
@@ -2624,18 +2836,27 @@
 
                         args.size = new Vector3(w, h, 0);
 
+                        if(name && description) {
 
-                        levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
-                            args );
 
-                        levelMaker.selectedSprite.img.onload = function()
-                        {
+                            levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                                args);
 
-                            levelMaker.addLevelObjectToUI( levelMaker.selectedSprite);
+
+                            levelMaker.selectedSprite.img.onload = function () {
+
+                                levelMaker.addLevelObjectToUI(levelMaker.selectedSprite);
+
+                            }
+
+                            $('#map-item-space form').hide();
 
                         }
+                        else
+                        {
+                            alert('map object must have name and description.');
 
-                        $('#map-item-space form').hide();
+                        }
 
                     });
 
@@ -2679,7 +2900,7 @@
 
                     var width = mapWidth, height = mapHeight;
 
-                    var portion = mapWidth / mapHeight;
+                    var portion = canvas.width / canvas.height;
 
                     mapHeight = canvas.height;
 
@@ -2752,7 +2973,38 @@
 
                 },
 
-             
+
+                getImageFileCallback:function(file,  callback)
+                {
+
+
+                    var reader  = new FileReader();
+
+                    reader.name = file.name;
+
+                    reader.addEventListener("load", function () {
+
+                        var mapWidth = this.width,
+
+                            mapHeight = this.height;
+
+                        var x = 0, y = 0;
+
+                        if(typeof(callback) == 'function')
+                        {
+                            callback(this.name, mapWidth, mapHeight, this.result);
+
+                        }
+                    }, false);
+
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
+
+
+                },
+
+
                 getRawLevelFile:function(input, callback)
                 {
 
@@ -2877,14 +3129,14 @@
 
                     });
                 },
-                getSelected: function ()
+                getHoverSelected: function ()
                 {
 
                     var getSpr = false;
 
                     Quazar.each(Game.sprites, function (ix, item) {
 
-                        if (item.hover_selected || item.selected)
+                        if (item.hover_selected)
                         {
 
                             getSpr = item;
@@ -3004,8 +3256,8 @@
                             y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top)
                         {
 
-                            //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
-                            //   selection = true;
+                              item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
+                               selection = true;
                         }
 
                     });
@@ -3097,7 +3349,7 @@
                     if(levelMaker.assembled_sprite.speed)
                     {
 
-                        alert(JSON.stringify(levelMaker.assembled_sprite.speed));
+                    //    alert(JSON.stringify(levelMaker.assembled_sprite.speed));
 
                     }
 
@@ -3111,7 +3363,7 @@
                     if(sprite.speed)
                     {
 
-                        alert("sprite-speed:" + JSON.stringify(sprite.speed));
+                      //  alert("sprite-speed:" + JSON.stringify(sprite.speed));
 
                     }
 
@@ -3156,13 +3408,13 @@
 
                         var x2 = 0, y2 = 0;
 
-                        if(east){    x2 = x * levelMaker.selectedElement.mapSize.x  * -1; }
+                        if(east){    x2 =   x * levelMaker.selectedElement.mapSize.x  * -1 + (dist * x) * -1; }
 
-                        if(west){    x2  = x * levelMaker.selectedElement.mapSize.x   }
+                        if(west){    x2  =   x * levelMaker.selectedElement.mapSize.x  + (dist * x)  }
 
-                        if(north){    y2 =  x * levelMaker.selectedElement.mapSize.y  * -1 }
+                        if(north){    y2 =  x * levelMaker.selectedElement.mapSize.y  * -1 + (dist * x) * -1}
 
-                        if(south){    y2 =  x * levelMaker.selectedElement.mapSize.y; }
+                        if(south){    y2 =   x * levelMaker.selectedElement.mapSize.y + (dist * x); }
 
                         levelMaker.plantMapSprite(levelMaker.selectedElement, x1+ x2, y1+y2);
 
@@ -3176,16 +3428,20 @@
                 addLevelObjectToUI:function(item)
                 {
 
-                    App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
-                        console.log('1');
 
-                        var value = $(element).text();
+                        App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                            console.log('1');
 
-                        // alert('click on:' + value);
+                            var value = $(element).text();
 
-                        levelMaker.selectedElement = levelMaker.get(value);
+                            // alert('click on:' + value);
 
-                    }));
+                            levelMaker.selectedElement = levelMaker.get(value);
+
+                        }));
+
+
+
 
                 },
 
@@ -3256,9 +3512,9 @@
 
             levelMaker.discluded_sprites.push(levelMaker.selection_sprite);
 
-            Game.sprites.push(levelMaker.selection_sprite);
+          //  Game.sprites.push(levelMaker.selection_sprite);
 
-            Game.sprites.push(levelMaker.hover_selection_sprite);
+           // Game.sprites.push(levelMaker.hover_selection_sprite);
 
 
         };
@@ -3309,18 +3565,18 @@
 
             var centerSizeSpriteToSprite = function (cSprite, aSprite)
             {
-                cSprite.size.x = aSprite.size.x + 20;
+                cSprite.size.x = aSprite.size.x;
 
-                cSprite.size.y = aSprite.size.y + 20;
+                cSprite.size.y = aSprite.size.y;
 
 
                 var x = Math.floor((aSprite.position.x + aSprite.size.x / 2) - cSprite.size.x / 2),
-                    y = Math.floor(aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);
+                    y = Math.floor((aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);
 
                 cSprite.position.x = x;
                 cSprite.position.y = y;
 
-            }
+            };
 
 
             create_selections();

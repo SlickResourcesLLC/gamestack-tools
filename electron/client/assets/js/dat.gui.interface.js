@@ -560,13 +560,6 @@ var DatGui = {
 
                                 DatGui.get(obj);
 
-                                if(!$('.file-notic').length) {
-
-                                    $('.dg.main').prepend('<p class="file-notice">Raw File Applied</p>');
-
-                                }
-
-
                           });
 
                         });

@@ -11,8 +11,6 @@ class Sprite {
 
         var _spr = this;
 
-
-
         Quazar.each(args, function (ix, item) {
 
             if (ix !== 'parent') {
@@ -24,9 +22,12 @@ class Sprite {
 
         this.type = $Q.getArg(args, 'type', 'basic');
 
-        this.animations = [];
+        this.animations = $Q.getArg(args, 'animations', []);
 
-        this.motionstacks = [];
+        this.motionstacks = $Q.getArg(args, 'motionstacks', []);
+
+        let __inst = this;
+
 
 
         this.sounds = {};
@@ -38,12 +39,10 @@ class Sprite {
         this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
 
 
-
         this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
 
         this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
-
 
         this.selected_animation = {};
 
@@ -70,8 +69,61 @@ class Sprite {
 
         this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
+
+
+        this.gravity_strength = [
+            0,
+            1,
+            2,
+            3
+
+        ];
+
+
+        this.bounce_strength = [
+            0,
+            1,
+            2,
+            3
+         ];
+
+
+        this.travel_mode_keys = [
+            'none',
+            'topscroll_freeflight',
+            'tsidescroll_freeflight',
+            'sidescroll_runner'
+
+        ];
+
+        this.travel_modes = [
+
+            this.create_travel_mode('topscroll_freeflight', 0.3, 0.3, 5.0),
+
+            this.create_travel_mode('sidescroll_freeflight', 0.3, 0.3, 5.0),
+
+            this.create_travel_mode('sidescroll_runner', 0.3, 0.3, 7.0)
+
+        ];
+
+        this.travel_mode = this.create_travel_mode('none', 0, 0, 0);
+
+        this.stats = this.create_stats();
+
         this.id = this.setid();
 
+        $.each(this.motionstacks, function(ix, item){
+
+            __inst.motionstacks[ix] = new Motionstack(item);
+
+        });
+
+
+        $.each(this.animations, function(ix, item){
+
+            __inst.animations[ix] = new Animation(item);
+
+        });
 
     }
 
@@ -93,7 +145,40 @@ class Sprite {
 
     }
 
+    type_options()
+    {
 
+        return[
+
+            'player',
+            'enemy',
+            'powerup',
+            'attachment',
+            'projectile'
+
+        ]
+
+    }
+
+    create_travel_mode(key, accel, decel, max_speed)
+    {
+
+        return{key, accel, decel, max_speed}
+
+    }
+
+    create_stats()
+    {
+        return{
+
+            "health":100,
+            "magic":10,
+            "strength":20,
+            "ammo":10,
+            "max_speed":5.0
+        }
+
+    }
 
     update() {}
 
