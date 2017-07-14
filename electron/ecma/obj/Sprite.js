@@ -127,6 +127,7 @@ class Sprite {
 
     }
 
+
     setid()
      {
          return new Date().getUTCMilliseconds();
@@ -183,7 +184,6 @@ class Sprite {
     update() {}
 
     def_update() {
-
 
         for(var x in this.speed)
         {

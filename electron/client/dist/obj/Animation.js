@@ -39,7 +39,7 @@ var Animation = function () {
 
                 this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
 
-                this.frameBounds = this.getArg(args, 'frameBounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+                this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
                 this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
@@ -111,7 +111,6 @@ var Animation = function () {
 
                                         //Quazar.log('assembling animation with:' + jstr(this.frameBounds) + ':frames len:' + this.frames.length);
 
-
                                         var framePos = { x: x * this.frameSize.x + this.frameOffset.x, y: y * this.frameSize.y + this.frameOffset.y };
 
                                         this.frames.push({ image: this.image, frameSize: this.frameSize, framePos: framePos });
@@ -141,11 +140,6 @@ var Animation = function () {
                 key: 'resetFrames',
                 value: function resetFrames() //special reset function:: frames are re-rendered each reset()
                 {
-
-                        //1. reset the GameImage
-
-
-                        //2. apply the frames
 
                         this.apply2DFrames();
                 }

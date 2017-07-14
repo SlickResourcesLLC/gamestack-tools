@@ -51,6 +51,17 @@ var VectorBounds = function VectorBounds(min, max) {
 
 ;
 
+var VectorFrameBounds = function VectorFrameBounds(min, max, termPoint) {
+    _classCallCheck(this, VectorFrameBounds);
+
+    this.min = min;
+    this.max = max;
+
+    this.termPoint = termPoint || new Vector3(this.max.x, this.max.y, this.max.z);
+};
+
+;
+
 var GameSound = function () {
     function GameSound(src, onCreate) {
         _classCallCheck(this, GameSound);
@@ -113,9 +124,9 @@ var GameImage = function () {
 
             this.image = document.createElement('IMG');
 
-            this.image.src = src;
+            this.image.src = Quazar.getImageSrc(src) || src;
 
-            this.src = src;
+            this.src = this.image.src;
         }
 
         if (!this.image) {
@@ -150,6 +161,31 @@ var GameImage = function () {
 var __gameInstance = __gameInstance || {};
 
 var Quazar = {
+
+    __images: {},
+
+    addImageSrc: function addImageSrc(src, id) {
+        this.__images[id || this.uniqueid()] = src;
+    },
+
+    uniqueid: function uniqueid() {
+        return new Date().getUTCMilliseconds();
+    },
+
+    getImageSrc: function getImageSrc(id) {
+        return this.__images[id] || false;
+    },
+
+    getImageId: function getImageId(src) {
+
+        for (var x in this.__images) {
+            if (this.__images[x] == src) {
+
+                return x;
+            }
+        }
+    },
+
 
     DEBUG: false,
 

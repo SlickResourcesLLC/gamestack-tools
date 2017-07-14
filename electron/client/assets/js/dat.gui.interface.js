@@ -332,7 +332,19 @@ var DatGui = {
         };
 
 
-        if(type == VectorBounds)
+        if(type == Sprite) {
+
+            console.log('detected sprite');
+
+            var  fuisize =  DatGui.main_gui.addFolder('size');
+
+            var max =  DatGui.addEachNumeric(o.size, fuisize );
+
+
+
+        }
+
+            if(type == VectorFrameBounds)
         {
 
             fui =  DatGui.main_gui.addFolder(ix + '');
@@ -342,11 +354,19 @@ var DatGui = {
 
             var  fuimin =  fui.addFolder('min');
 
-            var  fuimax =  fui.addFolder('max');
-
           var min =   DatGui.addEachNumeric(o.min, fuimin );
 
-          var max =  DatGui.addEachNumeric(o.max, fuimax );
+
+            var  fuimax =  fui.addFolder('max');
+
+
+            var max =  DatGui.addEachNumeric(o.max, fuimax );
+
+
+            var  fuiterm =  fui.addFolder('termPoint');
+
+
+            var term =  DatGui.addEachNumeric(o.termPoint, fuiterm );
 
             //todo = add folder for max
 
@@ -651,7 +671,7 @@ var DatGui = {
 
          * *****************************/
 
-        alert('calling');
+       // alert('calling');
 
         return this.addGuiByKeys(name, object);
 

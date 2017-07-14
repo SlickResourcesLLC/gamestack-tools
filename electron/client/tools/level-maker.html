@@ -11,15 +11,11 @@
         <!-- Insert this line above script imports  -->
         <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
-
-        <link rel="stylesheet" href="../assets/js/dat.gui.css">
-
-
-        <script src="../assets/js/dat.gui.js"></script>
-
         <script src="../assets/js/Tween.js"></script>
 
         <script src="../dist/obj/Animation.js"></script>
+
+        <script src="../dist/obj/Motionstack.js"></script>
 
         <script src="../dist/obj/Force.js"></script>
         <script src="../dist/obj/GameMedia.js"></script>
@@ -69,8 +65,6 @@
         }
 
 
-
-
         label
         {
 
@@ -99,6 +93,9 @@
             color:white;
 
         }
+
+
+
 
         .functional-group
         {
@@ -168,27 +165,7 @@
 
         }
 
-        div.dg.main
-        {
-            border:2px inset teal;
 
-            height:200px;
-
-            overflow:scroll;
-
-        }
-
-        div.dg.ac
-        {
-            position:fixed;
-
-            z-index:9999;
-
-            top:200px;
-
-            bottom:50px;
-
-        }
 
         canvas
         {
@@ -406,10 +383,6 @@
             position:relative;
 
         }
-
-
-
-
 
         nav.top-menu .button-top span {
             cursor: pointer;
@@ -891,11 +864,13 @@
 
             width:100%;
 
-            height:40px;
+            height:0px;
 
             z-index:9991;
 
             top:50px;
+
+            overflow:visible;
 
         }
 
@@ -937,8 +912,57 @@
         }
 
 
+        #gui-container
+        {
+            position:fixed;
+
+            z-index:9999;
+
+            top:50px;
+
+            right:0px;
+
+
+        }
+
+        div.slider
+        {
+            position:absolute;
+
+            right:0px;
+
+        }
+
+
 
     </style>
+
+
+
+    <link rel="stylesheet" href="../assets/js/dat.gui.css">
+
+    <script src="../assets/js/dat.gui.js"></script>
+
+    <style>
+
+
+        .dg .c input[type=text] {
+            border-left: 1px solid silver;
+            width: 100%;
+
+            padding:0px;
+
+            padding-left:3px;
+
+            margin:0px;
+
+            background:none;
+
+        }
+
+
+    </style>
+
 
     <body>
 
@@ -974,7 +998,7 @@
 
                     <li role="presentation"><a href="#" id="load-level">Load Level</a></li>
 
-                    <li role="presentation"><a href="#" id="load-map-objects">Load Map Objects</a></li>
+                    <li role="presentation"><a href="#" id="load-map-objects">Quick Load Map Images</a></li>
 
                  </ul>
             </div>
@@ -1337,6 +1361,7 @@
         </div>
 
 
+
     <div  class="free-select center" >
 
         <ul></ul>
@@ -1346,6 +1371,10 @@
 
     </div>
 
+
+    <div  id="gui-container" >
+
+    </div>
 
 
     <script>
@@ -1368,6 +1397,52 @@
 
             },
 
+
+            image_upload:function(filename, content, callback)
+            {
+
+                // Assign handlers immediately after making the request,
+// and remember the jqxhr object for this request
+                var jqxhr = $.post( 'http://localhost:3137/save', {filename:filename, content:content}, function(data) {
+                    alert( "success:" + jstr(data) );
+
+
+                })
+                    .done(function(data) {
+                        alert( "second success" );
+
+
+                        var d = JSON.parse(data);
+
+                        if(typeof(callback) == 'function')
+                        {
+
+                            alert('content len:' + content.length);
+
+                            callback(d.relpath, content);
+
+                        }
+
+
+                    })
+                    .fail(function(e) {
+                        alert( "error:" + jstr(e) );
+                    })
+                    .always(function() {
+                        alert( "finished" );
+                    });
+
+// Perform other work here ...
+
+// Set another completion function for the request above
+                jqxhr.always(function() {
+                    alert( "second finished" );
+                });
+
+
+
+
+            },
 
 
           create_level : function(data, callback)
@@ -1617,22 +1692,29 @@
 
 
 
+
                         levelMaker.getImageFileCallback(fitem, function(name, w, h, result){
 
-                        alert('name:' + name);
 
-                            levelMaker.selected_image_src = result;
+                            App.image_upload(name, result, function(relpath, content){
+
+                        alert('name:' + relpath);
+
+                            levelMaker.selected_image_src = '..' +  relpath.replace('client', '');
+
+                            alert(levelMaker.selected_image_src);
 
                             console.log('Making objects in create event');
 
                             var args = {type:"game object", description:"multi-loaded object" };
-
 
                             args.size = new Vector3(w, h, 0);
 
                             args.name = name;
 
                             if(args.name && args.description) {
+
+                                alert('making image');
 
 
                                var  sprite = levelMaker.MapElement(args.name, levelMaker.selected_image_src, new Vector3(w, h, 0), new Vector3(w, h, 0),
@@ -1647,12 +1729,29 @@
 
                                     levelMaker.addLevelObjectToUI(sprite);
 
+
+                                    if (ix == files.length - 1) {
+
+                                        alert('last file');
+
+                                        App.dialog(App._UI_OPTION_MAP.my_objects,
+                                            0, 120, function () {
+                                                console.log('dialog shown');
+                                            });
+
+                                    }
+
                                 }
 
-                            }
+                                }
 
 
-                    });
+
+                            });
+
+
+
+                        });
 
 
                     });
@@ -1663,6 +1762,7 @@
 
 
                 $('#load-map-objects').click(function(){
+
 
 
                     $('#multi-map-object-file-input').click();
@@ -1705,6 +1805,10 @@
                             elements[x].img = new Image();
 
                             elements[x].img.src =  elements[x].src;
+
+                            Quazar.addImageSrc(elements[x].img.src, elements[x].img_id || false);
+
+                            elements[x].img_id = Quazar.getImageId(elements[x].img.src);
 
                         }
 
@@ -2027,8 +2131,6 @@
                 {
 
                     $('.free-select').hide('slow');
-
-                    $('.free-select').animate({top: -800, left: -800}, "fast");
 
                 };
 
@@ -2516,12 +2618,10 @@
 
                     };
 
-                    remove(Game.sprites, levelMaker.selection_sprite);
-
-                    remove(Game.sprites, levelMaker.hover_selection_sprite);
-
 
                     $.each(sprites, function(ix, item){
+
+
 
                         if(item == levelMaker.selection_sprite || item == levelMaker.hover_selection_sprite)
                         {
@@ -2536,9 +2636,49 @@
 
                     $(this).prop('download', levelMaker.settings.name + '.json');
 
+
+
                     $(this).prop('target', '_blank');
 
+                    function roughSizeOfObject( object ) {
+
+                        var objectList = [];
+                        var stack = [ object ];
+                        var bytes = 0;
+
+                        while ( stack.length ) {
+                            var value = stack.pop();
+
+                            if ( typeof value === 'boolean' ) {
+                                bytes += 4;
+                            }
+                            else if ( typeof value === 'string' ) {
+                                bytes += value.length * 2;
+                            }
+                            else if ( typeof value === 'number' ) {
+                                bytes += 8;
+                            }
+                            else if
+                            (
+                                typeof value === 'object'
+                                && objectList.indexOf( value ) === -1
+                            )
+                            {
+                                objectList.push( value );
+
+                                for( var i in value ) {
+                                    stack.push( value[ i ] );
+                                }
+                            }
+                        }
+                        return bytes;
+                    };
+
+
+
                     $(this).prop('href', "data:text/json," + jstr(levelMaker.MapData(Game.sprites, levelMaker.settings)));
+
+                    alert(($(this).prop('href') + "").length);
 
                     $(this).prop('name', levelMaker.settings.name+ '.json');
 
@@ -3226,6 +3366,9 @@
                         {
 
                             item.selected = true;
+
+                            DatGui.get(item);
+
                             selection = true;
                         }
 
@@ -3362,7 +3505,7 @@
 
                     sprite.active = true;
 
-                    sprite.size = mapElement.mapSize;
+                    sprite.size = new Vector3(mapElement.mapSize.x, mapElement.mapSize.y, mapElement.mapSize.z);
 
 
                     if(sprite.speed)
@@ -3504,13 +3647,13 @@
 
             levelMaker.discluded_sprites.push(levelMaker.hover_selection_sprite);
 
-            var fs = new Size(191, 192);
+            var fs  = new Size(191 * 4, 192 * 4);
 
             levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
             levelMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
 
-            var fs = new Size(191, 192);
+            var fs = new Size(191 * 4, 192 * 4);
 
             levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
 

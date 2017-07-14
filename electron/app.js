@@ -18,9 +18,9 @@ module.exports = function() {
        console.log("Initializing");
 
        var bodyParser = require('body-parser');
-       app.use(bodyParser.json()); // support json encoded bodies
-       app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+       app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+       app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
        app.get('/test', function (req, res) {
 
@@ -30,6 +30,20 @@ module.exports = function() {
 
        });
 
+       function decodeBase64Image(dataString) {
+           var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+               response = {};
+
+           if (matches.length !== 3) {
+               return new Error('Invalid input string');
+           }
+
+           response.type = matches[1];
+           response.data = new Buffer(matches[2], 'base64');
+
+           return response;
+       }
+
 
 
        app.post('/save', function(req, res){
@@ -38,11 +52,85 @@ module.exports = function() {
 
            var filename = req.body.filename;
 
-           var writer = fs.createWriteStream(filename);
+           var relpath = 'client/assets/uploads/' + filename;
 
-           res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':'attachment; filename='+filename});
 
-           res.end(content);
+           var dataString = content;
+
+           // Save base64 image to disk
+           try
+           {
+               // Decoding base-64 image
+               // Source: http://stackoverflow.com/questions/20267939/nodejs-write-base64-image-file
+               function decodeBase64Image(dataString)
+               {
+                   var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                   var response = {};
+
+                   if (matches.length !== 3)
+                   {
+                       return new Error('Invalid input string');
+                   }
+
+                   response.type = matches[1];
+                   response.data = new Buffer(matches[2], 'base64');
+
+                   return response;
+               }
+
+               // Regular expression for image type:
+               // This regular image extracts the "jpeg" from "image/jpeg"
+               var imageTypeRegularExpression      = /\/(.*?)$/;
+
+               // Generate random string
+               var crypto                          = require('crypto');
+               var seed                            = crypto.randomBytes(20);
+               var uniqueSHA1String                = crypto
+                   .createHash('sha1')
+                   .update(seed)
+                   .digest('hex');
+
+               var base64Data = dataString;
+
+               var imageBuffer                      = decodeBase64Image(base64Data);
+               var userUploadedFeedMessagesLocation = '../img/upload/feed/';
+
+               var uniqueRandomImageName            = 'image-' + uniqueSHA1String;
+               // This variable is actually an array which has 5 values,
+               // The [1] value is the real image extension
+               var imageTypeDetected                = imageBuffer
+                   .type
+                   .match(imageTypeRegularExpression);
+
+               var userUploadedImagePath            = userUploadedFeedMessagesLocation +
+                   uniqueRandomImageName +
+                   '.' +
+                   imageTypeDetected[1];
+
+               // Save decoded binary image to disk
+               try
+               {
+                   require('fs').writeFile(relpath, imageBuffer.data,
+                       function()
+                       {
+                           console.log('DEBUG - feed:message: Saved to disk image attached by user:', userUploadedImagePath);
+
+                           res.end(JSON.stringify({relpath:relpath, content:content}));
+
+                       });
+               }
+               catch(error)
+               {
+                   console.log('ERROR:', error);
+               }
+
+           }
+           catch(error)
+           {
+               console.log('ERROR:', error);
+           }
+
+
 
        });
 

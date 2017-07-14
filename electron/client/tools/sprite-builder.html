@@ -63,6 +63,8 @@
 
             right:0px;
 
+            height:100%;
+
         }
 
     </style>
@@ -1299,7 +1301,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0), new Vector3(0, 0))}));
 
 
 
@@ -1350,7 +1352,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0),new Vector3(0, 0))}));
 
                 // console.log(JSON.stringify(sprite));
 
@@ -1551,7 +1553,7 @@
                     delay: 7,
                     tool: true,
                     frameSize: new Vector3(50, 50, 0),
-                    frameBounds: new VectorBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
+                    frameBounds: new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
                 });
 
 

@@ -67,6 +67,10 @@ var Sprite = function () {
 
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
+                this.gravity_strength = [0, 1, 2, 3];
+
+                this.bounce_strength = [0, 1, 2, 3];
+
                 this.travel_mode_keys = ['none', 'topscroll_freeflight', 'tsidescroll_freeflight', 'sidescroll_runner'];
 
                 this.travel_modes = [this.create_travel_mode('topscroll_freeflight', 0.3, 0.3, 5.0), this.create_travel_mode('sidescroll_freeflight', 0.3, 0.3, 5.0), this.create_travel_mode('sidescroll_runner', 0.3, 0.3, 7.0)];
