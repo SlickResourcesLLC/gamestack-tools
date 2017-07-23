@@ -379,7 +379,7 @@ var DatGui = {
             DatGui.addEachNumeric(o, fui );
 
         }
-        else if(type == Motionstack)
+        else if(type == Motion)
         {
 
             //add main text values
@@ -463,7 +463,7 @@ var DatGui = {
 
         }
 
-        if([GameImage, GameSound].indexOf(type) >= 0)
+        if([GameImage, Sound].indexOf(type) >= 0)
         {
 
             //display special file input --see npm static-stack
@@ -538,7 +538,7 @@ var DatGui = {
                 });
 
 
-                if(obj instanceof Animation || obj instanceof GameSound)
+                if(obj instanceof Animation || obj instanceof  Sound)
                 {
 
 
@@ -577,11 +577,11 @@ var DatGui = {
 
                               }
 
-                              if(obj instanceof(GameSound)) {
+                              if(obj instanceof(Sound)) {
 
                                   obj.sound = new Audio(imagesrc);
 
-                                    obj = new GameSound(obj);
+                                    obj = new Sound(obj);
 
                                   Game.sprites[0].selected_sound = obj;
 

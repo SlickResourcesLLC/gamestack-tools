@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>2D Level Mapper</title>
+        <title>Level-Maker</title>
         <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
         <!-- Insert this line above script imports  -->
@@ -15,18 +15,18 @@
 
         <script src="../dist/obj/Animation.js"></script>
 
-        <script src="../dist/obj/Motionstack.js"></script>
+        <script src="../dist/Geometry.js"></script>
 
         <script src="../dist/obj/Force.js"></script>
-        <script src="../dist/obj/GameMedia.js"></script>
 
         <script src="../dist/Quazar.js"></script>
+
+        <script src="../dist/obj/Motion.js"></script>
 
         <script src="../dist/obj/Sprite.js"></script>
 
         <script src="../dist/obj/GamepadAdapter.js"></script>
 
-        <script src="../dist/script/Terrain.js"></script>
 
         <script src="../assets/js/dat.gui.interface.js"></script>
 
@@ -145,6 +145,14 @@
 
     <style>
 
+        .dg.main
+        {
+            position:relative;
+
+            top:90px;
+
+        }
+
 
         .dg .c input[type=text] {
             border-left: 1px solid silver;
@@ -175,7 +183,9 @@
 
         </select>
 
-        <button id="add_tween_stack_ctrl" class="main-play bottom-ctrl"  ></button>
+
+        <button id="add_tween_stack_ctrl" class="main-play"  style=" "><span>&#9654;</span></button>
+
 
     </div>
 
@@ -186,7 +196,7 @@
     <div id="ctrl-space-top" >
         <nav class="top-menu" >
 
-            <img id="logo" src="img/logo-main.png"  />
+            <img id="logo" src="img/logo-level.png"  />
 
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
@@ -197,7 +207,7 @@
 
                     <li role="presentation"><a href="#" id="load-map-objects">Quick Load Map Images</a></li>
 
-                    <li role="presentation"><a  href="#" class="alt" id="download"><span>Save to File</span><img src="img/save.png" alt="save data" ></li>
+                    <li role="presentation"><a  href="#" class="alt" id="download"><span>Save to File</span><img src="img/save.png" alt="save data" ></a></li>
 
                     <li role="presentation"><a id="map_settings_show" class="alt"   href='#' onclick="$('#settings-space form').show();">Map-Settings<img src="img/settings.png" alt="settings image"  ></a></li>
 
@@ -838,8 +848,6 @@
 
                     var myObject = data;
 
-
-
                     var elements = myObject.elements;
 
                     for(var x = 0; x < elements.length; x++)
@@ -852,9 +860,9 @@
 
                             elements[x].img.src =  elements[x].src;
 
-                            Quazar.addImageSrc(elements[x].img.src, elements[x].img_id || false);
+                          //  Quazar.addImageSrc(elements[x].img.src, elements[x].img_id || false);
 
-                            elements[x].img_id = Quazar.getImageId(elements[x].img.src);
+                          //  elements[x].img_id = Quazar.getImageId(elements[x].img.src);
 
                         }
 
@@ -1989,7 +1997,7 @@
 
                     App.setMotionVectorGui();
 
-                    App.setTravelModeGui();
+                  //  App.setTravelModeGui();
 
                     $('#create_object').click(function(){
 
@@ -2596,23 +2604,26 @@
                 {
 
 
+                    alert('dist=' + dist);
 
                     var unitX = levelMaker.selectedElement.mapSize.x + dist, unitY = levelMaker.selectedElement.mapSize.y + dist;
 
                     for(var x = 0; x < n; x++)
                     {
 
-                        var x2 = 0, y2 = 0;
 
-                        if(east){    x2 =  x * unitX   * -1  ; }
 
-                        if(west){    x2  = x * unitX ;   }
+                        if(east){   x1 += unitX; }
 
-                        if(north){    y2 = x * unitY * -1 ; }
+                        if(west){    x1 -= unitX;   }
 
-                        if(south){    y2 =   x * unitY  ; }
+                        if(north){    y1 -= unitY; }
 
-                        levelMaker.plantMapSprite(levelMaker.selectedElement, x1+ x2, y1+y2);
+                        if(south){    y1 += unitY;}
+
+
+
+                        levelMaker.plantMapSprite(levelMaker.selectedElement, x1, y1);
 
                         levelMaker.lastPlantedCountRecordArray.push(n - 1);
 
@@ -2666,7 +2677,7 @@
 
             filename = filename ? filename.substring(0, filename.lastIndexOf('.json')) : filename;
 
-        alert('opening:' + filename);
+       // alert('opening:' + filename);
 
         var levelMaker = LevelMaker(filename);
 

@@ -1,12 +1,29 @@
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var __gameInstance = __gameInstance || {};
+
+var Stats = function Stats(args) {
+        _classCallCheck(this, Stats);
+
+        var s = this.create_stats;
+
+        for (var x in s) {
+                this[x] = s[x];
+        }
+
+        if ((typeof args === "undefined" ? "undefined" : _typeof(args)) == 'object') {
+
+                for (var x in args) {
+                        this[x] = args[x];
+                }
+        }
+};
 
 var Sprite = function () {
         function Sprite(name, description, args) {
@@ -15,6 +32,8 @@ var Sprite = function () {
                 this.name = name || "__";
 
                 this.description = description || "__";
+
+                this.active = true;
 
                 if ((typeof name === "undefined" ? "undefined" : _typeof(name)) == 'object') {
                         args = name;
@@ -33,7 +52,7 @@ var Sprite = function () {
 
                 this.animations = $Q.getArg(args, 'animations', []);
 
-                this.motionstacks = $Q.getArg(args, 'motionstacks', []);
+                this.motions = $Q.getArg(args, 'motions', []);
 
                 var __inst = this;
 
@@ -46,6 +65,8 @@ var Sprite = function () {
                 this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
 
                 this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
+
+                this.collision_bounds = $Q.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
                 this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
 
@@ -74,18 +95,18 @@ var Sprite = function () {
 
                 this.actionlists = $Q.getArg(args, 'actionlists', []);
 
-                this.stats = this.create_stats();
+                this.stats = $Q.getArg(args, 'stats', new Stats());
 
                 this.id = this.setid();
 
                 $.each(this.sounds, function (ix, item) {
 
-                        __inst.sounds[ix] = new GameSound(item);
+                        __inst.sounds[ix] = new Sound(item);
                 });
 
-                $.each(this.motionstacks, function (ix, item) {
+                $.each(this.motions, function (ix, item) {
 
-                        __inst.motionstacks[ix] = new Motionstack(item);
+                        __inst.motions[ix] = new Motion(item);
                 });
 
                 $.each(this.animations, function (ix, item) {
@@ -115,24 +136,6 @@ var Sprite = function () {
                 value: function type_options() {
 
                         return ['player', 'enemy', 'powerup', 'attachment', 'projectile'];
-                }
-        }, {
-                key: "create_travel_mode",
-                value: function create_travel_mode(key, accel, decel, max_speed) {
-
-                        return { key: key, accel: accel, decel: decel, max_speed: max_speed };
-                }
-        }, {
-                key: "create_stats",
-                value: function create_stats() {
-                        return {
-
-                                "health": 100,
-                                "magic": 10,
-                                "strength": 20,
-                                "ammo": 10,
-                                "max_speed": 5.0
-                        };
                 }
         }, {
                 key: "update",
@@ -174,122 +177,10 @@ var Sprite = function () {
                         }
                 }
         }, {
-                key: "move",
-                value: function move(options) //move from one position to another , or spread movement over a complex line, with curved acceleration
-                {
+                key: "collidesRectangular",
+                value: function collidesRectangular(sprite) {
 
-                        if (!options.targets instanceof Array) {
-
-                                options.targets = options.targets ? [options.targets] : [options.target || false];
-                        }
-                        ;
-
-                        if (options.startCurve) {}
-
-                        if (options.endCurve) {}
-
-                        if (options.loopFactor) {//use repeating of startCurve and endCurve over each loopFactor amount of targets
-
-                        }
-
-                        this.tween_movement_sequence = [];
-
-                        Quazar.each(options.targets, function (ix, item) {
-
-                                if (item && (typeof item === "undefined" ? "undefined" : _typeof(item)) == 'object') {}
-                        });
-
-                        //do the movement as described
-
-
-                        var __playerInstance = this; //grab a reference to the player
-
-                        __playerInstance.speed.y = -0.8;
-
-                        this.tween_movement_sequence.push(this.tween_movement_sequence[ix] || new TWEEN.Tween(this.position).to({ y: targetY }, 350).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
-                                console.log(this.x, this.y);
-                        }).onComplete(function () {
-
-                                //  alert('complete');
-
-                                __playerInstance.jump_position_tween = false;
-                        }).start());
-
-                        return this;
-                }
-        }, {
-                key: "event_prep",
-                value: function event_prep(key, ctrl, args) {
-                        return { key: key, ctrl: ctrl, args: args };
-                }
-        }, {
-                key: "event_arg",
-                value: function event_arg(key, ctrl, args) {
-
-                        if (__gameInstance.event_args_list instanceof Array !== true) {
-                                __gameInstance.event_args_list = [];
-                        }
-
-                        alert('applying event arguments');
-
-                        __gameInstance.event_args_list.push(this.event_prep(key, ctrl, args));
-                }
-        }, {
-                key: "line_movement",
-                value: function line_movement() //an array movement
-                {}
-        }, {
-                key: "jump",
-                value: function jump(options) {
-
-                        //character does a jump move
-
-                        this.prep_key = 'jump';
-
-                        if (__gameInstance.isAtPlay) //do a jump move only if the game is running... else this call is instructional ...aka prepare a jump
-                                {
-                                        //do the jump as described
-
-                                        if (options.hasOwnProperty('switch') && this[options.switch] !== true) {
-                                                return false;
-                                        }
-
-                                        var height = options.height,
-                                            duration = options.duration,
-                                            speed = options.speed;
-
-                                        if (!isNaN(height)) {
-                                                height = this.stat('jump_height') || 40;
-                                        }
-
-                                        var targetY = this.position.y - height;
-
-                                        var __playerInstance = this; //grab a reference to the player
-
-                                        if (!this.speed) {
-                                                this.speed = { x: 0, y: 0, z: 0 };
-                                        }
-
-                                        this.speed.y = -0.8;
-
-                                        this.jump_position_tween = this.jump_position_tween || new TWEEN.Tween(this.position).to({ y: targetY }, 350).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
-                                                console.log(this.x, this.y);
-                                        }).onComplete(function () {
-
-                                                //  alert('complete');
-
-                                                __playerInstance.jump_position_tween = false;
-                                        }).start();
-
-                                        this.onGround = false;
-
-                                        return this;
-                                } else {
-
-                                this.event_arg(this.prep_key, '_', options);
-                        }
-
-                        return this;
+                        return Quazar.Collision.spriteRectanglesCollide(sprite);
                 }
         }, {
                 key: "shoot",

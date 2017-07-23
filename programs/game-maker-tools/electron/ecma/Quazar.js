@@ -17,12 +17,18 @@
  *
  * */
 
-class GameSound {
+class Sound {
 
     constructor(src) {
 
         if(typeof(src)== 'object')
         {
+
+            for(var x in src)
+            {
+                this[x] = src[x];
+
+            }
 
             this.sound = new Audio(src.src);
 
@@ -37,8 +43,6 @@ class GameSound {
             this.sound = new Audio(this.src);
 
         }
-
-
 
         this.onLoad = this.onLoad || function(){};
 
@@ -236,6 +240,20 @@ let Quazar = {
 
     },
 
+    Collision:{
+
+        spriteRectanglesCollide(obj1, obj2)
+        {
+            if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x  < obj2.size.x + obj2.size.x &&
+                obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y  < obj2.size.y + obj2.size.y )
+            {
+
+                return true;
+
+            }
+
+        }
+    },
 
     TWEEN: TWEEN,
 
@@ -644,7 +662,7 @@ window.onload = function () {
 
 
 var Canvas = {
-    draw: function (sprite, ctx) {
+    draw: function (sprite, ctx){
 
         if (sprite.active && sprite.onScreen(Game.WIDTH, Game.HEIGHT)) {
 

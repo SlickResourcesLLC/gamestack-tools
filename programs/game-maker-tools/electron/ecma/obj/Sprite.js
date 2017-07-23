@@ -1,6 +1,31 @@
 let __gameInstance = __gameInstance || {};
 
 
+class Stats {
+
+    constructor(args) {
+
+        var s = this.create_stats;
+
+        for(var x in s)
+        {
+            this[x] = s[x];
+
+        }
+
+        if(typeof(args) == 'object') {
+
+            for (var x in args) {
+                this[x] = args[x];
+            }
+
+        }
+
+    }
+
+}
+
+
 class Sprite {
     constructor(name, description, args) {
 
@@ -8,7 +33,7 @@ class Sprite {
 
         this.description = description || "__";
 
-
+        this.active = true;
 
         if(typeof(name) == 'object')
         {
@@ -30,7 +55,7 @@ class Sprite {
 
         this.animations = $Q.getArg(args, 'animations', []);
 
-        this.motionstacks = $Q.getArg(args, 'motionstacks', []);
+        this.motions = $Q.getArg(args, 'motions', []);
 
         let __inst = this;
 
@@ -38,16 +63,15 @@ class Sprite {
 
         this.sounds = $Q.getArg(args, 'sounds', []);
 
-
-
         this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
-
 
         this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
 
-
         this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
+
+
+        this.collision_bounds = $Q.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
         this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
 
@@ -77,20 +101,20 @@ class Sprite {
 
         this.actionlists =  $Q.getArg(args, 'actionlists', []);
 
-        this.stats = this.create_stats();
+        this.stats = $Q.getArg(args, 'stats', new Stats());
 
         this.id = this.setid();
 
         $.each(this.sounds, function(ix, item){
 
-            __inst.sounds[ix] = new GameSound(item);
+            __inst.sounds[ix] = new Sound(item);
 
         });
 
 
-        $.each(this.motionstacks, function(ix, item){
+        $.each(this.motions, function(ix, item){
 
-            __inst.motionstacks[ix] = new Motionstack(item);
+            __inst.motions[ix] = new Motion(item);
 
         });
 
@@ -133,26 +157,6 @@ class Sprite {
             'projectile'
 
         ]
-
-    }
-
-    create_travel_mode(key, accel, decel, max_speed)
-    {
-
-        return{key, accel, decel, max_speed}
-
-    }
-
-    create_stats()
-    {
-        return{
-
-            "health":100,
-            "magic":10,
-            "strength":20,
-            "ammo":10,
-            "max_speed":5.0
-        }
 
     }
 
@@ -207,173 +211,15 @@ class Sprite {
                 this.rot_speed[x] += this.rot_accel[x];
 
             }
-
-
-
         }
-
-
-
-
     }
 
-    move(options) //move from one position to another , or spread movement over a complex line, with curved acceleration
+    collidesRectangular(sprite)
     {
 
-        if (!options.targets instanceof Array) {
-
-            options.targets = options.targets ? [options.targets] : [options.target || false]
-
-        }
-        ;
-
-
-        if (options.startCurve) {
-
-        }
-
-        if (options.endCurve) {
-
-        }
-
-        if (options.loopFactor) { //use repeating of startCurve and endCurve over each loopFactor amount of targets
-
-        }
-
-
-        this.tween_movement_sequence = [];
-
-
-        Quazar.each(options.targets, function (ix, item) {
-
-            if (item && typeof(item) == 'object') {
-
-            }
-
-        });
-
-        //do the movement as described
-
-
-        var __playerInstance = this; //grab a reference to the player
-
-        __playerInstance.speed.y = -0.8;
-
-
-        this.tween_movement_sequence.push(this.tween_movement_sequence[ix] || new TWEEN.Tween(this.position)
-                .to({y: targetY}, 350)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                        console.log(this.x, this.y);
-                    }
-                ).onComplete(function () {
-
-                    //  alert('complete');
-
-                    __playerInstance.jump_position_tween = false;
-
-                })
-                .start());
-
-        return this;
+        return Quazar.Collision.spriteRectanglesCollide(sprite);
 
     }
-
-    event_prep(key, ctrl, args) {
-        return {key: key, ctrl: ctrl, args: args}
-
-    }
-
-
-    event_arg(key, ctrl, args) {
-
-        if (__gameInstance.event_args_list instanceof Array !== true) {
-            __gameInstance.event_args_list = [];
-
-        }
-
-
-        alert('applying event arguments');
-
-        __gameInstance.event_args_list.push(this.event_prep(key, ctrl, args));
-
-    }
-
-    line_movement() //an array movement
-    {
-
-
-    }
-
-    jump(options) {
-
-        //character does a jump move
-
-        this.prep_key = 'jump';
-
-        if (__gameInstance.isAtPlay) //do a jump move only if the game is running... else this call is instructional ...aka prepare a jump
-        {
-            //do the jump as described
-
-            if(options.hasOwnProperty('switch') && this[options.switch] !== true)
-            {
-                return false;
-
-            }
-
-
-
-
-            var height = options.height, duration = options.duration, speed = options.speed;
-
-            if (!isNaN(height)) {
-                height = this.stat('jump_height') || 40;
-            }
-
-            var targetY = this.position.y - height;
-
-            var __playerInstance = this; //grab a reference to the player
-
-            if (!this.speed) {
-                this.speed = {x: 0, y: 0, z: 0};
-
-            }
-
-            this.speed.y = -0.8;
-
-            this.jump_position_tween = this.jump_position_tween || new TWEEN.Tween(this.position)
-                    .to({y: targetY}, 350)
-                    .easing(TWEEN.Easing.Cubic.Out)
-                    .onUpdate(function () {
-                            console.log(this.x, this.y);
-                        }
-                    ).onComplete(function () {
-
-                        //  alert('complete');
-
-                        __playerInstance.jump_position_tween = false;
-
-                    })
-                    .start();
-
-
-            this.onGround = false;
-
-            return this;
-
-        }
-
-        else {
-
-
-            this.event_arg(this.prep_key, '_', options);
-
-        }
-
-        return this;
-
-    }
-
 
     shoot(options) {
         //character shoots an animation

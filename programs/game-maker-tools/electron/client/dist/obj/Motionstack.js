@@ -108,7 +108,7 @@ var Motionstack = function () {
 
                                         if (ix == s1 && iy == s2) {
 
-                                                alert('setting curve');
+                                                // alert('setting curve');
 
                                                 curve = TWEEN.Easing[ix][iy];
                                         }
@@ -137,7 +137,7 @@ var Motionstack = function () {
 
                                         if (item.id == id_item) {
 
-                                                alert('mathc');
+                                                //  alert('match');
 
                                                 objects[ix] = item;
                                         }

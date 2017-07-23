@@ -1,6 +1,5 @@
 
 (function ( $ ) {
-
     $.fn.squeeze = function() {
 
         $(this).click(function(evt){
@@ -9,27 +8,35 @@
 
             tabHeader = $(tabs).parent().children('ul')[0];
 
-            $(tabs).toggle('fast');
+            var button = $(this).parent().find('button.squeeze'),
 
-            var char = $(evt.target).text();
+            char = $(button).text();
 
             switch (char)
             {
                 case "-":
 
-                    $(evt.target).text('+');
+                    if($(this).hasClass('squeeze')) {
 
-                    $(tabHeader).animate({
-                        opacity: 1.0,
-                        height: "50px"
-                    }, 250);
+                        $(button).text('+');
+
+                        $(tabs).hide('fast');
+
+                        $(tabHeader).animate({
+                            opacity: 1.0,
+                            height: "50px"
+                        }, 250);
+
+                    }
 
                     break;
 
                 case "+":
 
-                    $(evt.target).text('-');
+                    $(button).text('-');
 
+
+                    $(tabs).show('fast');
 
                     $(tabHeader).animate({
                         opacity: 1.0,

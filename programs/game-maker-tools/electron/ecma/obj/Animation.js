@@ -53,7 +53,6 @@ class Animation {
 
         this.duration = this.getArg(args, 'duration', false);
 
-
         this.effects = [];
 
         this.timer = 0;

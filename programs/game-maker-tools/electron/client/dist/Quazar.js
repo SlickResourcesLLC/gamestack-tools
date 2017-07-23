@@ -22,11 +22,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *
  * */
 
-var GameSound = function () {
-    function GameSound(src) {
-        _classCallCheck(this, GameSound);
+var Sound = function () {
+    function Sound(src) {
+        _classCallCheck(this, Sound);
 
         if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) == 'object') {
+
+            for (var x in src) {
+                this[x] = src[x];
+            }
 
             this.sound = new Audio(src.src);
 
@@ -46,7 +50,7 @@ var GameSound = function () {
         }
     }
 
-    _createClass(GameSound, [{
+    _createClass(Sound, [{
         key: 'play',
         value: function play() {
             if (_typeof(this.sound) == 'object' && typeof this.sound.play == 'function') {
@@ -56,7 +60,7 @@ var GameSound = function () {
         }
     }]);
 
-    return GameSound;
+    return Sound;
 }();
 
 var GameImage = function () {
@@ -194,6 +198,15 @@ var Quazar = {
         });
 
         callback(true);
+    },
+
+    Collision: {
+        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2) {
+            if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x && obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+
+                return true;
+            }
+        }
     },
 
     TWEEN: TWEEN,
