@@ -53,6 +53,8 @@ class Animation {
 
         this.duration = this.getArg(args, 'duration', false);
 
+        this.size =  this.getArg(args, 'size', new Vector3(20, 20, 20));
+
         this.effects = [];
 
         this.timer = 0;
@@ -73,11 +75,14 @@ class Animation {
 
     }
 
-    apply2DFrames(parent) {
+    apply2DFrames() {
 
         this.frames = [];
 
         var fcount = 0;
+
+
+        var quitLoop = false;
 
         for (let y = this.frameBounds.min.y; y <= this.frameBounds.max.y; y++) {
 
@@ -87,16 +92,18 @@ class Animation {
 
                 this.frames.push({image: this.image, frameSize: this.frameSize, framePos: framePos});
 
+                if( x >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y)
+                {
+
+                    quitLoop = true;
+
+                    break;
+                }
 
                 fcount += 1;
 
-                if(!isNaN(this.earlyTerm))
-                {
-
-                    if(fcount >= this.earlyTerm) {
-                        return 0;
-                    }
-                }
+                if(quitLoop)
+                    break;
 
             }
 
@@ -108,7 +115,7 @@ class Animation {
                 framePos: {x: this.frameBounds.min.x, y: this.frameBounds.min.y}
             } : this.frames[0];
 
-        this.selected_frame = this.frames[0];
+       // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
 
     }
 
@@ -173,6 +180,8 @@ onComplete(fun)
 }
 
     animate() {
+
+        this.apply2DFrames();
 
         this.timer += 1;
 

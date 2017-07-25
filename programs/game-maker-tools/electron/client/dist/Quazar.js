@@ -187,7 +187,9 @@ var Quazar = {
 
     log: function log(m) {
 
-        console.log('Quazar:' + m);
+        //  console.log('Quazar:' + m);
+
+
     },
 
     mustHave: function mustHave(obj, keytypes, callback) {
@@ -614,7 +616,7 @@ var Canvas = {
 
             //optional animation : gameSize
 
-            var targetSize = sprite.selected_animation.gameSize ? sprite.selected_animation.gameSize : sprite.size;
+            var targetSize = sprite.selected_animation.size ? sprite.selected_animation.size : sprite.size;
 
             var realWidth = targetSize.x;
             var realHeight = targetSize.y;
@@ -828,7 +830,8 @@ var GameWindow = function () {
 
             Quazar.each(this.force_set.list, function (ix, item) {
 
-                item.update();
+                //   item.update();
+
             });
 
             this.update();

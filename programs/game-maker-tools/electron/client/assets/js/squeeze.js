@@ -1,8 +1,10 @@
 
 (function ( $ ) {
-    $.fn.squeeze = function() {
+    $.fn.squeeze = function(callback) {
 
         $(this).click(function(evt){
+
+            callback = callback || function(){};
 
             var tabs = $(this).parent().parent().find('.tab-content')[0],
 
@@ -27,6 +29,8 @@
                             height: "50px"
                         }, 250);
 
+
+
                     }
 
                     break;
@@ -35,17 +39,18 @@
 
                     $(button).text('-');
 
-
                     $(tabs).show('fast');
 
                     $(tabHeader).animate({
                         opacity: 1.0,
                         height: "70%"
-                    }, 250);
+                    }, 250, function(){  callback();});
 
                     break;
 
             }
+
+
 
         });
 

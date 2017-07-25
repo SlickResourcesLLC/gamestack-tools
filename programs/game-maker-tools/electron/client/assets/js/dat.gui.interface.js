@@ -252,7 +252,7 @@ var DatGui = {
             if ( DatGui.isNumeric(obj[ix])) {
 
 
-             var g =  fui.add(obj, ix, -1000, 1000).step(0.2);
+             var g =  fui.add(obj, ix, -1000, 1000).step(1.0);
 
             }
 
@@ -400,8 +400,21 @@ var DatGui = {
 
                 obj.setCurve(value);
 
+                var parts = value.split('_');
+
+                var canvas =  obj.getGraphCanvas( value.replace('_', '.'), TWEEN.Easing[parts[0]][parts[1]] );
+
+
+                $(c.domElement).children('canvas').remove();
+
+                $(c.domElement).append(canvas);
 
             });
+
+            c.setValue('Quadratic_InOut');
+
+
+
 
             window.setTimeout(function(){
 
@@ -412,20 +425,12 @@ var DatGui = {
 
 
 
-            var  fuitiming =  DatGui.main_gui.addFolder('timing');
 
-            var n =  DatGui.addEachNumeric(obj, fuitiming );
-
-
-
+            var t = DatGui.main_gui.add(obj, 'duration', -5000, 5000 );
 
             var  fuidist =  DatGui.main_gui.addFolder('distance');
 
-
-
             var d =  DatGui.addEachNumeric(o.distance, fuidist );
-
-
 
         }
 
@@ -434,9 +439,6 @@ var DatGui = {
         else if(type == Animation)
     {
 
-        var fui =  DatGui.main_gui.addFolder('data');
-
-        DatGui.addEachText(obj, fui );
 
 
     }
@@ -448,8 +450,6 @@ var DatGui = {
             this.main_gui.add(parent, 'selected_force', Game.forces );
 
         }
-
-        'selected_force', Game.forces
 
 
         if([Sprite,  TextDisplay, VideoDisplay].indexOf(type) >= 0)
@@ -463,10 +463,18 @@ var DatGui = {
 
         }
 
-        if([GameImage, Sound].indexOf(type) >= 0)
+        if([Animation, Sound].indexOf(type) >= 0)
         {
 
             //display special file input --see npm static-stack
+
+            //add main text values
+
+            var fui =  DatGui.main_gui.addFolder('Info');
+
+            DatGui.addEachText(obj, fui );
+
+
 
         }
 
@@ -504,7 +512,9 @@ var DatGui = {
 
                 fui.onChange(function () {
 
-                    parent.reset();
+
+
+                    //parent.reset();
 
                 });
             }

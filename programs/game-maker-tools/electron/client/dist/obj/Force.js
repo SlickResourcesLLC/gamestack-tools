@@ -23,7 +23,7 @@ var Force = function () {
 
                 this.minSpeed = args.minSpeed || new Vector3(1, 1, 1);
 
-                this.maxSpeed = args.maxSpeed || new Vector3(3, 3, 3);
+                this.max = args.max || new Vector3(3, 3, 3);
                 this.accel = args.accel || new Vector3(1.3, 1.3, 1.3);
 
                 for (var x in args) {

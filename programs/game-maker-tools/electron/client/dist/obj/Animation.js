@@ -55,6 +55,8 @@ var Animation = function () {
 
                 this.duration = this.getArg(args, 'duration', false);
 
+                this.size = this.getArg(args, 'size', new Vector3(20, 20, 20));
+
                 this.effects = [];
 
                 this.timer = 0;
@@ -73,11 +75,13 @@ var Animation = function () {
                 }
         }, {
                 key: 'apply2DFrames',
-                value: function apply2DFrames(parent) {
+                value: function apply2DFrames() {
 
                         this.frames = [];
 
                         var fcount = 0;
+
+                        var quitLoop = false;
 
                         for (var y = this.frameBounds.min.y; y <= this.frameBounds.max.y; y++) {
 
@@ -87,14 +91,16 @@ var Animation = function () {
 
                                         this.frames.push({ image: this.image, frameSize: this.frameSize, framePos: framePos });
 
+                                        if (x >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y) {
+
+                                                quitLoop = true;
+
+                                                break;
+                                        }
+
                                         fcount += 1;
 
-                                        if (!isNaN(this.earlyTerm)) {
-
-                                                if (fcount >= this.earlyTerm) {
-                                                        return 0;
-                                                }
-                                        }
+                                        if (quitLoop) break;
                                 }
                         }
 
@@ -104,7 +110,7 @@ var Animation = function () {
                                 framePos: { x: this.frameBounds.min.x, y: this.frameBounds.min.y }
                         } : this.frames[0];
 
-                        this.selected_frame = this.frames[0];
+                        // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
                 }
         }, {
                 key: 'resetFrames',
@@ -155,6 +161,8 @@ var Animation = function () {
         }, {
                 key: 'animate',
                 value: function animate() {
+
+                        this.apply2DFrames();
 
                         this.timer += 1;
 

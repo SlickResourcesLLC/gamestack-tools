@@ -35,11 +35,16 @@
 
     <script src="../assets/js/jquery.js"></script>
 
+    <script src="../assets/js/jquery.js"></script>
+
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
     <script src="../assets/js/jquery.fileDownload.js"></script>
 
-    <script src="../assets/js/jquery.fileDownload.js"></script>
+
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
 
 
     <script src="../assets/js/squeeze.js"></script>
@@ -769,9 +774,9 @@
 <div id="top-gui">
 
     <select id="forceSelect">
-        <option>Strong Gravity</option>
-        <option>Medium Gravity</option>
         <option>Weak Gravity</option>
+        <option>Medium Gravity</option>
+        <option>Strong Gravity</option>
 
     </select>
 
@@ -1397,6 +1402,9 @@
             },
             rightClick: function (x, y)
             {
+
+                alert('rc');
+
                 Quazar.each(Game.sprites, function (ix, item) {
 
                     if (x > item.position.x && x < item.position.x + item.size.x &&
@@ -1571,6 +1579,13 @@
     var jstr = function(obj){
 
         return JSON.stringify(obj, null, 2);
+
+    };
+
+
+    var jsonclone = function(obj){
+
+        return JSON.parse(JSON.stringify(obj));
 
     };
 
@@ -1749,6 +1764,8 @@
         update:function()
         {
 
+            console.log(jstr(Game.selected_force.max));
+
             Game.selected_force.gravitateY();
 
         },
@@ -1758,7 +1775,7 @@
 
             this.update();
 
-            console.log('render');
+          //  console.log('render');
 
             this.GameWindow.update();
 
@@ -1774,7 +1791,7 @@
 
             var fs  = new Size(191 * 4, 192 * 4);
 
-            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src,  frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
+            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src,  frameSize:fs,  size:new Vector2(100, 150), frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0,0))}));
 
             $('#container').append("<canvas id='main-screen'></canvas>");
 
@@ -1806,6 +1823,11 @@
                 this.player.jump_anime = new Animation({
                     name:"anime_one",
                     src: "image/samus2.png",
+
+                    size:new Vector2(100, 100),
+
+                    frameBounds:new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 4)),
+
                     delay: 7,
                     tool: true,
                     frameSize: new Vector3(50, 50, 0),
@@ -1816,6 +1838,8 @@
                 this.player.jumpmotion = new Motion({
 
                     name: "jump",
+
+
 
                     description: "the jump movmement.",
 
@@ -1903,9 +1927,9 @@
             var wgrav = new Force({
                 name:"weak_grav",
 
-                accel:1.3,
+                accel:0.3,
 
-                max:new Vector3(0, 5, 0),
+                max:new Vector3(0, 1.5, 0),
                 subjects:[Game.sprites[0]],
 
                 massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
@@ -1919,9 +1943,9 @@
 
                 name:"medium_grav",
 
-                accel:1.3,
+                accel:0.5,
 
-                max:new Vector3(0, 5, 0),
+                max:new Vector3(0, 3, 0),
                 subjects:[Game.sprites[0]],
 
                 massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
@@ -1934,7 +1958,7 @@
 
                 name:"strong_grav",
 
-                accel:1.3,
+                accel:1.0,
 
                 max:new Vector3(0, 5, 0),
                 subjects:[Game.sprites[0]],
@@ -1946,15 +1970,13 @@
             Game.forceProfile.forces.push(sgrav);
 
 
-            Game.selected_force = Game.forceProfile.forces[0];
+            Game.selected_force =  new Force(wgrav);
 
             $('#forceSelect').change(function(evt){
 
                 var ix = evt.target.selectedIndex;
 
-                Game.selected_force =   Game.forceProfile.forces[ix];
-
-              //  alert('changed to:' + ix + Game.selected_force.name);
+                Game.selected_force =   new Force(Game.forceProfile.forces[ix]);
 
             });
 
@@ -2012,8 +2034,7 @@
 
                 var str = JSON.stringify(obj);
 
-
-                Game.sprites[0].selected_animation = new Animation(JSON.parse(str));
+                Game.sprites[0].selected_animation = obj;
 
                 obj = Game.sprites[0].selected_animation;
 
@@ -2065,6 +2086,9 @@
                 this.motionPaneDisplay(obj);
 
             }
+
+
+            return App.selectedItem;
 
 
         },
@@ -3170,7 +3194,7 @@
 
                 sprop = selectedObject[index];
 
-            App.selectItem(sprop);
+             App.selectItem(sprop);
                // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
 
                 DatGui.get(sprop, index + "");
@@ -3319,14 +3343,19 @@
 
         });
 
-        $('.squeeze, ul.nav-tabs li').squeeze();
+        $('.squeeze, ul.nav-tabs li').squeeze(function(){
+
+
+            App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
+
+        });
 
 
 
         $(document).on('keydown', function (e) {
 
             var key =  e.keyCode || e.charCode;
-            if ( key == 8 || key == 46 && App.selectedItem)
+            if ( key == 46 && App.selectedItem)
             {
 
                 var type =App.selectedItem.constructor.name;
@@ -3348,11 +3377,7 @@
 
         });
 
-
         App.paneGroupClicks();
-
-
-        // var gui = DatGui.get(lib.samples['Animation'][0]);
 
     });
 
