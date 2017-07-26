@@ -83,7 +83,6 @@ class Sprite {
 
         this.onGround = false;
 
-
         this.clasticTo = []; //an array of sprite types
 
 
@@ -428,28 +427,6 @@ class Sprite {
 
     }
 
-    on(options) {
-
-
-        let controller_index = options.controller || false;
-
-        let __sprite = this;
-
-        var evt = __gameInstance.event_args_list[__gameInstance.event_args_list.length - 1];
-
-        evt.object = __sprite;
-
-        evt.ctrl = options.ctrl;
-
-        for (var x in options) {
-
-
-            evt.args[x] = options[x];
-
-        }
-
-       // alert('event done');
-    }
 
 
     setAnimation(anime) {
@@ -475,48 +452,6 @@ class Sprite {
     }
 
 
-    getImage(key) {
-        key = this.normalKey(key);
-
-        return this.images[key] || false;
-
-    }
-
-
-    getAnimation(key) {
-        key = this.normalKey(key);
-
-        return this.animations[key] || false;
-
-    }
-
-
-    add(objects) // add any object to the sprite
-    {
-
-        if (!objects instanceof Array) {
-            objects = [objects];
-
-        }
-        ;
-
-        let _inst = this;
-
-        Quazar.each(this.__collections, function (ic, coll) {
-
-            Quazar.each(objects, function (ix, obj) {
-
-                if (obj instanceof coll.__typeProfile.constructor) {
-                    coll.list.push(obj); //add the object to collection by class-type
-
-                }
-
-            });
-
-        });
-
-    }
-
     fromFile(file_path)
     {
         var __inst = this;
@@ -530,6 +465,26 @@ class Sprite {
     }
 
 }
+
+
+
+let GameObjects = {
+
+  init:function(){
+
+      let BlockTile = new Sprite();
+
+
+
+
+      this.sprites = [];
+
+
+  }
+
+
+
+};
 
 
 

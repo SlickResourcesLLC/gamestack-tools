@@ -130,6 +130,7 @@ class GameImage {
 
 }
 
+
 //Quazar: a main / game lib object::
 let __gameInstance = __gameInstance || {};
 
@@ -1009,7 +1010,7 @@ class GameWindow {
 
         });
 
-        this.update();
+        this.update(this.sprites);
 
 
     }
@@ -1022,7 +1023,7 @@ class GameWindow {
 
             if(typeof(item.update) == 'function')
             {
-                item.update();
+                item.update(item);
 
             }
 
@@ -1030,7 +1031,7 @@ class GameWindow {
             {
               //  console.log('def_update');
 
-                item.def_update();
+                item.def_update(item);
 
             }
 
@@ -1038,6 +1039,28 @@ class GameWindow {
 
         });
 
+
+    }
+    add(obj)
+    {
+        if(obj instanceof Sprite)
+        {
+
+
+        }
+
+
+    }
+
+    onUpdate(arg)
+    {
+        if(typeof(arg) == 'function')
+        {
+            let up = this.update;
+
+            this.update = function(sprites){ arg(sprites); up(sprites); }
+
+        }
 
     }
 
@@ -1125,10 +1148,7 @@ let Animation_Samples = [
 
 var Sprite_Samples = [function() {
 
-
-
     let frog = new Sprite('frog', 'a frog sprite');
-
 
     frog.setAnimation(new Animation({
         src: "../assets/texture/2d/char/frogman1.png",
@@ -1147,11 +1167,7 @@ return frog;
 
     function(){
 
-
-
-
         let barrel = new Sprite('barrel', 'a barrel, interactive sprite');
-
 
         barrel.setAnimation(new Animation({
             src: "../assets/texture/2d/object/barrel1.png",

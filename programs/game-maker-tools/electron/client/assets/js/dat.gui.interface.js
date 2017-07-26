@@ -566,7 +566,8 @@ var DatGui = {
 
                         var id = this.create_id();
 
-                        $(ul).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/><label class='file_special' for='"+id+"'>Select file</label>");
+                        $(ul).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/>"  +
+                            "<label class='file_special' for='"+id+"'>Select File: <br/> "+obj.src+"</label>");
 
 
                         $('#' + id).change(function(evt){

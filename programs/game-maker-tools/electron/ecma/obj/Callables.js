@@ -36,9 +36,52 @@ class Callables {
 
     }
 
+    add(item)
+    {
+
+        if(typeof(item.engage) == 'function')
+        {
+           this.list.push(item);
+
+        }
+
+       else if(typeof(item.fire) == 'function')
+        {
+            this.list.push(item);
+
+        }
+
+       else if(typeof(item.start) == 'function')
+        {
+            this.list.push(item);
+
+        }
+
+       else if(typeof(item.run) == 'function')
+        {
+            this.list.push(item);
+
+        }
+
+       else if(typeof(item.process) == 'function')
+        {
+            this.list.push(item);
+
+        }
+
+
+    }
+
     call()
     {
         $.each(this.list, function (ix, item) {
+
+
+            if(typeof(item.engage) == 'function')
+            {
+                item.engage();
+
+            }
 
             if(typeof(item.fire) == 'function')
             {
