@@ -13,20 +13,7 @@
 
         <script src="../assets/js/Tween.js"></script>
 
-        <script src="../dist/obj/Animation.js"></script>
-
-        <script src="../dist/Geometry.js"></script>
-
-        <script src="../dist/obj/Force.js"></script>
-
-        <script src="../dist/Quazar.js"></script>
-
-        <script src="../dist/obj/Motion.js"></script>
-
-        <script src="../dist/obj/Sprite.js"></script>
-
-        <script src="../dist/obj/GamepadAdapter.js"></script>
-
+        <script src="../dist/js/Quick2d.js"></script>
 
         <script src="../assets/js/dat.gui.interface.js"></script>
 
@@ -144,6 +131,8 @@
 
     <script src="../assets/js/dat.gui.js"></script>
 
+    <script src="../assets/js/squeezetabs.js"></script>
+
     <style>
 
         .dg.main
@@ -171,6 +160,10 @@
 
 
     </style>
+
+
+
+    <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
 
 
     <body>
@@ -444,6 +437,47 @@
 
     </div>
 
+
+
+    <div id="overlay" >
+
+        <ul class="nav nav-tabs bottom">
+
+            <li class="fill-width"></li>
+
+            <li class="active"><a href="#tab-1" role="tab" data-toggle="tab" id="sprite-view">Selected Sprite 2-do</a></li>
+
+            <li><a href="#tab-2" role="tab" data-toggle="tab" id="map-object-view">Selected Map Object 2-do</a></li>
+
+            <li><a href="#tab-3" role="tab" data-toggle="tab" id="level-settings">Level Settings 2-do</a></li>
+
+            <li><a href="#tab-4" role="tab" data-toggle="tab" id="level-resources">Level Resources 2-do</a></li>
+
+            <button class="squeeze">-</button>
+
+        </ul>
+
+        <div class="tab-content bottom inside">
+
+            <div class="tab-pane fade in active detail-tab-pane" role="tabpanel" id="tab-1">
+                <ul class="list-group main-float-menu"> </ul>
+                <canvas  class="special"></canvas>
+            </div>
+            <div class="tab-pane fade detail-tab-pane" role="tabpanel" id="tab-2">
+                <ul class="list-group main-float-menu"> </ul>
+
+                <canvas ></canvas>
+
+            </div>
+            <div class="tab-pane fade detail-tab-pane" role="tabpanel" id="tab-3">
+
+                <ul>   </ul>
+                <canvas ></canvas>
+
+            </div>
+        </div>
+
+    </div>
 
     <script>
 
@@ -1542,6 +1576,10 @@
 
 
 
+            $('.squeeze, ul.nav-tabs li').squeeze(function(){ });
+
+
+
         });
 
 
@@ -2522,9 +2560,9 @@
 
                     var fs = mapElement.frameSize;
 
-                    sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+                    sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
-
+                    sprite.setSize(sprite.size);
 
                     // console.log(JSON.stringify(sprite));
 
@@ -2573,9 +2611,9 @@
 
                     var fs = mapElement.frameSize;
 
-                    sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+                    sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
-
+                    sprite.setSize(sprite.size);
 
                     // console.log(JSON.stringify(sprite));
 
@@ -2701,21 +2739,21 @@
 
             hoverSelectionImg.src =  pathPref +  "hover_selection.png";
 
-
-
             levelMaker.hover_selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
 
             levelMaker.discluded_sprites.push(levelMaker.hover_selection_sprite);
 
             var fs  = new Size(191 * 4, 192 * 4);
 
-            levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, frameSize:fs, frameBounds:new  VectorBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+            levelMaker.hover_selection_sprite.setAnimation(new Animation({src: hoverSelectionImg.src, size:fs, frameSize:fs, frameBounds:new  VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+
 
             levelMaker.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
 
-            var fs = new Size(191 * 4, 192 * 4);
 
-            levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, frameBounds:new VectorBounds(new Vector3(0, 0), new Vector3(0,0))}));
+
+            levelMaker.selection_sprite.setAnimation(new Animation({src: selectionImg.src, frameSize:fs, size:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0,0))}));
 
 
             levelMaker.discluded_sprites.push(levelMaker.selection_sprite);
@@ -2773,10 +2811,8 @@
 
             var centerSizeSpriteToSprite = function (cSprite, aSprite)
             {
-                cSprite.size.x = aSprite.size.x;
 
-                cSprite.size.y = aSprite.size.y;
-
+                cSprite.setSize(aSprite.size);
 
                 var x = Math.floor((aSprite.position.x + aSprite.size.x / 2) - cSprite.size.x / 2),
                     y = Math.floor((aSprite.position.y + aSprite.size.y / 2) - cSprite.size.y / 2);

@@ -990,4 +990,4 @@ var Sprite_Samples = [function () {
 }];
 
 __gameInstance.event_args_list = [];
-//# sourceMappingURL=Quazar.js.map
+//# sourceMappingURL=Main.js.map

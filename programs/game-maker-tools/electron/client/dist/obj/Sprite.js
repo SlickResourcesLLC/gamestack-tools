@@ -1,29 +1,12 @@
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var __gameInstance = __gameInstance || {};
-
-var Stats = function Stats(args) {
-        _classCallCheck(this, Stats);
-
-        var s = this.create_stats;
-
-        for (var x in s) {
-                this[x] = s[x];
-        }
-
-        if ((typeof args === "undefined" ? "undefined" : _typeof(args)) == 'object') {
-
-                for (var x in args) {
-                        this[x] = args[x];
-                }
-        }
-};
 
 var Sprite = function () {
         function Sprite(name, description, args) {
@@ -56,7 +39,7 @@ var Sprite = function () {
 
                 var __inst = this;
 
-                this.object_id = $Q.getArg(args, 'object_id', '__blank');
+                this.id = $Q.getArg(args, 'id', this.setid());
 
                 this.sounds = $Q.getArg(args, 'sounds', []);
 
@@ -94,10 +77,6 @@ var Sprite = function () {
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
                 this.actionlists = $Q.getArg(args, 'actionlists', []);
-
-                this.stats = $Q.getArg(args, 'stats', new Stats());
-
-                this.id = this.setid();
 
                 $.each(this.sounds, function (ix, item) {
 
@@ -330,27 +309,6 @@ var Sprite = function () {
                         }
                 }
         }, {
-                key: "on",
-                value: function on(options) {
-
-                        var controller_index = options.controller || false;
-
-                        var __sprite = this;
-
-                        var evt = __gameInstance.event_args_list[__gameInstance.event_args_list.length - 1];
-
-                        evt.object = __sprite;
-
-                        evt.ctrl = options.ctrl;
-
-                        for (var x in options) {
-
-                                evt.args[x] = options[x];
-                        }
-
-                        // alert('event done');
-                }
-        }, {
                 key: "setAnimation",
                 value: function setAnimation(anime) {
 
@@ -373,42 +331,6 @@ var Sprite = function () {
                         return this;
                 }
         }, {
-                key: "getImage",
-                value: function getImage(key) {
-                        key = this.normalKey(key);
-
-                        return this.images[key] || false;
-                }
-        }, {
-                key: "getAnimation",
-                value: function getAnimation(key) {
-                        key = this.normalKey(key);
-
-                        return this.animations[key] || false;
-                }
-        }, {
-                key: "add",
-                value: function add(objects) // add any object to the sprite
-                {
-
-                        if (!objects instanceof Array) {
-                                objects = [objects];
-                        }
-                        ;
-
-                        var _inst = this;
-
-                        Quazar.each(this.__collections, function (ic, coll) {
-
-                                Quazar.each(objects, function (ix, obj) {
-
-                                        if (obj instanceof coll.__typeProfile.constructor) {
-                                                coll.list.push(obj); //add the object to collection by class-type
-                                        }
-                                });
-                        });
-                }
-        }, {
                 key: "fromFile",
                 value: function fromFile(file_path) {
                         var __inst = this;
@@ -422,4 +344,15 @@ var Sprite = function () {
 
         return Sprite;
 }();
+
+var GameObjects = {
+
+        init: function init() {
+
+                var BlockTile = new Sprite();
+
+                this.sprites = [];
+        }
+
+};
 //# sourceMappingURL=Sprite.js.map

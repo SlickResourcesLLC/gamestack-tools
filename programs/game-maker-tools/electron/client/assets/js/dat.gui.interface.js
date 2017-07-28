@@ -371,7 +371,7 @@ var DatGui = {
 
 
         }
-        else if(type == Vector3)
+        if(type == Vector3)
         {
 
               fui =  DatGui.main_gui.addFolder(ix + '');
@@ -379,7 +379,7 @@ var DatGui = {
             DatGui.addEachNumeric(o, fui );
 
         }
-        else if(type == Motion)
+        if(type == Motion)
         {
 
             //add main text values
@@ -436,14 +436,8 @@ var DatGui = {
 
 
 
-        else if(type == Animation)
-    {
 
-
-
-    }
-
-        else if(type == Force)
+        if(type == Force)
         {
 
 
@@ -463,6 +457,9 @@ var DatGui = {
 
         }
 
+
+
+
         if([Animation, Sound].indexOf(type) >= 0)
         {
 
@@ -477,6 +474,17 @@ var DatGui = {
 
 
         }
+
+        if(type == Animation)
+        {
+
+
+            this.main_gui.add(parent, 'duration').step(1.0);
+
+
+
+        }
+
 
 
         if(fui && parent) {
@@ -560,14 +568,23 @@ var DatGui = {
 
 
 
+
                     if(!$(my_list).find('input[type="file"]').length)
                     {
                         var ul = $(my_list).first('ul');
 
                         var id = this.create_id();
 
+                        var fname;
+
+                        if(obj.src.length > 270)
+                        {
+
+                            fname = obj.src.substring(0, 270);
+                        }
+
                         $(ul).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/>"  +
-                            "<label class='file_special' for='"+id+"'>Select File: <br/> "+obj.src+"</label>");
+                            "<label class='file_special' for='"+id+"'>Select File: <br/> "+ (fname || obj.src) +"</label>");
 
 
                         $('#' + id).change(function(evt){

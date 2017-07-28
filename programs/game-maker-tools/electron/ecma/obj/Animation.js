@@ -4,6 +4,7 @@
  */
 
 
+
 class Animation {
     constructor(args) {
 
@@ -37,7 +38,7 @@ class Animation {
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
 
-        this.apply2DFrames(args.parent || {});
+      if(typeof(args) == 'object' && args.frameBounds && args.frameSize){  this.apply2DFrames(args.parent || {}) };
 
         this.flipX = $Q.getArg(args, 'flipX', false);
 
@@ -51,13 +52,37 @@ class Animation {
 
         this.hang =this.getArg(args, 'hang', false);
 
-        this.duration = this.getArg(args, 'duration', false);
+        this.duration = this.getArg(args, 'duration', 1000);
 
         this.size =  this.getArg(args, 'size', new Vector3(20, 20, 20));
 
         this.effects = [];
 
         this.timer = 0;
+
+        this.__gameLogic = false;
+
+        this.setType = function(){  };
+
+    }
+
+    singleFrame(frameSize, size)
+    {
+
+        this.__frametype = 'single';
+
+        this.frameSize = frameSize;
+
+        this.size = size;
+
+        this.selected_frame = {
+            image: this.image,
+            frameSize: this.frameSize,
+            framePos: {x: 0, y: 0}
+        };
+
+        this.frames[0] = this.selected_frame;
+
 
     }
 
@@ -128,7 +153,7 @@ class Animation {
 
     update() {
 
-        this.selected_frame = this.frames[this.cix % this.frames.length];
+        this.selected_frame = this.frames[Math.round(this.cix) % this.frames.length];
 
 
     }
@@ -142,20 +167,58 @@ class Animation {
 
 }
 
-engage_once()
+continuous(duration)
 {
+
+    if(this.__frametype == 'single')
+    {
+        return 0;
+
+    }
+
+  this.apply2DFrames();
+
+    //update once:
+    this.update();
+
+
+    if(this.cix == 0)
+  {
+
+      this.engage();
+
+  }
+
+
+}
+
+engage(duration, complete)
+{
+
+    if(this.__frametype == 'single')
+    {
+        return 0;
+
+    }
+
 
     let __inst = this;
 
+    this.complete = complete || this.complete || function(){  };
+
+    var duration = duration || typeof(this.duration) == 'number' ? this.duration : this.frames.length * 20;
+
     //we have a target
   this.tween = new TWEEN.Tween(this)
-        .easing(__inst.curve || TWEEN.Easing.Linear)
+        .easing(__inst.curve || TWEEN.Easing.Linear.None)
 
-        .to({cix:this.frames.length - 1}, this.duration || this.frames.length * 20)
+        .to({cix:__inst.frames.length - 1}, duration)
         .onUpdate(function() {
             //console.log(objects[0].position.x,objects[0].position.y);
 
+         //   __inst.cix = Math.ceil(__inst.cix);
 
+        __inst.update();
 
         })
         .onComplete(function() {
@@ -168,7 +231,14 @@ engage_once()
 
             }
 
+            __inst.cix = 0;
+
+            __inst.isComplete = true;
+
         });
+
+
+  this.tween.start();
 
 
 }

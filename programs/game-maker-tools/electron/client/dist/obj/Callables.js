@@ -34,9 +34,29 @@ var Callables = function () {
             }
         }
     }, {
+        key: 'add',
+        value: function add(item) {
+
+            if (typeof item.engage == 'function') {
+                this.list.push(item);
+            } else if (typeof item.fire == 'function') {
+                this.list.push(item);
+            } else if (typeof item.start == 'function') {
+                this.list.push(item);
+            } else if (typeof item.run == 'function') {
+                this.list.push(item);
+            } else if (typeof item.process == 'function') {
+                this.list.push(item);
+            }
+        }
+    }, {
         key: 'call',
         value: function call() {
             $.each(this.list, function (ix, item) {
+
+                if (typeof item.engage == 'function') {
+                    item.engage();
+                }
 
                 if (typeof item.fire == 'function') {
                     item.fire();

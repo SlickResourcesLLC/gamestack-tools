@@ -17,19 +17,8 @@
 
     <script src="../assets/js/Tween.js"></script>
 
-    <script src="../dist/obj/Animation.js"></script>
+    <script src="../dist/js/Quick2d.js"></script>
 
-    <script src="../dist/Geometry.js"></script>
-
-    <script src="../dist/obj/Force.js"></script>
-
-    <script src="../dist/Quazar.js"></script>
-
-    <script src="../dist/obj/Motion.js"></script>
-
-    <script src="../dist/obj/Sprite.js"></script>
-
-    <script src="../dist/obj/GamepadAdapter.js"></script>
 
     <script src="../assets/js/dat.gui.interface.js"></script>
 
@@ -41,13 +30,11 @@
 
     <script src="../assets/js/jquery.fileDownload.js"></script>
 
-
-
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
 
 
-    <script src="../assets/js/squeeze.js"></script>
+    <script src="../assets/js/squeezetabs.js"></script>
 
 
     <link rel="stylesheet" href="../assets/css/tool-shell.css">
@@ -175,7 +162,6 @@
 
             border:1px solid teal;
 
-
         }
 
         label.file_special:hover
@@ -183,10 +169,9 @@
 
             border:1px solid darkgoldenrod;
 
+            cursor:pointer;
 
         }
-
-
 
         #container
         {
@@ -555,145 +540,10 @@
 
     </style>
 
-    <style>
 
-        button.squeeze
-        {
 
+    <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
 
-            height:40px;
-
-            width:40px;
-
-            float:right;
-
-            margin:2px;
-
-            font-size:170%;
-
-        }
-
-        .close-open
-        {
-
-            height:40px;
-
-            width:40px;
-
-            float:right;
-
-            margin:2px;
-
-            font-size:170%;
-
-        }
-
-
-
-       li.fill-width
-        {
-
-           position:absolute;
-
-           z-index:-1;
-
-           width:100%;
-
-           height:50px;
-
-           background: #373f4b; /* Old browsers */
-           background: -moz-linear-gradient(top, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* FF3.6-15 */
-           background: -webkit-linear-gradient(top, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* Chrome10-25,Safari5.1-6 */
-           background: linear-gradient(to bottom, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-           filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#373f4b', endColorstr='#0e1214', GradientType=0);
-
-
-       }
-
-
-        .nav-tabs
-        {
-            position:fixed;
-
-            width:100%;
-
-            bottom:0px;
-
-            height:70%;
-
-            z-index:9998;
-
-
-        }
-
-
-        .tab-content
-        {
-            position:fixed;
-
-            z-index:9999;
-
-            top:30%;
-
-            width:90%;
-
-            left:5%;
-
-            margin-top:50px;
-
-            color:gold;
-
-        }
-
-        .tab-pane canvas#animation-panel, .tab-pane canvas#motion-panel
-        {
-            position:relative;
-
-            top:5px;
-
-            width:60%;
-
-            height:300px;
-            left:20%;
-
-            color:gold;
-
-        }
-
-
-        #overlay
-        {
-            position:absolute;
-
-            bottom:0px;
-
-            width:100%;
-
-            height:100%;
-
-        }
-
-        .tab-pane ul
-        {
-            color:steelblue;
-
-           float:left;
-
-        }
-
-        .tab-pane li:hover, .tab-pane li.selected
-        {
-           background:#333333;
-
-            color:white;
-
-            border-bottom:1px solid midnightblue;
-
-        }
-
-
-
-    </style>
 
 </head>
 <body>
@@ -702,7 +552,7 @@
 
 <div id="overlay" >
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs bottom">
 
         <li class="fill-width"></li>
 
@@ -716,8 +566,7 @@
 
     </ul>
 
-    <div class="tab-content inside">
-
+    <div class="tab-content bottom inside">
 
         <div class="tab-pane fade in active animations-tab-pane" role="tabpanel" id="tab-1">
             <ul class="list-group main-float-menu"> </ul>
@@ -732,7 +581,7 @@
         </div>
         <div class="tab-pane fade sounds-tab-pane" role="tabpanel" id="tab-3">
 
-          <ul>   </ul>
+            <ul>   </ul>
 
 
         </div>
@@ -1822,7 +1671,7 @@
 
                 this.player.jump_anime = new Animation({
                     name:"anime_one",
-                    src: "image/samus2.png",
+                    src: "../tools/image/samus2.png",
 
                     size:new Vector2(100, 100),
 
@@ -1881,7 +1730,7 @@
 
                 // this.rotation.x += 0.5;
 
-                this.selected_animation.animate();
+                this.selected_animation.continuous();
 
 
             };
@@ -3257,15 +3106,11 @@
 
         TWEEN.update(time);
 
-
         requestAnimationFrame(animate);
-
 
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
 
-
         Game.render();
-
 
 
     }
@@ -3324,6 +3169,8 @@
 
                Game.init(Game.sprites[0]);
 
+                App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+
             });
 
         });
@@ -3343,14 +3190,13 @@
 
         });
 
-        $('.squeeze, ul.nav-tabs li').squeeze(function(){
 
+
+        $('.squeeze, ul.nav-tabs li').squeeze(function(){
 
             App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
 
         });
-
-
 
         $(document).on('keydown', function (e) {
 

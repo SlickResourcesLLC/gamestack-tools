@@ -17,7 +17,7 @@ var Motion = function () {
 
                 this.curvesList = this.curvesObject();
 
-                this.object_id = [args.object_id] || ["__blank"];
+                this.parent_id = args.parent_id || "__blank";
 
                 this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
@@ -133,15 +133,10 @@ var Motion = function () {
 
                         $.each(Game.sprites, function (ix, item) {
 
-                                $.each(__inst.object_id, function (iy, id_item) {
+                                if (item.id == __inst.parent_id) {
 
-                                        if (item.id == id_item) {
-
-                                                //  alert('match');
-
-                                                objects[ix] = item;
-                                        }
-                                });
+                                        objects[ix] = item;
+                                }
                         });
 
                         var target = {

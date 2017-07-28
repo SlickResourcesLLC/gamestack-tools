@@ -1,30 +1,3 @@
-let __gameInstance = __gameInstance || {};
-
-
-class Stats {
-
-    constructor(args) {
-
-        var s = this.create_stats;
-
-        for(var x in s)
-        {
-            this[x] = s[x];
-
-        }
-
-        if(typeof(args) == 'object') {
-
-            for (var x in args) {
-                this[x] = args[x];
-            }
-
-        }
-
-    }
-
-}
-
 
 class Sprite {
     constructor(name, description, args) {
@@ -59,7 +32,8 @@ class Sprite {
 
         let __inst = this;
 
-        this.object_id =$Q.getArg(args, 'object_id', '__blank');
+
+        this.id = $Q.getArg(args, 'id',  this.setid());
 
         this.sounds = $Q.getArg(args, 'sounds', []);
 
@@ -100,11 +74,9 @@ class Sprite {
 
         this.actionlists =  $Q.getArg(args, 'actionlists', []);
 
-        this.stats = $Q.getArg(args, 'stats', new Stats());
 
-        this.id = this.setid();
 
-        $.each(this.sounds, function(ix, item){
+        $.each(this.sounds , function(ix, item){
 
             __inst.sounds[ix] = new Sound(item);
 
@@ -123,6 +95,14 @@ class Sprite {
             __inst.animations[ix] = new Animation(item);
 
         });
+
+    }
+
+    setSize(size)
+    {
+        this.size = new Vector3(size.x, size.y, size.z || 0);
+
+        this.selected_animation.size = this.size;
 
     }
 

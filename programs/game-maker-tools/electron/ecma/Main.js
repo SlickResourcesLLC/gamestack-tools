@@ -226,6 +226,27 @@ let Quazar = {
 
     },
 
+    animate:function()
+    {
+        TWEEN.update(time);
+
+        requestAnimationFrame(this.animate);
+
+        this.__gameWindow.update();
+
+        this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
+
+        this.__gameWindow.draw();
+
+    },
+
+    start:function()
+    {
+
+        this.animate();
+
+    },
+
 
     mustHave: function (obj, keytypes, callback) {
 
@@ -309,14 +330,13 @@ let Quazar = {
     onReady: function () {
         var funx = this.ready_callstack;
 
-        var lib = this;
+        var gameWindow = this._gameWindow, lib = this, sprites = this.__gameWindow.sprites;
 
         this.each(funx, function (ix, call) {
 
-            call(lib);
+            call(lib, gameWindow, sprites);
 
         });
-
 
         __gameInstance.isAtPlay = true;
 
@@ -951,6 +971,9 @@ class GameWindow {
             };
 
 
+        Quazar.__gameWindow = this;
+
+
     }
 
 
@@ -999,21 +1022,6 @@ class GameWindow {
 
     }
 
-    render() {
-
-
-
-        Quazar.each(this.force_set.list, function (ix, item) {
-
-
-         //   item.update();
-
-        });
-
-        this.update(this.sprites);
-
-
-    }
 
     update()
     {
