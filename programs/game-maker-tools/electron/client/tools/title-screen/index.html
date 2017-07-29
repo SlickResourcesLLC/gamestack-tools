@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+
+        <title>app-title-screen</title>
+       
+        <script src="jquery.min.js"></script>
+
+        <style>
+            <!--
+            html{}
+
+
+            @font-face {
+                font-family: round;
+                src: url(font/round.ttf);
+                font-weight:400;
+            }
+
+
+            .fillGradient
+            {
+                background-color:black;
+                background-size:100%, 100%;
+                opacity: 0.55;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                position: absolute;
+                z-index: -1;
+
+            }
+            p {
+
+                margin:0px;
+                font-family: "Trebuchet MS", Helvetica, sans-serif;
+                font-weight:normal;
+            }
+
+            #by{
+                width:100%;
+                display:block;
+                text-align:center;
+                position:relative;
+                color:white;
+                font-size:130%;
+                margin-top:200px;
+            }
+            #softDev
+            {
+
+                margin-left:5px;
+
+                color:orange;
+                text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
+                    -1px 1px 0 black, 3px 3px 5px #333333;
+                font-size:150%;
+            }
+
+            #vividText {
+
+                position:relative;
+                margin-right:5px;
+
+                color:black;
+                text-shadow: 1px 1px 0 aqua, -1px -1px 0 aqua, 1px -1px 0 aqua,
+                    -1px 1px 0 aqua, 2px 2px 3px snow;
+                font-size:190%;
+
+            }
+            #vividNameCase
+            {
+                position:relative;
+                display:block;
+                text-align:center;
+                margin-left:auto;
+                margin-right:auto;
+                margin-top:50px;
+            }
+            .title
+            {
+
+            }
+            #appTitle
+            {
+                width:100%;
+                margin-top:9px;
+                display:block;
+                text-align:center;
+                position:relative;
+                font-size:270%;
+                color:white;
+                text-shadow: 1px 1px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
+                    -1px 1px 0 grey;
+
+                font-family:f2;
+            }
+            #linkCase
+            {
+                position:relative;
+                width:100%;
+                margin-top:20px;
+            }
+            #linkLeft
+            {
+                position:relative;
+                width:49%;
+                text-align:right;
+                font-size:250%;
+                float:left;
+                color:grey;
+                margin:0px;
+                padding:0px;
+                cursor:pointer;
+                font-family:round;
+
+            }
+            #linkRight
+            {
+                position:relative;
+                width:49%;
+                text-align:left;
+                font-size:250%;
+                float:left;
+                color:grey;
+
+                margin:0px;
+                padding:0px;
+                cursor:pointer;
+                font-family:round;
+            }
+            #linkCenter
+            {
+                position:relative;
+                width:100%;
+                display:block;
+                text-align:center;
+                font-size:250%;
+                float:left;
+                color:grey;
+
+                margin:0px;
+                padding:0px;
+                cursor:pointer;
+                font-family:round;
+            }
+            #linkLeft:hover, #linkRight:hover, #linkCenter:hover{ color:snow;  }
+            #appTitleMain
+            {
+                width:100%;
+                margin-top:9px;
+                display:block;
+                text-align:center;
+                position:relative;
+                font-size:190%;
+                color:white;
+                text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
+                    -1px 1px 0 black;
+            }
+
+            .appTitleDef
+            {
+                width:100%;
+                display:block;
+                text-align:center;
+                position:relative;
+                font-size:150%;
+                color:snow;
+
+                text-shadow: 1px 1px 0 blue, -1px -1px 0 blue, 1px -1px 0 blue,
+                    -1px 1px 0 blue, 3px 3px 5px aqua;
+
+            }
+
+            -->
+        </style>
+
+    <body  >
+        <div class="fillGradient"  >
+        </div>
+
+        <p  id="appTitle"  class="title" >app-title</p>
+
+        <p  id="by" class="title"  >An Html5, CSS, Javascript Title Screen By:</p>
+
+        <div id="vividNameCase"  >
+
+            <p  id="softDev"  class="title"   >Slick Resources</p>
+            <p  class="appTitleDef"  ></p>
+        </div>
+
+        <p  id="linkCenter"    >|Enter|</p>
+        <script  type="text/javascript">
+            //TODO: check local storage and cookies for member already signed in:
+            
+            
+            var app = {
+                
+                titleOps: new Array(),
+                
+                complete:false,
+                
+                opacityUpdate:function(){
+                    
+                        app.opacityUp();
+                    
+                },
+                
+                opacityUp:function(){
+                    
+                      if ( app.titleOps[ app.titleOps.length - 1] >= 1.0)
+                {
+                     app.complete = true;
+                }
+                for (var i = 0; i <  app.titleOps.length; i++)
+                {
+                    if (app.titleOps[i] < 1.0)
+                    {
+                         app.titleOps[i] += 0.025;
+                        var t = $('.title')[i];
+
+                        $(t).css('opacity', '' + app.titleOps[i]);
+                        return;
+                    }
+
+                }
+                    
+                },
+                
+                init:function(){
+                    
+                    
+                $(".title").each(function (index) {
+                    $(this).css('opacity', '0.0');
+                    app.titleOps.push(0);
+                });
+
+                    
+                }
+                
+            }
+            
+        </script>
+
+        <script  type="text/javascript">
+
+            $(document).ready(function () {
+                app.init();
+                window.setInterval('app.opacityUpdate();', 20);
+
+                $('#linkCenter').click(function () {
+                    app.main();
+                });
+
+            });
+
+            var main = function ()
+            {
+                //login code: just get the page from site
+                window.location.href = '/main.html';
+            }
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,4 @@
+
+
+
+The developer-user can select from a variety of ready game controls, such that the initial player is easier to rig.
