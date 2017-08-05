@@ -59,7 +59,6 @@ class Sprite {
 
         this.selected_animation = {};
 
-
         this.speed =  $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
 
         this.accel =  $Q.getArg(args, 'accel', new Vector3(0, 0, 0));
@@ -68,7 +67,7 @@ class Sprite {
 
         this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
-        //Apply and instantiate Sound(), Motion(), and Animation() args...
+        //Apply / instantiate Sound(), Motion(), and Animation() args...
 
         $.each(this.sounds , function(ix, item){
 
@@ -90,7 +89,6 @@ class Sprite {
         });
 
     }
-
 
     /*****************************
      * Getters

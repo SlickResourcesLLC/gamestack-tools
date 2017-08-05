@@ -250,7 +250,7 @@ li.selected-heading, span.tree-open
 
 
 
-#object-maker .dg
+#object-maker .dg.main
 {
 
 position:relative;
@@ -261,7 +261,8 @@ position:relative;
 
     margin-left:-120px;
 
-    margin-bottom:30px;
+
+    top:0px;
 
 }
 
@@ -962,7 +963,7 @@ form #testCanvas
 button.ok
 {
 
-    position:absolute;
+    position:relative;
 
     left:10%;
     background-color:#333333;
@@ -988,8 +989,6 @@ button.ok
     width:30%;
 
     vertical-align: middle;
-
-    bottom:4px;
 
 }
 
@@ -1021,13 +1020,11 @@ li a.delete:hover {
 button.cancel
 {
 
-    position:absolute;
+    position:relative;
 
     color:white;
 
     border-radius: 4px;
-
-    margin-top:12px;
 
     background: #da8452; /* Old browsers */
     background: -moz-linear-gradient(top, #da8452 0%, #c26732 50%, #d67842 100%); /* FF3.6-15 */
@@ -1043,13 +1040,15 @@ button.cancel
     height:25px;
     width:30%;
 
-    left:60%;
+    left:30%;
 
     vertical-align: middle;
 
-    bottom:4px;
+    top:6px;
+
 
 }
+
 
 #logo
 {

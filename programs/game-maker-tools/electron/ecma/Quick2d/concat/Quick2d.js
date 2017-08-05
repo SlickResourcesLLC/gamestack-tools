@@ -3,11 +3,6 @@
  */
 
 
-/**
- * Created by The Blakes on 3/16/2017.
- */
-
-
 
 /*
  * #Section Media
@@ -43,7 +38,7 @@ class Sound {
 
         }
 
-      else  if (typeof(src)=='string') {
+        else  if (typeof(src)=='string') {
 
             this.src = src;
 
@@ -118,6 +113,11 @@ class GameImage {
         if(!this.image)
         {
             this.image = {error:"Image not instantiated, set to object by default"};
+
+        }
+        else
+        {
+            this.image.onerror = function(){ this.__error = true;   };
 
         }
 
@@ -721,6 +721,11 @@ var Canvas = {
 
         }
 
+        if(img.__error)
+        {
+            return console.info('image src invalid:' + img.src);
+        }
+
         //draw the image
         canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * (-1), height / 2 * (-1), width, height);
         //reset the canvas
@@ -1033,94 +1038,6 @@ class VideoDisplay //show a video
     play() {
 
     }
-}
-
-;/**
- * Created by Administrator on 7/15/2017.
- */
-
-
-
-
-class Vector3 {
-    constructor(x, y, z, r) {
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.r = r;
-
-    }
-
-
-}
-;
-
-let Vector2 = Vector3, Point = Vector3, Size = Vector3, Vertex = Vector3, Rotation = Vector3, Rot = Vector3, Position = Vector3,
-
-    Pos = Vector3;
-
-
-
-
-class Rectangle {
-
-    constructor(min, max) {
-
-        this.min = min;
-        this.max = max;
-
-    }
-
-
-}
-;
-
-let VectorBounds = Rectangle;
-
-
-
-class VectorFrameBounds {
-
-    constructor(min, max, termPoint) {
-
-        this.min = min;
-        this.max = max;
-
-        this.termPoint = termPoint || new Vector3(this.max.x, this.max.y, this.max.z);
-
-    }
-
-
-}
-;
-
-
-
-class Circle
-{
-    constructor(args) {
-
-        this.position = this.getArg(args, 'position', new Vector3(0, 0, 0));
-
-        this.radius = this.getArgs(args, 'radius', 100);
-
-    }
-
-    getArg(args, key, fallback) {
-
-        if (args.hasOwnProperty(key)) {
-
-            return args[key];
-
-        }
-        else {
-            return fallback;
-
-        }
-
-    }
-
 }
 
 ;/**
@@ -2466,6 +2383,53 @@ class Motion {
 
 
 
+;/**
+ * Created by Administrator on 7/15/2017.
+ */
+
+
+class Rectangle {
+
+    constructor(min, max) {
+
+        this.min = min;
+        this.max = max;
+
+    }
+
+
+}
+;
+
+let VectorBounds = Rectangle;
+
+class VectorFrameBounds extends Rectangle {
+
+    constructor(min, max, termPoint) {
+
+        super(min, max);
+
+        this.termPoint = termPoint || new Vector3(this.max.x, this.max.y, this.max.z);
+
+    }
+
+
+}
+;
+
+class Circle
+{
+    constructor(args) {
+
+        this.position = this.getArg(args, 'position', new Vector3(0, 0, 0));
+
+        this.radius = this.getArgs(args, 'radius', 100);
+
+    }
+
+
+}
+
 ;
 class Sprite {
     constructor(name, description, args) {
@@ -2474,8 +2438,9 @@ class Sprite {
 
         this.__specialPresets = new SpritePresets(); //apply presets to this variable
 
-        if(typeof(name) == 'object') //accept first argument as full args object
+        if(typeof name == 'object') //accept first argument as full args object
         {
+
             args = name;
 
             this.name = args.name || "__";
@@ -2499,7 +2464,6 @@ class Sprite {
             if (ix !== 'parent') {
                 _spr[ix] = item;
             }
-
 
         });
 
@@ -2527,7 +2491,6 @@ class Sprite {
 
         this.selected_animation = {};
 
-
         this.speed =  $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
 
         this.accel =  $Q.getArg(args, 'accel', new Vector3(0, 0, 0));
@@ -2536,7 +2499,7 @@ class Sprite {
 
         this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
-        //Apply and instantiate Sound(), Motion(), and Animation() args...
+        //Apply / instantiate Sound(), Motion(), and Animation() args...
 
         $.each(this.sounds , function(ix, item){
 
@@ -2558,7 +2521,6 @@ class Sprite {
         });
 
     }
-
 
     /*****************************
      * Getters
@@ -3162,7 +3124,51 @@ return {
     }
 
 }
-};;/**
+};;
+//Vector3:
+
+class Vector3 {
+    constructor(x, y, z, r) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.r = r;
+
+        this.__relativeTo = false;
+
+    }
+
+    relativeTo(v)
+    {
+        this.__relativeTo = v;
+    }
+
+    sub()
+    {
+        //TODO : subtract vectors
+
+
+    }
+
+    add()
+    {
+        //TODO : add vectors
+
+    }
+
+    is_between(v1, v2)
+    {
+        //TODO : overlap vectors return boolean
+
+    }
+
+}
+;
+
+let Pos = Vector3, Size = Vector3, Position = Vector3, Vector2 = Vector3, Vector = Vector3, Rotation = Vector3;
+
+//The above are a list of synonymous expressions for Vector3. All of these do the same thing in this library (store x,y,z values)
+;/**
  * Created by The Blakes on 04-13-2017
  *
  */

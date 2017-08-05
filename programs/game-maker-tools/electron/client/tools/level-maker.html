@@ -8,6 +8,7 @@
         <title>Level-Maker</title>
         <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
+        <link rel="stylesheet" href="../assets/js/ui/contextMenu.css">
         <!-- Insert this line above script imports  -->
         <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -24,6 +25,10 @@
         <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
         <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+        <script src="../assets/js/ui/contextMenu.js"></script>
+
 
         <!-- Insert this line after script imports -->
         <script>if (window.module) module = window.module;</script>
@@ -417,45 +422,12 @@
 
     <div id="overlay" >
 
-        <ul class="nav nav-tabs bottom">
-
-            <li class="fill-width"></li>
-
-            <li class="active"><a href="#tab-1" role="tab" data-toggle="tab" id="sprite-view">Selected Sprite 2-do</a></li>
-
-            <li><a href="#tab-2" role="tab" data-toggle="tab" id="map-object-view">Selected Map Object 2-do</a></li>
-
-            <li><a href="#tab-3" role="tab" data-toggle="tab" id="level-settings">Level Settings 2-do</a></li>
-
-            <li><a href="#tab-4" role="tab" data-toggle="tab" id="level-resources">Level Resources 2-do</a></li>
-
-            <button class="squeeze">-</button>
-
-        </ul>
-
-        <div class="tab-content bottom inside">
-
-            <div class="tab-pane fade in active detail-tab-pane" role="tabpanel" id="tab-1">
-                <ul class="list-group main-float-menu"> </ul>
-                <canvas  class="special"></canvas>
-            </div>
-            <div class="tab-pane fade detail-tab-pane" role="tabpanel" id="tab-2">
-                <ul class="list-group main-float-menu"> </ul>
-
-                <canvas ></canvas>
-
-            </div>
-            <div class="tab-pane fade detail-tab-pane" role="tabpanel" id="tab-3">
-
-                <ul>   </ul>
-                <canvas ></canvas>
-
-            </div>
-        </div>
 
     </div>
 
     <script>
+
+
 
         //App{}: a collection of UI functionality
 
@@ -1004,14 +976,14 @@
                container.oncontextmenu = function (e) {
 
 
-                   App.placeRCMenu(levelMaker.mouse.x, levelMaker.mouse.y - 40, true);
+                  // App.placeRCMenu(levelMaker.mouse.x, levelMaker.mouse.y - 40, true);
 
                     if(!App.DEVMODE)
                     {
 
-                        e.preventDefault();
+                       // e.preventDefault();
 
-                        return false;
+                     //   return false;
 
                     }
 
@@ -1021,7 +993,7 @@
 
                 lib.InputEvents.extend('rightclick', function (x, y) {
 
-                    levelMaker.rightClick(x, y);
+                 //   levelMaker.rightClick(x, y);
                 }, function (x, y) {
 
                     //button was released
@@ -2816,7 +2788,19 @@
 
                 }
 
+
+
+
+
             }, 10);
+
+
+
+
+
+
+
+
 
         });
         /********************************
@@ -2956,7 +2940,56 @@
 
             });
 
+            //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
+            var menu = [{
+                name: 'delete',
+                img: 'images/cross_icon.png',
+                title: 'delete button',
+                fun: function () {
+                    alert('add code to delete last object(s)')
+                }
+            }, {
+                name: 'update',
+                img: '#',
+                title: 'update button',
+                fun: function () {
+                    alert('i am update button')
+                }
+            },{
+                name: 'With_Selected',
+                img: 'images/update.png',
+                title: 'With_Selected',
+                subMenu: [{
+                    name: 'Clone_To_New_Map_Object',
+                    title: 'Clone To Map Object',
+                    img: 'images/merge.png',
+                    fun: function () {
+                        alert('Now show option select of all map object(s)')
+                    }
+                }, {
+                    name: 'Special_Presets',
+                    title: 'Apply special presets to the object, such as javascript behaviors and events.',
+                    img: 'images/replace.png',
+                   // disable: true,
+                    subMenu: [{
+                        name: 'TODO',
+                        img: 'images/top.png',
+                        fun: function () {
+                            alert('TODO : apply');
+                        }
 
+                    }, {
+                        name: 'TODO2',
+                        img: 'images/all.png',
+                        fun: function () {
+                            alert('TODO2');
+                        }
+                    }]
+                }]
+            }];
+
+            //Calling context menu
+            $('body canvas').contextMenu(menu,{triggerOn:'contextmenu'});
 
         });
 

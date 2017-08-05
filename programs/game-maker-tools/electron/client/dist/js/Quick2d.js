@@ -4,11 +4,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-/**
- * Created by The Blakes on 3/16/2017.
- */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * Created by The Blakes on 3/16/2017.
@@ -104,6 +104,10 @@ var GameImage = function () {
 
                 if (!this.image) {
                         this.image = { error: "Image not instantiated, set to object by default" };
+                } else {
+                        this.image.onerror = function () {
+                                this.__error = true;
+                        };
                 }
 
                 this.domElement = this.image;
@@ -604,6 +608,10 @@ var Canvas = {
                         canvasContextObj.scale(-1, 1);
                 } else {}
 
+                if (img.__error) {
+                        return console.info('image src invalid:' + img.src);
+                }
+
                 //draw the image
                 canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * -1, height / 2 * -1, width, height);
                 //reset the canvas
@@ -886,77 +894,6 @@ var VideoDisplay //show a video
         }]);
 
         return VideoDisplay;
-}();
-
-; /**
-  * Created by Administrator on 7/15/2017.
-  */
-
-var Vector3 = function Vector3(x, y, z, r) {
-        _classCallCheck(this, Vector3);
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.r = r;
-};
-
-;
-
-var Vector2 = Vector3,
-    Point = Vector3,
-    Size = Vector3,
-    Vertex = Vector3,
-    Rotation = Vector3,
-    Rot = Vector3,
-    Position = Vector3,
-    Pos = Vector3;
-
-var Rectangle = function Rectangle(min, max) {
-        _classCallCheck(this, Rectangle);
-
-        this.min = min;
-        this.max = max;
-};
-
-;
-
-var VectorBounds = Rectangle;
-
-var VectorFrameBounds = function VectorFrameBounds(min, max, termPoint) {
-        _classCallCheck(this, VectorFrameBounds);
-
-        this.min = min;
-        this.max = max;
-
-        this.termPoint = termPoint || new Vector3(this.max.x, this.max.y, this.max.z);
-};
-
-;
-
-var Circle = function () {
-        function Circle(args) {
-                _classCallCheck(this, Circle);
-
-                this.position = this.getArg(args, 'position', new Vector3(0, 0, 0));
-
-                this.radius = this.getArgs(args, 'radius', 100);
-        }
-
-        _createClass(Circle, [{
-                key: 'getArg',
-                value: function getArg(args, key, fallback) {
-
-                        if (args.hasOwnProperty(key)) {
-
-                                return args[key];
-                        } else {
-                                return fallback;
-                        }
-                }
-        }]);
-
-        return Circle;
 }();
 
 ; /**
@@ -2057,6 +1994,47 @@ var Motion = function () {
         return Motion;
 }();
 
+; /**
+  * Created by Administrator on 7/15/2017.
+  */
+
+var Rectangle = function Rectangle(min, max) {
+        _classCallCheck(this, Rectangle);
+
+        this.min = min;
+        this.max = max;
+};
+
+;
+
+var VectorBounds = Rectangle;
+
+var VectorFrameBounds = function (_Rectangle) {
+        _inherits(VectorFrameBounds, _Rectangle);
+
+        function VectorFrameBounds(min, max, termPoint) {
+                _classCallCheck(this, VectorFrameBounds);
+
+                var _this = _possibleConstructorReturn(this, (VectorFrameBounds.__proto__ || Object.getPrototypeOf(VectorFrameBounds)).call(this, min, max));
+
+                _this.termPoint = termPoint || new Vector3(_this.max.x, _this.max.y, _this.max.z);
+
+                return _this;
+        }
+
+        return VectorFrameBounds;
+}(Rectangle);
+
+;
+
+var Circle = function Circle(args) {
+        _classCallCheck(this, Circle);
+
+        this.position = this.getArg(args, 'position', new Vector3(0, 0, 0));
+
+        this.radius = this.getArgs(args, 'radius', 100);
+};
+
 ;
 
 var Sprite = function () {
@@ -2069,6 +2047,7 @@ var Sprite = function () {
 
                 if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
                         {
+
                                 args = name;
 
                                 this.name = args.name || "__";
@@ -2123,7 +2102,7 @@ var Sprite = function () {
 
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
-                //Apply and instantiate Sound(), Motion(), and Animation() args...
+                //Apply / instantiate Sound(), Motion(), and Animation() args...
 
                 $.each(this.sounds, function (ix, item) {
 
@@ -2674,10 +2653,64 @@ var SpritePresetsOptions = function SpritePresetsOptions() {
                 }
 
         };
-};; /**
-    * Created by The Blakes on 04-13-2017
-    *
-    */
+};;
+//Vector3:
+
+var Vector3 = function () {
+        function Vector3(x, y, z, r) {
+                _classCallCheck(this, Vector3);
+
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.r = r;
+
+                this.__relativeTo = false;
+        }
+
+        _createClass(Vector3, [{
+                key: 'relativeTo',
+                value: function relativeTo(v) {
+                        this.__relativeTo = v;
+                }
+        }, {
+                key: 'sub',
+                value: function sub() {
+                        //TODO : subtract vectors
+
+
+                }
+        }, {
+                key: 'add',
+                value: function add() {
+                        //TODO : add vectors
+
+                }
+        }, {
+                key: 'is_between',
+                value: function is_between(v1, v2) {
+                        //TODO : overlap vectors return boolean
+
+                }
+        }]);
+
+        return Vector3;
+}();
+
+;
+
+var Pos = Vector3,
+    Size = Vector3,
+    Position = Vector3,
+    Vector2 = Vector3,
+    Vector = Vector3,
+    Rotation = Vector3;
+
+//The above are a list of synonymous expressions for Vector3. All of these do the same thing in this library (store x,y,z values)
+; /**
+  * Created by The Blakes on 04-13-2017
+  *
+  */
 
 var InterfaceCallback = function () {
         function InterfaceCallback(_ref6) {

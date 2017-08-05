@@ -3,11 +3,6 @@
  */
 
 
-/**
- * Created by The Blakes on 3/16/2017.
- */
-
-
 
 /*
  * #Section Media
@@ -43,7 +38,7 @@ class Sound {
 
         }
 
-      else  if (typeof(src)=='string') {
+        else  if (typeof(src)=='string') {
 
             this.src = src;
 
@@ -118,6 +113,11 @@ class GameImage {
         if(!this.image)
         {
             this.image = {error:"Image not instantiated, set to object by default"};
+
+        }
+        else
+        {
+            this.image.onerror = function(){ this.__error = true;   };
 
         }
 
@@ -719,6 +719,11 @@ var Canvas = {
             canvasContextObj.scale(-1, 1);
         } else {
 
+        }
+
+        if(img.__error)
+        {
+            return console.info('image src invalid:' + img.src);
         }
 
         //draw the image

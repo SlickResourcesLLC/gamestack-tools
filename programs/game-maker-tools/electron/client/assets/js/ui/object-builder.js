@@ -1,12 +1,9 @@
-
-
 /**********
  *
  * deps:
  * 	-DatGui (dat.gui.interface.js)
  *
  * ***********/
-
 
 
 var ObjectArrayBuilder = function(instance, allowedTypes, allowedMembers)
@@ -24,7 +21,7 @@ var ObjectArrayBuilder = function(instance, allowedTypes, allowedMembers)
 
 	return new ObjectBuilder(this, allowedTypes, allowedMembers);
 
-}
+};
 
 
 var __arrayBuilderInstance = {};
