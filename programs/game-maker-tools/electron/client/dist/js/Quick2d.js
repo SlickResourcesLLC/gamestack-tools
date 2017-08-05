@@ -363,7 +363,7 @@ Quazar.InputEvents = { //PC input events
                                 y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
                         }
                         x -= Quazar.canvas.offsetLeft;
-                        y -= Quazar.canvas.offsetTop;
+                        y -= Quazar.canvas.style.top;
                         return { x: x, y: y };
                 }
 
@@ -607,10 +607,6 @@ var Canvas = {
 
                         canvasContextObj.scale(-1, 1);
                 } else {}
-
-                if (img.__error) {
-                        return console.info('image src invalid:' + img.src);
-                }
 
                 //draw the image
                 canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * -1, height / 2 * -1, width, height);
