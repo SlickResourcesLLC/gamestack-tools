@@ -14,10 +14,18 @@ grunt.initConfig({
         options: {
             separator: ';',
         },
-        dist: {
-            src: ['ecma/Main.js', 'ecma/Geometry.js', 'ecma/obj/*.js', 'ecma/obj/sub/*.js'],
-            dest: 'ecma/concat/Quick2d.js',
+        api:{
+
+            src: ['ecma/Protocol/rest/*.js'],
+            dest: 'ecma/Protocol/concat/Protocol.js',
         },
+
+        game_lib:{
+            src: ['ecma/Quick2d/Main.js', 'ecma/Quick2d/Geometry.js', 'ecma/Quick2d/obj/*.js', 'ecma/Quick2d/obj/sub/*.js'],
+            dest: 'ecma/Quick2d/concat/Quick2d.js'
+        },
+
+
     },
 
     babel: {
@@ -25,15 +33,28 @@ grunt.initConfig({
             sourceMap: true,
             presets: ['babel-preset-es2015']
         },
-        dist: {
+        game_lib: {
           files: [
             {
                 expand: true,
-                cwd: 'ecma/concat',
+                cwd: 'ecma/Quick2d/concat',
                 src: ['Quick2d.js'],
                 dest: 'client/dist/js'
             }
         ]
+
+        }
+        ,
+
+        api: {
+            files: [
+                {
+                    expand: true,
+                    cwd: 'ecma/Protocol/concat',
+                    src: ['Protocol.js'],
+                    dest: 'client/dist/js'
+                }
+            ]
         }
     }
 });

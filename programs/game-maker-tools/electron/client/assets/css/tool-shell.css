@@ -83,6 +83,37 @@ label.major
 
 }
 
+
+
+img.ctrl.eye
+{
+
+
+    width:18px;
+
+    height:18px;
+
+    background-color:lightgrey;
+
+    border:1px solid grey;
+
+    margin:-3px;
+
+    visibility: hidden;
+    position:absolute;
+    right:-40px;
+
+    margin-top:5px;
+
+    background-image: url(../img/eye_icon.png);
+
+    background-position: center center;
+    background-size: 100% auto;
+
+
+}
+
+
 #control-line
 {
     position:fixed;
@@ -141,6 +172,11 @@ button.main-play
 
 }
 
+.selected-text
+{
+color:lightblue;
+}
+
 button.test-button
 {
     position:relative;
@@ -164,11 +200,11 @@ ul.controllable, ul.options
 
     left:0px;
 
-    top:30px;
+    top:10px;
 
     padding:7px;
 
-    padding-left:25px;
+    padding-bottom:25px;
 
     border:2px inset grey;
 
@@ -176,12 +212,42 @@ ul.controllable, ul.options
 
     cursor:pointer;
 
-    background-color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 1.0);
 
     font:14px Arial, Sans-Serif;
 
 
+
 }
+
+ul.controllable:hover
+{
+    z-index:9999;
+
+}
+
+
+li.selected-heading
+{
+    color:ghostwhite;
+}
+
+
+li.building-heading
+{
+    color:ghostwhite;
+}
+
+
+li.selected-heading, span.tree-open
+{
+
+
+    float:left;
+
+
+}
+
 
 
 #object-maker .dg
@@ -199,7 +265,11 @@ position:relative;
 
 }
 
+.dg li:hover
+{
+    cursor:pointer;
 
+}
 
 
 
@@ -351,6 +421,53 @@ ul#options-dock-main
 }
 
 
+img.ctrl.tree-add, img.tree-add-special
+{
+
+    position:relative;  float:right; top:-25px;
+
+    width:20px;
+
+    height:20px;
+
+    margin:3px;
+
+    margin-left:-15px;
+
+    margin-bottom:-3px;
+
+    background-color:teal;
+
+    background-image: url('img/add_icon_transparent.png');
+
+    background-position: center center;
+
+    background-size: 100% auto;
+
+
+}
+
+span.special-text
+{
+    color:mediumaquamarine;
+
+}
+
+
+#main_plus
+{
+    float:none;
+
+    top:-1px;
+
+    left:10px;
+
+    background-color:darkorange;
+
+}
+
+
+
 li.list-group-heading
 {
     background: url(assets/img/hash-medium.png);
@@ -391,6 +508,16 @@ nav.top-menu{
 
 }
 
+form > div
+{
+
+    position:relative;
+
+    width:100%;
+
+    padding:10px;
+
+}
 
 nav.top-menu  .button-top {
 
@@ -419,6 +546,38 @@ nav.top-menu  .button-top {
 
 
     vertical-align: middle;
+
+}
+
+button#settings
+{
+
+    border: 1px outset lightgrey;
+
+    border-radius:5px;
+
+    vertical-align: middle;
+    text-align: center;
+    font-size: 16px;
+
+    cursor: pointer;
+
+    color: lightgrey;
+
+    height:30px;
+
+    background: #45484d; /* Old browsers */
+    background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+
+}
+
+
+button#settings:hover
+{
+    border:1px inset mediumturquoise;
 
 }
 
@@ -568,7 +727,13 @@ nav.top-menu{
 }
 
 
+div#settings-space
+{
+    position:fixed;
 
+    z-index:9999;
+
+}
 
 
 div.free-select
@@ -725,7 +890,7 @@ form h2, form h3,form h4
 
 form input,form label, form select
 {
-    width:80%;
+    max-width:80%;
 
     display:block;
 
@@ -738,6 +903,7 @@ form input,form label, form select
     margin-bottom:2px;
 
     font-weight:normal;
+
 
 }
 
@@ -796,7 +962,7 @@ form #testCanvas
 button.ok
 {
 
-    position:relative;
+    position:absolute;
 
     left:10%;
     background-color:#333333;
@@ -805,7 +971,7 @@ button.ok
 
     border-radius: 4px;
 
-    margin-top:7px;
+    margin-top:12px;
 
     background: #45484d; /* Old browsers */
     background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6-15 */
@@ -823,7 +989,7 @@ button.ok
 
     vertical-align: middle;
 
-    margin-bottom:4px;
+    bottom:4px;
 
 }
 
@@ -855,13 +1021,13 @@ li a.delete:hover {
 button.cancel
 {
 
-    position:relative;
+    position:absolute;
 
     color:white;
 
     border-radius: 4px;
 
-    margin-top:7px;
+    margin-top:12px;
 
     background: #da8452; /* Old browsers */
     background: -moz-linear-gradient(top, #da8452 0%, #c26732 50%, #d67842 100%); /* FF3.6-15 */
@@ -877,11 +1043,11 @@ button.cancel
     height:25px;
     width:30%;
 
-    left:30%;
+    left:60%;
 
     vertical-align: middle;
 
-    margin-bottom:4px;
+    bottom:4px;
 
 }
 

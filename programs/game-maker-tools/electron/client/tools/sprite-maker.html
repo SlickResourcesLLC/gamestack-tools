@@ -10,31 +10,41 @@
     <link rel="stylesheet" href="../assets/css/Navigation-with-Search1.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
 
-    <link rel="stylesheet" href="../assets/js/dat.gui.css">
+    <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
 
 
-    <script src="../assets/js/dat.gui.js"></script>
-
-    <script src="../assets/js/Tween.js"></script>
-
-    <script src="../dist/js/Quick2d.js"></script>
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
 
-    <script src="../assets/js/dat.gui.interface.js"></script>
+    <script src="../assets/js/ui/serverside-image.js"></script>
 
-    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/ui/dat.gui.js"></script>
 
-    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/ui/Tween.js"></script>
+
+
+
+    <script src="../assets/js/ui/dat.gui.interface.js"></script>
+
+    <script src="../assets/js/ui/jquery-3.2.1.min.js"></script>
+
 
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
-    <script src="../assets/js/jquery.fileDownload.js"></script>
+    <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+
+    <script src="../assets/js/ui/squeezetabs.js"></script>
+
+    <script src="../dist/js/Quick2d.js"></script>
+
+    <script src="../assets/js/ui/object-builder.js"></script><!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
 
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
 
-
-    <script src="../assets/js/squeezetabs.js"></script>
 
 
     <link rel="stylesheet" href="../assets/css/tool-shell.css">
@@ -151,6 +161,8 @@
         label.file_special
         {
 
+            z-index:9997;
+
             padding:4px;
 
             background: #4c4c4c; /* Old browsers */
@@ -199,9 +211,7 @@
 
            position:relative;
 
-            top:50px;
-
-           float:right;
+            left:0px;
 
         }
 
@@ -224,46 +234,18 @@
 
           display:inline-block;
 
-            width:50px;
-
-            height:50px;
-
             text-align:center;
 
-
-            margin-left:-20px;
-
+            margin-left:10px;
 
             border:none;
 
             color:gold;
 
-            transform: rotate(90deg);
+            margin-top:0px;
 
-
-            -ms-transform-origin: 50% 50%; /* IE 9 */
-
-            -webkit-transform-origin:  50% 50%; /* Chrome, Safari, Opera */
-
-            transform-origin: 50% 50%;
 
         }
-
-       span.open
-        {
-
-
-            -o transform: rotate(180deg);
-
-            -ms transform: rotate(180deg);
-
-            -webkit transform: rotate(180deg);
-
-           transform: rotate(180deg);
-
-        }
-
-
 
 
         img.ctrl
@@ -278,23 +260,6 @@
             border:1px solid grey;
 
             margin:-3px;
-
-        }
-
-        img.ctrl.eye
-        {
-
-            width:18px;
-
-            height:18px;
-
-            background-color:lightgrey;
-
-            border:1px solid grey;
-
-            margin:-3px;
-
-            margin-top:-19px;
 
         }
 
@@ -328,27 +293,6 @@
         }
 
 
-        img.tree-add
-        {
-
-            background-color:grey;
-
-            margin:3px;
-
-            margin-left:-15px;
-
-            margin-bottom:-3px;
-
-
-        }
-
-        img.ctrl:hover
-        {
-
-
-
-        }
-
 
         ul .controllable-image
         {
@@ -379,7 +323,6 @@
         {
 
             text-align:left;
-
 
 
         }
@@ -415,20 +358,21 @@
 
         }
 
-        #gui-container
+        #dat-gui-container
         {
             position:absolute;
 
-            top:0px; right:0;
+            z-index:9998;
 
-            left:0;
+            left:0px;
 
+            top:0px;
 
-            width:100%;
+            overflow:scroll;
 
-            height:50px;
+            background:transparent;
 
-            z-index:9990;
+            bottom:0px;
 
         }
 
@@ -466,19 +410,11 @@
 
         }
 
-
-
         #forceSelect
         {
-            position:absolute;
+            position:relative;
 
             z-index:9999;
-
-            left:0;
-
-            top:0;
-
-            margin:0;
 
             background: #4c4c4c; /* Old browsers */
             background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
@@ -491,18 +427,14 @@
 
         #forceSelect option
         {
-
             background: black; /* Old browsers */
 
             color:white;
-
         }
 
         #top-gui
         {
-
             position:fixed;
-
 
             width:100%;
 
@@ -513,7 +445,6 @@
             top:50px;
             padding-left:15px;
             padding-right:15px;
-
 
         }
 
@@ -535,18 +466,24 @@
 
         }
 
-
-
-
     </style>
-
-
 
     <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
 
-
 </head>
 <body>
+
+<!--This is a TODO: list. Items todo are as follows
+
+1. rig and maintain the App.Detail_View_Special_Settings{}, pertaining to the bottom sliding panel of this app.
+
+    -detail views must switch focus to the appropriate sprite-property as needed: pressing  'Animation' switches to the nearest animation, etc...
+
+2. maintain html and the css across this web page
+
+3.
+
+-->
 
 <input type="file" name="sprite-file-input" id="sprite-file-input" />
 
@@ -556,36 +493,42 @@
 
         <li class="fill-width"></li>
 
-        <li class="active"><a href="#tab-1" role="tab" data-toggle="tab" id="animation-view">Animations</a></li>
-
-        <li><a href="#tab-2" role="tab" data-toggle="tab" id="motion-view">Motions</a></li>
-
-        <li><a href="#tab-3" role="tab" data-toggle="tab" id="sound-view">Sounds</a></li>
+        <li><a class="special-tab-link" href="#tab-1" role="tab" data-toggle="tab" id="presets-view">Selected Property</a></li>
 
         <button class="squeeze">-</button>
 
     </ul>
 
-    <div class="tab-content bottom inside">
+    <div class="tab-content object-tabs bottom inside">
 
-        <div class="tab-pane fade in active animations-tab-pane" role="tabpanel" id="tab-1">
-            <ul class="list-group main-float-menu"> </ul>
-            <canvas id="animation-panel" class="special"></canvas>
-        </div>
-        <div class="tab-pane fade motions-tab-pane" role="tabpanel" id="tab-2">
-            <ul class="list-group main-float-menu"> </ul>
+        <div id="selected-tab"></div>
 
-
-            <canvas id="motion-panel"></canvas>
+        <div id="dat-gui-container">
 
         </div>
-        <div class="tab-pane fade sounds-tab-pane" role="tabpanel" id="tab-3">
 
-            <ul>   </ul>
-
-
-        </div>
     </div>
+
+
+
+    <div id="settings-space" >
+
+        <form class="dock-form self-close"   >
+
+            <h3>Sprite-Maker Settings</h3>
+
+
+            <div id="special-settings-gui"></div>
+
+            <button id="apply_sprite_settings" class="ok"  >Apply</button>
+
+            <button id="cancel_map_settings" class="cancel" >Cancel</button>
+
+        </form>
+
+    </div>
+
+
 
 </div>
 
@@ -606,39 +549,28 @@
 
         <div style="margin-top:13px;" >
         <a id="download" class="button-top"   name="level" href="#" ><span>Save to File</span><img src="img/save.png" alt="save data" ></a>
+
+        <button style="float:right; margin-top:-3px;" id="settings" onclick="App.showSettings();" >Test-Settings</button>
+
         </div>
+
     </nav>
 </div>
 
 <div id="mainContainer">
-
 <div id="container">
-    <div id="gui-container">
-
-    </div>
-
 </div>
 <div id="info"></div>
-
 <div id="top-gui">
-
-    <select id="forceSelect">
-        <option>Weak Gravity</option>
-        <option>Medium Gravity</option>
-        <option>Strong Gravity</option>
-
-    </select>
-
-    <button id="add_tween_stack_ctrl" class="main-play"  style=" "><span>&#9654;</span></button>
-
-
-
+    <button id="add_tween_stack_ctrl" class="main-play"  style=" left:50%; top:7px; margin-left:0px; "><span>&#9654;</span></button>
 </div>
 
 <ul class="controllable selected_object"  >
-    <span id="*" class="tree-open open" style="position:relative;  top:20px; left:0px; width:20px; height:20px; ">&psi;</span>
-    <li>Selected Sprite:</li>
+    <span id="*" class="tree-open open"  >&#9881;</span>
+    <li class="building-heading">Building Sprite</li>
 </ul>
+
+
 
 </div>
 
@@ -646,19 +578,38 @@
 
     /*************************************
      *
-     * Object Controller:
+     * SpriteMaker.html, functional list:
+     *  -everything we need to happen on for this page
      *
-     *      -How does it work:
-     *          1. call controller_init(main_object) , where main_object{} has collections within
-     *          2. open up and explore the objects. Delete them, test them, etc
-     *          3. Alter, or change the objects at runtime, using default_object_display()
-     *          OR custom_object_display()
+     *      -Buildable Sprite with dat.GUI():
+     *          1. We can select and edit simple properties of the sprite
+     *          2. Detail views will show any complex class Object() that is selected
+     *          3. We can save the sprite as .json
+     *          4. Retrieving the Sprite from .json file
      *
+     *
+     *      -Other functionality
+     *          1. Browse and Load Sprite from all sprites available in the app (TODO)
+     *
+     *
+     *
+     *      -Psuedo-Code:
+     *          *The ideal way that js would complete the above tasks:
      *
      * ********************************/
 
 
+    /*************************************
+     *
+     * Object Controller:
+     *
+     *      -What does it do?:
+     *          1. Creates GUI for a complex class object
+     *
+     * ********************************/
 
+
+    //LevelMaker? -an old
 
     function LevelMaker(filename, settings)
     {
@@ -1364,7 +1315,7 @@
 
                 this.selectedSprite = sprite;
 
-                sprite.def_update = function(){}; //turn off the motion, we are just mapping
+              //  sprite.def_update = function(){}; //turn off the motion, we are just mapping
 
 
                 Game.sprites.push(sprite);
@@ -1461,6 +1412,8 @@
         sprites:[],
 
         is_init:false,
+
+        __builderProfile:false, //the main object builder
 
         selection_sprite:new Sprite('Selection Sprite', 'Shows selected area'),
 
@@ -1638,9 +1591,6 @@
         init:function(sprite)
         {
 
-            var fs  = new Size(191 * 4, 192 * 4);
-
-            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src,  frameSize:fs,  size:new Vector2(100, 150), frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0,0))}));
 
             $('#container').append("<canvas id='main-screen'></canvas>");
 
@@ -1663,7 +1613,7 @@
                 //3. the player sprite
 
 
-                this.player = new Sprite('Samus-Like Character', 'a video game sprite', {
+                this.player = new Sprite('Samus-Like Character', 'an animated sprite', {
                     position: new Vector3(100, 120),
                     size: new Vector3(50, 52)
                 });
@@ -1687,8 +1637,6 @@
                 this.player.jumpmotion = new Motion({
 
                     name: "jump",
-
-
 
                     description: "the jump movmement.",
 
@@ -1725,12 +1673,12 @@
 
             this.player.selected_sound.play();
 
-            this.player.update = function () {
+            this.player.update = function (sprite) {
 
 
                 // this.rotation.x += 0.5;
 
-                this.selected_animation.continuous();
+               sprite.selected_animation.continuous();
 
 
             };
@@ -1779,6 +1727,8 @@
                 accel:0.3,
 
                 max:new Vector3(0, 1.5, 0),
+
+                
                 subjects:[Game.sprites[0]],
 
                 massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
@@ -1841,6 +1791,35 @@
 
             Game.sprites[0].position = new Vector3(center.x, center.y - this.sprites[0].size.y * 2);
 
+            this.testObjects = [];
+
+            var selectionImg = document.createElement('IMG');
+
+            var pathPref = '../assets/builder/';
+
+            selectionImg.src =  pathPref +  "hover_selection.png";
+
+            this.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+
+            var fs  = new Size(191 * 4, 192 * 4);
+
+            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src, size:new Vector3(50, 50, 0), frameSize:fs, frameBounds:new  VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+
+            this.testObjects.push(this.selection_sprite);
+
+            Game.sprites.push(this.selection_sprite);
+
+            //select the first animation
+
+            window.setTimeout(function(){
+
+                App.selectItem(Game.sprites[0].selected_animation);
+
+            }, 1000);
+
+
+            //create the gui / Builder
+            this.__builderProfile = new ObjectArrayBuilder(Game.sprites[0], ['animations', 'motions', 'sounds']),
 
             this.is_init = true;
 
@@ -1848,8 +1827,6 @@
         }
 
     };
-
-
 
     var levelMaker = LevelMaker(false);
 
@@ -1861,20 +1838,84 @@
      *   renderObjectControllable:()
      *          @devplans / todo : 1st make the functionality work, then incorporate runtime settings for controllable
      *
-     *
-     *
      * **********************/
-
-
 
 
     var App = {
 
         locked:false,
 
-        selectItem:function(obj)
+        object_gui_to_container:function(object, container) //create special object gui, append to container
+        {
+            var gui = DatGui.get(object);
+
+            gui.add(object, 'item1');
+
+            $(container).html();
+
+            $(container).append($(gui.domElement));
+
+        },
+
+
+        showSettings:function()
         {
 
+            App.object_gui_to_container({item1:"value", item2:"value"}, $('#special-settings-gui'));
+
+            $('#settings-space form').show();
+
+        },
+
+        selfClosablesInit:function()
+        {
+
+            $('form.self-close').submit(function(){
+
+                $(this).hide('fast');
+
+                 return false;
+
+            });
+
+        },
+
+        listToObjectByNames:function(list)
+        {
+            var obj = {};
+
+            for(var x in list)
+            {
+
+                obj[list[x].name]  = list[x];
+
+            }
+
+            return obj;
+
+        },
+
+        Detail_View_Special_Settings:{
+
+            Animation:{
+
+                grid_display:true,
+
+                apply:function(dguiContainer){
+
+                    dguiContainer.add(Game.sprites[0], 'selected_animation', App.listToObjectByNames(Game.sprites[0].animations));
+
+                  var addButton = dguiContainer.add(this, 'grid_display', true);
+
+
+                }
+
+            }
+
+        },
+
+        selectItem:function(obj)
+        {
 
             if(obj instanceof Animation)
             {
@@ -1898,7 +1939,6 @@
 
             }
 
-
             if(obj instanceof Sound)
             {
 
@@ -1907,7 +1947,6 @@
                 obj = Game.sprites[0].selected_sound;
 
             }
-
 
             if(obj instanceof Force)
             {
@@ -1920,8 +1959,15 @@
 
             };
 
+            this.selectedItem =  obj;
 
-            App.selectedItem =  obj;
+            //load the selectedItem into html tab
+
+            $('#selected-tab').html('<div class="tab-pane fade in selected-object-tab-pane" role="tabpanel" id="tab-1">' +
+
+            '<canvas id="selected-object-canvas" ></canvas>' +
+
+            '</div>');
 
 
             if(obj.constructor.name == 'Animation')
@@ -1932,63 +1978,21 @@
 
             if(obj.constructor.name == 'Motion')
             {
-                this.motionPaneDisplay(obj);
+                this.selectedItemCanvasInit(obj);
 
             }
 
+            DatGui.get(this.selectedItem);
 
-            return App.selectedItem;
-
-
-        },
-
-        paneGroupClicks:function()
-        {
-
-         $('a#animation-view').on('click', function(){
-
-
-             if(!App.selectedItem || App.selectedItem.constructor.name !== Animation)
-             {
-
-                 App.selectItem(Game.sprites[0].animations[0]);
-
-             }
-
-
-         });
-
-            $('a#motion-view').on('click', function(){
-
-                if(!App.selectedItem || App.selectedItem.constructor.name !== Motion)
-                {
-                    App.selectItem(Game.sprites[0].motions[0]);
-
-                }
-
-            });
-
-            $('a#sound-view').on('click', function(){
-
-                    if(!App.selectedItem || App.selectedItem.constructor.name !== Sound)
-                    {
-
-
-                        App.selectItem(Game.sprites[0].sounds[0]);
-
-                    }
-
-            });
-
+            return this.selectedItem;
 
         },
+
 
         animationPaneDisplay:function(obj)
         {
 
-            var canvas = $('.tab-pane canvas#animation-panel')[0], ctx = canvas.getContext('2d');
-
-
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
 
             var update = function()
             {
@@ -2026,13 +2030,10 @@
 
         },
 
-
-        motionPaneDisplay:function(obj)
+        selectedItemCanvasInit:function(obj)
         {
 
-            var canvas = $('.tab-pane canvas#motion-panel')[0], ctx = canvas.getContext('2d');
-
-
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
 
             var update = function()
             {
@@ -2044,31 +2045,27 @@
                 //grab the context from your destination canvas
                 var destCtx = canvas.getContext('2d');
 
-
-
-
                 var sc =Game.GameWindow.canvas;
 
-//call its drawImage() function passing it the source canvas directly
+                //call its drawImage() function passing it the source canvas directly
                 destCtx.drawImage(sc, canvas.width / 2 - sc.width / 2, canvas.height / 2 - sc.height / 2);
 
             };
 
-            if(Game.motionPaneUpdate)
+            if(Game.selectedItemCanvasUpdate)
             {
 
-                window.clearInterval(Game.animationPaneUpdate);
+                window.clearInterval(Game.selectedItemCanvasUpdate);
 
-    };
+            };
 
-            Game.motionPaneUpdate = window.setInterval(function () {
+            Game.selectedItemCanvasUpdate = window.setInterval(function () {
 
                 update();
 
             }, 50);
 
         },
-
 
         createNewSprite:function()
         {
@@ -2077,23 +2074,23 @@
 
         },
 
-        removeSpriteItem:function(obj, type)
+        removeObjectListMember:function(parent, listname, obj)
         {
 
-            var arrayName = type.toLowerCase() + 's';//arrays are type name with an s
+            $.each(parent[listname], function(ix, item){
 
-            if(Game.player[arrayName].length == 1)
-            {
+                if(item === obj)
+                {
+                    parent[listname].splice(parent[listname].indexOf(item), 1);
 
-           //   alert('Default ' + type + ' may be modified, not removed');
+                  var member =  $('.' + listname + '_member')[ix];
 
-                      return 0;
+                  $(member).remove();
 
-            }
+                }
 
-           var ix = Game.player[arrayName].indexOf(obj);
 
-            Game.player[arrayName].splice(ix, 1);
+            });
 
         },
 
@@ -2138,8 +2135,6 @@
 
             }
         },
-
-
 
         onType:function(obj, type, callback)
         {
@@ -2211,6 +2206,8 @@
 
                 id =  this.getArg(args, 'id',  false),
 
+                folders =  this.getArg(args, 'folders',  []),
+
                 html = this.getArg(args, 'html',  false),
 
                 callback = this.getArg(args, 'callback', false),
@@ -2228,7 +2225,7 @@
 
                 $('#' + id).unbind().click(function(){
 
-                    callback(list, clName);
+                    callback(list, clName, folders);
 
                 });
 
@@ -2244,7 +2241,7 @@
         objectListToUL:function(keyname, list, iconHtmls)
         {
 
-            var html = "<li >" + keyname + "<ul>";
+            var html = "<ul>";
 
             if(!iconHtmls instanceof Array)
             {
@@ -2270,7 +2267,6 @@
 
                  //   alert(ulCl);
 
-
                     if(!$("#pane-list-" + keyname + ix).length) {
 
                         $(ulCl).find('ul').append('<li id="pane-list-' + keyname + ix + '">' + name + icons.join(' ') + '</li>');
@@ -2283,676 +2279,16 @@
 
             });
 
-            return html + "</ul></li>";
+            return html + "</ul>";
 
         },
-
-
-
-
-
-        GTUI:{
-
-            files:[],
-
-            fileOptions:function(key, callback)
-            {
-
-                switch(key)
-                {
-
-
-
-
-                }
-
-
-            },
-
-
-
-            Option:function(value, args, eventKeyCall)
-            {
-              this.value = value;
-
-              this.callback = eventKeyCall;
-
-              var checkBox = args.checkable ? '<input type="checkbox"  />' : '';
-
-              this.element = $('<li>'+value+ checkBox + '</li>');
-
-
-              var _e = this.element;
-
-              $(this.element).click( function()
-              {
-
-
-                  if(!this.checked)
-                  {
-                      this.checked = true;
-
-                  }
-                  else
-                  {
-                      this.checked = false;
-                  }
-
-                  eventKeyCall('click', _e);
-
-              });
-
-              $(this.element).hover(function(){ eventKeyCall('hover', _e); }, function(){ eventKeyCall('mouseout', _e);  });
-
-
-              this.appendTo = function(parent)
-              {
-                  $(parent).append($(this.element));
-
-              };
-
-            },
-
-
-            renderOptions:function(args)
-            {
-
-                var isCheckType = App.getArg(args, 'type', 'check'),
-
-                    x = 200, y = 200,
-
-                    parent = App.getArg(args, 'parent', []),
-
-                    options = App.getArg(args, 'options', []) ;
-
-                    var optionElement = $('.options')[0];
-
-                    var _inst = this, html = '';
-
-
-                $(optionElement).html('');
-
-                    $.each(options, function(x, e){
-
-                       e.appendTo(optionElement);
-
-                    });
-
-                $(optionElement).css('left', x);
-
-                $(optionElement).css('top', y);
-
-                $(optionElement).show();
-
-                $(optionElement).animate({
-
-                    'left': x,
-                    'top': y,
-                }, 500, function() {
-
-                });
-
-            },
-
-            __selectedObject:{},
-
-            listmemberkeys:['animations', 'motions', 'forces', 'sounds'],
-
-            renderObjectControllable:function(object_members, container, options)
-            {
-
-                var html = "";
-
-                $.each(object_members /*This is where our 'MainGame' Object would go*/, function(ix, element_object){
-
-                   if(App.GTUI.listmemberkeys.indexOf(ix) >= 0)
-                   {
-                    //   alert(ix);
-
-
-                    if(ix === 'frames')
-                    {
-                     //   alert('frame element');
-
-                    }
-
-                    if((!element_object) || (typeof(ix) == 'string' &&  ix.indexOf('__') >= 0))
-                        {
-                            return;
-                        }
-
-                    var element =  element_object instanceof Array ? element_object : element_object.hasOwnProperty('list') && element_object.list  instanceof Array ? element_object.list : element_object;
-
-                    if(element instanceof Array ) {
-
-                      //  alert('processing array of len:' + element.length);
-
-                        var eye_icon = '<img data-name="*"  class="tree-edit ctrl eye xcl__" style="visibility: hidden; position:absolute; right:2px; background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                       
-                        html += '<ul class="' + ix + '">' + App.objectListToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, ""]) + '</ul>';
-
-                    }
-
-
-                    else if(App.GTUI.listmemberkeys.indexOf(ix) >= 0)
-                    {
-
-
-                        var eye_icon = '<img data-name="*" class="tree-edit ctrl eye xcl__"  style="visibility: hidden; position:absolute;  right:2px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                       
-                        html += '<ul class="' + ix + '">' + App.objectListToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, ""]) + '</ul>';
-
-
-
-                    }
-
-
-                   }
-
-                });
-
-                var mainElement = $(container);
-
-                if($(container).length < 1) {
-
-                  mainElement = $('.controllable')[0];
-
-
-                }
-
-                $(mainElement).find('img,ul').remove();
-
-                $(mainElement).append(html);
-
-                $.each(object_members /*This is where our 'MainGame' Object would go*/, function(ix, element_object){
-
-                    if((!element_object) || (typeof(ix) == 'string' &&  ix.indexOf('__') >= 0))
-                    {
-                        return;
-                    }
-
-
-                    var element = element_object instanceof Array ? element_object : element_object.list  instanceof Array ? element_object.list : element_object;
-
-
-
-                    var  add_button_html= '<img id="*" class="tree-add ctrl"  style="position:relative;  top:20px; left:0px; width:15px; height:15px; background-image: url(&quot;img/add_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-
-                    var my_id = ix + '_add';
-
-
-                    var nameElement = ix; //always should be the name of the variable
-
-                    add_button_html = add_button_html.replace('*', my_id);
-
-
-                    var relationals = ['action'];
-
-                    var object_watch = App.GTUI.listmemberkeys;
-
-                    var relMode = false, proceed = false;
-
-                    Quazar.each(relationals, function(ir, item){
-
-                        if(ix !== '' && ix && item.indexOf(ix) >= 0) //the relational key contains text of non-empty object key
-                        {
-                            proceed = true;
-                            relMode = true;
-
-                        }
-                    });
-
-
-                    Quazar.each(object_watch, function(io, item){
-
-                        if(ix !== '' && ix && item.indexOf(ix) >= 0) //the object_watch key contains sought after text
-                        {
-                            proceed = true;
-
-                        }
-                    });
-
-
-
-
-                    if(proceed || element instanceof Array ) {
-
-                        App.applyControl({parent:$('.' + ix /*The class previously inserted*/), clName:ix, list:element,
-                        id: my_id,html: add_button_html,
-                        callback:function(list, clName){
-
-                            App.lock_events();
-
-                            var instantiator;
-
-                            var tp_inst = false;
-
-
-                            if(element instanceof  Array )
-                            {
-                                instantiator =  element[0] && element[0].constructor ? element[0].constructor.name : false;
-
-                            }
-                            else
-                            {
-                               tp_inst = element.hasOwnProperty('__typeProfile') ? element.__typeProfile.__key : instantiator;
-
-                               instantiator = tp_inst;
-
-                            }
-
-
-
-                            var addElement = function() {
-
-                                if (element instanceof (Array)) {
-
-
-                                    element.push(myNewObject);
-
-                                    renderListMembers(element, clName);
-
-
-                                }
-                                else if (typeof(element) == 'object') {
-
-                                //    alert('click on element:' + clName + ':with members::' + jstr(element));
-
-                                    var done = false;
-
-                                    var x = 0;
-
-                                    while (!done && x < 200) {
-
-                                        x++;
-
-                                        if (!element['instance_' + x]) {
-
-                                            element['instance_' + x] = myNewObject;
-                                            done = true;
-                                        }
-
-                                    }
-
-                                    renderListMembers(element, clName);
-
-                                }
-
-                            }
-
-                            if(window[instantiator]) {
-
-                               // alert('adding the object');
-
-                               var name = element[0].name + "_copy";
-
-                                 myNewObject = new window[instantiator](element[0]);
-
-                                 myNewObject.name = name;
-
-                                 addElement();
-
-                            }
-
-
-                        }
-
-
-
-                        });
-
-                    }
-
-
-                    var arrayListEvents = function(list, clName) {
-
-                      //  alert('showing array for:' + clName + ":" + list);
-
-                        var lix = 0;
-
-                        $.each($('.' + clName + ' li ul li'), function (ix, el) {
-
-                            //distinguish a callback for displaying the element
-
-                            var member = list[ix];
-
-                            lix+= 1;
-
-                            //we have: 1. The selected class
-
-                            var cl = $(el).attr('class').replace('_member', '');
-
-
-                            console.log(list + ' :li click');
-
-                            var prevent = false;
-
-
-                            $('.' + cl + '-tab-pane ul').on('click', function(evt){
-
-                                $('.tab-pane li').removeClass('selected');
-
-                                $(evt.target).addClass('selected');
-
-                                var ix = $(evt.target).index();
-
-                                App.selectItem(Game.sprites[0][cl][ix] || false);
-
-                            });
-
-
-                            $(el).on('click', function () {
-
-                                // console.log('click on' + list + "::" + (ix - 1));
-
-                                //get reference to the object
-
-                                if(Game.GameWindow[clName] && Game.GameWindow[clName].list) {
-
-                                    //apply the top level object::
-
-                                    var object = Game.GameWindow[clName].list[ix] || false;
-
-                                    //  alert('Got click on object:' + jstr(object));
-
-                                    if (object) {
-
-
-                                        App.GTUI.__selectedObject = object;
-
-                                        DatGui.get(App.GTUI.__selectedObject, ix);
-
-                                        App.GTUI.renderObjectControllable(object, $('.selected_object')[0]);
-
-
-                                    }
-
-
-                                }
-                                else if(!prevent)
-                                {
-                                    prevent = true;
-
-                                    window.setTimeout(function(){
-
-                                        prevent = false;
-
-                                    },100);
-
-                                    $(this).find('.tree-edit').click();
-
-                                }
-
-
-
-                            });
-
-                            $(el).hover(function () {
-
-                                $(this).css('background-color', '#003366');
-
-                                $(this).css('color', 'white');
-
-                            }, function () {
-
-                                $(this).css('background-color', 'black');
-
-                                $(this).css('color', 'white');
-
-                            });
-
-                        });
-
-                    };
-
-
-
-                    var renderListMembers = function(list, clName) {
-
-                       // alert('showing array for:' + clName + ":" + list);
-
-
-                           // alert('processing array');
-
-                       var eye_icon = '<img id="*" class="tree-edit ctrl eye" style=" visibility: hidden; position:absolute; right:5px;    background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                  
-                      html = App.objectListToUL(clName, list /*INSERT Members of actual array(s)*/, [eye_icon, ""]) + '</ul>';
-
-
-                       var container =  $('.' + clName);
-
-                       $(container).html( html);
-
-
-                        arrayListEvents(list, clName);
-
-                     };
-
-                    arrayListEvents(element, ix);
-
-                    
-                });
-
-                return html;
-
-            },
-
-
-            renderCheckables:function(checkables, clickCallback)
-            {
-
-                var defOptionCall = function(evt_key, target)
-                {
-
-                    switch(evt_key)
-                    {
-                        case "hover":
-
-                            $(target).css('background-color', '#003366');
-
-                            $(target).css('color', 'white');
-
-                            break;
-
-                        case "mouseout":
-
-                            $(target).css('background-color', 'black');
-
-                            $(target).css('color', 'white');
-
-                            break;
-
-                        case "click":
-
-                            clickCallback();
-
-                            alert('clicked');
-
-                            break;
-
-                    }
-
-                };
-
-
-
-
-                var Option = App.GTUI.Option;
-
-                var checks = [];
-
-                if(typeof(checkables) == 'object') {
-
-                        Quazar.each(checkables, function(ix, item){
-
-                        checks.push( new Option(item.name, {checkable:true}, defOptionCall));
-
-                        });
-
-                        }
-
-
-
-                App.GTUI.renderOptions({type:'basic',
-                    options:checks});
-
-
-
-
-            },
-
-            renderByType:function(object_members, title, x, y)
-            {
-
-                var html = "";
-
-                var testMembers = ["1", "2", "3", "4"];
-
-                $.each(object_members /*This is where our 'MainGame' Object would go*/, function(ix, element){
-
-
-                    var eye_icon = '<img id="*" class="tree-edit ctrl eye" style="position:relative;  top:2px; right:-30px;  background-image: url(&quot;img/eye_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-                  
-                    html +=  '<ul class="'+element+'">' + App.objectListToUL(ix, element /*INSERT Members of actual array(s)*/, [eye_icon, ""]) + '</ul>';
-
-                });
-
-
-                 if($('.controllable').length <= 1 ){$('body').append('<ul class="controllable"></ul>')};
-
-                var mainElement = $('.controllable')[1];
-
-                $(mainElement).html('<li>'+title+'</li>');
-
-                $(mainElement).append(html);
-
-
-                $(mainElement).animate({
-
-                    'left': x,
-                    'top': y,
-                }, 500, function() {
-
-                });
-
-                $(mainElement).show('fast');
-
-                $.each(object_members /*This is where our 'MainGame' Object would go*/, function(ix, element){
-
-                    var  add_button_html= '<img id="*" class="tree-add ctrl" style="position:relative;  top:20px; left:0px; width:15px; height:15px; background-image: url(&quot;img/add_icon.png&quot;);   background-position: center center; background-size: 100% auto;"></img>';
-
-                    var my_id = object_members[ix] + '_add',
-
-                        elementText = element; //always must equal the member name
-
-                    add_button_html = add_button_html.replace('*', my_id);
-
-                    App.applyControl({parent:$('.' + element /*The class previously inserted*/),
-                        id: my_id,html: add_button_html,
-                        callback:function(object){
-
-                            //   alert('event for: add ' + element);
-
-                            switch(elementText)
-                            {
-
-                                /*HOW DO WE ADD EACH OF THESE AS SUB-OBJECT TO AN OBJECT?*/
-
-                                case "animations":
-
-                                    //how do we update an animation?
-
-                                    DatGui.get(object, $('#floating-dat-gui'));
-
-                                    break;
-
-
-                                case "images":
-
-                                    DatGui.get(object, $('#floating-dat-gui'));
-
-                                    break;
-
-                                case "sounds":
-
-
-
-                                    DatGui.get(object, $('#floating-dat-gui'));
-
-                                    break;
-
-
-                                case "actions":
-
-                                    break;
-
-                            }
-
-
-                        }});
-
-
-                    $.each($('.' + element + ' li ul li'), function(ix, el){
-
-                        console.log(element + ' :li click');
-
-                        $(el).on('click', function()
-                        {
-
-                            // alert('click on' + element + "::" + (ix - 1));
-
-
-                        });
-
-                        $(el).hover( function()
-                        {
-
-                            $(this).css('background-color', '#003366');
-
-                            $(this).css('color', 'white');
-
-                        }, function(){
-
-                            $(this).css('background-color', 'black');
-
-                            $(this).css('color', 'white');
-
-                        });
-
-                    });
-
-
-                });
-
-                return html;
-
-            }
-
-    }
-        ,
-
-        refresh:function()
-        {
-
-
-
-            App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
-
-
-        },
-
 
         init:function()
         {
 
-
             //request files from the server:
 
-
-
-
-
-            App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+            this.__selectedObject =Game.sprites[0];
 
             $(document).on('change', 'input' ,function (e) {
 
@@ -2960,7 +2296,6 @@
 
 
             });
-
 
 
            $(document).on('click', 'li' ,function (e) {
@@ -2976,47 +2311,6 @@
 
 
                 }
-
-            });
-
-
-
-
-            $(document).on('click', 'span.tree-open' ,function (evt) {
-
-
-                var controllable = $(evt.target).parent().find('ul');
-
-
-                if($(controllable).length >= 1) {
-
-                    $('ul.controllable ul').toggle('fast');
-
-                    var clPresent = $(evt.target).hasClass('open');
-
-                    if (clPresent) {
-
-                        $(evt.target).animateRotate(180, 90, 250, 'linear', function () {
-
-
-                            $(evt.target).removeClass('open');
-
-                        });
-
-                    }
-                    else {
-
-                        $(evt.target).animateRotate(90, 180, 250, 'linear', function () {
-
-
-                            $(evt.target).addClass('open');
-
-                        });
-
-                    }
-
-                }
-
 
             });
 
@@ -3046,40 +2340,6 @@
              App.selectItem(sprop);
                // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
 
-                DatGui.get(sprop, index + "");
-
-            });
-
-            $(document).on('click', 'img.tree-delete' ,function (evt) {
-
-
-                var prt = $(evt.target).parent(),parentObjectName = $(prt).prop('class');
-
-                parentObjectName = parentObjectName.replace('_member', '');
-
-
-                var index = $(prt).index();
-
-               // alert('Got click on delete button for::' + parentObjectName + ': member number::' + index);
-
-                var selectedObject =  Game.sprites[0];
-
-
-                var sprop;
-
-                var x = 0;
-
-                Quazar.each(selectedObject[parentObjectName], function(ix, el){
-
-                    if(x == index)
-                    {
-                       sprop = el;
-
-                    }
-
-                    x+= 1;
-
-                });
 
             });
 
@@ -3126,7 +2386,6 @@
 
       //  alert('hi');
 
-
         $.fn.animateRotate = function(startAngle, angle, duration, easing, complete) {
             var args = $.speed(duration, easing, complete);
             var step = args.step;
@@ -3145,12 +2404,9 @@
 
         Game.init();
 
-
        App.init();
 
-
         animate();
-
 
         $('#new-sprite').click(function(){
 
@@ -3208,12 +2464,12 @@
 
                 if (confirm('Do you want to delete the selected object:' + type  + ":" + App.selectedItem.name || "__blankName")) {
 
-                    App.removeSpriteItem(App.selectedItem, type);
+                    var clString =  type.toLowerCase() + 's';
+
+
+                    App.removeObjectListMember(Game.sprites[0], clString, App.selectedItem);
 
                     App.selectedItem = {};
-
-                    App.refresh();
-
 
                 } else {
                     // Do nothing!
@@ -3223,9 +2479,12 @@
 
         });
 
-        App.paneGroupClicks();
+        App.selfClosablesInit();
+
 
     });
+
+
 
 
 

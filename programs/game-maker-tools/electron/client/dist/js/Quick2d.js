@@ -15,10 +15,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 /*
- * Vector3
+ * #Section Media
  *
- *    multi instantiator for size, pos, rotation, anything with X,Y, and Z (or just x and y)
+ * */
+
+/*
+ * Sound
  *
+ * Simple Sound object:: uses Jquery: audio
+ *
+ * TODO : test Sound() for multiple simultaneous sounds, modify as needed
  *
  * */
 
@@ -62,6 +68,13 @@ var Sound = function () {
 
         return Sound;
 }();
+
+/*
+ * GameImage
+ *
+ * Simple GameImage
+ *
+ * */
 
 var GameImage = function () {
         function GameImage(src, onCreate) {
@@ -140,6 +153,8 @@ var Quazar = {
 
         recursionCount: 0,
 
+        __gameWindowList: [],
+
         createid: function createid() {
                 new Date().getUTCMilliseconds() + "";
         },
@@ -182,15 +197,21 @@ var Quazar = {
 
         info: function info(m) {
 
-                console.info('Info:' + m);
+                if (Quazar.DEBUG) {
+
+                        console.info('Info:' + m);
+                }
         },
 
         log: function log(m) {
 
-                //  console.log('Quazar:' + m);
+                if (Quazar.DEBUG) {
 
-
+                        console.log('Quazar:' + m);
+                }
         },
+
+        //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
         animate: function animate() {
                 TWEEN.update(time);
@@ -207,16 +228,6 @@ var Quazar = {
         start: function start() {
 
                 this.animate();
-        },
-
-        mustHave: function mustHave(obj, keytypes, callback) {
-
-                this.each(keytypes, function (ix, item) {
-
-                        callback(false);
-                });
-
-                callback(true);
         },
 
         Collision: {
@@ -243,6 +254,7 @@ var Quazar = {
         },
 
         assignAll: function assignAll(object, args, keys) {
+
                 $Q.each(keys, function (ix, item) {
 
                         object[ix] = args[ix];
@@ -266,12 +278,15 @@ var Quazar = {
                 this.ready_callstack.push(callback);
         },
 
-        onReady: function onReady() {
+        callReady: function callReady() {
+
                 var funx = this.ready_callstack;
 
                 var gameWindow = this._gameWindow,
                     lib = this,
                     sprites = this.__gameWindow.sprites;
+
+                //call every function in the ready_callstack
 
                 this.each(funx, function (ix, call) {
 
@@ -279,6 +294,8 @@ var Quazar = {
                 });
 
                 __gameInstance.isAtPlay = true;
+
+                this.InputEvents.init();
         },
 
         getArg: function getArg(args, key, fallback) {
@@ -296,6 +313,11 @@ __gameInstance = Quazar;
 var QUAZAR = Quazar;
 
 var $q = Quazar;var $Q = Quazar;
+
+/********************
+ * Quazar.InputEvents
+ * -Various PC Input Events
+ ********************/
 
 Quazar.InputEvents = { //PC input events
         mousemove: [],
@@ -539,25 +561,22 @@ Quazar.InputEvents = { //PC input events
 
 $Q = QUAZAR;
 
+//Override the existing window.onload function
+
 window._preQuazar_windowLoad = window.onload;
 
 window.onload = function () {
-
-        //alert('window load');
 
         if (typeof window._preQuazar_windowLoad == 'function') {
                 window._preQuazar_windowLoad();
         }
 
-        $Q.onReady();
+        $Q.callReady();
 };
 
 /*
  * Canvas
- *
  *    draw animations, textures to the screen
- *
- *
  * */
 
 var Canvas = {
@@ -670,109 +689,8 @@ Quazar.ready(function (lib) {
 
 /**
  *
- *  class: Collection:
- *
- *      Defines a Collection of objects
- *      #extended by  class
- *      functions:
- *          add()
- *          remove()GameWindow
- *          next()
- *          all()
- *
- */
-
-var Collection = function () {
-        function Collection(list, type) {
-                _classCallCheck(this, Collection);
-
-                this.list = list;
-
-                //if type is undefined, then no type profile is needed (assume basic array, object types)
-
-                //else the type profile must exist ::
-
-
-                this.type = type;
-
-                this.__flyingIndex = 0;
-        }
-
-        _createClass(Collection, [{
-                key: 'add',
-                value: function add(object) {
-
-                        this.list.push(object);
-                }
-        }, {
-                key: 'remove',
-                value: function remove(object) {
-
-                        var ix = this.list.indexOf(object);
-
-                        if (ix >= 0) this.list = this.list.splice(ix, 1);
-                }
-        }, {
-                key: 'next',
-                value: function next(callback) {
-                        var object = this.list(this.__flyingIndex % this.list.length);
-
-                        if (callback) {
-                                return callback(object);
-                        } //run callback with reference to the object
-
-                }
-        }, {
-                key: 'all',
-                value: function all(callback) {
-                        Quazar.each(this.list, function (ix, item) {
-
-                                callback(item); //run callback with reference to the object
-                        });
-                }
-        }, {
-                key: 'toCheckableGui',
-                value: function toCheckableGui(gui, list, key) {
-
-                        var fui = gui.addFolder(this.type);
-
-                        Quazar.each(this.list, function (ix, el) {
-
-                                // store this reference somewhere reasonable or just look it up in
-                                // __controllers or __folders like other examples show
-
-                                var testObject = {};
-
-                                testObject[key] = {};
-
-                                var o = fui.add(testObject, key).onChange(function (value) {
-
-                                        //  alert('Value changed to:' + value);
-
-                                        list.push(value);
-                                });
-
-                                // some later time you manually update
-                                o.updateDisplay();
-                                o.__prev = o.__checkbox.checked;
-                        });
-
-                        return gui;
-                }
-        }]);
-
-        return Collection;
-}();
-
-;
-
-/**
- *
  *  class: GameWindow:
- *
- *      Requires a canvas, all sprites on canvas, and physical collective_forces on screen
- *
- *
+ *  args{canvas, ctx, sprites, backgrounds, interactives, forces, update}
  */
 
 var GameWindow = function () {
@@ -787,31 +705,33 @@ var GameWindow = function () {
 
                 _classCallCheck(this, GameWindow);
 
-                this.sprite_set = new Collection(sprites || [], 'Sprite');
+                this.sprites = sprites instanceof Array ? sprites : [];
 
-                this.background_set = new Collection(backgrounds || [], 'Sprite');
+                this.backgrounds = backgrounds instanceof Array ? backgrounds : [];
 
-                this.interactive_set = new Collection(interactives || [], 'Sprite');
+                this.interactives = interactives instanceof Array ? interactives : [];
 
-                this.force_set = new Collection(forces || [], 'Force');
-
-                this.actionstack_set = new Collection(forces || [], 'ActionStack');
+                this.forces = forces instanceof Array ? forces : [];
 
                 this.canvas = canvas;
 
-                this.ctx = ctx;
+                if (!this.canvas) {
+                        this.canvas = document.createElement('CANVAS');console.info('GameWindow(): Created New Canvas');
+                }
 
-                Quazar.canvas = canvas;
+                this.ctx = ctx || canvas.getContext('2d');
 
-                Quazar.ctx = ctx;
+                this.__camera = new Vector3(0, 0, 0);
 
-                this.camera = new Vector3(0, 0, 0);
-
-                this.spriteOptions = this.uniques(this.sprite_set.list);
-
-                this.extraUpdate = update || function () {};
+                if (typeof update == 'function') {
+                        this.onUpdate(update);
+                }
 
                 Quazar.__gameWindow = this;
+
+                Quazar.canvas = this.canvas;
+
+                Quazar.ctx = this.ctx;
         }
 
         _createClass(GameWindow, [{
@@ -833,23 +753,19 @@ var GameWindow = function () {
                         return listout;
                 }
         }, {
-                key: 'extraUpdate',
-                value: function extraUpdate() {}
-        }, {
                 key: 'setPlayer',
                 value: function setPlayer(player) {
-
                         this.player = player;
 
-                        if (!this.sprite_set.list.indexOf(player) >= 0) {
-                                this.sprite_set.list.push(player);
+                        if (!this.sprites.indexOf(player) >= 0) {
+                                this.sprites.push(player);
                         }
                 }
         }, {
                 key: 'update',
                 value: function update() {
 
-                        Quazar.each(this.sprite_set.list, function (ix, item) {
+                        Quazar.each(this.sprites, function (ix, item) {
 
                                 if (typeof item.update == 'function') {
                                         item.update(item);
@@ -863,18 +779,13 @@ var GameWindow = function () {
                         });
                 }
         }, {
-                key: 'add',
-                value: function add(obj) {
-                        if (obj instanceof Sprite) {}
-                }
-        }, {
                 key: 'onUpdate',
                 value: function onUpdate(arg) {
                         if (typeof arg == 'function') {
                                 var up = this.update;
 
                                 this.update = function (sprites) {
-                                        arg(sprites);up(sprites);
+                                        up(sprites);arg(sprites);
                                 };
                         }
                 }
@@ -884,7 +795,7 @@ var GameWindow = function () {
 
                         var _gw = this;
 
-                        Quazar.each(this.sprite_set.list, function (ix, item) {
+                        Quazar.each(this.sprites, function (ix, item) {
 
                                 Canvas.draw(item, _gw.ctx);
                         });
@@ -896,39 +807,73 @@ var GameWindow = function () {
 
 ;
 
-var TextDisplay //show a text element
-= function () {
-        function TextDisplay(_ref2) {
-                var font = _ref2.font,
-                    size = _ref2.size,
-                    text = _ref2.text,
-                    color = _ref2.color;
+var TextDisplay = function TextDisplay() {
+        _classCallCheck(this, TextDisplay);
+};
 
-                _classCallCheck(this, TextDisplay);
+/**TODO:complete the following
+ *  class: StatDisplay:
+ *  class: BarDisplay
+ *  class: VideoDisplay
+ */
+
+var ItemDisplay //show an item display (image with text/number to the right
+= function () {
+        function ItemDisplay(_ref2) {
+                var font = _ref2.font,
+                    fontSize = _ref2.fontSize;
+
+                _classCallCheck(this, ItemDisplay);
         }
 
-        _createClass(TextDisplay, [{
-                key: 'next',
-                value: function next() {}
+        _createClass(ItemDisplay, [{
+                key: 'set',
+                value: function set(text, image, color, font) {}
         }, {
-                key: 'show',
-                value: function show() {}
+                key: 'size',
+                value: function size() {}
+        }, {
+                key: 'render',
+                value: function render() {}
         }]);
 
-        return TextDisplay;
+        return ItemDisplay;
 }();
 
-var VideoDisplay //show a video sequence
+var BarDisplay //show a display bar such as health bar
 = function () {
-        function VideoDisplay(_ref3) {
-                var src = _ref3.src,
-                    size = _ref3.size;
+        function BarDisplay(_ref3) {
+                var font = _ref3.font,
+                    fontSize = _ref3.fontSize;
+
+                _classCallCheck(this, BarDisplay);
+        }
+
+        _createClass(BarDisplay, [{
+                key: 'set',
+                value: function set(text, image, color, font) {}
+        }, {
+                key: 'size',
+                value: function size() {}
+        }, {
+                key: 'render',
+                value: function render() {}
+        }]);
+
+        return BarDisplay;
+}();
+
+var VideoDisplay //show a video
+= function () {
+        function VideoDisplay(_ref4) {
+                var src = _ref4.src,
+                    size = _ref4.size;
 
                 _classCallCheck(this, VideoDisplay);
 
                 this.domElement = undefined;
 
-                this.src = src || "__NO-SRC!";
+                this.src = src;
 
                 this.size = new Vector3(size.x, size.y, size.z || 0);
 
@@ -943,55 +888,9 @@ var VideoDisplay //show a video sequence
         return VideoDisplay;
 }();
 
-var Animation_Samples = [function () {
-        return new Animation({
-                src: "../assets/texture/2d/char/frogman1.png",
-                duration: 1000, repeat: true,
-                parent: {},
-                frameSize: new Vector2(100, 120),
-                frameBounds: new VectorBounds(new Vector2(0, 0), new Vector2(0, 0))
-        });
-}, function () {
-        return new Animation({
-                src: "../assets/texture/2d/char/frogman1.png",
-                duration: 1000, repeat: true,
-                parent: {},
-                frameSize: new Vector2(100, 120),
-                frameBounds: new VectorBounds(new Vector2(0, 0), new Vector2(0, 0))
-        });
-}];
-
-var Sprite_Samples = [function () {
-
-        var frog = new Sprite('frog', 'a frog sprite');
-
-        frog.setAnimation(new Animation({
-                src: "../assets/texture/2d/char/frogman1.png",
-                duration: 1000, repeat: true,
-                parent: {},
-                frameSize: new Vector2(100, 120),
-                frameBounds: new VectorBounds(new Vector2(0, 0), new Vector2(9, 0))
-        }));
-
-        return frog;
-}, function () {
-
-        var barrel = new Sprite('barrel', 'a barrel, interactive sprite');
-
-        barrel.setAnimation(new Animation({
-                src: "../assets/texture/2d/object/barrel1.png",
-                duration: 1000, repeat: true,
-                parent: {},
-                frameSize: new Vector2(100, 100),
-                frameBounds: new VectorBounds(new Vector2(0, 0), new Vector2(0, 0))
-        }));
-
-        return barrel;
-}];
-
-__gameInstance.event_args_list = [];; /**
-                                      * Created by Administrator on 7/15/2017.
-                                      */
+; /**
+  * Created by Administrator on 7/15/2017.
+  */
 
 var Vector3 = function Vector3(x, y, z, r) {
         _classCallCheck(this, Vector3);
@@ -1403,6 +1302,53 @@ var Camera = function () {
         return Camera;
 }();
 
+;
+/*****************
+ *  Controls():
+ *
+ *  Dependencies: (1) :
+ *      -Quick2d.GamepadAdapter, HTML5 Gamepad Api
+ ******************/
+
+var Controls = function () {
+        function Controls(args) {
+                _classCallCheck(this, Controls);
+
+                this.__controller = args.controller;
+        }
+
+        _createClass(Controls, [{
+                key: 'extendedCall',
+                value: function extendedCall(_call, extension) {
+
+                        var formerCall = _call;
+
+                        _call = function call() {
+                                _call();extension();
+                        };
+
+                        return _call;
+                }
+        }, {
+                key: 'on',
+                value: function on(key, callback) {
+
+                        if (_typeof(this.__controller) == 'object' && typeof this.__controller[key] == 'function') {
+
+                                console.info('applying controller function:' + key);
+
+                                this.__controller[key] = this.extendedCall(this.__controller[key], callback);
+                        } else {
+                                console.error('could not apply controller function');
+                        }
+                }
+        }]);
+
+        return Controls;
+}();
+
+;
+
 ; /**
   * Created by The Blakes on 04-13-2017
   *
@@ -1457,11 +1403,13 @@ var Force = function () {
 
                         $.each(subjects, function (ix, itemx) {
 
-                                itemx.velocityY(accel, max);
+                                itemx.accelY(accel, max);
+
+                                itemx.__falling = true;
 
                                 $.each(massObjects, function (iy, itemy) {
 
-                                        itemx.collide(itemy);
+                                        itemx.collide_stop(itemy);
                                 });
                         });
                 }
@@ -1477,7 +1425,7 @@ var Force = function () {
   */
 
 var StatEffect = function () {
-        function StatEffect(name, value, onEffect) {
+        function StatEffect(name, value) {
                 _classCallCheck(this, StatEffect);
 
                 this.__is = "a game logic effect";
@@ -1485,14 +1433,9 @@ var StatEffect = function () {
                 this.name = name;
 
                 this.value = value;
-
-                this.onEffect = onEffect || function () {};
         }
 
         _createClass(StatEffect, [{
-                key: 'limit',
-                value: function limit(numberTimes, withinDuration) {}
-        }, {
                 key: 'process',
                 value: function process(object) {
                         //if the object has any property by effect.name, the property is incremenented by effect value
@@ -1506,59 +1449,64 @@ var StatEffect = function () {
                                 }
                         }
                 }
-        }, {
-                key: 'onEffect',
-                value: function onEffect() {}
         }]);
 
         return StatEffect;
 }();
 
-;
+var Collision = function () {
+        function Collision(_ref5) {
+                var object = _ref5.object,
+                    collideables = _ref5.collideables,
+                    extras = _ref5.extras;
 
-var GameEffect = function () {
-        function GameEffect(args) {
-                _classCallCheck(this, GameEffect);
+                _classCallCheck(this, Collision);
 
-                var myChance = this.chance(args.chance || 1.0); //the chance the effect will happen
+                this.object = object || [];
 
-                this.trigger = args.trigger || 'always' || 'collide';
+                this.collideables = collideables instanceof Array ? collideables : [];
 
-                this.parent = args.parent || false;
-
-                if (!this.parent) {
-                        console.error('GameEffect Must have valid parent sprite');
-                }
-
-                this.objects = args.objects || [];
-
-                for (var x in args) {
-
-                        if (x instanceof Animation) {
-
-                                //trigger the Animation
-
-                        }
-
-                        if (x instanceof StatEffect) {
-
-                                //trigger the StatEffect
-
-
-                        }
-                }
+                this.extras = extras instanceof Array ? extras : []; //anything extra to execute onCollision
+                //note: extras are any StatEffect, Animation, Movement to be simultaneously executed with this Collision
         }
 
-        _createClass(GameEffect, [{
-                key: 'chance',
-                value: function chance(floatPrecision) {}
+        _createClass(Collision, [{
+                key: 'Object',
+                value: function Object(object) {
+                        this.object = object;
+                }
+        }, {
+                key: 'Extras',
+                value: function Extras(extras) {
+                        this.extras = extras;
+                }
+        }, {
+                key: 'Collideables',
+                value: function Collideables(collideables) {
+                        this.collideables = collideables;
+                }
+        }, {
+                key: 'onCollide',
+                value: function onCollide(fun) {
+                        this.callback = fun;
+                }
         }, {
                 key: 'collide',
-                value: function collide(object, collidables) {}
+                value: function collide() {
+                        this.callback();
+                }
+        }, {
+                key: 'process',
+                value: function process() {
+                        //if collision, call collide()
+
+                }
         }]);
 
-        return GameEffect;
+        return Collision;
 }();
+
+;
 
 var GameLogic = function () {
         function GameLogic(gameEffectList) {
@@ -1577,16 +1525,18 @@ var GameLogic = function () {
         _createClass(GameLogic, [{
                 key: 'process_all',
                 value: function process_all() {
-
                         //process all game logic objects::
 
+                        for (var x = 0; x < this.gameEffects.length; x++) {
 
+                                this.gameEffects[x].process();
+                        }
                 }
         }, {
                 key: 'add',
-                value: function add(effect) {
+                value: function add(gameeffect) {
 
-                        this.gameEffects.push(effect);
+                        this.gameEffects.push(gameeffect);
                 }
         }]);
 
@@ -1594,7 +1544,13 @@ var GameLogic = function () {
 }();
 
 ;
-var Game = __gameInstance || {};
+
+/*****************
+ *  GamepadAdapter:
+ *
+ *  Dependencies: (1) :
+ *      -HTML5 Gamepad Api
+ ******************/
 
 var GamepadAdapter = function () {
         function GamepadAdapter() {
@@ -1607,6 +1563,8 @@ var GamepadAdapter = function () {
                 var controller_stack = this;
 
                 var _gpinst = this;
+
+                this.events = [];
 
                 window.setInterval(function () {
 
@@ -1674,10 +1632,6 @@ var GamepadAdapter = function () {
 
                         gp.buttons = [];
 
-                        if (args.buttons) {
-                                gp.buttons = args.buttons;
-                        }
-
                         gp.on = function (key, callback) {
 
                                 if (this[key] && key !== "on") {
@@ -1692,7 +1646,7 @@ var GamepadAdapter = function () {
 
                                                 number = parseInt(parts[1]);
 
-                                                gp['buttons'][number] = callback;
+                                                this['buttons'][number] = callback;
                                         } catch (e) {
                                                 console.error('could not parse "on" event with ' + key);
                                         }
@@ -1781,9 +1735,12 @@ var GamepadAdapter = function () {
                 key: 'on',
                 value: function on(key, gpix, callback) {
 
-                        if (typeof this[key] == 'function') {}
+                        if (gpix >= this.__gamepads.length) {
 
-                        this.events.push(this.Event(key, gpix, callback));
+                                this.__gamepads.push(this.GamepadEvents({}));
+                        }
+
+                        this.__gamepads[gpix].on(key, callback);
                 }
         }]);
 
@@ -1797,16 +1754,53 @@ if (!__gameInstance.GamepadAdapter) {
 
         __gameInstance.gamepads = [];
 
-        var gamepad = __gameInstance.GamepadAdapter.GamepadEvents({
+        Quazar.GamepadAdapter = __gameInstance.GamepadAdapter;
 
-                stick_left: function stick_left() {
-                        // console.log('Left Stick callback');
+        Quazar.gamepads = __gameInstance.gamepads;
 
-                }
+        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
+                console.log('Gamepad stick left');
         });
 
-        __gameInstance.gamepads.push(gamepad);
+        Quazar.GamepadAdapter.on('button_0', 0, function (x, y) {
+
+                console.log('Gamepad button 0');
+        });
+
+        Quazar.GamepadAdapter.on('button_1', 0, function (x, y) {
+
+                console.log('Gamepad button 1');
+        });
+
+        Quazar.GamepadAdapter.on('button_2', 0, function (x, y) {
+
+                console.log('Gamepad button 2');
+        });
+
+        Quazar.GamepadAdapter.on('button_3', 0, function (x, y) {
+
+                console.log('Gamepad button 3');
+        });
+
+        // __gameInstance.gamepads.push(gamepad);
+};
+
+; /**
+  * Created by Jordan Blake on 04-13-2017
+  *
+  */
+
+var GravityAction = function GravityAction() {
+        _classCallCheck(this, GravityAction);
+};
+
+var Graviton = function Graviton(args) {
+        _classCallCheck(this, Graviton);
+};
+
+var GravitationalRay = function GravitationalRay(args) {
+        _classCallCheck(this, GravitationalRay);
 };
 
 ; /**
@@ -1818,11 +1812,13 @@ var Motion = function () {
         function Motion(args) {
                 _classCallCheck(this, Motion);
 
+                this.getArg = $Q.getArg;
+
                 this.distance = this.getArg(args, 'distance', this.getArg(args, 'distances', false));
 
-                this.curvesList = this.curvesObject();
+                this.curvesList = this.curvesObject(); //Tween.Easing
 
-                this.parent_id = args.parent_id || "__blank";
+                this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
                 this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
@@ -1832,7 +1828,7 @@ var Motion = function () {
 
                 this.description = this.getArg(args, 'description', false);
 
-                this.curveString = this.getCurveString();
+                this.curveString = this.getCurveString(); //store a string key for the Tween.Easing || 'curve'
 
                 this.setCurve(this.curveString);
 
@@ -1846,17 +1842,6 @@ var Motion = function () {
         }
 
         _createClass(Motion, [{
-                key: 'getArg',
-                value: function getArg(args, key, fallback) {
-
-                        if (args.hasOwnProperty(key)) {
-
-                                return args[key];
-                        } else {
-                                return fallback;
-                        }
-                }
-        }, {
                 key: 'curvesObject',
                 value: function curvesObject() {
 
@@ -2078,19 +2063,28 @@ var Sprite = function () {
         function Sprite(name, description, args) {
                 _classCallCheck(this, Sprite);
 
-                this.name = name || "__";
+                this.active = true; //active sprites are visible
 
-                this.description = description || "__";
+                this.__specialPresets = new SpritePresets(); //apply presets to this variable
 
-                this.active = true;
+                if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
+                        {
+                                args = name;
 
-                if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') {
-                        args = name;
+                                this.name = args.name || "__";
+
+                                this.description = args.description || "__";
+                        } else {
+
+                        this.name = name || "__";
+
+                        this.description = description || "__";
                 }
 
                 var _spr = this;
 
                 Quazar.each(args, function (ix, item) {
+                        //apply all args
 
                         if (ix !== 'parent') {
                                 _spr[ix] = item;
@@ -2105,7 +2099,7 @@ var Sprite = function () {
 
                 var __inst = this;
 
-                this.id = $Q.getArg(args, 'id', this.setid());
+                this.id = $Q.getArg(args, 'id', this.create_id());
 
                 this.sounds = $Q.getArg(args, 'sounds', []);
 
@@ -2121,28 +2115,15 @@ var Sprite = function () {
 
                 this.selected_animation = {};
 
-                this.selected_motionstack = {};
+                this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
 
-                this.selected_physics = {};
-
-                this.onGround = false;
-
-                this.clasticTo = []; //an array of sprite types
-
-
-                this.damagedBy = []; //an array of animation types
-
-
-                this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0)); //store constant speed value
-
-                this.accel = $Q.getArg(args, 'accel', new Vector3(0, 0, 0)); //store constant accel value
-
+                this.accel = $Q.getArg(args, 'accel', new Vector3(0, 0, 0));
 
                 this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
                 this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
-                this.actionlists = $Q.getArg(args, 'actionlists', []);
+                //Apply and instantiate Sound(), Motion(), and Animation() args...
 
                 $.each(this.sounds, function (ix, item) {
 
@@ -2160,41 +2141,117 @@ var Sprite = function () {
                 });
         }
 
+        /*****************************
+         * Getters
+         ***************************/
+
         _createClass(Sprite, [{
+                key: 'get_id',
+                value: function get_id() {
+                        return this.id;
+                }
+
+                /*****************************
+                 * Setters and Creators
+                 ***************************/
+
+        }, {
+                key: 'create_id',
+                value: function create_id() {
+                        return new Date().getUTCMilliseconds();
+                }
+        }, {
                 key: 'setSize',
                 value: function setSize(size) {
                         this.size = new Vector3(size.x, size.y, size.z || 0);
 
                         this.selected_animation.size = this.size;
                 }
-        }, {
-                key: 'setid',
-                value: function setid() {
-                        return new Date().getUTCMilliseconds();
-                }
-        }, {
-                key: 'get_id',
-                value: function get_id() {
 
-                        return this.id;
+                /*****************************
+                 *  assertSpeed()
+                 *  -assert the existence of a speed{} object
+                 ***************************/
+
+        }, {
+                key: 'assertSpeed',
+                value: function assertSpeed() {
+                        if (!this.speed) {
+
+                                this.speed = new Vector3(0, 0, 0);
+                        }
                 }
+
+                /*****************************
+                 *  setAnimation(anime)
+                 *  -set the select_animation of this sprite
+                 ***************************/
+
+        }, {
+                key: 'setAnimation',
+                value: function setAnimation(anime) {
+
+                        this.animations['default'] = anime;
+
+                        this.selected_animation = anime;
+
+                        Quazar.log('declared default animation');
+
+                        return this;
+                }
+
+                /*****************************
+                 *  defaultAnimation(anime)
+                 *  -set the default_animation of this sprite
+                 *  -TODO : determine whether to implement a default animatio OR simply use setAnimation() plus selected_animation
+                 ***************************/
+
+        }, {
+                key: 'defaultAnimation',
+                value: function defaultAnimation(anime) {
+
+                        this.animations['default'] = anime;
+
+                        Quazar.log('declared default animation');
+
+                        return this;
+                }
+
+                /*****************************
+                 * onScreen :
+                 * -returns boolean
+                 * -takes and requires w, h of screen
+                 * -detects if object is on the screen
+                 ***************************/
+
         }, {
                 key: 'onScreen',
                 value: function onScreen(w, h) {
                         return this.position.x + this.size.x >= 0 && this.position.x < w && this.position.y + this.size.y >= 0 && this.position.y < h;
                 }
-        }, {
-                key: 'type_options',
-                value: function type_options() {
 
-                        return ['player', 'enemy', 'powerup', 'attachment', 'projectile'];
-                }
+                /*****************************
+                 * Updates
+                 ***************************/
+
+                /*****************************
+                 * update()
+                 * -starts empty:: is used by Quick2d.js as the main sprite update
+                 ***************************/
+
         }, {
                 key: 'update',
-                value: function update() {}
+                value: function update(sprite) {}
+
+                /*****************************
+                 * def_update()
+                 * -applies speed and other default factors of movement::
+                 * -is used by Quick2d.js as the system def_update (default update)
+                 ***************************/
+
         }, {
                 key: 'def_update',
-                value: function def_update() {
+                value: function def_update(sprite) {
 
                         for (var x in this.speed) {
 
@@ -2228,17 +2285,67 @@ var Sprite = function () {
                                 }
                         }
                 }
+
+                /*****************************
+                 *  onUpdate(fun)
+                 * -args: 1 function(sprite){ } //the self-instance/sprite is passed into the function()
+                 * -overrides and maintains existing code for update(){} function
+                 ***************************/
+
+        }, {
+                key: 'onUpdate',
+                value: function onUpdate(fun) {
+                        fun = fun || function () {};
+
+                        var update = this.update;
+
+                        var __inst = this;
+
+                        this.update = function (__inst) {
+                                update(__inst);fun(__inst);
+                        };
+                }
+
+                /*****************************
+                 *  collidesRectangular(sprite)
+                 * -args: 1 sprite object
+                 * -returns boolean of true on collision or false on no-collision
+                 * -TODO : add options object with highlight=true||false,
+                 * -TODO:allow stateffects, graphiceffects into the collision function
+                 ***************************/
+
         }, {
                 key: 'collidesRectangular',
                 value: function collidesRectangular(sprite) {
 
                         return Quazar.Collision.spriteRectanglesCollide(sprite);
                 }
+
+                /*****************************
+                 *  collidesByPixels(sprite)
+                 *  -TODO : this function is incomplete
+                 *  -process collision according to the non-transparent pixels of the sprite::
+                 *  -provides a more realistic collision than basic rectangular
+                 ***************************/
+
+        }, {
+                key: 'collidesByPixels',
+                value: function collidesByPixels(sprite) {
+
+                        return console.info("TODO: Sprite().collidesByPixels(sprite): finish this function");
+                }
+
+                /*****************************
+                 *  shoot(sprite)
+                 *  -fire a shot from the sprite:: as in a firing gun or spaceship
+                 *  -takes options{} for number of shots, anglePerShot, etc...
+                 *  -TODO: complete and test this code
+                 ***************************/
+
         }, {
                 key: 'shoot',
                 value: function shoot(options) {
                         //character shoots an animation
-
 
                         this.prep_key = 'shoot';
 
@@ -2259,13 +2366,12 @@ var Sprite = function () {
 
                         return this;
                 }
-        }, {
-                key: 'allow',
-                value: function allow(options) {
-                        this.prep_key = 'animate';
 
-                        this.event_arg(this.prep_key, '_', options);
-                }
+                /*****************************
+                 *  animate(animation)
+                 *  -simply animate, set the animation to the arg 'animation'
+                 ***************************/
+
         }, {
                 key: 'animate',
                 value: function animate(animation) {
@@ -2274,96 +2380,80 @@ var Sprite = function () {
 
                         if (__gameInstance.isAtPlay) {
 
-                                this.setAnimation(animation);
+                                if (animation) {
+                                        this.setAnimation(animation);
+                                };
 
-                                return this;
-                        } else {
-                                var evt = __gameInstance.event_args_list[__gameInstance.event_args_list.length - 1];
-
-                                evt.animation = animation;
+                                this.selected_animation.animate();
 
                                 return this;
                         }
-
-                        return this;
                 }
+
+                /*****************************
+                 *  accelY
+                 *  -accelerate on Y-Axis with 'accel' and 'max' (speed) arguments
+                 *  -example-use: gravitation of sprite || up / down movement
+                 ***************************/
+
         }, {
-                key: 'velocityY',
-                value: function velocityY(accel, max) {
+                key: 'accelY',
+                value: function accelY(accel, max) {
+
+                        accel = Math.abs(accel);
+
+                        if (typeof max == 'number') {
+                                max = { y: max };
+                        }
 
                         this.assertSpeed();
 
-                        if (this.speed.y < max.y) {
-                                this.speed.y += accel;
+                        var diff = max.y - this.speed.y;
+
+                        if (diff > 0) {
+                                this.speed.y += Math.abs(diff) >= accel ? accel : diff;
+                        };
+
+                        if (diff < 0) {
+                                this.speed.y -= Math.abs(diff) >= accel ? accel : diff;
+                        };
+                }
+
+                /*****************************
+                 *  accelX
+                 *  -accelerate on X-Axis with 'accel' and 'max' (speed) arguments
+                 *  -example-use: running of sprite || left / right movement
+                 ***************************/
+
+        }, {
+                key: 'accelX',
+                value: function accelX(accel, max) {
+
+                        accel = Math.abs(accel);
+
+                        if (typeof max == 'number') {
+                                max = { x: max };
                         }
 
-                        this.position.y += this.speed.y;
+                        this.assertSpeed();
+
+                        var diff = max.x - this.speed.x;
+
+                        if (diff > 0) {
+                                this.speed.x += Math.abs(diff) >= accel ? accel : diff;
+                        };
+
+                        if (diff < 0) {
+                                this.speed.x -= Math.abs(diff) >= accel ? accel : diff;
+                        };
                 }
-        }, {
-                key: 'collide',
-                value: function collide(item) {
 
-                        var max_y = item.max ? item.max.y : item.position.y;
+                /*****************************
+                 *  decelX
+                 *  -decelerate on the X axis
+                 *  -args: 1 float:amt
+                 ***************************/
 
-                        if (this.position.y + this.size.y >= max_y) {
-
-                                this.position.y = max_y - this.size.y;
-                        }
-                }
-        }, {
-                key: 'assertSpeed',
-                value: function assertSpeed() {
-                        if (!this.speed) {
-
-                                this.speed = new Vector3(0, 0, 0);
-                        }
-                }
-        }, {
-                key: 'swing',
-                value: function swing() {}
-        }, {
-                key: 'accel',
-                value: function accel(options) {
-
-                        this.prep_key = 'accel';
-
-                        //targeting position
-
-                        if (__gameInstance.isAtPlay) {
-
-                                this.assertSpeed();
-
-                                if (options.hasOwnProperty('switch') && this[options.switch] !== true) {
-                                        return false;
-                                } else {
-
-                                        //  this[options.switch] = false;
-
-                                }
-
-                                if (options.extras && options.speed !== 0) {
-
-                                        for (var x in options.extras) {
-                                                this[x] = options.extras[x];
-                                        }
-                                }
-
-                                if (this.speed[options.key] < options.speed) {
-
-                                        this.speed[options.key] += options.accel;
-                                } else if (this.speed[options.key] > options.speed) {
-
-                                        this.speed[options.key] -= options.accel;
-                                } else if (options.speed == 0) {
-                                        this.speed[options.key] = 0;
-                                }
-                        } else {
-
-                                this.event_arg(this.prep_key, '_', options);
-                        }
-
-                        return this;
-                }
         }, {
                 key: 'deccelX',
                 value: function deccelX(rate) {
@@ -2381,28 +2471,80 @@ var Sprite = function () {
                                 this.speed['x'] = 0;
                         }
                 }
+
+                /*****************************
+                 *  decelY
+                 *  -decelerate on the Y axis
+                 *  -args: 1 float:amt
+                 ***************************/
+
         }, {
-                key: 'setAnimation',
-                value: function setAnimation(anime) {
+                key: 'decelY',
+                value: function decelY(amt) {
 
-                        this.animations['default'] = anime;
+                        amt = Math.abs(amt);
 
-                        this.selected_animation = anime;
+                        if (Math.abs(this.speed.y) <= amt) {
+                                this.speed.y = 0;
+                        } else if (this.speed.y > amt) {
 
-                        Quazar.log('declared default animation');
+                                this.speed.y -= amt;
+                        } else if (this.speed.y < amt * -1) {
 
-                        return this;
+                                this.speed.y += amt;
+                        }
                 }
+
+                /*****************************
+                 *  decelX
+                 *  -decelerate on the X axis
+                 *  -args: 1 float:amt
+                 ***************************/
+
         }, {
-                key: 'defaultAnimation',
-                value: function defaultAnimation(anime) {
+                key: 'decelX',
+                value: function decelX(amt) {
 
-                        this.animations['default'] = anime;
+                        amt = Math.abs(amt);
 
-                        Quazar.log('declared default animation');
+                        if (Math.abs(this.speed.x) <= amt) {
+                                this.speed.x = 0;
+                        } else if (this.speed.x > amt) {
 
-                        return this;
+                                this.speed.x -= amt;
+                        } else if (this.speed.x < amt * -1) {
+
+                                this.speed.x += amt;
+                        }
                 }
+
+                /*****************************
+                 *  collide_stop(item)
+                 *  -both collide and stop on the object, when falling on Y axis::
+                 *  -sets the special property: __falling to false on stop :: helps to control Sprite() state
+                 *  -TODO : rename to fallstop || something that resembles a function strictly on Y-Axis
+                 ***************************/
+
+        }, {
+                key: 'collide_stop',
+                value: function collide_stop(item) {
+
+                        var max_y = item.max ? item.max.y : item.position.y;
+
+                        if (this.position.y + this.size.y >= max_y) {
+
+                                this.position.y = max_y - this.size.y;
+
+                                this.__falling = false;
+                        }
+                }
+
+                /*****************************
+                 *  fromFile(file_path)
+                 *  -TODO : complete this function based on code to load Sprite() from file, located in the spritemaker.html file
+                 *  -TODO: test this function
+                 ***************************/
+
         }, {
                 key: 'fromFile',
                 value: function fromFile(file_path) {
@@ -2418,49 +2560,198 @@ var Sprite = function () {
         return Sprite;
 }();
 
-var GameObjects = {
-
-        init: function init() {
-
-                var BlockTile = new Sprite();
-
-                this.sprites = [];
-        }
-
-};
-
 ;
 
-var BlockSprite = function BlockSprite(sprite) {
-        _classCallCheck(this, BlockSprite);
+/****************
+ * TODO : Complete SpritePresetsOptions::
+ *  Use these as options for Sprite Control, etc...
+ ****************/
 
-        this.__subType = "block";
+var SpritePresets = function () {
+        function SpritePresets() {
+                _classCallCheck(this, SpritePresets);
 
-        //todo: apply a sprite that collides on both sides
-};
+                var options = SpritePresetsOptions();
 
-var PowerContainer = function () {
-        function PowerContainer(sprite) {
-                _classCallCheck(this, PowerContainer);
+                for (var x in options) {
 
-                this.__subType = "block";
-
-                //todo: apply a sprite that collides on both sides
+                        this[x] = false;
+                }
         }
 
-        _createClass(PowerContainer, [{
-                key: 'onStrike',
-                value: function onStrike() {}
+        _createClass(SpritePresets, [{
+                key: 'apply',
+                value: function apply() {}
         }]);
 
-        return PowerContainer;
+        return SpritePresets;
 }();
 
-var SideScrollerSprite = function SideScrollerSprite(sprite) {
-        _classCallCheck(this, SideScrollerSprite);
+var SpritePresetsOptions = function SpritePresetsOptions() {
+        return {
+                Flight: {
 
-        this.__subType = "block";
+                        __args: {},
 
-        //todo: apply a sprite that collides on both sides
+                        top_down_flight: function top_down_flight(sprite) {},
+
+                        side_scroll_flight: function side_scroll_flight(sprite) {}
+
+                },
+
+                Running: {
+
+                        __args: {},
+
+                        side_scroll_runner: function side_scroll_runner(sprite) {
+
+                                var __lib = Quazar || Quick2d;
+
+                                Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                                        accel = accel || 0.25;max = max || 7;
+
+                                        sprite.accelX(accel, x * max);
+
+                                        if (x < -0.2) {
+                                                sprite.flipX = true;
+                                        } else if (x > 0.2) {
+                                                sprite.flipX = false;
+                                        }
+                                });
+
+                                sprite.onUpdate(function (spr) {
+
+                                        spr.decelX(0.1);
+
+                                        if (!spr.__falling) {
+                                                spr.decelY(0.2);
+                                        };
+                                });
+                        }
+
+                },
+
+                Collision: {
+
+                        __args: {},
+
+                        basic_stop_collideable: function basic_stop_collideable(sprite) {},
+
+                        top_stop_collideable: function top_stop_collideable(sprite) {} //pass through bottom, but land on top, as with certain platforms
+
+
+                },
+
+                Powerups: {
+
+                        __args: {},
+
+                        grabbable_power_up: function grabbable_power_up(sprite) {}
+
+                },
+
+                ControllerStickMotion: {
+
+                        __args: {},
+
+                        stick_move_x: function stick_move_x(sprite) {},
+
+                        stick_move_y: function stick_move_y(sprite) {}
+
+                },
+
+                Jumping: {
+
+                        __args: {}
+
+                },
+
+                Shooting: {
+
+                        __args: {}
+
+                }
+
+        };
+};; /**
+    * Created by The Blakes on 04-13-2017
+    *
+    */
+
+var InterfaceCallback = function () {
+        function InterfaceCallback(_ref6) {
+                var name = _ref6.name,
+                    description = _ref6.description,
+                    callback = _ref6.callback;
+
+                _classCallCheck(this, InterfaceCallback);
+
+                this.name = name;
+
+                this.description = description;
+
+                this.callback = callback || function () {
+                        console.info('The call was empty');
+                };
+        }
+
+        _createClass(InterfaceCallback, [{
+                key: 'run',
+                value: function run() {
+
+                        this.callback();
+                }
+        }]);
+
+        return InterfaceCallback;
+}();
+
+var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref7) {
+        var name = _ref7.name,
+            description = _ref7.description;
+
+        _classCallCheck(this, SpeechInterfaceStructure);
+
+        this.name = name || "Program helper.";
+
+        this.description = description || "An interface for the game-builder program.";
+
+        this.options_structure = {
+
+                scroll: function scroll(x, y) {}, //simple scroll controller
+
+
+                create_object_resource: {
+
+                        constructors: Quazar.IF.__allConstructors(),
+
+                        selectedType: false,
+
+                        selectByName: Quazar.IF.selectByName,
+
+                        apply_speech_value: Quazar.IF.applySpeechValue()
+
+                }, //apply each class in the program, with means of creating / instantiating
+
+                save_object_resource: {
+
+                        selected_object: false,
+
+                        confirm: Quazar.IF.confirmation()
+
+                }, //apply each class in the program, with means of saving
+
+                retrieve_object_resource: {}, //retrieve
+
+                browse_object_resources: {}, //browsing
+
+                search_object_resources: {}, //searching
+
+                delete_object_resources: {}, //delete
+
+                apply_value: {} //apply a value to an object resource
+
+        };
 };
 //# sourceMappingURL=Quick2d.js.map
