@@ -30,6 +30,9 @@
         <script src="../assets/js/ui/contextMenu.js"></script>
 
 
+        <script src="../assets/js/quick2d/right_click_interface.js"></script>
+
+
         <!-- Insert this line after script imports -->
         <script>if (window.module) module = window.module;</script>
 
@@ -695,7 +698,7 @@
                             if(args.name && args.description) {
 
 
-                                var mapElementArgs = {tag:args.name, img:levelMaker.selected_image_src, frameSize:new Vector3(w, h, 0), mapSize:new Vector3(w, h, 0)};
+                                var mapElementArgs = {tag:args.name, src:levelMaker.selected_image_src, frameSize:new Vector3(w, h, 0), mapSize:new Vector3(w, h, 0)};
 
                                     var sprite =  levelMaker.createMapElement(mapElementArgs, function(){
 
@@ -863,28 +866,11 @@
 
                 //add mapItems
 
-                //1. trampoline
-
-                //2. wall turret
-
-                //3. flying enemies
-
-                //4. power boxes
-
-
-                //5. boss points
-
-
-                //6. portals :: of level
-
-
-                //7. portals::end portal
-
                 levelMaker.createMapElement(
-                    {tag:'ground',
-                        img:pathPref + 'ground.png',
-                        frameSize:{x: 100, y: 100},
-                        mapSize:{x:  Math.round(40), y:  Math.round(40)}},
+                    {tag:'ground_brick',
+                        src:pathPref + 'bricks/square_brick.png',
+                        frameSize:{x: 85, y: 85},
+                        mapScale:0.5},
                     function(){
 
 
@@ -892,7 +878,7 @@
 
                 levelMaker.createMapElement(
                     {tag:'platform',
-                        img:pathPref + 'mushplat.png',
+                        src:pathPref + 'mushplat.png',
                         frameSize:{x: 100, y: 100},
                         mapSize:{x:  Math.round(40), y:  Math.round(40)}},
                     function(){
@@ -2201,7 +2187,7 @@
 
                     }
 
-                    if(e.img.__error)
+                    if(e && e.img && e.img.__error)
                     {
 
 
@@ -2225,8 +2211,8 @@
 
                     if(args.mapScale)
                     {
-                        element.mapSize = new Vector3(element.frameSize.x * args.mapScale,
-                            element.frameSize.y * args.mapScale);
+                        element.mapSize = new Vector3(Math.round(element.frameSize.x * args.mapScale),
+                            Math.round(element.frameSize.y * args.mapScale));
                     }
 
 
@@ -2244,12 +2230,13 @@
 
                     var __inst = this;
 
-                    element.img.onerror = function()
+                    element.img.onerror = function(e)
                     {
+
 
                         var ix = __inst.mapElements.indexOf(element);
 
-                        __inst.splice(ix, 1);
+                        __inst.mapElements.splice(ix, 1);
 
                        this.__error = true;
 
@@ -2950,73 +2937,7 @@
 
             });
 
-            //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
-            var menu = [{
-                name: 'delete',
-                img: 'img/cross_icon.png',
-                title: 'delete button',
-                id:'delete',
-                class:'delete',
-                fun: function () {
 
-                    levelMaker.removeLast();
-
-                }
-            },
-
-                {
-                name: 'Selected_Sprite...',
-                img: 'image/sprite_icon.png',
-                title: 'Selected_Sprite...',
-                subMenu: [{
-                    name: 'Clone_To_New_Map_Object',
-                    title: 'Clone To Map Object',
-                    img: 'img/settings_icon.png',
-                    fun: function () {
-                        alert('Now show option select of all map object(s)')
-                    }
-                }, {
-                    name: 'Apply_Special_Presets',
-                    title: 'Apply special presets to the object, such as javascript behaviors and events.',
-                    img: 'img/settings_icon.png',
-                   // disable: true,
-                    subMenu: [{
-                        name: 'TODO',
-                        img: 'img/settings_icon.png',
-                        fun: function () {
-                            alert('TODO : apply');
-                        }
-
-                    }, {
-                        name: 'TODO2',
-                        img: 'img/settings_icon.png',
-                        fun: function () {
-                            alert('TODO2');
-                        }
-                    }]
-                }]
-            },
-
-                {
-                    name: 'Advanced Action...',
-
-                    title: 'Advanced Click-Action',
-                    subMenu: [{
-                        name: 'Multi-Sprite Generator',
-                        title: 'Formulate large groups of sprites. Then add them to the map on the following click.',
-                        img: 'img/settings_icon.png',
-                        fun: function () {
-                            alert('Apply the auto-place form...')
-                        }
-                    }
-
-                    ]
-                }
-
-            ];
-
-            //Calling context menu
-            $('body canvas').contextMenu(menu,{triggerOn:'contextmenu'});
 
             levelMaker.offsetTop = $(Quazar.canvas).offset().top;
 
