@@ -23,22 +23,21 @@ class Sound {
 
     constructor(src) {
 
-        if(typeof(src)== 'object')
-        {
+        if (typeof(src) == 'object') {
 
-            for(var x in src)
-            {
+            for (var x in src) {
                 this[x] = src[x];
 
             }
 
             this.sound = new Audio(src.src);
 
-            this.onLoad = src.onLoad || function(){};
+            this.onLoad = src.onLoad || function () {
+                };
 
         }
 
-        else  if (typeof(src)=='string') {
+        else if (typeof(src) == 'string') {
 
             this.src = src;
 
@@ -46,7 +45,8 @@ class Sound {
 
         }
 
-        this.onLoad = this.onLoad || function(){};
+        this.onLoad = this.onLoad || function () {
+            };
 
         if (typeof(this.onLoad) == 'function') {
 
@@ -80,7 +80,7 @@ class GameImage {
 
     constructor(src, onCreate) {
 
-       // Quazar.log('initializing image');
+        // Quazar.log('initializing image');
 
         if (src instanceof Object) {
 
@@ -96,11 +96,11 @@ class GameImage {
 
         else if (typeof(src) == 'string') {
 
-        let ext = src.substring(src.lastIndexOf('.'), src.length);
+            let ext = src.substring(src.lastIndexOf('.'), src.length);
 
             this.image = document.createElement('IMG');
 
-            this.image.src =  src;
+            this.image.src = src;
 
             this.src = this.image.src;
 
@@ -108,16 +108,14 @@ class GameImage {
         }
 
 
-
-
-        if(!this.image)
-        {
-            this.image = {error:"Image not instantiated, set to object by default"};
+        if (!this.image) {
+            this.image = {error: "Image not instantiated, set to object by default"};
 
         }
-        else
-        {
-            this.image.onerror = function(){ this.__error = true;   };
+        else {
+            this.image.onerror = function () {
+                this.__error = true;
+            };
 
         }
 
@@ -136,7 +134,7 @@ class GameImage {
 
     }
 
-     getImage() {
+    getImage() {
 
         return this.image;
 
@@ -145,234 +143,259 @@ class GameImage {
 }
 
 
-//Quazar: a main / game lib object::
-let __gameInstance = __gameInstance || {};
 
-let Quazar = {
-
-    DEBUG: false,
-
-    gui_mode:true,
-
-    __gameWindow:{},
-
-    __sprites:[],
-
-    __animations:[],
-
-    samples: {},
-
-    log_modes:['reqs', 'info', 'warning'],
-
-    log_mode:"all",
-
-    recursionCount:0,
-
-    __gameWindowList:[],
+    let QuazarLibrary = function () {
 
 
-    createid:function()
-    {
-        new Date().getUTCMilliseconds() + "";
-    },
+    var lib = {
 
-    getActionablesCheckList:function()
-    {
-        //every unique sound, animation, tweenmotion in the game
+        DEBUG: false,
 
-        let __inst = {};
+        gui_mode: true,
 
-        let actionables = [];
+        __gameWindow: {}
+        ,
 
-        $.each(this.sprites, function(ix, item){
+        __sprites: [],
 
-            actionables.concat(item.sounds);
+        __animations: [],
 
-            actionables.concat(item.motionstacks);
+        samples: {}
+        ,
 
-            actionables.concat(item.animations);
+        log_modes: ['reqs', 'info', 'warning'],
+
+        log_mode: "all",
+
+        recursionCount: 0,
+
+        __gameWindowList: [],
 
 
-        });
+        createid: function () {
+            new Date().getUTCMilliseconds() + "";
+        }
+
+        ,
+
+        getActionablesCheckList: function () {
+            //every unique sound, animation, tweenmotion in the game
+
+            let __inst = {};
+
+            let actionables = [];
+
+            $.each(this.sprites, function (ix, item) {
+
+                actionables.concat(item.sounds);
+
+                actionables.concat(item.motionstacks);
+
+                actionables.concat(item.animations);
 
 
-    },
+            });
 
-    interlog:function(message, div) //recursive safe :: won't go crazy with recursive logs
-    {
-        this.recursionCount++;
 
-        if(!isNaN(div) && this.recursionCount % div == 0)
+        }
+        ,
+
+        interlog: function (message, div) //recursive safe :: won't go crazy with recursive logs
         {
-         //   console.log('Interval Log:'+  message);
+            this.recursionCount++;
 
-        }
-
-    },
-
-    error:function(quit, message)
-    {
-
-        if(quit)
-        {
-            throw new Error(message);
-
-        }
-        else
-        {
-            console.error('E!' + message);
-
-        }
-
-    },
-
-    info: function (m) {
-
-        if(Quazar.DEBUG) {
-
-            console.info('Info:' + m);
-
-        }
-    },
-
-
-    log: function (m) {
-
-        if(Quazar.DEBUG) {
-
-            console.log('Quazar:' + m);
-
-        }
-    },
-
-    //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
-
-    animate:function()
-    {
-        TWEEN.update(time);
-
-        requestAnimationFrame(this.animate);
-
-        this.__gameWindow.update();
-
-        this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
-
-        this.__gameWindow.draw();
-
-    },
-
-    start:function()
-    {
-
-        this.animate();
-
-    },
-
-
-
-    Collision:{
-
-        spriteRectanglesCollide(obj1, obj2)
-        {
-            if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x  < obj2.size.x + obj2.size.x &&
-                obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y  < obj2.size.y + obj2.size.y )
-            {
-
-                return true;
+            if (!isNaN(div) && this.recursionCount % div == 0) {
+                //   console.log('Interval Log:'+  message);
 
             }
 
         }
-    },
+        ,
 
-    TWEEN: TWEEN,
+        error: function (quit, message) {
 
-    _gameWindow: {},
+            if (quit) {
+                throw new Error(message);
 
-    setGameWindow: function (gameWindow) {
+            }
+            else {
+                console.error('E!' + message);
 
-        this._gameWindow = gameWindow;
+            }
 
-    },
+        }
+        ,
 
-    getGameWindow: function () {
+        info: function (m) {
 
+            if (Quazar.DEBUG) {
 
-        return this._gameWindow;
+                console.info('Info:' + m);
 
-    },
-
-    assignAll: function (object, args, keys) {
-
-        $Q.each(keys, function (ix, item) {
-
-            object[ix] = args[ix];
-
-        });
-
-
-    },
+            }
+        }
+        ,
 
 
-    each: function (list, onResult, onComplete) {
-        for (var i in list) {
-            onResult(i, list[i]);
+        log: function (m) {
+
+            if (Quazar.DEBUG) {
+
+                console.log('Quazar:' + m);
+
+            }
+        }
+        ,
+
+        //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
+
+        animate: function () {
+            TWEEN.update(time);
+
+            requestAnimationFrame(this.animate);
+
+            this.__gameWindow.update();
+
+            this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
+
+            this.__gameWindow.draw();
+
+        }
+        ,
+
+        start: function () {
+
+            this.animate();
+
+        }
+        ,
+
+
+        Collision: {
+
+            spriteRectanglesCollide(obj1, obj2)
+            {
+                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x &&
+                    obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+
+                    return true;
+
+                }
+
+            }
+        }
+        ,
+
+        TWEEN: TWEEN,
+
+        _gameWindow: {}
+        ,
+
+        setGameWindow: function (gameWindow) {
+
+            this._gameWindow = gameWindow;
+
+        }
+        ,
+
+        getGameWindow: function () {
+
+
+            return this._gameWindow;
+
+        }
+        ,
+
+        assignAll: function (object, args, keys) {
+
+            $Q.each(keys, function (ix, item) {
+
+                object[ix] = args[ix];
+
+            });
+
+
+        }
+        ,
+
+
+        each: function (list, onResult, onComplete) {
+            for (var i in list) {
+                onResult(i, list[i]);
+            }
+
+            if (typeof(onComplete) === 'function') {
+                onComplete(false, list)
+            }
+            ;
+
+        }
+        ,
+
+        ready_callstack: [],
+
+        ready: function (callback) {
+
+            this.ready_callstack.push(callback);
+
         }
 
-        if (typeof(onComplete) === 'function') {
-            onComplete(false, list)
-        };
+        ,
 
-    },
+        callReady: function () {
 
-    ready_callstack: [],
+            var funx = this.ready_callstack;
 
-    ready: function (callback) {
+            var gameWindow = this._gameWindow, lib = this, sprites = this.__gameWindow.sprites;
 
-        this.ready_callstack.push(callback);
+            //call every function in the ready_callstack
 
-    },
+            this.each(funx, function (ix, call) {
 
-    callReady: function () {
+                call(lib, gameWindow, sprites);
 
-        var funx = this.ready_callstack;
-
-        var gameWindow = this._gameWindow, lib = this, sprites = this.__gameWindow.sprites;
-
-        //call every function in the ready_callstack
-
-        this.each(funx, function (ix, call) {
-
-            call(lib, gameWindow, sprites);
-
-        });
+            });
 
 
-        __gameInstance.isAtPlay = true;
+            __gameInstance.isAtPlay = true;
 
 
-        this.InputEvents.init();
+            this.InputEvents.init();
 
-    },
-
-    getArg: function (args, key, fallback) {
-        if (args && args.hasOwnProperty(key)) {
-            return args[key];
         }
-        else {
-            return fallback;
+        ,
+
+        getArg: function (args, key, fallback) {
+            if (args && args.hasOwnProperty(key)) {
+                return args[key];
+            }
+            else {
+                return fallback;
+
+            }
 
         }
 
     }
 
+
+    return lib;
+
 };
 
-__gameInstance = Quazar;
 
+//Quazar: a main / game lib object::
+//TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
+
+let Quazar = new QuazarLibrary();
 let QUAZAR = Quazar;
 
-let $q = Quazar; let $Q = Quazar;
+
+let __gameInstance = Quazar;
+
+
+let $q = Quazar;
+let $Q = Quazar;
 
 /********************
  * Quazar.InputEvents
@@ -692,7 +715,7 @@ window.onload = function () {
 
 
 var Canvas = {
-    draw: function (sprite, ctx){
+    draw: function (sprite, ctx) {
 
         if (sprite.active && sprite.onScreen(Game.WIDTH, Game.HEIGHT)) {
 
@@ -778,8 +801,7 @@ var Canvas = {
 
             //optional animation : gameSize
 
-            var targetSize = sprite.selected_animation.size ? sprite.selected_animation.size : sprite.size;
-
+            var targetSize = sprite.size || sprite.selected_animation.size;
 
             var realWidth = targetSize.x;
             var realHeight = targetSize.y;
@@ -795,19 +817,16 @@ var Canvas = {
 
             var rotation;
 
-            if(typeof(sprite.rotation) == 'object')
-            {
+            if (typeof(sprite.rotation) == 'object') {
 
                 rotation = sprite.rotation.x;
 
 
             }
-            else
-            {
+            else {
                 rotation = sprite.rotation;
 
             }
-
 
 
             this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
@@ -837,24 +856,26 @@ class GameWindow {
 
     constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update}) {
 
-        this.sprites = sprites instanceof Array ? sprites:[];
+        this.sprites = sprites instanceof Array ? sprites : [];
 
-        this.backgrounds = backgrounds instanceof Array ? backgrounds:[];
+        this.backgrounds = backgrounds instanceof Array ? backgrounds : [];
 
-        this.interactives = interactives instanceof Array ? interactives:[];
+        this.interactives = interactives instanceof Array ? interactives : [];
 
-        this.forces = forces instanceof Array ? forces:[];
+        this.forces = forces instanceof Array ? forces : [];
 
         this.canvas = canvas;
 
-        if(!this.canvas){ this.canvas =  document.createElement('CANVAS'); console.info('GameWindow(): Created New Canvas'); }
+        if (!this.canvas) {
+            this.canvas = document.createElement('CANVAS');
+            console.info('GameWindow(): Created New Canvas');
+        }
 
         this.ctx = ctx || canvas.getContext('2d');
 
         this.__camera = new Vector3(0, 0, 0);
 
-        if(typeof update == 'function')
-        {
+        if (typeof update == 'function') {
             this.onUpdate(update);
 
         }
@@ -867,19 +888,17 @@ class GameWindow {
 
     }
 
-    uniques(list)
-    {
+    uniques(list) {
 
         var listout = [];
 
-        $.each(list, function(ix, item){
+        $.each(list, function (ix, item) {
 
-            if(!listout.indexOf(item.id) >= 0)
-            {
+            if (!listout.indexOf(item.id) >= 0) {
 
                 var str = item.name;
 
-                listout.push({"sprite":item});
+                listout.push({"sprite": item});
 
             }
 
@@ -889,30 +908,26 @@ class GameWindow {
 
     }
 
-    setPlayer(player)
-    {
+    setPlayer(player) {
         this.player = player;
 
-        if(!this.sprites.indexOf(player) >= 0)
-        {
+        if (!this.sprites.indexOf(player) >= 0) {
             this.sprites.push(player);
 
         }
 
     }
 
-    update()
-    {
+    update() {
 
         Quazar.each(this.sprites, function (ix, item) {
 
-            if(typeof(item.update) == 'function')
-            {
+            if (typeof(item.update) == 'function') {
                 item.update(item);
 
             }
 
-            if(typeof(item.def_update) == 'function') {
+            if (typeof(item.def_update) == 'function') {
                 //  console.log('def_update');
 
                 item.def_update(item);
@@ -924,13 +939,14 @@ class GameWindow {
 
     }
 
-    onUpdate(arg)
-    {
-        if(typeof(arg) == 'function')
-        {
+    onUpdate(arg) {
+        if (typeof(arg) == 'function') {
             let up = this.update;
 
-            this.update = function(sprites){ up(sprites); arg(sprites);  }
+            this.update = function (sprites) {
+                up(sprites);
+                arg(sprites);
+            }
 
         }
 
@@ -948,12 +964,11 @@ class GameWindow {
 
     }
 
-};
+}
+;
 
 
-class TextDisplay
-{
-
+class TextDisplay {
 
 
 }
@@ -972,19 +987,17 @@ class ItemDisplay //show an item display (image with text/number to the right
 
     }
 
-    set(text, image, color, font)
-    {
-
-
-    }
-    size()
-    {
+    set(text, image, color, font) {
 
 
     }
 
-    render()
-    {
+    size() {
+
+
+    }
+
+    render() {
 
     }
 
@@ -997,19 +1010,17 @@ class BarDisplay //show a display bar such as health bar
 
     }
 
-    set(text, image, color, font)
-    {
-
-
-    }
-    size()
-    {
+    set(text, image, color, font) {
 
 
     }
 
-    render()
-    {
+    size() {
+
+
+    }
+
+    render() {
 
     }
 

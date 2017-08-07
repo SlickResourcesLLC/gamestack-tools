@@ -6,6 +6,7 @@ class Sprite {
 
         this.__specialPresets = new SpritePresets(); //apply presets to this variable
 
+
         if(typeof name == 'object') //accept first argument as full args object
         {
 
@@ -49,7 +50,7 @@ class Sprite {
 
         this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
 
-        this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
+        this.size = $Q.getArg(args, 'size', new Vector3(100, 100));
 
         this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
@@ -113,12 +114,17 @@ class Sprite {
 
     setSize(size)
     {
-        this.size = new Vector3(size.x, size.y, size.z || 0);
+        this.size = new Vector3(size.x, size.y, size.z);
 
-        this.selected_animation.size = this.size;
+        this.selected_animation.size = new Vector3(size.x, size.y, size.z);
 
     }
 
+    setPos(pos)
+    {
+        this.position = new Vector3(pos.x, pos.y, pos.z || 0);
+
+    }
 
     /*****************************
      *  assertSpeed()
@@ -584,7 +590,15 @@ class SpritePresets {
 
 }
 
+onCreate(fun)
+{
+
+
+
 }
+
+}
+
 
 
 

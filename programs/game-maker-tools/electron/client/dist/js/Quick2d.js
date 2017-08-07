@@ -132,191 +132,197 @@ var GameImage = function () {
         return GameImage;
 }();
 
-//Quazar: a main / game lib object::
+var QuazarLibrary = function QuazarLibrary() {
 
+        var lib = {
 
-var __gameInstance = __gameInstance || {};
+                DEBUG: false,
 
-var Quazar = {
+                gui_mode: true,
 
-        DEBUG: false,
+                __gameWindow: {},
 
-        gui_mode: true,
+                __sprites: [],
 
-        __gameWindow: {},
+                __animations: [],
 
-        __sprites: [],
+                samples: {},
 
-        __animations: [],
+                log_modes: ['reqs', 'info', 'warning'],
 
-        samples: {},
+                log_mode: "all",
 
-        log_modes: ['reqs', 'info', 'warning'],
+                recursionCount: 0,
 
-        log_mode: "all",
+                __gameWindowList: [],
 
-        recursionCount: 0,
+                createid: function createid() {
+                        new Date().getUTCMilliseconds() + "";
+                },
 
-        __gameWindowList: [],
+                getActionablesCheckList: function getActionablesCheckList() {
+                        //every unique sound, animation, tweenmotion in the game
 
-        createid: function createid() {
-                new Date().getUTCMilliseconds() + "";
-        },
+                        var __inst = {};
 
-        getActionablesCheckList: function getActionablesCheckList() {
-                //every unique sound, animation, tweenmotion in the game
+                        var actionables = [];
 
-                var __inst = {};
+                        $.each(this.sprites, function (ix, item) {
 
-                var actionables = [];
+                                actionables.concat(item.sounds);
 
-                $.each(this.sprites, function (ix, item) {
+                                actionables.concat(item.motionstacks);
 
-                        actionables.concat(item.sounds);
+                                actionables.concat(item.animations);
+                        });
+                },
 
-                        actionables.concat(item.motionstacks);
+                interlog: function interlog(message, div) //recursive safe :: won't go crazy with recursive logs
+                {
+                        this.recursionCount++;
 
-                        actionables.concat(item.animations);
-                });
-        },
+                        if (!isNaN(div) && this.recursionCount % div == 0) {
+                                //   console.log('Interval Log:'+  message);
 
-        interlog: function interlog(message, div) //recursive safe :: won't go crazy with recursive logs
-        {
-                this.recursionCount++;
+                        }
+                },
 
-                if (!isNaN(div) && this.recursionCount % div == 0) {
-                        //   console.log('Interval Log:'+  message);
+                error: function error(quit, message) {
 
-                }
-        },
+                        if (quit) {
+                                throw new Error(message);
+                        } else {
+                                console.error('E!' + message);
+                        }
+                },
 
-        error: function error(quit, message) {
+                info: function info(m) {
 
-                if (quit) {
-                        throw new Error(message);
-                } else {
-                        console.error('E!' + message);
-                }
-        },
+                        if (Quazar.DEBUG) {
 
-        info: function info(m) {
+                                console.info('Info:' + m);
+                        }
+                },
 
-                if (Quazar.DEBUG) {
+                log: function log(m) {
 
-                        console.info('Info:' + m);
-                }
-        },
+                        if (Quazar.DEBUG) {
 
-        log: function log(m) {
+                                console.log('Quazar:' + m);
+                        }
+                },
 
-                if (Quazar.DEBUG) {
+                //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
-                        console.log('Quazar:' + m);
-                }
-        },
+                animate: function animate() {
+                        TWEEN.update(time);
 
-        //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
+                        requestAnimationFrame(this.animate);
 
-        animate: function animate() {
-                TWEEN.update(time);
+                        this.__gameWindow.update();
 
-                requestAnimationFrame(this.animate);
+                        this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
 
-                this.__gameWindow.update();
+                        this.__gameWindow.draw();
+                },
 
-                this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
+                start: function start() {
 
-                this.__gameWindow.draw();
-        },
+                        this.animate();
+                },
 
-        start: function start() {
+                Collision: {
+                        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2) {
+                                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x && obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
 
-                this.animate();
-        },
+                                        return true;
+                                }
+                        }
+                },
 
-        Collision: {
-                spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2) {
-                        if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x && obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                TWEEN: TWEEN,
 
-                                return true;
+                _gameWindow: {},
+
+                setGameWindow: function setGameWindow(gameWindow) {
+
+                        this._gameWindow = gameWindow;
+                },
+
+                getGameWindow: function getGameWindow() {
+
+                        return this._gameWindow;
+                },
+
+                assignAll: function assignAll(object, args, keys) {
+
+                        $Q.each(keys, function (ix, item) {
+
+                                object[ix] = args[ix];
+                        });
+                },
+
+                each: function each(list, onResult, onComplete) {
+                        for (var i in list) {
+                                onResult(i, list[i]);
+                        }
+
+                        if (typeof onComplete === 'function') {
+                                onComplete(false, list);
+                        }
+                        ;
+                },
+
+                ready_callstack: [],
+
+                ready: function ready(callback) {
+
+                        this.ready_callstack.push(callback);
+                },
+
+                callReady: function callReady() {
+
+                        var funx = this.ready_callstack;
+
+                        var gameWindow = this._gameWindow,
+                            lib = this,
+                            sprites = this.__gameWindow.sprites;
+
+                        //call every function in the ready_callstack
+
+                        this.each(funx, function (ix, call) {
+
+                                call(lib, gameWindow, sprites);
+                        });
+
+                        __gameInstance.isAtPlay = true;
+
+                        this.InputEvents.init();
+                },
+
+                getArg: function getArg(args, key, fallback) {
+                        if (args && args.hasOwnProperty(key)) {
+                                return args[key];
+                        } else {
+                                return fallback;
                         }
                 }
-        },
 
-        TWEEN: TWEEN,
+        };
 
-        _gameWindow: {},
-
-        setGameWindow: function setGameWindow(gameWindow) {
-
-                this._gameWindow = gameWindow;
-        },
-
-        getGameWindow: function getGameWindow() {
-
-                return this._gameWindow;
-        },
-
-        assignAll: function assignAll(object, args, keys) {
-
-                $Q.each(keys, function (ix, item) {
-
-                        object[ix] = args[ix];
-                });
-        },
-
-        each: function each(list, onResult, onComplete) {
-                for (var i in list) {
-                        onResult(i, list[i]);
-                }
-
-                if (typeof onComplete === 'function') {
-                        onComplete(false, list);
-                };
-        },
-
-        ready_callstack: [],
-
-        ready: function ready(callback) {
-
-                this.ready_callstack.push(callback);
-        },
-
-        callReady: function callReady() {
-
-                var funx = this.ready_callstack;
-
-                var gameWindow = this._gameWindow,
-                    lib = this,
-                    sprites = this.__gameWindow.sprites;
-
-                //call every function in the ready_callstack
-
-                this.each(funx, function (ix, call) {
-
-                        call(lib, gameWindow, sprites);
-                });
-
-                __gameInstance.isAtPlay = true;
-
-                this.InputEvents.init();
-        },
-
-        getArg: function getArg(args, key, fallback) {
-                if (args && args.hasOwnProperty(key)) {
-                        return args[key];
-                } else {
-                        return fallback;
-                }
-        }
-
+        return lib;
 };
 
-__gameInstance = Quazar;
+//Quazar: a main / game lib object::
+//TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
 
+var Quazar = new QuazarLibrary();
 var QUAZAR = Quazar;
 
-var $q = Quazar;var $Q = Quazar;
+var __gameInstance = Quazar;
+
+var $q = Quazar;
+var $Q = Quazar;
 
 /********************
  * Quazar.InputEvents
@@ -658,7 +664,7 @@ var Canvas = {
 
                         //optional animation : gameSize
 
-                        var targetSize = sprite.selected_animation.size ? sprite.selected_animation.size : sprite.size;
+                        var targetSize = sprite.size || sprite.selected_animation.size;
 
                         var realWidth = targetSize.x;
                         var realHeight = targetSize.y;
@@ -720,7 +726,8 @@ var GameWindow = function () {
                 this.canvas = canvas;
 
                 if (!this.canvas) {
-                        this.canvas = document.createElement('CANVAS');console.info('GameWindow(): Created New Canvas');
+                        this.canvas = document.createElement('CANVAS');
+                        console.info('GameWindow(): Created New Canvas');
                 }
 
                 this.ctx = ctx || canvas.getContext('2d');
@@ -789,7 +796,8 @@ var GameWindow = function () {
                                 var up = this.update;
 
                                 this.update = function (sprites) {
-                                        up(sprites);arg(sprites);
+                                        up(sprites);
+                                        arg(sprites);
                                 };
                         }
                 }
@@ -1349,6 +1357,27 @@ var Force = function () {
         }]);
 
         return Force;
+}();
+
+;
+
+;
+
+var FrameEffectsApi = function () {
+        function FrameEffectsApi() {
+                _classCallCheck(this, FrameEffectsApi);
+
+                this.__effects = [];
+        }
+
+        _createClass(FrameEffectsApi, [{
+                key: 'add',
+                value: function add(effect) {
+                        this.__effects.push(effect);
+                }
+        }]);
+
+        return FrameEffectsApi;
 }();
 
 ;
@@ -2041,6 +2070,7 @@ var Sprite = function () {
 
                 this.__specialPresets = new SpritePresets(); //apply presets to this variable
 
+
                 if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
                         {
 
@@ -2080,7 +2110,7 @@ var Sprite = function () {
 
                 this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
 
-                this.size = $Q.getArg(args, 'size', new Vector2(100, 100));
+                this.size = $Q.getArg(args, 'size', new Vector3(100, 100));
 
                 this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
 
@@ -2138,9 +2168,14 @@ var Sprite = function () {
         }, {
                 key: 'setSize',
                 value: function setSize(size) {
-                        this.size = new Vector3(size.x, size.y, size.z || 0);
+                        this.size = new Vector3(size.x, size.y, size.z);
 
-                        this.selected_animation.size = this.size;
+                        this.selected_animation.size = new Vector3(size.x, size.y, size.z);
+                }
+        }, {
+                key: 'setPos',
+                value: function setPos(pos) {
+                        this.position = new Vector3(pos.x, pos.y, pos.z || 0);
                 }
 
                 /*****************************
@@ -2557,6 +2592,9 @@ var SpritePresets = function () {
         _createClass(SpritePresets, [{
                 key: 'apply',
                 value: function apply() {}
+        }, {
+                key: 'onCreate',
+                value: function onCreate(fun) {}
         }]);
 
         return SpritePresets;
@@ -2656,6 +2694,15 @@ var Vector3 = function () {
         function Vector3(x, y, z, r) {
                 _classCallCheck(this, Vector3);
 
+                if ((typeof x === 'undefined' ? 'undefined' : _typeof(x)) == 'object' && x.x && x.y) //optionally pass vector3
+                        {
+                                this.x = x.x;
+                                this.y = x.y;
+                                this.z = x.z || 0;
+
+                                return this;
+                        }
+
                 this.x = x;
                 this.y = y;
                 this.z = z;
@@ -2671,15 +2718,66 @@ var Vector3 = function () {
                 }
         }, {
                 key: 'sub',
-                value: function sub() {
-                        //TODO : subtract vectors
+                value: function sub(v) {
+                        if (typeof v == 'number') {
+                                v = { x: v, y: v, z: v };
+                        };
+
+                        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
+                }
+        }, {
+                key: 'add',
+                value: function add(v) {
+                        if (typeof v == 'number') {
+                                v = { x: v, y: v, z: v };
+                        };
+
+                        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
+                }
+        }, {
+                key: 'mult',
+                value: function mult(v) {
+                        if (typeof v == 'number') {
+                                v = { x: v, y: v, z: v };
+                        };
+
+                        return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
+                }
+        }, {
+                key: 'div',
+                value: function div(v) {
+                        if (typeof v == 'number') {
+                                v = { x: v, y: v, z: v };
+                        };
+
+                        return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z);
+                }
+        }, {
+                key: 'round',
+                value: function round() {
+                        return new Vector3(Math.round(this.x), Math.round(this.y), Math.round(this.z));
+                }
+        }, {
+                key: 'floor',
+                value: function floor() {
+                        return new Vector3(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
+                }
+        }, {
+                key: 'ceil',
+                value: function ceil() {
+                        return new Vector3(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z));
+                }
+        }, {
+                key: 'diff',
+                value: function diff() {
+                        //TODO:this function
 
 
                 }
         }, {
-                key: 'add',
-                value: function add() {
-                        //TODO : add vectors
+                key: 'abs_diff',
+                value: function abs_diff() {
+                        //TODO:this function
 
                 }
         }, {
