@@ -4,8 +4,7 @@ class Sprite {
 
         this.active = true; //active sprites are visible
 
-        this.__specialPresets = new SpritePresets(); //apply presets to this variable
-
+        this.__initializers = []; //apply options to this variable
 
         if(typeof name == 'object') //accept first argument as full args object
         {
@@ -565,45 +564,8 @@ class Sprite {
  ****************/
 
 
-class SpritePresets {
 
-
-    constructor()
-    {
-
-        var options = SpritePresetsOptions();
-
-        for(var x in options)
-        {
-
-            this[x] = false;
-
-        }
-
-
-    }
-
-    apply()
-{
-
-
-
-}
-
-onCreate(fun)
-{
-
-
-
-}
-
-}
-
-
-
-
-let SpritePresetsOptions =function() {
-return {
+let SpriteInitializersOptions = {
     Flight: {
 
         __args: {},
@@ -705,5 +667,8 @@ return {
 
     }
 
-}
 };
+
+Quazar.options = Quazar.options || {};
+
+Quazar.options.SpriteInitializers = SpriteInitializersOptions;

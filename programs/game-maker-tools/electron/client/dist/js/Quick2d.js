@@ -2068,8 +2068,7 @@ var Sprite = function () {
 
                 this.active = true; //active sprites are visible
 
-                this.__specialPresets = new SpritePresets(); //apply presets to this variable
-
+                this.__initializers = []; //apply options to this variable
 
                 if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
                         {
@@ -2577,117 +2576,96 @@ var Sprite = function () {
  *  Use these as options for Sprite Control, etc...
  ****************/
 
-var SpritePresets = function () {
-        function SpritePresets() {
-                _classCallCheck(this, SpritePresets);
+var SpriteInitializersOptions = {
+        Flight: {
 
-                var options = SpritePresetsOptions();
+                __args: {},
 
-                for (var x in options) {
+                top_down_flight: function top_down_flight(sprite) {},
 
-                        this[x] = false;
+                side_scroll_flight: function side_scroll_flight(sprite) {}
+
+        },
+
+        Running: {
+
+                __args: {},
+
+                side_scroll_runner: function side_scroll_runner(sprite) {
+
+                        var __lib = Quazar || Quick2d;
+
+                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                                accel = accel || 0.25;max = max || 7;
+
+                                sprite.accelX(accel, x * max);
+
+                                if (x < -0.2) {
+                                        sprite.flipX = true;
+                                } else if (x > 0.2) {
+                                        sprite.flipX = false;
+                                }
+                        });
+
+                        sprite.onUpdate(function (spr) {
+
+                                spr.decelX(0.1);
+
+                                if (!spr.__falling) {
+                                        spr.decelY(0.2);
+                                };
+                        });
                 }
+
+        },
+
+        Collision: {
+
+                __args: {},
+
+                basic_stop_collideable: function basic_stop_collideable(sprite) {},
+
+                top_stop_collideable: function top_stop_collideable(sprite) {} //pass through bottom, but land on top, as with certain platforms
+
+
+        },
+
+        Powerups: {
+
+                __args: {},
+
+                grabbable_power_up: function grabbable_power_up(sprite) {}
+
+        },
+
+        ControllerStickMotion: {
+
+                __args: {},
+
+                stick_move_x: function stick_move_x(sprite) {},
+
+                stick_move_y: function stick_move_y(sprite) {}
+
+        },
+
+        Jumping: {
+
+                __args: {}
+
+        },
+
+        Shooting: {
+
+                __args: {}
+
         }
 
-        _createClass(SpritePresets, [{
-                key: 'apply',
-                value: function apply() {}
-        }, {
-                key: 'onCreate',
-                value: function onCreate(fun) {}
-        }]);
+};
 
-        return SpritePresets;
-}();
+Quazar.options = Quazar.options || {};
 
-var SpritePresetsOptions = function SpritePresetsOptions() {
-        return {
-                Flight: {
-
-                        __args: {},
-
-                        top_down_flight: function top_down_flight(sprite) {},
-
-                        side_scroll_flight: function side_scroll_flight(sprite) {}
-
-                },
-
-                Running: {
-
-                        __args: {},
-
-                        side_scroll_runner: function side_scroll_runner(sprite) {
-
-                                var __lib = Quazar || Quick2d;
-
-                                Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
-
-                                        accel = accel || 0.25;max = max || 7;
-
-                                        sprite.accelX(accel, x * max);
-
-                                        if (x < -0.2) {
-                                                sprite.flipX = true;
-                                        } else if (x > 0.2) {
-                                                sprite.flipX = false;
-                                        }
-                                });
-
-                                sprite.onUpdate(function (spr) {
-
-                                        spr.decelX(0.1);
-
-                                        if (!spr.__falling) {
-                                                spr.decelY(0.2);
-                                        };
-                                });
-                        }
-
-                },
-
-                Collision: {
-
-                        __args: {},
-
-                        basic_stop_collideable: function basic_stop_collideable(sprite) {},
-
-                        top_stop_collideable: function top_stop_collideable(sprite) {} //pass through bottom, but land on top, as with certain platforms
-
-
-                },
-
-                Powerups: {
-
-                        __args: {},
-
-                        grabbable_power_up: function grabbable_power_up(sprite) {}
-
-                },
-
-                ControllerStickMotion: {
-
-                        __args: {},
-
-                        stick_move_x: function stick_move_x(sprite) {},
-
-                        stick_move_y: function stick_move_y(sprite) {}
-
-                },
-
-                Jumping: {
-
-                        __args: {}
-
-                },
-
-                Shooting: {
-
-                        __args: {}
-
-                }
-
-        };
-};;
+Quazar.options.SpriteInitializers = SpriteInitializersOptions;;
 //Vector3:
 
 var Vector3 = function () {

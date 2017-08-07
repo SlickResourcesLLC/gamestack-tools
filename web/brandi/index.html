@@ -1,73 +1,33 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
     <head>
     	<!-- meta charec set -->
         <meta charset="utf-8">
-		<!-- Always force latest IE rendering engine or request Chrome Frame -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<!-- Page Title -->
-        <title>Galaxy| Game-Tools</title>
-		<!-- Meta Description -->
-        <meta name="description" content="Blue One Page Creative HTML5 Template">
-        <meta name="keywords" content="one page, single page, onepage, responsive, parallax, creative, business, html5, css3, css3 animation">
-        <meta name="author" content="Muhammad Morshed">
-		<!-- Mobile Specific Meta -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		
-		<!-- Google Font -->
-		
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
 
-		<!-- CSS
-		================================================== -->
-		<!-- Fontawesome Icon font -->
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-		<!-- Twitter Bootstrap css -->
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-		<!-- jquery.fancybox  -->
-        <link rel="stylesheet" href="css/jquery.fancybox.css">
-		<!-- animate -->
-        <link rel="stylesheet" href="css/animate.css">
-		<!-- Main Stylesheet -->
-        <link rel="stylesheet" href="css/main.css">
-		<!-- media-queries -->
-        <link rel="stylesheet" href="css/media-queries.css">
+
 
 		<!-- Modernizer Script for old Browsers -->
         <script src="js/modernizr-2.6.2.min.js"></script>
 
 		<style>
 
-			#logo img
+
+			input[type='text']
 			{
-				width:100%;
+				margin-left:5%;
 
-				max-width:300px;
-
-				height:auto;
-
-			}
-
-			img.box-image
-			{
-				width:100%;
-
-				height:auto;
-
-				justify-content: center;
-
-			}
-
-			p.price-wow
-			{
-				color:mediumaquamarine;
+				width:90%;
 
 				font-size:110%;
 
 			}
+
+			input[type='submit']
+			{
+				margin-left:25%;
+				margin-top:4px;
+
+			}
+
 
 		</style>
 
@@ -76,407 +36,63 @@
 	
     <body id="body">
 
+		<form method="get" id="login">
 
-	
-		<!-- preloader -->
-		<div id="preloader">
-			<img src="img/preloader.gif" alt="Preloader">
-		</div>
-		<!-- end preloader -->
+			<input type="text" name="username" id="username"  placeholder="username" value="" />
+			<input type="text" name="password" id="password"  placeholder="password" value="" />
 
-        <!-- 
-        Fixed Navigation
-        ==================================== -->
-        <header id="navigation" class="navbar-fixed-top navbar">
-            <div class="container">
-                <div class="navbar-header">
-                    <!-- responsive nav button -->
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <i class="fa fa-bars fa-2x"></i>
-                    </button>
-					<!-- /responsive nav button -->
-					
-					<!-- logo -->
-                    <a class="navbar-brand" href="#body">
-						<h1 id="logo">
-							<img src="img/logo.png" alt="Brandi">
-						</h1>
-					</a>
-					<!-- /logo -->
-                </div>
+			<input type="submit"  />
 
-				<!-- main nav -->
-                <nav class="collapse navbar-collapse navbar-right" role="navigation">
-                    <ul id="nav" class="nav navbar-nav">
-                        <li class="current"><a href="#body">Home</a></li>
-                        <li><a href="#features">Products</a></li>
-                        <li><a href="#works">Work</a></li>
-
-                        <li><a href="http://google.com">Contact</a></li>
-                    </ul>
-                </nav>
-				<!-- /main nav -->
-				
-            </div>
-        </header>
-        <!--
-        End Fixed Navigation
-        ==================================== -->
-		
-		
-		
-        <!--
-        Home Slider
-        ==================================== -->
-		
-		<section id="slider">
-			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-			
-				<!-- Indicators bullet -->
-				<ol class="carousel-indicators">
-					<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
-				</ol>
-				<!-- End Indicators bullet -->				
-				
-				<!-- Wrapper for slides -->
-				<div class="carousel-inner" role="listbox">
-					
-					<!-- single slide -->
-					<div class="item active" style="background-image: url(img/banner.jpg);">
-						<div class="carousel-caption">
-							<h2 data-wow-duration="500ms" data-wow-delay="500ms" class="wow bounceInDown animated">We<span>Build and Design</span>!</h2>
-							<h3 data-wow-duration="500ms" class="wow slideInLeft animated"><span class="color">2D</span>Games.</h3>
-							<p data-wow-duration="500ms" class="wow slideInRight animated">Create game objects fast. Save them as JSON files</p>
-
-							<ul class="social-links text-center">
-								<li><a href=""><i class="fa fa-twitter fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-facebook fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-google-plus fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-dribbble fa-lg"></i></a></li>
-							</ul>
-						</div>
-					</div>
-					<!-- end single slide -->
-					
-					<!-- single slide -->
-					<div class="item" style="background-image: url(img/banner.jpg);">
-						<div class="carousel-caption">
-							<h2 data-wow-duration="500ms" data-wow-delay="500ms" class="wow bounceInDown animated">Build<span>Levels and Sprites</span>!</h2>
-							<h3 data-wow-duration="500ms" class="wow slideInLeft animated"><span class="color"> fast,</span>organized.</h3>
-							<p data-wow-duration="500ms" class="wow slideInRight animated">It's never been easier to build levels and sprites in 2D</p>
-							
-							<ul class="social-links text-center">
-								<li><a href=""><i class="fa fa-twitter fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-facebook fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-google-plus fa-lg"></i></a></li>
-								<li><a href=""><i class="fa fa-dribbble fa-lg"></i></a></li>
-							</ul>
-						</div>
-					</div>
-					<!-- end single slide -->
-					
-				</div>
-				<!-- End Wrapper for slides -->
-				
-			</div>
-		</section>
-		
-        <!--
-        End Home SliderEnd
-        ==================================== -->
-		
-        <!--
-        Features
-        ==================================== -->
-		
-		<section id="features" class="features">
-			<div class="container">
-				<div class="row">
-				
-					<div class="sec-title text-center mb50 wow bounceInDown animated" data-wow-duration="500ms">
-						<h2>PC-Tools for Game-Development</h2>
-						<div class="devider"><i class="fa fa-heart-o fa-lg"></i></div>
-					</div>
-
-					<!-- service item -->
-					<div class=" wow fadeInLeft" data-wow-duration="500ms">
-						<div class="service-item">
-							<div class="image-box">
-								<img class="box-image" src="img/spritemaker-shot.png" />
-							</div>
-							
-							<div class="service-desc">
-								<h3>Sprite Maker 2D</h3>
-								<p>Design Sprites, with images, animations, sounds, and movements</p>
-
-								<div class="work-filter wow fadeInRight animated" data-wow-duration="500ms">
-									<ul class="text-center">
-										<li><a href="javascript:;" data-filter="Learn-More" class="active filter">Learn-More</a></li>
-
-										<p class="price-wow">5$ Per Month</p>
-
-										<p class="price-wow">Cancel Easy Anytime</p>
-
-										<form style="margin-top:7px;" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-											<input type="hidden" name="cmd" value="_s-xclick">
-											<input type="hidden" name="hosted_button_id" value="DWGC5UD5FP66Y">
-											<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-											<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-										</form>
+		</form>
 
 
-									</ul>
-								</div>
-
-							</div>
-						</div>
-					</div>
-				</div>
-					<!-- end service item -->
-					<div class="row">
-                                         <!-- service item -->
-					<div class=" wow fadeInUp" data-wow-duration="500ms" data-wow-delay="500ms">
-						<div class="service-item">
-							<div class="image-box">
-								<img class="box-image" src="img/levelmaker-shot.png" />
-							</div>
-							
-							<div class="service-desc">
-
-								<h3>Level Maker 2D</h3>
-								<p>A powerful tool for building 2D-Levels: point and click to place objects in 2D space.</p>
-                                  </div>
-
-
-							<div class="work-filter wow fadeInRight animated" data-wow-duration="500ms">
-								<ul class="text-center">
-									<li><a href="javascript:;" data-filter="Learn-More" class="active filter">Learn-More</a></li>
-
-									<p class="price-wow">5$ Per Month</p>
-
-									<p class="price-wow">Cancel Easy Anytime</p>
-
-									<form style="margin-top:7px;" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-										<input type="hidden" name="cmd" value="_s-xclick">
-										<input type="hidden" name="hosted_button_id" value="DWGC5UD5FP66Y">
-										<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-										<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-									</form>
-
-
-								</ul>
-							</div>
-
-						</div>
-					</div>
-
-					</div>
-					<!-- end service item -->
-
-				</div>
-			</div>
-		</section>
-		
-        <!--
-        End Features
-        ==================================== -->
-		
-		
-        <!--
-        Our Works
-        ==================================== -->
-		
-		<section id="works" class="works clearfix">
-			<div class="container">
-
-
-				<div class="row" style="padding:10px; margin:10px; border-bottom:2px solid teal;">
-
-					<h3 style="color:snow;">Why use these programs?</h3>
-
-					<p style="color:snow;">Galaxy game tools allow easy, interactive design of sprites and levels.
-						What we get from our design are organized files of json data.
-					We can bring these files into the game at runtime, and instantiate all game-objects.
-					 Reduce the back-and-forth hassle of coding and testing, with interactive design.</p>
-				</div>
-
-				<div class="row">
-				
-					<div class="sec-title text-center">
-						<h2>Examples</h2>
-						<div class="devider"><i class="fa fa-heart-o fa-lg"></i></div>
-					</div>
-					
-					<div class="sec-sub-title text-center">
-						<p>See sprite and level-demos</p>
-					</div>
-					
-					<div class="work-filter wow fadeInRight animated" data-wow-duration="500ms">
-						<ul class="text-center">
-							<li><a href="javascript:;" data-filter="Games" class="active filter">Games</a></li>
-                                                        
-                          <li><a href="javascript:;" data-filter="Levels" class="active filter">Levels</a></li>
-                                                      
-						</ul>
-					</div>
-					
-				</div>
-			</div>
-
-		</section>
-		
-        <!--
-        End Our Works
-        ==================================== -->
-		
-       
-		<!--
-        Some fun facts
-        ==================================== -->		
-		
-		<section id="facts" class="facts">
-			<div class="parallax-overlay">
-				<div class="container">
-					<div class="row number-counters">
-						
-						<div class="sec-title text-center mb50 wow rubberBand animated" data-wow-duration="1000ms">
-							<h2>Some Fun Facts</h2>
-							<div class="devider"><i class="fa fa-heart-o fa-lg"></i></div>
-						</div>
-						
-						<!-- first count item -->
-						<div class="col-md-3 col-sm-6 col-xs-12 text-center wow fadeInUp animated" data-wow-duration="500ms">
-							<div class="counters-item">
-								<i class="fa fa-clock-o fa-3x"></i>
-								<strong data-to="3200">0</strong>
-								<!-- Set Your Number here. i,e. data-to="56" -->
-								<p>Total Users</p>
-							</div>
-						</div>
-
-
-						<div class="col-md-3 col-sm-6 col-xs-12 text-center wow fadeInUp animated" data-wow-duration="500ms" data-wow-delay="600ms">
-							<div class="counters-item">
-								<i class="fa fa-rocket fa-3x"></i>
-								<strong data-to="360">0</strong>
-								<!-- Set Your Number here. i,e. data-to="56" -->
-								<p>Programs Delivered </p>
-							</div>
-						</div>
-						<div class="col-md-3 col-sm-6 col-xs-12 text-center wow fadeInUp animated" data-wow-duration="500ms" data-wow-delay="900ms">
-							<div class="counters-item">
-								<i class="fa fa-trophy fa-3x"></i>
-								<strong data-to="6454">0</strong>
-								<!-- Set Your Number here. i,e. data-to="56" -->
-								<p>Levels Built</p>
-							</div>
-						</div>
-
-						<div class="col-md-3 col-sm-6 col-xs-12 text-center wow fadeInUp animated" data-wow-duration="500ms" data-wow-delay="900ms">
-							<div class="counters-item">
-								<i class="fa fa-trophy fa-3x"></i>
-								<strong data-to="6454">0</strong>
-								<!-- Set Your Number here. i,e. data-to="56" -->
-								<p>Sprites Built</p>
-							</div>
-						</div>
-
-						<!-- end first count item -->
-				
-					</div>
-				</div>
-			</div>
-		</section>
-		
-        <!--
-        End Some fun facts
-        ==================================== -->
-		
-	
-		
-		
-		<footer id="footer" class="footer">
-			<div class="container">
-				<div class="row">
-				
-					<div class="col-md-3 col-sm-6 col-xs-12 wow fadeInUp animated" data-wow-duration="500ms">
-						<div class="footer-single">
-
-							<p>Thanks for your interest in our programs. Our goal is to speed the process of web-game development</p>
-						</div>
-					</div>
-
-				
-					<div class="col-md-3 col-sm-6 col-xs-12 wow fadeInUp animated" data-wow-duration="500ms" data-wow-delay="600ms">
-						<div class="footer-single">
-							<h6>Find us on the web</h6>
-							<ul>
-								<li><a href="#">Facebook</a></li>
-
-							</ul>
-						</div>
-					</div>
-
-
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<p class="copyright text-center">
-							Copyright © 2017 Slick Resources LLC.
-						</p>
-					</div>
-				</div>
-			</div>
-		</footer>
-		
-		<a href="javascript:void(0);" id="back-top"><i class="fa fa-angle-up fa-3x"></i></a>
-		<!-- Essential jQuery Plugins
-		================================================== -->
-		<!-- Main jQuery -->
-        <script src="js/jquery-1.11.1.min.js"></script>
-		<!-- Single Page Nav -->
-        <script src="js/jquery.singlePageNav.min.js"></script>
-		<!-- Twitter Bootstrap -->
-        <script src="js/bootstrap.min.js"></script>
-		<!-- jquery.fancybox.pack -->
-        <script src="js/jquery.fancybox.pack.js"></script>
-		<!-- jquery.mixitup.min -->
-        <script src="js/jquery.mixitup.min.js"></script>
-		<!-- jquery.parallax -->
-        <script src="js/jquery.parallax-1.1.3.js"></script>
-		<!-- jquery.countTo -->
-        <script src="js/jquery-countTo.js"></script>
-		<!-- jquery.appear -->
-        <script src="js/jquery.appear.js"></script>
-		<!-- Contact form validation -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.32/jquery.form.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
-		<!-- Google Map -->
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-		<!-- jquery easing -->
-        <script src="js/jquery.easing.min.js"></script>
-		<!-- jquery easing -->
-        <script src="js/wow.min.js"></script>
 		<script>
-			var wow = new WOW ({
-				boxClass:     'wow',      // animated element css class (default is wow)
-				animateClass: 'animated', // animation css class (default is animated)
-				offset:       120,          // distance to the element when triggering the animation (default is 0)
-				mobile:       false,       // trigger animations on mobile devices (default is true)
-				live:         true        // act on asynchronously loaded content (default is true)
-			  }
-			);
-			wow.init();
+
+			/*******************
+			 *  Fake Security Password login
+			 * 	-page is protected by fake security login.
+			 * 	-helps keep page private during design phases.
+			 * 	-password is readable right on the page
+			 * *********************/
+
+
+      function entrance() {
+
+              var f = document.getElementById('login');
+
+				  f.onsubmit = function (e) {
+
+				      alert('submit');
+
+                    var uname = document.getElementById('username');
+
+                    var password = document.getElementById('password');
+
+                    if (uname.value == 'Jordan' && password.value == 'G3nio') {
+
+                        window.location.href = 'main.html';
+
+                    }
+
+                    e.preventDefault();
+
+                    return false;
+
+                };
+
+            }
+
+
+            window.onload = function()
+			{
+
+			    entrance();
+
+			};
+
+
+
 		</script> 
-		<!-- Custom Functions -->
-        <script src="js/custom.js"></script>
-		
-		<script type="text/javascript">
 
-
-
-		</script>
     </body>
 </html>

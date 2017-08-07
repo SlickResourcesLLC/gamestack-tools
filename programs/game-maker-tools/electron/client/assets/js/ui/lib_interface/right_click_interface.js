@@ -4,6 +4,68 @@ $(document).ready( function(){
 
     console.log('Applying right-click interface');
 
+    var objectFunctionsToRightClickSubMenu = function(obj)
+    {
+        var subMenu = [];
+
+        var createSubMenuObject = function(key, call)
+        {
+
+            return{
+
+                name: key,
+                title: key,
+                img: 'img/settings_icon.png',
+                fun: call
+            }
+
+        };
+
+        for(var x in obj) {
+
+            if (typeof obj[x] == 'function') {
+
+                subMenu.push(createSubMenuObject(x, obj[x]));
+
+            }
+            else if (typeof obj[x] == 'object') {
+
+                for (var y in obj[x]) {
+
+
+                    if (typeof obj[x][y] == 'function') {
+
+                        subMenu.push(createSubMenuObject(x, obj[x]));
+
+                    }
+                    else if (typeof obj[x][y] == 'object') {
+
+                        for (var z in obj[x][y]) {
+
+
+                            if (typeof obj[x][y][z] == 'function') {
+
+                                subMenu.push(createSubMenuObject(x, obj[x]));
+
+                            }
+
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+        }
+
+        return subMenu;
+
+    };
+
+
     //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
     var __rightClickInterface = [{
         name: 'delete',
@@ -40,25 +102,11 @@ $(document).ready( function(){
                 },
 
                 {
-                    name: 'Apply_Behavior...',
-                    title: 'Apply behaviors and events.',
+                    name: 'Object_Initializer_Option...',
+                    title: 'Apply features on init.',
                     img: 'img/settings_icon.png',
                     // disable: true,
-                    subMenu: [{ //TODO : get all behaviors
-                        name: 'TODO',
-                        img: 'img/settings_icon.png',
-                        fun: function () {
-                            alert('TODO : apply');
-                        }
-
-                    },
-                        {
-                            name: 'TODO2',
-                            img: 'img/settings_icon.png',
-                            fun: function () {
-                                alert('TODO2');
-                            }
-                        }]
+                    subMenu: objectFunctionsToRightClickSubMenu(Quazar.options.SpriteInitializers)
                 }]
         },
 
