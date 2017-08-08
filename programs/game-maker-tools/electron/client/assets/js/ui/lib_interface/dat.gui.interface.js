@@ -316,12 +316,11 @@ var DatGui = {
 
     },
 
-    typeHandler:function(ix, obj, parent)
+    typeHandlerSpriteMaker:function(ix, obj, parent)
     {
         var o = obj,  type = typeof(obj) == 'object' ?  obj.constructor : false;
 
         var  fui;
-
 
         var selectedLib = window;
 
@@ -338,15 +337,6 @@ var DatGui = {
             return  typeof type == 'function' && obj instanceof type;
 
         };
-
-
-        if(isType(SpritePresets)) {
-
-            //Special Options
-
-            alert('Found Sprite Presets');
-
-        }
 
 
         if(isType(Sprite)) {
@@ -392,7 +382,7 @@ var DatGui = {
         if(isType(Vector3))
         {
 
-              fui =  DatGui.main_gui.addFolder(ix + '');
+            fui =  DatGui.main_gui.addFolder(ix + '');
 
             DatGui.addEachNumeric(o, fui );
 
@@ -533,11 +523,11 @@ var DatGui = {
 
     },
 
-        addGuiByKeys:function(ix, obj)
+        spriteMakerGuiByKeys:function(ix, obj)
         {
-
             //anything numeric:
 
+            alert('adding object');
 
             if(typeof(obj) == 'object')
             {
@@ -546,13 +536,13 @@ var DatGui = {
 
                 var _inst = this;
 
-              complete =   _inst.typeHandler(ix, obj, obj);
+              complete =   _inst.typeHandlerSpriteMaker(ix, obj, obj);
 
                 this.each(obj, function(ix, o){
 
                   //#typeHandler
 
-              if(!complete){ complete = _inst.typeHandler(ix, o, obj)};
+              if(!complete){ complete = _inst.typeHandlerSpriteMaker(ix, o, obj)};
 
 
                 });
@@ -704,6 +694,28 @@ var DatGui = {
 
     },
 
+    getLevelEdit:function(mode, object){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
+
+        if(mode.toLowerCase() == 'mapobject' && object instanceof Sprite)
+        {
+            alert('TODO: level edit for Sprite()');
+
+        }
+
+        else if(mode.toLowerCase() == 'sprite' && object instanceof Sprite)
+        {
+            alert('TODO: level edit for actual Sprite()');
+
+        }
+
+        else if (mode.toLowerCase() == 'list' && object instanceof Array && object.length && object[0] instanceof Sprite)
+        {
+
+            alert('TODO: present gui to edit all selected sprite objects at once');
+
+        }
+
+    },
 
     get: function (object, name, gui, cont) {
 
@@ -714,7 +726,6 @@ var DatGui = {
          this.main_gui = gui || new dat.GUI({autoPlace:false});
 
         $('#dat-gui-container').append($(this.main_gui.domElement));
-
 
         $('#dat-gui-container').css('top', 0);
 
@@ -733,7 +744,7 @@ var DatGui = {
 
        // alert('calling');
 
-        return this.addGuiByKeys(name, object);
+        return this.spriteMakerGuiByKeys(name, object);
 
        // return this.Display(object);
 

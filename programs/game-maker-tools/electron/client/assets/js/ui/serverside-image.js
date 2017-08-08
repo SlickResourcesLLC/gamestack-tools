@@ -8,7 +8,7 @@ var __ServerSideImage = {
 // and remember the jqxhr object for this request
         var jqxhr = $.post( 'http://localhost:3137/save', {filename:filename, content:content}, function(data) {
 
-            console.log( "upload success:" + jstr(data) );
+           // console.log( "upload success:" + jstr(data) );
 
 
         })

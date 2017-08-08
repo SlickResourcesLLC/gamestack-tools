@@ -8,6 +8,8 @@
         <title>Level-Maker</title>
         <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
+        <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
+
         <link rel="stylesheet" href="../assets/js/ui/contextMenu.css">
         <!-- Insert this line above script imports  -->
         <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
@@ -17,6 +19,8 @@
         <script src="../assets/js/ui/Tween.js"></script>
 
         <script src="../dist/js/Quick2d.js"></script>
+
+        <script src="../assets/js/ui/dat.gui.js"></script>
 
         <script src="../assets/js/ui/lib_interface/dat.gui.interface.js"></script>
 
@@ -111,7 +115,7 @@
         }
 
 
-        #gui-container
+        #dat-gui-container
         {
             position:fixed;
 
@@ -130,6 +134,11 @@
 
             right:0px;
 
+        }
+
+        canvas.level-maker-canvas
+        {
+            zoom:1.0;
         }
 
     </style>
@@ -168,8 +177,6 @@
 
 
     </style>
-
-    <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
 
     <body>
 
@@ -406,7 +413,7 @@
 
         </div>
 
-    <div  class="free-select center" >
+    <div  class="free-select center map-list" >
 
         <ul></ul>
 
@@ -414,7 +421,7 @@
 
     </div>
 
-    <div  id="gui-container" >
+    <div  id="dat-gui-container" >
 
     </div>
 
@@ -685,11 +692,12 @@
 
                             __levelMaker.selected_image_src = '..' +  relpath.replace('client', '');
 
-                            alert(__levelMaker.selected_image_src);
+                           // alert(__levelMaker.selected_image_src);
 
                             console.log('Making objects in create event');
 
                             var args = {type:"game object", description:"multi-loaded object" };
+
 
                             args.size = new Vector3(w, h, 0);
 
@@ -698,19 +706,23 @@
                             if(args.name && args.description) {
 
 
-                                var mapElementArgs = {tag:args.name, src:__levelMaker.selected_image_src, frameSize:new Vector3(w, h, 0), __mapSize:new Vector3(w, h, 0)};
+                                var mapElementArgs = {name:args.name, src:__levelMaker.selected_image_src};
 
-                                    var sprite =  __levelMaker.createMapElement(mapElementArgs, function(){
+                                 var sprite =  __levelMaker.createMapElement(mapElementArgs, function(sprite){
 
-                                  sprite.__mapSize = new Vector3(this.width, this.height, 0);
+                                     sprite.frameSize = new Vector3(sprite.img.width, sprite.img.height, 0);
 
-                                  sprite.frameSize = new Vector3(this.width, this.height, 0);
+                                     sprite.__mapSize = new Vector3(sprite.img.width, sprite.img.height, 0);
+
+                                     sprite.mapSize = sprite.__mapSize;
+
+                                     sprite.size = sprite.__mapSize;
 
                                   __levelMaker.addLevelObjectToUI(sprite);
 
                                   if (ix == files.length - 1) {
 
-                                      alert('last file');
+                                    //  alert('last file');
 
                                       App.dialog(App._UI_OPTION_MAP.my_objects,
                                           0, 120, function () {
@@ -775,14 +787,8 @@
                         if(elements[x].src)
                         {
 
-                            elements[x].img = new Image();
+                            elements[x] = __levelMaker.createMapElement(elements[x]);
 
-                            elements[x].img.src =  elements[x].src;
-
-                            elements[x].img.onload = function(){
-
-
-                            };
 
                           //  Quazar.addImageSrc(elements[x].img.src, elements[x].img_id || false);
 
@@ -920,17 +926,77 @@
             {
 
 
+
+
+
+                lib.InputEvents.extend('mousemove', function (x, y) {
+
+                    var zoom = $('.level-maker-canvas').css('zoom');
+
+                    zoom = parseFloat(zoom);
+
+                    console.log('zoom:' +  1.0 / zoom );
+
+                    __levelMaker.mouse.x = x * (1.0 / zoom) ;
+                    __levelMaker.mouse.y = y  * (1.0/zoom) ;
+
+                    if(zoom !== 1.0)
+                    {
+                        App.movement_locked = true;
+
+                    }
+                    else
+                    {
+                        App.movement_locked = false;
+
+                    }
+
+                    if(!App.movement_locked) {
+
+                        __levelMaker.moveSelected(__levelMaker.mouse.x, __levelMaker.mouse.y);
+
+                    }
+
+                });
+
+
+
+
                 lib.InputEvents.extend('leftclick', function (x, y) {
 
-                    __levelMaker.leftClick(x,y);
 
-                    __levelMaker.mouse.down = true;
+                    if(!App.movement_locked) {
+
+                        __levelMaker.leftClick(x, y);
+
+                        __levelMaker.mouse.down = true;
+
+                    }
+                    else
+                    {
+                       if(confirm('Go back to full-size-view?')){
+
+                           var zoom = $('.level-maker-canvas').css('zoom', 1.0);
+
+                           App.movement_locked = false;
+
+                       };
+
+                    }
 
                 }, function (x, y) {
 
                     //button was released
 
-                    __levelMaker.deselectAll();
+                    __levelMaker.release_hover_select();
+
+                    __levelMaker.release_drag_select();
+
+                    if(!__levelMaker.shift)
+                    {
+                        __levelMaker.release_select();
+
+                    }
 
                     __levelMaker.mouse.down = false;
 
@@ -1090,7 +1156,7 @@
 
                     var cmText = item.text;
 
-                    var cmCallback = item.callback;
+                    var cmCallback = item.callback, hCall = item.hoverCallback;
 
                     var data = item.data;
 
@@ -1103,11 +1169,21 @@
                     var lparent = $(link).parent();
 
                     $(link).on('click', function () {
+
                         cmCallback(false, this);
 
                         hide();
 
                     });
+
+                    $(lparent).on('contextmenu', function (evt) {
+
+                        var textItem = $(this).find('a')[0], value = $(textItem).text();
+
+                        __levelMaker.selectedElement = __levelMaker.get(value);
+
+                    });
+
 
                     $(lparent).on('click', function () {
                         cmCallback(false, $(link));
@@ -1115,6 +1191,7 @@
                         hide();
 
                     });
+
 
 
                 });
@@ -1492,7 +1569,22 @@
 
                 var __inst = this;
 
+
                 Canvas.draw(__levelMaker.hover_selection_sprite, this.GameWindow.ctx);
+
+                $.each(this.sprites, function(ix, item){
+
+                    if(item.selected)
+                    {
+                        __levelMaker.selection_sprite.setSize(item.size);
+                        __levelMaker.selection_sprite.setPos(item.position);
+
+                        Canvas.draw(__levelMaker.selection_sprite, __inst.GameWindow.ctx);
+
+                    }
+
+                });
+
 
             },
 
@@ -1926,14 +2018,14 @@
                         if(name && description) {
 
 
-                            __levelMaker.selectedSprite = __levelMaker.createMapElement(name, __levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                            __levelMaker.selectedSprite = __levelMaker.createMapElement({name:name, src:__levelMaker.selected_image_src, frameSize: new Vector3(fw, fh, 0), __mapSize: new Vector3(w, h, 0)},
                                 args);
 
                             __levelMaker.selectedSprite.img.onload = function () {
 
                                 __levelMaker.addLevelObjectToUI(__levelMaker.selectedSprite);
 
-                            }
+                            };
 
                             $('#map-item-space form').hide();
 
@@ -2149,14 +2241,21 @@
 
                     var e = this.mapElements[0];
 
+                    var hasTagMatch = function(obj, key)
+                    {
+
+                        return obj[key] && obj[key] == tag;
+                    };
+
                     if(tag)
                     {
 
                     for (var x = 0; x < this.mapElements.length; x++)
                     {
 
-                        if (this.mapElements[x].tag.toLowerCase() === tag.toLowerCase())
+                        if (hasTagMatch(this.mapElements[x],'tag') || hasTagMatch(this.mapElements[x],'name'))
                         {
+                           alert('found object');
 
                             e = this.mapElements[x];
                         }
@@ -2176,16 +2275,20 @@
 
                     var mapElement = new Sprite({
                         name:args.name || args.tag, img:img, src:img.src, __mapScale:args.__mapScale || false,
-                        __mapSize: args.__mapSize
+                        __mapSize: new Vector3(args.__mapSize || args.mapSize || args.size),frameSize:new Vector3(args.frameSize)
                     });
 
+                 //   alert(args.name + ":" + jstr(mapElement.__mapSize));
 
+                    //name is synonymous with tag:
+
+                    mapElement.tag = mapElement.name;
 
                     //mapScale overwrites the __mapSize:
 
                     if(mapElement.__mapScale)
                     {
-                        mapElement.__mapSize = new Vector3(frameSize.mult(element.__mapScale));
+                        mapElement.__mapSize = new Vector3(args.frameSize.mult(element.__mapScale));
                     }
 
 
@@ -2194,66 +2297,126 @@
                         var extras = args.extras;
 
                         for (var x in extras) {
-                            element[x] = JSON.parse(JSON.stringify(extras[x]));
+                            mapElement[x] = JSON.parse(JSON.stringify(extras[x]));
 
                         }
                         ;
 
-                    }
-
-
-                    element.size = element.__mapSize;
+                    };
 
 
                     var __inst = this;
 
-                    element.img.onerror = function(e)
+                    mapElement.img.onerror = function(e)
                     {
 
 
-                        var ix = __inst.mapElements.indexOf(element);
+                        var ix = __inst.mapElements.indexOf(mapElement);
 
                         __inst.mapElements.splice(ix, 1);
 
                        this.__error = true;
 
-                    }
+                    };
 
 
-                    element.img.onload = function()
+                    mapElement.img.onload = function()
                     {
 
                         if(!this.__error )
                         {
 
-                            __inst.mapElements.push(element);
+                            __inst.mapElements.push(mapElement);
 
                             if(typeof(callback) == 'function') {
-                                callback(element);
+                                callback(mapElement);
                             }
                         }
 
                     };
 
 
-                    return element;
+                    return  mapElement;
 
                 },
                 selectedSprite: false,
                 selectedTag: "",
                 selectedElement: {},
                 levelObjects: [],
-                deselectAll: function ()
+
+                select_item: function (obj)
+                {
+                 obj.selected = true;
+
+                this.selection_sprite.active = true;
+
+                this.selection_sprite.setSize(obj.size);
+
+                this.selection_sprite.setPos(obj.position);
+
+                },
+
+                all_selected_sprites:function(callback)
+                {
+
+                    var sprites = [];
+
+                    Quazar.each(Game.sprites, function (ix, item) {
+
+                       if(item.selected)
+                        {
+                            sprites.push(item);
+
+                            if(callback && typeof(callback) == 'function')
+                            {
+                                callback(item);
+
+                            }
+
+                        }
+
+                    });
+
+                    return sprites;
+                },
+
+                release_select: function ()
                 {
 
                     Quazar.each(Game.sprites, function (ix, item) {
 
+                        //  item.selected = false;
+
                         item.selected = false;
+
+                    });
+                },
+
+
+                release_hover_select: function ()
+                {
+
+                    Quazar.each(Game.sprites, function (ix, item) {
+
+                      //  item.selected = false;
 
                         item.hover_selected = false;
 
                     });
                 },
+
+                release_drag_select: function ()
+                {
+
+                    Quazar.each(Game.sprites, function (ix, item) {
+
+                        //  item.selected = false;
+
+                        item.drag_selected = false;
+
+                    });
+                },
+
                 getHoverSelected: function ()
                 {
 
@@ -2292,7 +2455,7 @@
 
                     Quazar.each(Game.sprites, function (ix, item) {
 
-                        if (item.selected)
+                        if (item.drag_selected)
                         {
 
                             var x1 = x - (x% __levelMaker.settings.pixelSnap) ,
@@ -2341,12 +2504,21 @@
 
                     Quazar.each(Game.sprites, function (ix, item) {
 
-                        item.selected = false;
+                        item.drag_selected = false;
 
                         if(item.hoverSelected)
                         {
-                            item.selected = true;
-                          //  DatGui.get(item);
+                            if(!__levelMaker.shift){
+                                item.drag_selected = true;
+                                //  DatGui.get(item);
+
+                            }
+                            else {
+
+                                __levelMaker.select_item(item);
+
+                            }
+
                             selection = true;
                         }
 
@@ -2369,7 +2541,7 @@
 
                     Quazar.each(Game.sprites, function (ix, item) {
 
-                        if(item.selected )
+                        if(item.drag_selected )
                         {
                             basic_selection = true;
 
@@ -2432,7 +2604,7 @@
 
                     // console.log("Selected Element:" + JSON.stringify(mapElement));
                     var img = mapElement.img;
-                    console.log("Img src:" + img.src);
+                   // console.log("Img src:" + img.src);
 
                     var sprite = new Sprite('MapElement', 'A level-builder element');
 
@@ -2460,12 +2632,19 @@
 
                    this.selectedSprite = sprite;
 
+                  console.log('spite:' + sprite);
+
                     return sprite;
 
                 },
 
                 plantMapSprite: function (mapElement, x, y)
                 {
+                    if(!mapElement.__mapSize)
+                    {
+                        mapElement.__mapSize = mapElement.mapSize;
+
+                    }
 
                     if(!mapElement){return false;}
                     // console.log("Selected Element:" + JSON.stringify(mapElement));
@@ -2483,8 +2662,6 @@
 
                     sprite.active = true;
 
-                    sprite.size = new Vector3(mapElement.__mapSize.x, mapElement.__mapSize.y, mapElement.__mapSize.z);
-
                     if(sprite.speed)
                     {
 
@@ -2492,12 +2669,17 @@
 
                     }
 
+                    console.log(mapElement);
+
 
                     var fs = mapElement.frameSize;
 
+                    sprite.setSize(mapElement.size || mapElement.__mapSize || mapElement.mapSize);
+
+
                     sprite.setAnimation(new Animation({src:img, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
 
-                   // sprite.setSize(sprite.size);
+                    console.log(sprite);
 
                     // console.log(JSON.stringify(sprite));
 
@@ -2565,6 +2747,7 @@
                             __levelMaker.selectedElement = __levelMaker.get(value);
 
                         }));
+
 
 
 
@@ -2697,7 +2880,6 @@
 
             };
 
-
             create_selections();
 
             console.log(__levelMaker.selection_sprite);
@@ -2705,7 +2887,7 @@
             window.setInterval(function(){
 
                 if(!__levelMaker.blink){  __levelMaker.hover_selection_sprite.active = false; }
-                __levelMaker.selection_sprite.active = false;
+              //  __levelMaker.selection_sprite.active = false;
 
                 var notSelection = function(obj)
                 {
@@ -2729,7 +2911,7 @@
 
                       //  console.log('Sprite Selected!');
 
-                        centerSpriteToSprite(__levelMaker.selection_sprite, item);
+                       // centerSpriteToSprite(__levelMaker.selection_sprite, item);
 
                         centerSpriteToSprite(__levelMaker.hover_selection_sprite, item);
 

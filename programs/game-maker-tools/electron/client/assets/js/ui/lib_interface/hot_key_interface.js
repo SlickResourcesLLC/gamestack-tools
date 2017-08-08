@@ -1,9 +1,6 @@
 
 $(document).on('ready', function(){
 
-   alert('hotkeys functional');
-
-
 var selected_interface_object = window.__levelMaker || window.__spriteMaker || window.__objectBrowser || console.error('An interface must be present');
 
 var selected_hotkeys = selected_interface_object.hotkeys || {};
@@ -21,7 +18,25 @@ if(window.LevelMaker) //the LevelMaker exists
 
   };
 
-$(document).bind('keyup', 'alt+r', function(){
+
+
+    $(document).bind('keydown', 'shift', function(){
+
+
+       __levelMaker.shift = true;
+    });
+
+
+    $(document).bind('keyup', 'shift', function(){
+
+
+        __levelMaker.shift = false;
+    });
+
+
+
+
+    $(document).bind('keyup', 'alt+r', function(){
 
     alert('Rotate the sprite by 90 degrees');
 

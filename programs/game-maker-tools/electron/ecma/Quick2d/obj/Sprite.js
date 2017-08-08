@@ -558,14 +558,14 @@ class Sprite {
 };
 
 
+
 /****************
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
 
-
-
 let SpriteInitializersOptions = {
+
     Flight: {
 
         __args: {},
@@ -624,9 +624,12 @@ let SpriteInitializersOptions = {
 
 
         basic_stop_collideable: function (sprite) {
+
         },
 
         top_stop_collideable: function (sprite) {
+
+
         } //pass through bottom, but land on top, as with certain platforms
 
 

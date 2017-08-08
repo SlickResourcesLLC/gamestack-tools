@@ -35,7 +35,7 @@ $(document).ready( function(){
 
                     if (typeof obj[x][y] == 'function') {
 
-                        subMenu.push(createSubMenuObject(x, obj[x]));
+                        subMenu.push(createSubMenuObject(x, obj[x][y]));
 
                     }
                     else if (typeof obj[x][y] == 'object') {
@@ -45,7 +45,7 @@ $(document).ready( function(){
 
                             if (typeof obj[x][y][z] == 'function') {
 
-                                subMenu.push(createSubMenuObject(x, obj[x]));
+                                subMenu.push(createSubMenuObject(x, obj[x][y][z]));
 
                             }
 
@@ -66,22 +66,221 @@ $(document).ready( function(){
     };
 
 
+    var alterMenu= function(name, callback)
+    {
+
+        for(var x = 0; x < __rightClickInterface.length; x++)
+        {
+            if(__rightClickInterface[x].name == name)
+            {
+                callback(__rightClickInterface[x]);
+
+            }
+
+        }
+
+    };
+
+
+    $(document).bind('contextmenu', function(){
+
+
+
+    });
+
+
+
+
+
     //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
-    var __rightClickInterface = [{
-        name: 'delete',
+    var __mapListRightClickInterface = [{
+        name: 'delete_MapObject',
         img: 'img/cross_icon.png',
         title: 'delete button',
         id:'delete',
-        class:'delete',
+
         fun: function () {
 
-            levelMaker.removeLast();
+
+            if(confirm('Delete Map_Object:' + __levelMaker.selectedElement.name + '?')){
+
+               alert('TODO: code the deletion');
+
+            }else{
+
+                //do nothing
+
+            };
 
         }
     },
 
         {
-            name: 'Selected_Sprite...',
+            name: 'Edit_MapObject',
+            img: 'img/circle_icon.png',
+            title: 'edit Map Object',
+            id:'edit',
+
+            fun: function () {
+                //TODO: edit a single sprite with dat.GUI.interface.js();
+
+                if(confirm('This will effect all objects mapped from:' + __levelMaker.selectedElement.name)){
+
+                    DatGui.getLevelEdit('mapobject', __levelMaker.selectedElement);
+
+                }else{
+
+                    //do nothing
+
+                };
+
+
+            }
+        }
+
+        ];
+
+
+
+
+    //Calling context menu
+    $('body .map-list').contextMenu(__mapListRightClickInterface,{triggerOn:'contextmenu'});
+
+
+
+
+
+
+
+    //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
+    var __rightClickInterface = [{
+        name: 'delete_previous',
+        img: 'img/cross_icon.png',
+        title: 'delete button',
+        id:'delete',
+
+        fun: function () {
+
+            __levelMaker.removeLast();
+
+        }
+    },
+
+
+        {
+            name: 'Zoom',
+            img: 'img/target-blue.png',
+            title: 'zoom button',
+            id:'zoom',
+
+            subMenu: [{
+                name: '0.2',
+                title: '0.2',
+
+                fun: function () {
+                    $('.level-maker-canvas').css('zoom', '0.2');
+                }
+            },
+
+                {
+                    name: '0.5',
+                    title: '0.5',
+
+                    fun: function () {
+                        $('.level-maker-canvas').css('zoom', '0.5');
+                    }
+                },
+
+                {
+                    name: '1.0',
+                    title: '1.0',
+
+                    fun: function () {
+                        $('.level-maker-canvas').css('zoom', '1.0');
+                    }
+                }
+
+            ]
+
+
+        },
+
+        {
+            name: 'Set-Pixel-Snap-Size',
+            img: 'img/target-green.png',
+            title: 'pixel snap button',
+            id:'pixel_snap',
+
+            subMenu: [{
+                name: '1/8 object size',
+                title: '0.2',
+                fun: function () {
+
+                    console.info('DEV-TODO');
+
+                }
+            },
+
+                {
+                    name: '1/4 object size',
+                    title: '1/4 object size',
+
+                    fun: function () {
+
+                        console.info('DEV-TODO');
+
+                    }
+                },
+
+                {
+                    name: '1/2 object size',
+                    title: '1/4 object size',
+
+                    fun: function () {
+
+                        console.info('DEV-TODO');
+
+                    }
+                }
+
+            ]
+
+
+        },
+
+        {
+            name: 'With_Selected_Map_Items...',
+            img: 'image/sprite_icon.png',
+            title: 'Selected_Sprite...',
+            subMenu: [{
+                name: 'Clone_To_New_Map_Object',
+                title: 'Clone To Map Object',
+                img: 'img/target-green.png',
+                fun: function () {
+                    alert('Now show option select of all map object(s)')
+                }
+            },
+                {
+                    name: 'Edit_As_Single_Object',
+                    title: 'Edit Selected Object',
+                    img: 'img/settings_icon.png',
+                    fun: function () {
+                        alert('TODO: edit object(s)')
+                    }
+                },
+
+                {
+                    name: 'Object_Initializer_Option...',
+                    title: 'Apply features on init.',
+                    img: 'img/settings_icon.png',
+                    // disable: true,
+                    subMenu: objectFunctionsToRightClickSubMenu(Quazar.options.SpriteInitializers)
+                }]
+        },
+
+
+        {
+            name: 'With_Selected_Sprites...',
             img: 'image/sprite_icon.png',
             title: 'Selected_Sprite...',
             subMenu: [{
@@ -110,20 +309,8 @@ $(document).ready( function(){
                 }]
         },
 
-        {
-            name: 'Disperse_Clones...',
-            title: 'Clone Generator',
-            subMenu: [{
-                name: 'Multi-Sprite Generator',
-                title: 'Formulate large groups of sprites. Add them to the map on the following click.',
-                img: 'img/settings_icon.png',
-                fun: function () {
-                    alert('Apply the auto-place form...')
-                }
-            }
 
-            ]
-        }
+
 
     ];
 
