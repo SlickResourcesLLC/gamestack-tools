@@ -2143,6 +2143,8 @@ var Sprite = function () {
 
                         __inst.animations[ix] = new Animation(item);
                 });
+
+                this.selected_animation = this.animations[0] || new Animation();
         }
 
         /*****************************
@@ -2153,6 +2155,15 @@ var Sprite = function () {
                 key: 'get_id',
                 value: function get_id() {
                         return this.id;
+                }
+        }, {
+                key: 'to_map_object',
+                value: function to_map_object(size, framesize) {
+                        this.__mapSize = new Vector3(size || this.size);
+
+                        this.frameSize = new Vector3(framesize || this.size);
+
+                        return this;
                 }
 
                 /*****************************
@@ -2577,6 +2588,7 @@ var Sprite = function () {
  ****************/
 
 var SpriteInitializersOptions = {
+
         Flight: {
 
                 __args: {},

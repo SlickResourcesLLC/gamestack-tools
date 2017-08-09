@@ -48,6 +48,12 @@
 
     <style>
 
+        .gui-space input[type='file']
+        {
+            display:none;
+
+        }
+
         #top-gui
         {
 
@@ -153,26 +159,32 @@
 
     <style>
 
-        .dg.main
-        {
-            position:relative;
 
-            top:90px;
-
-        }
 
         .dg .c input[type=text] {
+
+            position:relative;
+
             border-left: 1px solid silver;
             width: 100%;
 
             padding:0px;
 
-            padding-left:3px;
+            padding-left:2px;
+
+            padding-right:2px;
+
+
 
             margin:0px;
 
             background:none;
 
+        }
+
+        .dg div.slider
+        {
+            width:55%;
         }
 
 
@@ -189,7 +201,7 @@
 
         </select>
 
-        <button id="add_tween_stack_ctrl" class="main-play"  style=" "><span>&#9654;</span></button>
+        <button type="button" id="add_tween_stack_ctrl" class="main-play"  style=" "><span>&#9654;</span></button>
 
     </div>
 
@@ -203,7 +215,7 @@
             <img id="logo" src="img/logo-level.png"  />
 
             <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Level<span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation"><a href="#" id="new-level">New Level</a></li>
 
@@ -213,12 +225,12 @@
 
                     <li role="presentation"><a  href="#" class="alt" id="download"><span>Save to File</span><img src="img/save.png" alt="save data" ></a></li>
 
-                    <li role="presentation"><a id="map_settings_show" class="alt"   href='#' onclick="$('#settings-space form').show();">Map-Settings<img src="img/settings_icon.png" alt="settings image"  ></a></li>
+                    <li role="presentation"><a id="map_settings_show" class="alt"   href='#' onclick="__levelMaker.settings.show();">Level-Settings<img src="img/settings_icon.png" alt="settings image"  ></a></li>
 
                  </ul>
             </div>
 
-            <button id="my-objects" class="button-top"  ><span>Choose-Object</span></button> <button id="create_map_object" class="button-add"  >+</button>
+            <button type="button" id="my-objects" class="button-top"  ><span>Choose-Object</span></button> <button id="create_map_object" class="button-add"  >+</button>
 
         </nav>
 
@@ -251,14 +263,14 @@
     <br/>
         </ul>
         <button id="auto_place" class="ok"  >Apply</button>
-        <button id="cancel_dispersion" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
+        <button type="button" id="cancel_dispersion" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
     </form>
 
     <div id="settings-space" >
 
         <form id="settings"   method="GET">
 
-            <h3>Map Settings</h3>
+            <h3>Level Settings</h3>
 
             <input  type="hidden"  value="image_data" id="image_data" name="image_data" />
 
@@ -278,7 +290,20 @@
 
             <input type="text"  placeholder="map_id" id="map_id" name="map_id" />
 
+            <div class="add-list sprite-types">
+
+            <label >Sprite Types</label> <button type="button" class="add-sprite-type add" >+</button>
+
+            <ul class="add-list">
+
+
+            </ul>
+
+            </div>
+
             <label>Pixel Snap</label>
+
+
 
             <select id="map_snap_size">
 
@@ -292,20 +317,19 @@
 
             </select>
 
-            <label>Width</label>
+            <label>Level-Width</label>
 
             <input id="map_level_size_x" type="range"  value="5000" step="10" name="width" min="0" max="10000" />
 
-            <label>Height</label>
+            <label>Level-Height</label>
 
             <input id="map_level_size_y" type="range"  value="5000"  step="10" name="height" min="0" max="10000" />
 
             <label>Intended Game Scale</label>
 
-            <input id="map_game_scale" type="range"  value="1.5" name="gameScale" min="0" max="100" />
+            <input id="map_game_scale" type="range"  value="1.5" name="gameScale" min="1.0" max="40" />
 
-
-            <button id="apply_map_settings" class="ok"  >Apply</button>
+            <button type="button" id="apply_map_settings" class="ok"  >Apply</button>
 
             <button id="cancel_map_settings" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
 
@@ -317,7 +341,9 @@
 
             <form id="object-maker" method="GET">
 
-                <h3>Create Map Object</h3>
+                <h3>Create Level-Map Sprite</h3>
+
+                <div id="sprite-space" class="sprite-space gui-space"></div>
 
                 <div class="form-pair" id="file-space" >
 
@@ -405,9 +431,9 @@
 
                 </div>
 
-                <button  id="create_object" class="ok"  >Apply</button>
+                <button   id="create_object" class="ok"  >Apply</button>
 
-                <button id="cancel_map_settings" class="cancel" >Cancel</button>
+                <button type="button" id="cancel_map_settings" class="cancel" >Cancel</button>
 
             </form>
 
@@ -450,6 +476,21 @@
 
             },
 
+            __todos:[],
+
+            TODO:function(t)
+            {
+
+            this.__todos.push(t);
+
+            },
+
+            log_all_todos:function()
+            {
+
+                console.log(jstr(this.__todos));
+
+            },
 
             image_upload:__ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
 
@@ -1624,7 +1665,7 @@
 
                 $('#settings_button').click(function(){
 
-                   $('#settings-space form').show();
+                   __levelMaker.settings.show();
 
                 });
 
@@ -1795,7 +1836,114 @@
 
                     levelSizeZ:0,
 
-                    game_scale:2.0
+                    game_scale:2.0,
+
+                    spriteTypes:['player', 'enemy', 'background', 'interactive'], //The minimum spriteTypes,
+
+                    show:function()
+                    {
+
+                        $('div.add-list.sprite-types ul li').remove();
+
+                        $.each(__levelMaker.settings.spriteTypes, function(ix, item){
+
+                            $('div.add-list.sprite-types ul').append('<li> <input type="text" class="list" value="'+item+'" /> <button type="button" class="list-delete">X</button> </li>');
+
+                        });
+
+
+                        $('form#settings').on('submit', function(evt){
+
+                            evt.preventDefault();
+
+                            return false;
+
+                        });
+
+
+                        var setForAddition = function()
+                        {
+
+                            $('div.add-list.sprite-types').find('input.list').each(function(ix, item){
+
+                                $(item).on('change', function(evt){
+
+                                    __levelMaker.settings.spriteTypes[ix] = $(item).val();
+
+
+                                });
+
+                            });
+
+                        };
+
+                        var setForDeletion = function()
+                        {
+
+                            $('div.add-list.sprite-types').find('button.list-delete').each(function(ix, item){
+
+                                $(item).on('click', function(evt){
+
+                                    var value = $(this).parent().find('input').val();
+
+                                    var li = __levelMaker.settings.spriteTypes[ix];
+
+                                    var alist =  __levelMaker.settings.spriteTypes;
+
+                                    for(var x in alist)
+                                    {
+
+                                        if(alist[x] == value)
+                                        {
+                                            __levelMaker.settings.spriteTypes.splice(x, 1);
+
+                                        }
+
+                                    }
+
+                                    $(this).parent().remove();
+
+
+                                });
+
+                            });
+
+                        };
+
+
+                        setForDeletion();
+
+                        setForAddition();
+
+                        $('div.add-list.sprite-types button.add').unbind().on('click', function(evt){
+
+                            var len =  $(this).parent().find('li').length, tvalue = "list_value_"+len;
+
+                            while(__levelMaker.settings.spriteTypes.indexOf(tvalue) >= 0)
+                            {
+                                tvalue += '_c';
+
+                            }
+
+                            $(this).parent().find('ul').append('<li> <input type="text" class="list" value="'+tvalue+'" /> <button type="button" class="list-delete">X</button></li>');
+
+                            setForDeletion();
+
+                            setForAddition();
+
+
+                            evt.preventDefault();
+
+                            return false;
+
+
+                        });
+
+
+                        $('div#settings-space form').show();
+
+
+                    }
 
                 },
 
@@ -1965,6 +2113,14 @@
                 },
 
                 showObjectDialog:function(){
+
+                    //TODO: create dat.GUI() for the Map Object(s)
+
+                    $('#map-item-space form .sprite-space').html('');
+
+                    var sprite_gui = DatGui.getLevelObjectGui('mapobject', new Sprite().to_map_object());
+
+                    $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
 
                     $('#map-item-space form').show();
 
@@ -2255,7 +2411,7 @@
 
                         if (hasTagMatch(this.mapElements[x],'tag') || hasTagMatch(this.mapElements[x],'name'))
                         {
-                           alert('found object');
+                        //   alert('found object');
 
                             e = this.mapElements[x];
                         }
@@ -3082,16 +3238,20 @@
 
                     }
 
-
                 }
 
             });
+
+
+            App.TODO('Sprite Types Update and Delete');
 
 
 
             window.setTimeout(function(){
 
               //  alert(jstr(__levelMaker.hover_selection_sprite.size));
+
+                App.log_all_todos();
 
 
             }, 4000);

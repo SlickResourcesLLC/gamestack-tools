@@ -2460,7 +2460,7 @@ class Sprite {
         this.active = true; //active sprites are visible
 
         this.__initializers = []; //apply options to this variable
-        
+
         if(typeof name == 'object') //accept first argument as full args object
         {
 
@@ -2543,6 +2543,8 @@ class Sprite {
 
         });
 
+        this.selected_animation = this.animations[0] || new Animation();
+
     }
 
     /*****************************
@@ -2555,6 +2557,15 @@ class Sprite {
         return this.id;
     }
 
+    to_map_object(size, framesize)
+    {
+        this.__mapSize = new Vector3(size || this.size);
+
+        this.frameSize = new Vector3(framesize || this.size);
+
+        return this;
+
+    }
 
     /*****************************
      * Setters and Creators
@@ -3013,14 +3024,14 @@ class Sprite {
 };
 
 
+
 /****************
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
 
-
-
 let SpriteInitializersOptions = {
+
     Flight: {
 
         __args: {},
@@ -3079,9 +3090,12 @@ let SpriteInitializersOptions = {
 
 
         basic_stop_collideable: function (sprite) {
+
         },
 
         top_stop_collideable: function (sprite) {
+
+
         } //pass through bottom, but land on top, as with certain platforms
 
 

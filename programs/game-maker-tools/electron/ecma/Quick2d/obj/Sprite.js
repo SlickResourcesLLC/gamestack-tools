@@ -88,6 +88,8 @@ class Sprite {
 
         });
 
+        this.selected_animation = this.animations[0] || new Animation();
+
     }
 
     /*****************************
@@ -100,6 +102,15 @@ class Sprite {
         return this.id;
     }
 
+    to_map_object(size, framesize)
+    {
+        this.__mapSize = new Vector3(size || this.size);
+
+        this.frameSize = new Vector3(framesize || this.size);
+
+        return this;
+
+    }
 
     /*****************************
      * Setters and Creators

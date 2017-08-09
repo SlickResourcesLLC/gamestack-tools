@@ -148,9 +148,64 @@ $(document).ready( function(){
 
 
 
+    var getClonesSubMenu = function()
+    {
+
+        var subMenu = [];
+
+        for(var x = 1; x < 10; x++)
+        {
+
+            var obj = {};
+
+            obj.name = "create_" + x;
+
+            obj.id = "create_" + x;
+
+            obj.title = "create_" + x;
+
+            obj.subMenu = [];
+
+            var dirs = {
+                up_left:"Diag-Up-Left &#8598;",
+                up:"Up &#8593;",
+                up_right:"Diag-Up-Right &#8599;",
+                left:"Left &#8592;",
+                down_left:"Diag-Up-Left &#8598;",
+                down:"Down &#8595;",
+                down_right:"Diag-Down-Right &#8601;",
+                right:"Right &#8594;"
+            };
+
+            for(var x2 in dirs)
+            {
+
+                var subobj = {};
+
+                subobj.name = "line_" + dirs[x2];
+
+                subobj.id = "line_" + x;
+
+                subobj.title = "line_" + dirs[x2];
+
+                subobj.fun = function()
+                {
+
+                    alert('TODO: make clones');
+
+                }
+
+                obj.subMenu.push(subobj);
 
 
+            }
 
+            subMenu.push(obj);
+
+        }
+
+        return subMenu;
+    };
 
     //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
     var __rightClickInterface = [{
@@ -165,7 +220,6 @@ $(document).ready( function(){
 
         }
     },
-
 
         {
             name: 'Zoom',
@@ -211,34 +265,101 @@ $(document).ready( function(){
             title: 'pixel snap button',
             id:'pixel_snap',
 
-            subMenu: [{
+            subMenu: [
+                {
+                    name: '10px',
+                    title: 'pixel_snap',
+                    fun: function () {
+
+                        var number = 10;
+
+                        if(typeof(number) == 'number') {
+
+                            __levelMaker.settings.pixelSnap = number;
+
+                        }
+
+                    }
+                },
+
+                {
+                    name: '20px',
+                    title: 'pixel_snap',
+                    fun: function () {
+
+                        var number = 20;
+
+                        if(typeof(number) == 'number') {
+
+                            __levelMaker.settings.pixelSnap = number;
+
+                        }
+
+                    }
+                },
+
+                {
+                    name: '50px',
+                    title: 'pixel_snap',
+                    fun: function () {
+
+                        var number = 50;
+
+                        if(typeof(number) == 'number') {
+
+                            __levelMaker.settings.pixelSnap = number;
+
+                        }
+
+                    }
+                },
+
+                {
                 name: '1/8 object size',
-                title: '0.2',
+                title: 'pixel_snap',
                 fun: function () {
 
-                    console.info('DEV-TODO');
+                    var number = Math.ceil(__levelMaker.selectedElement.size.x / 8);
+
+                    if(typeof(number) == 'number') {
+
+                        __levelMaker.settings.pixelSnap = number;
+
+                    }
 
                 }
             },
 
                 {
                     name: '1/4 object size',
-                    title: '1/4 object size',
+                    title: 'pixel_snap',
 
                     fun: function () {
 
-                        console.info('DEV-TODO');
+                        var number = Math.ceil(__levelMaker.selectedElement.size.x / 4);
+
+                        if(typeof(number) == 'number') {
+
+                            __levelMaker.settings.pixelSnap = number;
+
+                        }
 
                     }
                 },
 
                 {
                     name: '1/2 object size',
-                    title: '1/4 object size',
+                    title: 'pixel_snap',
 
                     fun: function () {
 
-                        console.info('DEV-TODO');
+                        var number = Math.ceil(__levelMaker.selectedElement.size.x / 2);
+
+                        if(typeof(number) == 'number') {
+
+                            __levelMaker.settings.pixelSnap = number;
+
+                        }
 
                     }
                 }
@@ -249,16 +370,16 @@ $(document).ready( function(){
         },
 
         {
-            name: 'With_Selected_Map_Items...',
+            name: 'With_Selected_Map_Item...',
             img: 'image/sprite_icon.png',
             title: 'Selected_Sprite...',
             subMenu: [{
-                name: 'Clone_To_New_Map_Object',
-                title: 'Clone To Map Object',
+                name: 'Create Clones (Next Click)',
+                title: 'Create Clones',
                 img: 'img/target-green.png',
-                fun: function () {
-                    alert('Now show option select of all map object(s)')
-                }
+
+                subMenu:getClonesSubMenu()
+
             },
                 {
                     name: 'Edit_As_Single_Object',

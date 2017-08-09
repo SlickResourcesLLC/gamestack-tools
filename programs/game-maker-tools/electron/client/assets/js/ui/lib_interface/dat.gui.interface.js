@@ -316,6 +316,25 @@ var DatGui = {
 
     },
 
+    addVectorFromProperty:function(gui, prop, name, min, max)
+    {
+
+        var fui = gui.addFolder(name);
+
+        if(!prop instanceof Vector3  && !prop instanceof Vector2)
+        {
+            return console.error('passed non-vector');
+
+        }
+
+        for(var x in prop)
+        {
+            fui.add(prop, x).min(min).max(max);
+
+        }
+
+    },
+
     typeHandlerSpriteMaker:function(ix, obj, parent)
     {
         var o = obj,  type = typeof(obj) == 'object' ?  obj.constructor : false;
@@ -538,6 +557,7 @@ var DatGui = {
 
               complete =   _inst.typeHandlerSpriteMaker(ix, obj, obj);
 
+
                 this.each(obj, function(ix, o){
 
                   //#typeHandler
@@ -551,16 +571,13 @@ var DatGui = {
                 if(obj instanceof Animation || obj instanceof  Sound)
                 {
 
-                    var lastBox = $('.object-tabs .dg.ac.member');
 
-                    var lists = $('.object-tabs div.main.member');
+                    var first_list = $('#dat-gui-container div.main ul')[0];
 
-                    var my_list = $(lists)[lists.length - 1];
-
-                    if(!$(my_list).find('input[type="file"]').length)
+                    if(!$(first_list).find('input[type="file"]').length)
                     {
 
-                        var ul = $(my_list).first('ul');
+
 
                         var id = this.create_id();
 
@@ -572,55 +589,60 @@ var DatGui = {
                             fname = obj.src.substring(0, 270);
                         }
 
-                        $(ul).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/>"  +
+                        $(first_list).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/>"  +
                             "<label class='file_special' id='file_special"+id+"' for='"+id+"'>Select File: <br/> "+ (fname || obj.src) +"</label>");
 
                         $('#' + id).change(function(evt){
 
-                         var input = evt.target;
+                            var input = evt.target;
 
-                          var file =  levelMaker.getRawImageFile(this, function(imagesrc){
+                            var file =  levelMaker.getRawImageFile(this, function(imagesrc){
 
-                              if(obj instanceof Animation) {
+                                if(obj instanceof Animation) {
 
-                                  var filename = $(input).val().split('\\').pop();
-
-
-                                  DatGui.image_upload(filename, imagesrc, function(relpath, content){
-
-                                      relpath = relpath.replace('client/', '../');
+                                    var filename = $(input).val().split('\\').pop();
 
 
-                                      alert('uploaded image:' + filename + ":using relative path:" + relpath);
+                                    DatGui.image_upload(filename, imagesrc, function(relpath, content){
+
+                                        relpath = relpath.replace('client/', '../');
 
 
-                                      $('file_special'+id).text(relpath);
+                                        alert('uploaded image:' + filename + ":using relative path:" + relpath);
 
 
-                                      obj.src = relpath;
+                                        $('file_special'+id).text(relpath);
 
-                                      obj.image = new GameImage(relpath);
+                                        obj.src = relpath;
 
-                                      obj = new Animation(obj);
+                                        obj.image = new GameImage(relpath);
 
-                                      Game.sprites[0].selected_animation = obj;
+                                        obj.image.onload = function()
+                                        {
 
-                                  });
+                                            obj = new Animation(obj);
+
+                                            Game.sprites[0].selected_animation = obj;
 
 
-                              }
+                                        };
 
-                             else if(obj instanceof Sound) {
 
-                                  obj.sound = new Audio(imagesrc);
+                                    });
 
-                                  obj = new Sound(obj);
+                                }
 
-                                  Game.sprites[0].selected_sound = obj;
+                                else if(obj instanceof Sound) {
 
-                              }
+                                    obj.sound = new Audio(imagesrc);
 
-                          });
+                                    obj = new Sound(obj);
+
+                                    Game.sprites[0].selected_sound = obj;
+
+                                }
+
+                            });
 
                             DatGui.get(obj);
 
@@ -634,6 +656,10 @@ var DatGui = {
                     }
 
                 }
+
+
+
+
 
             }
 
@@ -694,26 +720,156 @@ var DatGui = {
 
     },
 
-    getLevelEdit:function(mode, object){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
+    getLevelObjectGui:function(mode, object){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
+
+
+        var gui = new dat.GUI({autoPlace:false});
+
 
         if(mode.toLowerCase() == 'mapobject' && object instanceof Sprite)
         {
             alert('TODO: level edit for Sprite()');
 
+
+            var name = gui.add(object, 'name');
+
+            var description = gui.add(object, 'description');
+
+            var type = gui.add(object, 'type');
+
+            var obj = object.selected_animation;
+
+            for(var x in object)
+            {
+                if(x == '__mapSize' && object[x] instanceof Vector3)
+                {
+                    console.log('found vector');
+
+                    DatGui.addVectorFromProperty(gui, object[x], '__mapSize', 0, 1000);
+
+                }
+
+                if(x == 'frameSize' && object[x] instanceof Vector3)
+                {
+                    console.log('found vector');
+
+                    DatGui.addVectorFromProperty(gui, object[x], 'frameSize', 0, 1000);
+
+                }
+
+            }
+
+
+            window.setTimeout(function(){
+
+                if(obj instanceof Animation || obj instanceof  Sound) {
+
+                    var first_list = $('div#sprite-space div.main ul')[0];
+
+                    if (!$(first_list).children().find('input[type="file"]').length) {
+
+                        var id = DatGui.create_id();
+
+                        var fname;
+
+                        if (obj.src && obj.src.length > 270) {
+
+                            fname = obj.src.substring(0, 270);
+                        }
+
+                        $(first_list).prepend("<input type='file' id='" + id + "'  class='dat_gui_file'/>" +
+                            "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + (fname || obj.src) + "</label>");
+
+                        $('#' + id).change(function (evt) {
+
+                            var input = evt.target;
+
+                            var file = levelMaker.getRawImageFile(this, function (imagesrc) {
+
+                                if (obj instanceof Animation) {
+
+                                    var filename = $(input).val().split('\\').pop();
+
+
+                                    DatGui.image_upload(filename, imagesrc, function (relpath, content) {
+
+                                        relpath = relpath.replace('client/', '../');
+
+
+                                        alert('uploaded image:' + filename + ":using relative path:" + relpath);
+
+
+                                        $('file_special' + id).text(relpath);
+
+                                        obj.src = relpath;
+
+                                        obj.image = new GameImage(relpath);
+
+                                        obj.image.onload = function () {
+
+                                            obj = new Animation(obj);
+
+                                            Game.sprites[0].selected_animation = obj;
+
+
+                                        };
+
+
+                                    });
+
+                                }
+
+                                else if (obj instanceof Sound) {
+
+                                    obj.sound = new Audio(imagesrc);
+
+                                    obj = new Sound(obj);
+
+                                    Game.sprites[0].selected_sound = obj;
+
+                                }
+
+                            });
+
+                            DatGui.get(obj);
+
+                            evt.preventDefault();
+
+                            return false;
+
+
+                        });
+
+                    }
+
+                    else
+                    {
+                        alert('already had file input');
+                    }
+
+                }
+
+
+            }, 250);
+
+
+
         }
 
         else if(mode.toLowerCase() == 'sprite' && object instanceof Sprite)
         {
-            alert('TODO: level edit for actual Sprite()');
+            console.log('TODO: level edit for actual Sprite()');
 
         }
 
         else if (mode.toLowerCase() == 'list' && object instanceof Array && object.length && object[0] instanceof Sprite)
         {
 
-            alert('TODO: present gui to edit all selected sprite objects at once');
+            console.log('TODO: present gui to edit all selected sprite objects at once');
 
         }
+
+        return gui;
 
     },
 
