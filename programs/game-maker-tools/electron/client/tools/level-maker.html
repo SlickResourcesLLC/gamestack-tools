@@ -538,30 +538,51 @@
 
         image_upload: __ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
 
-
         create_level: function (data, callback) {
 
             var start_level = function () {
+
+                var __inst = Game;
+
+                if(data && data.settings)
+                {
+                    __inst.settings = data.settings;
+
+                }
 
                 __levelMaker.htmlSettings();
 
                 __levelMaker.applySettings(__levelMaker.settings);
 
-                var _inst = Game;
 
-                _inst.canvas = document.getElementById('myCanvas');
+                if(data && data.sprites instanceof Array)
+                {
 
-                _inst.ctx = _inst.canvas.getContext('2d');
+                    $.each(data.sprites, function(ix, item){
 
-                _inst.collective_forces = [];
+                        data.sprites[ix] = new Sprite(item);
+
+                        data.sprites[ix].init();
+
+                    });
+
+                    __inst.sprites = data.sprites;
+
+                }
+
+                __inst.canvas = document.getElementById('myCanvas');
+
+                __inst.ctx = __inst.canvas.getContext('2d');
+
+                __inst.collective_forces = [];
 
                 //2. create a GameWindow to be sychronizd
 
-                _inst.GameWindow = new GameWindow({
-                    canvas: _inst.canvas,
-                    ctx: _inst.ctx,
-                    sprites: _inst.sprites,
-                    collective_forces: _inst.collective_forces
+                __inst.GameWindow = new GameWindow({
+                    canvas: __inst.canvas,
+                    ctx: __inst.ctx,
+                    sprites: __inst.sprites,
+                    collective_forces: __inst.collective_forces
                 }, function () {
 
 
@@ -576,7 +597,7 @@
                     __levelMaker.selectedSprite = __levelMaker.createMapSprite(sprMapItem, __levelMaker.mouse.x, __levelMaker.mouse.y);
                 }
 
-                _inst.is_init = true;
+                __inst.is_init = true;
 
 
                 var usingOptFile = true;
@@ -632,24 +653,7 @@
             };
 
 
-            if (data) {
-
-                alert('restoring');
-
-                return __levelMaker.restoreInstance(data.map, data.settings, function () {
-
-                    start_level();
-
-                    create_selections();
-
-                });
-
-            }
-            else {
-
-
-                start_level();
-            }
+            start_level();
 
         },
 
@@ -703,7 +707,7 @@
 
         saveLevel: function (filename) {
 
-            var str = JSON.stringify({settings: __levelMaker.settings, map: Game.sprites}, null, 2); // spacing level = 2
+            var str = JSON.stringify({settings: __levelMaker.settings, sprites: Game.sprites}, null, 2); // spacing level = 2
 
             App.triggerDownload(__levelMaker.settings.name + ".json", str);
 
@@ -1059,26 +1063,16 @@
                 __levelMaker.mouse.down = false;
 
             });
-            //2DO add this to the main engine: don't need a context menu
 
             var container = $('#container')[0];
 
             container.oncontextmenu = function (e) {
 
-
-                // App.placeRCMenu(__levelMaker.mouse.x, __levelMaker.mouse.y - 40, true);
-
                 if (!App.DEVMODE) {
-
-                    // e.preventDefault();
-
-                    //   return false;
 
                 }
 
-
-            }
-
+            };
 
             lib.InputEvents.extend('rightclick', function (x, y) {
 
@@ -1100,7 +1094,6 @@
             Quazar.InputEvents.init();
 
         },
-
 
         setTravelModeGui: function () {
 
@@ -1229,6 +1222,7 @@
                     var textItem = $(this).find('a')[0], value = $(textItem).text();
 
                     __levelMaker.selectedElement = __levelMaker.get(value);
+
 
                 });
 
@@ -2269,9 +2263,9 @@
                 }
             },
 
-            MapData: function (map, settings) {
+            MapData: function (sprites, settings) {
 
-                return {map: map, settings: settings};
+                return {sprites: sprites, settings: settings};
             },
 
             selection_sprite: {},
@@ -2696,24 +2690,9 @@
                 var img = mapElement.img;
                 //  console.log("Img src:" + img.src);
 
-                if (__levelMaker.assembled_sprite.speed) {
-
-                    //    alert(JSON.stringify(__levelMaker.assembled_sprite.speed));
-
-                }
-
-                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(__levelMaker.assembled_sprite)));
+                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
 
                 sprite.active = true;
-
-                if (sprite.speed) {
-
-                    //  alert("sprite-speed:" + JSON.stringify(sprite.speed));
-
-                }
-
-
-                console.log(mapElement);
 
 
                 var fs = mapElement.frameSize;

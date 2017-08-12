@@ -172,8 +172,18 @@ class GameImage {
         __gameWindowList: [],
 
 
-        createid: function () {
-            new Date().getUTCMilliseconds() + "";
+        create_id: function () {
+
+            var d = new Date().getTime();
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+                d += performance.now(); //use high-precision timer if available
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+
         }
 
         ,
@@ -376,6 +386,8 @@ class GameImage {
 
         }
 
+
+
     }
 
 
@@ -389,6 +401,8 @@ class GameImage {
 
 let Quazar = new QuazarLibrary();
 let QUAZAR = Quazar;
+
+let Quick2d = Quazar; //new name of library : Quick2d;
 
 
 let __gameInstance = Quazar;
@@ -1333,130 +1347,6 @@ onComplete(fun)
 ;/**
  * Created by The Blakes on 04-13-2017
  *
- */
-
-
-class Callables {
-    constructor(args) {
-
-        this.list = [];
-
-        if(args instanceof Array)
-        {
-            this.list = args;
-
-        }
-        else
-        {
-            this.list = this.getArg(args, 'list', []);
-
-        }
-
-    }
-
-    getArg(args, key, fallback) {
-
-        if (args.hasOwnProperty(key)) {
-
-            return args[key];
-
-        }
-        else {
-            return fallback;
-
-        }
-
-    }
-
-    add(item)
-    {
-
-        if(typeof(item.engage) == 'function')
-        {
-           this.list.push(item);
-
-        }
-
-       else if(typeof(item.fire) == 'function')
-        {
-            this.list.push(item);
-
-        }
-
-       else if(typeof(item.start) == 'function')
-        {
-            this.list.push(item);
-
-        }
-
-       else if(typeof(item.run) == 'function')
-        {
-            this.list.push(item);
-
-        }
-
-       else if(typeof(item.process) == 'function')
-        {
-            this.list.push(item);
-
-        }
-
-
-    }
-
-    call()
-    {
-        $.each(this.list, function (ix, item) {
-
-
-            if(typeof(item.engage) == 'function')
-            {
-                item.engage();
-
-            }
-
-            if(typeof(item.fire) == 'function')
-            {
-                item.fire();
-
-            }
-
-            if(typeof(item.start) == 'function')
-            {
-                item.start();
-
-            }
-
-            if(typeof(item.run) == 'function')
-            {
-                item.run();
-
-            }
-
-            if(typeof(item.process) == 'function')
-            {
-                item.process();
-
-            }
-
-        });
-
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-;/**
- * Created by The Blakes on 04-13-2017
- *
  * Camera : has simple x, y, z, position / Vector, follows a specific sprite
  *
  * *incomplete as of 07-20-2017
@@ -1532,6 +1422,74 @@ class Controls {
 
 
 };
+
+
+
+
+;/**
+ * Created by The Blakes on 04-13-2017
+ *
+ */
+
+
+Quick2d.Extras =  {
+
+    call(items)
+    {
+        if(!(items instanceof Array))
+        {
+
+          return console.error('Quick2d.Extras.call(), needs array argument');
+
+        }
+
+        //a callable item can be one-time executed: it will have any of the following functions attached
+
+        for(var x = 0; x < items.length; x++)
+        {
+            var item = items[x];
+
+            if(typeof(item.engage) == 'function')
+            {
+                item.engage();
+
+            }
+
+            if(typeof(item.fire) == 'function')
+            {
+                item.fire();
+
+            }
+
+            if(typeof(item.start) == 'function')
+            {
+                item.start();
+
+            }
+
+            if(typeof(item.run) == 'function')
+            {
+                item.run();
+
+            }
+
+            if(typeof(item.process) == 'function')
+            {
+                item.process();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+
+
+
+
 
 
 
@@ -1675,6 +1633,7 @@ class Collision
 {
     constructor({object, collideables, extras})
     {
+
         this.object = object || [];
 
         this.collideables = collideables instanceof Array ? collideables : [];
@@ -2479,7 +2438,6 @@ class Circle
 
         this.active = true; //active sprites are visible
 
-
         if (typeof name == 'object') //accept first argument as full args object
         {
             args = name;
@@ -2496,6 +2454,8 @@ class Circle
             this.description = description || "__";
 
         }
+
+        this.__initializers = $Q.getArg(args, '__initializers', []);
 
         var _spr = this;
 
@@ -2560,6 +2520,15 @@ class Circle
 
         });
 
+
+        //Apply initializers:
+
+        $.each(this.__initializers, function(ix, item){
+
+            __inst.onInit(item);
+
+        });
+
         this.selected_animation = this.animations[0] || new Animation();
 
     }
@@ -2573,6 +2542,9 @@ class Circle
     onInit(fun) {
 
         if (typeof fun == 'string') {
+
+           if(this.__initializers.indexOf(fun) < 0){ this.__initializers.push(fun) };
+
             var __inst = this;
 
             var keys = fun.split('.');
@@ -2607,6 +2579,14 @@ class Circle
 
         }
 
+        else if (typeof fun == 'object') {
+
+            console.log('extending init:');
+
+           console.info('Quick2D does not yet implement onInit() from arg of object type');
+
+        }
+
     }
 
     /*****************************
@@ -2632,7 +2612,8 @@ class Circle
      ***************************/
 
     create_id() {
-        return new Date().getUTCMilliseconds();
+
+        return Quick2d.create_id();
 
     }
 
@@ -2669,7 +2650,10 @@ class Circle
 
     setAnimation(anime) {
 
-        this.animations['default'] = anime;
+        if(anime instanceof Animation && this.animations.indexOf(anime) < 0)
+        {
+            this.animations.push(anime);
+        }
 
         this.selected_animation = anime;
 
@@ -3180,14 +3164,13 @@ class Circle
 
     }
 
-}
-;
-
+};
 
 /****************
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
+
 
 let SpriteInitializersOptions = {
 
@@ -3195,7 +3178,7 @@ let SpriteInitializersOptions = {
 
         __args: {},
 
-        side_scroll_player_move_x: function (sprite) {
+        player_move_x: function (sprite) {
 
             alert('applying initializer');
 
@@ -3242,7 +3225,58 @@ let SpriteInitializersOptions = {
 
         },
 
-        side_scroll_player_rotate_x: function (sprite) {
+        player_move_xy: function (sprite) {
+
+            alert('applying initializer');
+
+            console.log('side_scroll_player_run:init-ing');
+
+            let __lib = Quazar || Quick2d;
+
+            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                console.log('stick-x:' + x);
+
+                if(Math.abs(x) < 0.2)
+                {
+                    x = 0;
+                }
+
+                if(Math.abs(y) < 0.2)
+                {
+                    y = 0;
+                }
+
+                var  accel =  0.2; //todo : options for accel
+                var  max =  7;
+
+                sprite.accelX(accel, x * max);
+
+                sprite.accelY(accel, y * max);
+
+                if (x < -0.2) {
+                    sprite.flipX = true;
+
+                }
+                else if (x > 0.2) {
+                    sprite.flipX = false;
+
+                }
+
+            });
+
+            sprite.onUpdate(function (spr) {
+
+                sprite.decel(sprite.speed, 'x', 0.1);
+
+                sprite.decel(sprite.speed, 'y', 0.1);
+
+            });
+
+
+        },
+
+        player_rotate_x: function (sprite) {
 
             alert('applying initializer');
 

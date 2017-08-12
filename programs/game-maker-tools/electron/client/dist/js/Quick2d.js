@@ -156,8 +156,17 @@ var QuazarLibrary = function QuazarLibrary() {
 
                 __gameWindowList: [],
 
-                createid: function createid() {
-                        new Date().getUTCMilliseconds() + "";
+                create_id: function create_id() {
+
+                        var d = new Date().getTime();
+                        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+                                d += performance.now(); //use high-precision timer if available
+                        }
+                        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                                var r = (d + Math.random() * 16) % 16 | 0;
+                                d = Math.floor(d / 16);
+                                return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
+                        });
                 },
 
                 getActionablesCheckList: function getActionablesCheckList() {
@@ -318,6 +327,9 @@ var QuazarLibrary = function QuazarLibrary() {
 
 var Quazar = new QuazarLibrary();
 var QUAZAR = Quazar;
+
+var Quick2d = Quazar; //new name of library : Quick2d;
+
 
 var __gameInstance = Quazar;
 
@@ -1147,82 +1159,6 @@ var Animation = function () {
 ; /**
   * Created by The Blakes on 04-13-2017
   *
-  */
-
-var Callables = function () {
-        function Callables(args) {
-                _classCallCheck(this, Callables);
-
-                this.list = [];
-
-                if (args instanceof Array) {
-                        this.list = args;
-                } else {
-                        this.list = this.getArg(args, 'list', []);
-                }
-        }
-
-        _createClass(Callables, [{
-                key: 'getArg',
-                value: function getArg(args, key, fallback) {
-
-                        if (args.hasOwnProperty(key)) {
-
-                                return args[key];
-                        } else {
-                                return fallback;
-                        }
-                }
-        }, {
-                key: 'add',
-                value: function add(item) {
-
-                        if (typeof item.engage == 'function') {
-                                this.list.push(item);
-                        } else if (typeof item.fire == 'function') {
-                                this.list.push(item);
-                        } else if (typeof item.start == 'function') {
-                                this.list.push(item);
-                        } else if (typeof item.run == 'function') {
-                                this.list.push(item);
-                        } else if (typeof item.process == 'function') {
-                                this.list.push(item);
-                        }
-                }
-        }, {
-                key: 'call',
-                value: function call() {
-                        $.each(this.list, function (ix, item) {
-
-                                if (typeof item.engage == 'function') {
-                                        item.engage();
-                                }
-
-                                if (typeof item.fire == 'function') {
-                                        item.fire();
-                                }
-
-                                if (typeof item.start == 'function') {
-                                        item.start();
-                                }
-
-                                if (typeof item.run == 'function') {
-                                        item.run();
-                                }
-
-                                if (typeof item.process == 'function') {
-                                        item.process();
-                                }
-                        });
-                }
-        }]);
-
-        return Callables;
-}();
-
-; /**
-  * Created by The Blakes on 04-13-2017
-  *
   * Camera : has simple x, y, z, position / Vector, follows a specific sprite
   *
   * *incomplete as of 07-20-2017
@@ -1294,6 +1230,44 @@ var Controls = function () {
   * Created by The Blakes on 04-13-2017
   *
   */
+
+Quick2d.Extras = {
+        call: function call(items) {
+                if (!(items instanceof Array)) {
+
+                        return console.error('Quick2d.Extras.call(), needs array argument');
+                }
+
+                //a callable item can be one-time executed: it will have any of the following functions attached
+
+                for (var x = 0; x < items.length; x++) {
+                        var item = items[x];
+
+                        if (typeof item.engage == 'function') {
+                                item.engage();
+                        }
+
+                        if (typeof item.fire == 'function') {
+                                item.fire();
+                        }
+
+                        if (typeof item.start == 'function') {
+                                item.start();
+                        }
+
+                        if (typeof item.run == 'function') {
+                                item.run();
+                        }
+
+                        if (typeof item.process == 'function') {
+                                item.process();
+                        }
+                }
+        }
+}; /**
+   * Created by The Blakes on 04-13-2017
+   *
+   */
 
 var Force = function () {
         function Force(args) {
@@ -2083,7 +2057,6 @@ var Sprite = function () {
 
                 this.active = true; //active sprites are visible
 
-
                 if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
                         {
                                 args = name;
@@ -2097,6 +2070,8 @@ var Sprite = function () {
 
                         this.description = description || "__";
                 }
+
+                this.__initializers = $Q.getArg(args, '__initializers', []);
 
                 var _spr = this;
 
@@ -2157,6 +2132,13 @@ var Sprite = function () {
                         __inst.animations[ix] = new Animation(item);
                 });
 
+                //Apply initializers:
+
+                $.each(this.__initializers, function (ix, item) {
+
+                        __inst.onInit(item);
+                });
+
                 this.selected_animation = this.animations[0] || new Animation();
         }
 
@@ -2168,6 +2150,11 @@ var Sprite = function () {
                 value: function onInit(fun) {
 
                         if (typeof fun == 'string') {
+
+                                if (this.__initializers.indexOf(fun) < 0) {
+                                        this.__initializers.push(fun);
+                                };
+
                                 var __inst = this;
 
                                 var keys = fun.split('.');
@@ -2190,6 +2177,11 @@ var Sprite = function () {
                                 console.log('extending init:');
 
                                 __inst.extendFunc(initializer, this.init);
+                        } else if ((typeof fun === 'undefined' ? 'undefined' : _typeof(fun)) == 'object') {
+
+                                console.log('extending init:');
+
+                                console.info('Quick2D does not yet implement onInit() from arg of object type');
                         }
                 }
 
@@ -2219,7 +2211,8 @@ var Sprite = function () {
         }, {
                 key: 'create_id',
                 value: function create_id() {
-                        return new Date().getUTCMilliseconds();
+
+                        return Quick2d.create_id();
                 }
         }, {
                 key: 'setSize',
@@ -2257,7 +2250,9 @@ var Sprite = function () {
                 key: 'setAnimation',
                 value: function setAnimation(anime) {
 
-                        this.animations['default'] = anime;
+                        if (anime instanceof Animation && this.animations.indexOf(anime) < 0) {
+                                this.animations.push(anime);
+                        }
 
                         this.selected_animation = anime;
 
@@ -2738,7 +2733,7 @@ var SpriteInitializersOptions = {
 
                 __args: {},
 
-                side_scroll_player_move_x: function side_scroll_player_move_x(sprite) {
+                player_move_x: function player_move_x(sprite) {
 
                         alert('applying initializer');
 
@@ -2777,7 +2772,49 @@ var SpriteInitializersOptions = {
                         });
                 },
 
-                side_scroll_player_rotate_x: function side_scroll_player_rotate_x(sprite) {
+                player_move_xy: function player_move_xy(sprite) {
+
+                        alert('applying initializer');
+
+                        console.log('side_scroll_player_run:init-ing');
+
+                        var __lib = Quazar || Quick2d;
+
+                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                                console.log('stick-x:' + x);
+
+                                if (Math.abs(x) < 0.2) {
+                                        x = 0;
+                                }
+
+                                if (Math.abs(y) < 0.2) {
+                                        y = 0;
+                                }
+
+                                var accel = 0.2; //todo : options for accel
+                                var max = 7;
+
+                                sprite.accelX(accel, x * max);
+
+                                sprite.accelY(accel, y * max);
+
+                                if (x < -0.2) {
+                                        sprite.flipX = true;
+                                } else if (x > 0.2) {
+                                        sprite.flipX = false;
+                                }
+                        });
+
+                        sprite.onUpdate(function (spr) {
+
+                                sprite.decel(sprite.speed, 'x', 0.1);
+
+                                sprite.decel(sprite.speed, 'y', 0.1);
+                        });
+                },
+
+                player_rotate_x: function player_rotate_x(sprite) {
 
                         alert('applying initializer');
 

@@ -168,8 +168,8 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
     var createSubMenuObject = function(key, call)
     {
 
+        //determine the img path
         var img = key.toLowerCase().indexOf('control') >= 0 ? /*is conroller function*/ 'img/controller_icon.png' : 'img/settings_icon.png';
-
 
         return{
 
@@ -274,7 +274,7 @@ var alterMenu= function(name, callback)
 var get_selected_sprites = function(){  return __levelMaker.all_selected_sprites();};
 
 
-var get_selected_map_object = function(){  return __levelMaker.selectedElement;};
+var get_selected_map_object = function(){  return [__levelMaker.selectedElement];};
 
 
 //For example we are defining menu in object. You can also define it on Ul list. See on documentation.

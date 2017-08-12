@@ -52,11 +52,15 @@ class Collision
     {
         this.object = object;
 
+        return this;
+
     }
 
     Extras(extras)
     {
         this.extras = extras;
+
+        return this;
 
     }
 
@@ -64,11 +68,15 @@ class Collision
     {
         this.collideables = collideables;
 
+        return this;
+
     }
 
     onCollide(fun)
     {
         this.callback = fun;
+
+        return this;
 
     }
 

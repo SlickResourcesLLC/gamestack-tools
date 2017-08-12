@@ -3,7 +3,6 @@ class Sprite {
 
         this.active = true; //active sprites are visible
 
-
         if (typeof name == 'object') //accept first argument as full args object
         {
             args = name;
@@ -20,6 +19,8 @@ class Sprite {
             this.description = description || "__";
 
         }
+
+        this.__initializers = $Q.getArg(args, '__initializers', []);
 
         var _spr = this;
 
@@ -84,6 +85,15 @@ class Sprite {
 
         });
 
+
+        //Apply initializers:
+
+        $.each(this.__initializers, function(ix, item){
+
+            __inst.onInit(item);
+
+        });
+
         this.selected_animation = this.animations[0] || new Animation();
 
     }
@@ -97,6 +107,9 @@ class Sprite {
     onInit(fun) {
 
         if (typeof fun == 'string') {
+
+           if(this.__initializers.indexOf(fun) < 0){ this.__initializers.push(fun) };
+
             var __inst = this;
 
             var keys = fun.split('.');
@@ -131,6 +144,14 @@ class Sprite {
 
         }
 
+        else if (typeof fun == 'object') {
+
+            console.log('extending init:');
+
+           console.info('Quick2D does not yet implement onInit() from arg of object type');
+
+        }
+
     }
 
     /*****************************
@@ -156,7 +177,8 @@ class Sprite {
      ***************************/
 
     create_id() {
-        return new Date().getUTCMilliseconds();
+
+        return Quick2d.create_id();
 
     }
 
@@ -193,7 +215,10 @@ class Sprite {
 
     setAnimation(anime) {
 
-        this.animations['default'] = anime;
+        if(anime instanceof Animation && this.animations.indexOf(anime) < 0)
+        {
+            this.animations.push(anime);
+        }
 
         this.selected_animation = anime;
 
@@ -704,14 +729,13 @@ class Sprite {
 
     }
 
-}
-;
-
+};
 
 /****************
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
+
 
 let SpriteInitializersOptions = {
 
@@ -719,9 +743,7 @@ let SpriteInitializersOptions = {
 
         __args: {},
 
-        __guiImageUrl:"no-exista",
-
-        side_scroll_player_move_x: function (sprite) {
+        player_move_x: function (sprite) {
 
             alert('applying initializer');
 
@@ -768,7 +790,58 @@ let SpriteInitializersOptions = {
 
         },
 
-        side_scroll_player_rotate_x: function (sprite) {
+        player_move_xy: function (sprite) {
+
+            alert('applying initializer');
+
+            console.log('side_scroll_player_run:init-ing');
+
+            let __lib = Quazar || Quick2d;
+
+            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                console.log('stick-x:' + x);
+
+                if(Math.abs(x) < 0.2)
+                {
+                    x = 0;
+                }
+
+                if(Math.abs(y) < 0.2)
+                {
+                    y = 0;
+                }
+
+                var  accel =  0.2; //todo : options for accel
+                var  max =  7;
+
+                sprite.accelX(accel, x * max);
+
+                sprite.accelY(accel, y * max);
+
+                if (x < -0.2) {
+                    sprite.flipX = true;
+
+                }
+                else if (x > 0.2) {
+                    sprite.flipX = false;
+
+                }
+
+            });
+
+            sprite.onUpdate(function (spr) {
+
+                sprite.decel(sprite.speed, 'x', 0.1);
+
+                sprite.decel(sprite.speed, 'y', 0.1);
+
+            });
+
+
+        },
+
+        player_rotate_x: function (sprite) {
 
             alert('applying initializer');
 
