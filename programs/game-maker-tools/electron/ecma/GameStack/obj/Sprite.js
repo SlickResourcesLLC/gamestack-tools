@@ -18,9 +18,9 @@ class Sprite {
 
             this.description = description || "__";
 
-        }
+        };
 
-        this.__initializers = $Q.getArg(args, '__initializers', []);
+        this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
         var _spr = this;
 
@@ -32,37 +32,37 @@ class Sprite {
 
         });
 
-        this.type = $Q.getArg(args, 'type', 'basic');
+        this.type = __gameStack.getArg(args, 'type', 'basic');
 
-        this.animations = $Q.getArg(args, 'animations', []);
+        this.animations = __gameStack.getArg(args, 'animations', []);
 
-        this.motions = $Q.getArg(args, 'motions', []);
+        this.motions = __gameStack.getArg(args, 'motions', []);
 
         let __inst = this;
 
-        this.id = $Q.getArg(args, 'id', this.create_id());
+        this.id = __gameStack.getArg(args, 'id', this.create_id());
 
-        this.sounds = $Q.getArg(args, 'sounds', []);
+        this.sounds = __gameStack.getArg(args, 'sounds', []);
 
-        this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
+        this.image = __gameStack.getArg(args, 'image', new GameImage(__gameStack.getArg(args, 'src', false)));
 
-        this.size = $Q.getArg(args, 'size', new Vector3(100, 100));
+        this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
 
-        this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
+        this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
 
-        this.collision_bounds = $Q.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+        this.collision_bounds = __gameStack.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
-        this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
+        this.rotation = __gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0));
 
         this.selected_animation = {};
 
-        this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
+        this.speed = __gameStack.getArg(args, 'speed', new Vector3(0, 0, 0));
 
-        this.acceleration = $Q.getArg(args, 'acceleration', new Vector3(0, 0, 0));
+        this.acceleration = __gameStack.getArg(args, 'acceleration', new Vector3(0, 0, 0));
 
-        this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
+        this.rot_speed = __gameStack.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
-        this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+        this.rot_accel = __gameStack.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
@@ -157,7 +157,6 @@ class Sprite {
     /*****************************
      * Getters
      ***************************/
-
 
     get_id() {
         return this.id;

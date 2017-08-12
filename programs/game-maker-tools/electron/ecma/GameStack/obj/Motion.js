@@ -42,9 +42,9 @@ class Motion {
 
         var c = [];
 
-        Quazar.each(TWEEN.Easing, function (ix, easing) {
+        GameStack.each(TWEEN.Easing, function (ix, easing) {
 
-            Quazar.each(easing, function (iy, easeType) {
+            GameStack.each(easing, function (iy, easeType) {
 
                 if (['in', 'out', 'inout'].indexOf(iy.toLowerCase()) >= 0) {
 

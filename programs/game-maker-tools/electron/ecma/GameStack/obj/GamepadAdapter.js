@@ -116,7 +116,6 @@ class GamepadAdapter {
 
             }
 
-
         };
 
         gp.on = function(key, callback)
@@ -287,36 +286,36 @@ if(!__gameInstance.GamepadAdapter)
 
     __gameInstance.gamepads = [];
 
-    Quazar.GamepadAdapter = __gameInstance.GamepadAdapter;
+    GameStack.GamepadAdapter = __gameInstance.GamepadAdapter;
 
-    Quazar.gamepads = __gameInstance.gamepads;
+    GameStack.gamepads = __gameInstance.gamepads;
 
-    Quazar.GamepadAdapter.on('stick_left', 0, function(x, y){
+    GameStack.GamepadAdapter.on('stick_left', 0, function(x, y){
 
         console.log('Gamepad stick left');
 
     });
 
-    Quazar.GamepadAdapter.on('button_0', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_0', 0, function(x, y){
 
         console.log('Gamepad button 0');
 
     });
 
 
-    Quazar.GamepadAdapter.on('button_1', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_1', 0, function(x, y){
 
         console.log('Gamepad button 1');
 
     });
 
-    Quazar.GamepadAdapter.on('button_2', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_2', 0, function(x, y){
 
         console.log('Gamepad button 2');
 
     });
 
-    Quazar.GamepadAdapter.on('button_3', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_3', 0, function(x, y){
 
         console.log('Gamepad button 3');
 

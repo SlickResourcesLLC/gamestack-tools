@@ -13,7 +13,7 @@ class Camera
     constructor(position)
     {
 
-      this.position = Quazar.getArg(args, 'position', Quazar.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
+      this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
 
     }
 

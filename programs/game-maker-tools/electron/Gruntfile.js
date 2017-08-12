@@ -21,10 +21,9 @@ grunt.initConfig({
         },
 
         game_lib:{
-            src: ['ecma/Quick2d/Main.js', 'ecma/Quick2d/Geometry.js', 'ecma/Quick2d/obj/*.js', 'ecma/Quick2d/obj/sub/*.js'],
-            dest: 'ecma/Quick2d/concat/Quick2d.js'
+            src: ['ecma/GameStack/Main.js', 'ecma/GameStack/Geometry.js', 'ecma/GameStack/obj/*.js', 'ecma/GameStack/obj/sub/*.js'],
+            dest: 'ecma/GameStack/concat/GameStack.js'
         },
-
 
     },
 
@@ -37,8 +36,8 @@ grunt.initConfig({
           files: [
             {
                 expand: true,
-                cwd: 'ecma/Quick2d/concat',
-                src: ['Quick2d.js'],
+                cwd: 'ecma/GameStack/concat',
+                src: ['GameStack.js'],
                 dest: 'client/dist/js'
             }
         ]

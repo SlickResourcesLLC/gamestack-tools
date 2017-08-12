@@ -80,7 +80,7 @@ class GameImage {
 
     constructor(src, onCreate) {
 
-        // Quazar.log('initializing image');
+        // GameStack.log('initializing image');
 
         if (src instanceof Object) {
 
@@ -135,16 +135,11 @@ class GameImage {
     }
 
     getImage() {
-
         return this.image;
-
     }
 
 }
-
-
-
-    let QuazarLibrary = function () {
+    let GameStackLibrary = function () {
 
 
     var lib = {
@@ -238,7 +233,7 @@ class GameImage {
 
         info: function (m) {
 
-            if (Quazar.DEBUG) {
+            if (GameStack.DEBUG) {
 
                 console.info('Info:' + m);
 
@@ -249,9 +244,9 @@ class GameImage {
 
         log: function (m) {
 
-            if (Quazar.DEBUG) {
+            if (GameStack.DEBUG) {
 
-                console.log('Quazar:' + m);
+                console.log('GameStack:' + m);
 
             }
         }
@@ -318,7 +313,7 @@ class GameImage {
 
         assignAll: function (object, args, keys) {
 
-            $Q.each(keys, function (ix, item) {
+            __gameStack.each(keys, function (ix, item) {
 
                 object[ix] = args[ix];
 
@@ -395,28 +390,192 @@ class GameImage {
 
 };
 
-
-//Quazar: a main / game lib object::
+//GameStack: a main / game lib object::
 //TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
 
-let Quazar = new QuazarLibrary();
-let QUAZAR = Quazar;
+let GameStack = new GameStackLibrary();
+let __gameStack = GameStack;
 
-let Quick2d = Quazar; //new name of library : Quick2d;
+let Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameStack
+
+let Quazar = GameStack; //Exposing 'Quazar' as synonymous reference to GameStack
 
 
-let __gameInstance = Quazar;
+/**********
+ * $Q : Selector Function
+ *
+ * **********/
+
+function $Q({selector})
+{
+    this.selector = selector;
+
+    this.before = function(c1, str)
+    {
+        var test_str = str || this.selector;
+        var start_pos = 0;
+        var end_pos = test_str.indexOf(c1,start_pos);
+       return test_str.substring(start_pos,end_pos);
+    };
 
 
-let $q = Quazar;
-let $Q = Quazar;
+    this.contains = function(c1, str)
+    {
+        var test_str = str || this.selector;
+
+        return test_str.indexOf(c1) >= 0;
+    };
+
+    this.contains_all = function(cList, str)
+    {
+        var test_str = str || this.selector;
+
+        for(var x = 0; x < cList.length; x++)
+        {
+            if(test_str.indexOf(cList[x]) < 0)
+            {
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    };
+
+
+    this.contains_any = function(cList, str)
+    {
+        var test_str = str || this.selector;
+
+        for(var x = 0; x < cList.length; x++)
+        {
+            if(test_str.indexOf(cList[x]) >= 0)
+            {
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    };
+
+    this.after = function(c1, str)
+    {
+        var test_str = str || this.selector;
+        var start_pos = 0;
+        var end_pos = test_str.length;
+        return test_str.substring(start_pos,end_pos);
+    };
+
+    this.between = function(c1, c2, str)
+    {
+        var test_str = str || this.selector;
+        var start_pos = test_str.indexOf(c1) + 1;
+        var end_pos = test_str.indexOf(c2,start_pos);
+        return test_str.substring(start_pos,end_pos)
+    };
+
+    var mainSelector = this.before('[').trim(), msfChar = mainSelector.substring(0, 1);
+
+
+    var __targetClassName = "*";
+
+    switch(msfChar.toLowerCase())
+    {
+        case ".":
+
+            console.info('Selecting by class');
+
+            __targetClassName =  this.after('.', mainSelector);
+
+            break;
+
+    }
+
+
+    var criterion = this.between('[', ']'), cparts = criterion.split('=');
+
+    switch(cparts[0].toLowerCase())
+    {
+        case "name":
+
+            //get all objects according to name=name
+
+            break;
+
+        case  "type":
+
+            //get all objects according to type=type
+
+            break;
+
+    };
+
+    this.getEventProfileFromKey = function(evt_key)
+    {
+
+        var isControl = evt_key.indexOf('stick') >= 0 || evt_key.indexOf('button') >= 0;
+
+        var isCollision = evt_key.indexOf('collide') >= 0,
+
+        isPropertyLimit = this.contains_any([">", "<", "="], evt_key);
+
+        return{
+
+            isControl:isControl,
+
+            isCollision:isCollision,
+
+            isProperty:isProperty
+
+        }
+    };
+
+    var __
+
+    return{
+
+        on:function(evt_key, callback) //handle each event, such as on('collide') OR on('stick_left_0') << first controller, stick_left
+        {
+
+            //where does the event go?
+
+            var profile = this.getEventProfileFromKey(evt_key);
+
+            if(profile.isControl)
+            {
+                console.info('Rigging a control event');
+
+            }
+
+            if(profile.isCollision)
+            {
+                console.info('Rigging a collision event');
+
+            }
+
+            if(profile.isProperty)
+            {
+                console.info('Rigging a property event');
+
+            }
+
+        }
+
+    }
+};
+
 
 /********************
- * Quazar.InputEvents
+ * GameStack.InputEvents
  * -Various PC Input Events
  ********************/
 
-Quazar.InputEvents = { //PC input events
+GameStack.InputEvents = { //PC input events
     mousemove: [],
     leftclick: [],
     rightclick: [],
@@ -434,12 +593,12 @@ Quazar.InputEvents = { //PC input events
             //process this as a key event
 
             var cleanKey = evt_key.toLowerCase();
-            Quazar.InputEvents[cleanKey] = Quazar.InputEvents[cleanKey] || [];
-            return Quazar.InputEvents[cleanKey].push({down: callback, up: onFinish});
+            GameStack.InputEvents[cleanKey] = GameStack.InputEvents[cleanKey] || [];
+            return GameStack.InputEvents[cleanKey].push({down: callback, up: onFinish});
         } else {
 
-            Quazar.InputEvents[evt_key] = Quazar.InputEvents[evt_key] || [];
-            return Quazar.InputEvents[evt_key].push({down: callback, up: onFinish});
+            GameStack.InputEvents[evt_key] = GameStack.InputEvents[evt_key] || [];
+            return GameStack.InputEvents[evt_key].push({down: callback, up: onFinish});
         }
 
     },
@@ -457,8 +616,8 @@ Quazar.InputEvents = { //PC input events
                 x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
                 y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
             }
-            x -= Quazar.canvas.offsetLeft;
-            y -= Quazar.canvas.style.top;
+            x -= GameStack.canvas.offsetLeft;
+            y -= GameStack.canvas.style.top;
             return {x: x, y: y};
         }
 
@@ -466,14 +625,14 @@ Quazar.InputEvents = { //PC input events
         function fullMoveInputEvents(event) {
 
             var pos = getMousePos(event);
-            var InputEvents = Quazar.InputEvents;
+            var InputEvents = GameStack.InputEvents;
             for (var x in InputEvents) {
 
 
                 if (InputEvents[x] instanceof Array && x == 'mousemove') {
 
 
-                    Quazar.each(InputEvents[x], function (ix, el) {
+                    GameStack.each(InputEvents[x], function (ix, el) {
 
                         el.down(pos.x, pos.y);
                     });
@@ -485,16 +644,16 @@ Quazar.InputEvents = { //PC input events
         ;
         document.onkeydown = function (e) {
 
-            //    alert(JSON.stringify(Quazar.InputEvents, true, 2));
+            //    alert(JSON.stringify(GameStack.InputEvents, true, 2));
 
-            Quazar.log('Got e');
+            GameStack.log('Got e');
 
             var value = 'key_' + String.fromCharCode(e.keyCode).toLowerCase();
-            if (Quazar.InputEvents[value] instanceof Array) {
+            if (GameStack.InputEvents[value] instanceof Array) {
 
-                Quazar.log('Got []');
+                GameStack.log('Got []');
 
-                Quazar.each(Quazar.InputEvents[value], function (ix, item) {
+                GameStack.each(GameStack.InputEvents[value], function (ix, item) {
 
                     if (typeof (item.down) == 'function') {
 
@@ -512,12 +671,12 @@ Quazar.InputEvents = { //PC input events
 
         document.onkeyup = function (e) {
 
-            //    alert(JSON.stringify(Quazar.InputEvents, true, 2));
+            //    alert(JSON.stringify(GameStack.InputEvents, true, 2));
 
             var value = 'key_' + String.fromCharCode(e.keyCode).toLowerCase();
-            if (Quazar.InputEvents[value] instanceof Array) {
+            if (GameStack.InputEvents[value] instanceof Array) {
 
-                Quazar.each(Quazar.InputEvents[value], function (ix, item) {
+                GameStack.each(GameStack.InputEvents[value], function (ix, item) {
 
                     if (typeof (item.up) == 'function') {
 
@@ -532,13 +691,13 @@ Quazar.InputEvents = { //PC input events
 
         };
 
-        Quazar.canvas.onmousedown = function (e) {
+        GameStack.canvas.onmousedown = function (e) {
 
-            //    alert(JSON.stringify(Quazar.InputEvents, true, 2));
+            //    alert(JSON.stringify(GameStack.InputEvents, true, 2));
 
             var value = e.which;
             var pos = getMousePos(e);
-            var InputEvents = Quazar.InputEvents;
+            var InputEvents = GameStack.InputEvents;
 
 
             e.preventDefault();
@@ -552,7 +711,7 @@ Quazar.InputEvents = { //PC input events
                         if (InputEvents[x] instanceof Array && x == 'leftclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
 
                                 el.down(pos.x, pos.y);
@@ -567,13 +726,13 @@ Quazar.InputEvents = { //PC input events
                     // alert('Middle Mouse button pressed.');
 
 
-                    for (var x in Quazar.InputEvents) {
+                    for (var x in GameStack.InputEvents) {
 
 
                         if (InputEvents[x] instanceof Array && x == 'middleclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
                                 el.down(pos.x, pos.y);
                             });
@@ -586,13 +745,13 @@ Quazar.InputEvents = { //PC input events
                     //  alert('Right Mouse button pressed.');
 
 
-                    for (var x in Quazar.InputEvents) {
+                    for (var x in GameStack.InputEvents) {
 
 
                         if (InputEvents[x] instanceof Array && x == 'rightclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
                                 el.down(pos.x, pos.y);
                             });
@@ -615,13 +774,13 @@ Quazar.InputEvents = { //PC input events
             e.preventDefault();
             return 0;
         };
-        Quazar.canvas.onmouseup = function (e) {
+        GameStack.canvas.onmouseup = function (e) {
 
-            //    alert(JSON.stringify(Quazar.InputEvents, true, 2));
+            //    alert(JSON.stringify(GameStack.InputEvents, true, 2));
 
             var value = e.which;
             var pos = getMousePos(e);
-            var InputEvents = Quazar.InputEvents;
+            var InputEvents = GameStack.InputEvents;
 
 
             e.preventDefault();
@@ -635,7 +794,7 @@ Quazar.InputEvents = { //PC input events
                         if (InputEvents[x] instanceof Array && x == 'leftclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
 
                                 el.up(pos.x, pos.y);
@@ -650,13 +809,13 @@ Quazar.InputEvents = { //PC input events
                     // alert('Middle Mouse button pressed.');
 
 
-                    for (var x in Quazar.InputEvents) {
+                    for (var x in GameStack.InputEvents) {
 
 
                         if (InputEvents[x] instanceof Array && x == 'middleclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
                                 el.up(pos.x, pos.y);
                             });
@@ -669,13 +828,13 @@ Quazar.InputEvents = { //PC input events
                     //  alert('Right Mouse button pressed.');
 
 
-                    for (var x in Quazar.InputEvents) {
+                    for (var x in GameStack.InputEvents) {
 
 
                         if (InputEvents[x] instanceof Array && x == 'rightclick') {
 
 
-                            Quazar.each(InputEvents[x], function (ix, el) {
+                            GameStack.each(InputEvents[x], function (ix, el) {
 
                                 el.up(pos.x, pos.y);
                             });
@@ -705,19 +864,19 @@ Quazar.InputEvents = { //PC input events
 };
 
 
-$Q = QUAZAR;
+__gameStack = QUAZAR;
 
 //Override the existing window.onload function
 
-window._preQuazar_windowLoad = window.onload;
+window._preGameStack_windowLoad = window.onload;
 
 window.onload = function () {
 
-    if (typeof(window._preQuazar_windowLoad) == 'function') {
-        window._preQuazar_windowLoad();
+    if (typeof(window._preGameStack_windowLoad) == 'function') {
+        window._preGameStack_windowLoad();
     }
 
-    $Q.callReady();
+    __gameStack.callReady();
 
 }
 
@@ -794,7 +953,7 @@ var Canvas = {
             var x = sprite.position.x;
             var y = sprite.position.y;
 
-            var camera = $Q.camera || {pos: {x: 0, y: 0, z: 0}};
+            var camera = __gameStack.camera || {pos: {x: 0, y: 0, z: 0}};
 
 
             if (true) {
@@ -851,9 +1010,9 @@ var Canvas = {
 }
 
 
-Quazar.ready(function (lib) {
+GameStack.ready(function (lib) {
 
-    Quazar.log('Quazar:lib :: ready');
+    GameStack.log('GameStack:lib :: ready');
 
 
 });
@@ -894,11 +1053,11 @@ class GameWindow {
 
         }
 
-        Quazar.__gameWindow = this;
+        GameStack.__gameWindow = this;
 
-        Quazar.canvas = this.canvas;
+        GameStack.canvas = this.canvas;
 
-        Quazar.ctx = this.ctx;
+        GameStack.ctx = this.ctx;
 
     }
 
@@ -934,7 +1093,7 @@ class GameWindow {
 
     update() {
 
-        Quazar.each(this.sprites, function (ix, item) {
+        GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.update) == 'function') {
                 item.update(item);
@@ -970,7 +1129,7 @@ class GameWindow {
 
         var _gw = this;
 
-        Quazar.each(this.sprites, function (ix, item) {
+        GameStack.each(this.sprites, function (ix, item) {
 
             Canvas.draw(item, _gw.ctx);
 
@@ -1050,7 +1209,7 @@ class VideoDisplay //show a video
 
         this.size = new Vector3(size.x, size.y, size.z || 0);
 
-        Quazar.log('VideoDisplay():: TODO: create dom element');
+        GameStack.log('VideoDisplay():: TODO: create dom element');
 
     }
 
@@ -1359,7 +1518,7 @@ class Camera
     constructor(position)
     {
 
-      this.position = Quazar.getArg(args, 'position', Quazar.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
+      this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
 
     }
 
@@ -1633,7 +1792,6 @@ class Collision
 {
     constructor({object, collideables, extras})
     {
-
         this.object = object || [];
 
         this.collideables = collideables instanceof Array ? collideables : [];
@@ -1647,11 +1805,15 @@ class Collision
     {
         this.object = object;
 
+        return this;
+
     }
 
     Extras(extras)
     {
         this.extras = extras;
+
+        return this;
 
     }
 
@@ -1659,11 +1821,15 @@ class Collision
     {
         this.collideables = collideables;
 
+        return this;
+
     }
 
     onCollide(fun)
     {
         this.callback = fun;
+
+        return this;
 
     }
 
@@ -2008,36 +2174,36 @@ if(!__gameInstance.GamepadAdapter)
 
     __gameInstance.gamepads = [];
 
-    Quazar.GamepadAdapter = __gameInstance.GamepadAdapter;
+    GameStack.GamepadAdapter = __gameInstance.GamepadAdapter;
 
-    Quazar.gamepads = __gameInstance.gamepads;
+    GameStack.gamepads = __gameInstance.gamepads;
 
-    Quazar.GamepadAdapter.on('stick_left', 0, function(x, y){
+    GameStack.GamepadAdapter.on('stick_left', 0, function(x, y){
 
         console.log('Gamepad stick left');
 
     });
 
-    Quazar.GamepadAdapter.on('button_0', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_0', 0, function(x, y){
 
         console.log('Gamepad button 0');
 
     });
 
 
-    Quazar.GamepadAdapter.on('button_1', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_1', 0, function(x, y){
 
         console.log('Gamepad button 1');
 
     });
 
-    Quazar.GamepadAdapter.on('button_2', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_2', 0, function(x, y){
 
         console.log('Gamepad button 2');
 
     });
 
-    Quazar.GamepadAdapter.on('button_3', 0, function(x, y){
+    GameStack.GamepadAdapter.on('button_3', 0, function(x, y){
 
         console.log('Gamepad button 3');
 
@@ -2127,9 +2293,9 @@ class Motion {
 
         var c = [];
 
-        Quazar.each(TWEEN.Easing, function (ix, easing) {
+        GameStack.each(TWEEN.Easing, function (ix, easing) {
 
-            Quazar.each(easing, function (iy, easeType) {
+            GameStack.each(easing, function (iy, easeType) {
 
                 if (['in', 'out', 'inout'].indexOf(iy.toLowerCase()) >= 0) {
 
@@ -2453,9 +2619,9 @@ class Circle
 
             this.description = description || "__";
 
-        }
+        };
 
-        this.__initializers = $Q.getArg(args, '__initializers', []);
+        this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
         var _spr = this;
 
@@ -2467,37 +2633,37 @@ class Circle
 
         });
 
-        this.type = $Q.getArg(args, 'type', 'basic');
+        this.type = __gameStack.getArg(args, 'type', 'basic');
 
-        this.animations = $Q.getArg(args, 'animations', []);
+        this.animations = __gameStack.getArg(args, 'animations', []);
 
-        this.motions = $Q.getArg(args, 'motions', []);
+        this.motions = __gameStack.getArg(args, 'motions', []);
 
         let __inst = this;
 
-        this.id = $Q.getArg(args, 'id', this.create_id());
+        this.id = __gameStack.getArg(args, 'id', this.create_id());
 
-        this.sounds = $Q.getArg(args, 'sounds', []);
+        this.sounds = __gameStack.getArg(args, 'sounds', []);
 
-        this.image = $Q.getArg(args, 'image', new GameImage($Q.getArg(args, 'src', false)));
+        this.image = __gameStack.getArg(args, 'image', new GameImage(__gameStack.getArg(args, 'src', false)));
 
-        this.size = $Q.getArg(args, 'size', new Vector3(100, 100));
+        this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
 
-        this.position = $Q.getArg(args, 'position', new Vector3(0, 0, 0));
+        this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
 
-        this.collision_bounds = $Q.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+        this.collision_bounds = __gameStack.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
-        this.rotation = $Q.getArg(args, 'rotation', new Vector3(0, 0, 0));
+        this.rotation = __gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0));
 
         this.selected_animation = {};
 
-        this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
+        this.speed = __gameStack.getArg(args, 'speed', new Vector3(0, 0, 0));
 
-        this.acceleration = $Q.getArg(args, 'acceleration', new Vector3(0, 0, 0));
+        this.acceleration = __gameStack.getArg(args, 'acceleration', new Vector3(0, 0, 0));
 
-        this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
+        this.rot_speed = __gameStack.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
-        this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+        this.rot_accel = __gameStack.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
@@ -2592,7 +2758,6 @@ class Circle
     /*****************************
      * Getters
      ***************************/
-
 
     get_id() {
         return this.id;

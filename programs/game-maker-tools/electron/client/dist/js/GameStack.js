@@ -331,6 +331,16 @@ var Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameSta
 
 var Quazar = GameStack; //Exposing 'Quazar' as synonymous reference to GameStack
 
+var QUAZAR = GameStack; //Exposing 'QUAZAR' as synonymous reference to GameStack
+
+var __gameInstance = GameStack;
+
+/***************
+ * TODO : fix the above duplicate references, which exist now for backward compatibility with previouslyh authored code
+ *
+ *  -apply find and replace accross the codebase
+ *
+ * ****************/
 
 /**********
  * $Q : Selector Function
@@ -1061,19 +1071,19 @@ var Animation = function () {
 
                 var _anime = this;
 
-                this.name = $Q.getArg(args, 'name', '_blank'), this.description = $Q.getArg(args, 'description', '_blank');
+                this.name = this.getArg(args, 'name', '_blank'), this.description = this.getArg(args, 'description', '_blank');
 
-                this.frames = $Q.getArg(args, 'frames', []);
+                this.frames = this.getArg(args, 'frames', []);
 
-                this.image = new GameImage($Q.getArg(args, 'src', $Q.getArg(args, 'image', false)));
+                this.image = new GameImage(this.getArg(args, 'src', this.getArg(args, 'image', false)));
 
                 this.src = this.image.domElement.src;
 
                 this.domElement = this.image.domElement;
 
-                this.type = $Q.getArg(args, 'type', 'basic');
+                this.type = this.getArg(args, 'type', 'basic');
 
-                this.delay = $Q.getArg(args, 'delay', 0);
+                this.delay = this.getArg(args, 'delay', 0);
 
                 this.cix = 0;
 
@@ -1087,9 +1097,9 @@ var Animation = function () {
                         this.apply2DFrames(args.parent || {});
                 };
 
-                this.flipX = $Q.getArg(args, 'flipX', false);
+                this.flipX = this.getArg(args, 'flipX', false);
 
-                this.priority = $Q.getArg(args, 'priority', 0);
+                this.priority = this.getArg(args, 'priority', 0);
 
                 this.cix = 0;
 
@@ -3195,4 +3205,4 @@ var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref8) {
 
         };
 };
-//# sourceMappingURL=Quick2d.js.map
+//# sourceMappingURL=GameStack.js.map
