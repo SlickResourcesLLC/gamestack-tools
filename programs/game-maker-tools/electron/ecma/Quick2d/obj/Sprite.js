@@ -1,14 +1,11 @@
-
 class Sprite {
     constructor(name, description, args) {
 
         this.active = true; //active sprites are visible
 
-        this.__initializers = []; //apply options to this variable
 
-        if(typeof name == 'object') //accept first argument as full args object
+        if (typeof name == 'object') //accept first argument as full args object
         {
-
             args = name;
 
             this.name = args.name || "__";
@@ -16,8 +13,7 @@ class Sprite {
             this.description = args.description || "__";
 
         }
-        else
-        {
+        else {
 
             this.name = name || "__";
 
@@ -43,7 +39,7 @@ class Sprite {
 
         let __inst = this;
 
-        this.id = $Q.getArg(args, 'id',  this.create_id());
+        this.id = $Q.getArg(args, 'id', this.create_id());
 
         this.sounds = $Q.getArg(args, 'sounds', []);
 
@@ -59,30 +55,30 @@ class Sprite {
 
         this.selected_animation = {};
 
-        this.speed =  $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
+        this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
 
-        this.accel =  $Q.getArg(args, 'accel', new Vector3(0, 0, 0));
+        this.acceleration = $Q.getArg(args, 'acceleration', new Vector3(0, 0, 0));
 
-        this.rot_speed =  $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
+        this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
-        this.rot_accel =  $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+        this.rot_accel = $Q.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
-        $.each(this.sounds , function(ix, item){
+        $.each(this.sounds, function (ix, item) {
 
             __inst.sounds[ix] = new Sound(item);
 
         });
 
-        $.each(this.motions, function(ix, item){
+        $.each(this.motions, function (ix, item) {
 
             __inst.motions[ix] = new Motion(item);
 
         });
 
 
-        $.each(this.animations, function(ix, item){
+        $.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
 
@@ -92,18 +88,61 @@ class Sprite {
 
     }
 
+
+    init() {
+
+
+    }
+
+    onInit(fun) {
+
+        if (typeof fun == 'string') {
+            var __inst = this;
+
+            var keys = fun.split('.');
+
+            console.log('finding init from string:' + fun);
+
+            if(!keys.length >= 2)
+            {
+                return console.error('need min 2 string keys separated by "."');
+            }
+
+            var f = Quazar.options.SpriteInitializers[keys[0]][keys[1]];
+
+            if(typeof(f) == 'function')
+            {
+                alert('found func');
+
+
+                __inst.init =   __inst.extendFunc(f, __inst.init);
+
+            }
+
+
+        }
+
+        else if (typeof fun == 'function') {
+
+            console.log('extending init:');
+
+            __inst.extendFunc(initializer, this.init);
+
+
+        }
+
+    }
+
     /*****************************
      * Getters
      ***************************/
 
 
-    get_id()
-    {
+    get_id() {
         return this.id;
     }
 
-    to_map_object(size, framesize)
-    {
+    to_map_object(size, framesize) {
         this.__mapSize = new Vector3(size || this.size);
 
         this.frameSize = new Vector3(framesize || this.size);
@@ -116,22 +155,19 @@ class Sprite {
      * Setters and Creators
      ***************************/
 
-    create_id()
-    {
+    create_id() {
         return new Date().getUTCMilliseconds();
 
     }
 
-    setSize(size)
-    {
+    setSize(size) {
         this.size = new Vector3(size.x, size.y, size.z);
 
         this.selected_animation.size = new Vector3(size.x, size.y, size.z);
 
     }
 
-    setPos(pos)
-    {
+    setPos(pos) {
         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
 
     }
@@ -205,7 +241,8 @@ class Sprite {
      * -starts empty:: is used by Quick2d.js as the main sprite update
      ***************************/
 
-    update(sprite) {}
+    update(sprite) {
+    }
 
     /*****************************
      * def_update()
@@ -215,11 +252,9 @@ class Sprite {
 
     def_update(sprite) {
 
-        for(var x in this.speed)
-        {
+        for (var x in this.speed) {
 
-            if(this.speed[x] > 0 || this.speed[x] < 0)
-            {
+            if (this.speed[x] > 0 || this.speed[x] < 0) {
 
                 this.position[x] += this.speed[x];
 
@@ -227,23 +262,19 @@ class Sprite {
 
         }
 
-        for(var x in this.accel)
-        {
+        for (var x in this.acceleration) {
 
-            if(this.accel[x] > 0 || this.accel[x] < 0)
-            {
+            if (this.acceleration[x] > 0 || this.acceleration[x] < 0) {
 
-                this.speed[x] += this.accel[x];
+                this.speed[x] += this.acceleration[x];
 
             }
 
         }
 
-        for(var x in this.rot_speed)
-        {
+        for (var x in this.rot_speed) {
 
-            if(this.rot_speed[x] > 0 || this.rot_speed[x] < 0)
-            {
+            if (this.rot_speed[x] > 0 || this.rot_speed[x] < 0) {
 
                 this.rotation[x] += this.rot_speed[x];
 
@@ -252,12 +283,10 @@ class Sprite {
 
         }
 
-        for(var x in this.rot_accel)
-        {
+        for (var x in this.rot_accel) {
 
 
-            if(this.rot_accel[x] > 0 || this.rot_accel[x] < 0)
-            {
+            if (this.rot_accel[x] > 0 || this.rot_accel[x] < 0) {
 
                 this.rot_speed[x] += this.rot_accel[x];
 
@@ -265,23 +294,58 @@ class Sprite {
         }
     }
 
+    resolveFunctionFromDoubleKeys(keyString1, keyString2, obj, callback) {
+
+        callback(typeof obj[keyString1][keyString2] == 'function' ? obj[keyString1][keyString2] : {});
+
+    }
+
+
+    extendFunc(fun, extendedFunc) {
+
+        console.log('extending func');
+
+        var ef = extendedFunc;
+
+        var __inst = this;
+
+       return function () {
+
+
+            ef(__inst);
+
+            //any new function comes after
+
+           fun(__inst);
+
+
+
+        };
+
+    }
+
+
     /*****************************
      *  onUpdate(fun)
      * -args: 1 function(sprite){ } //the self-instance/sprite is passed into the function()
      * -overrides and maintains existing code for update(){} function
      ***************************/
 
-    onUpdate(fun)
-    {
-        fun = fun || function(){};
+    onUpdate(fun) {
+        fun = fun || function () {
+            };
 
         let update = this.update;
 
         let __inst = this;
 
-        this.update = function(__inst){ update(__inst); fun(__inst); };
+        this.update = function (__inst) {
+            update(__inst);
+            fun(__inst);
+        };
 
     }
+
 
     /*****************************
      *  collidesRectangular(sprite)
@@ -291,8 +355,7 @@ class Sprite {
      * -TODO:allow stateffects, graphiceffects into the collision function
      ***************************/
 
-    collidesRectangular(sprite)
-    {
+    collidesRectangular(sprite) {
 
         return Quazar.Collision.spriteRectanglesCollide(sprite);
 
@@ -305,8 +368,7 @@ class Sprite {
      *  -provides a more realistic collision than basic rectangular
      ***************************/
 
-    collidesByPixels(sprite)
-    {
+    collidesByPixels(sprite) {
 
         return console.info("TODO: Sprite().collidesByPixels(sprite): finish this function");
 
@@ -359,7 +421,10 @@ class Sprite {
 
         if (__gameInstance.isAtPlay) {
 
-          if(animation){ this.setAnimation(animation) };
+            if (animation) {
+                this.setAnimation(animation)
+            }
+            ;
 
             this.selected_animation.animate();
 
@@ -379,27 +444,26 @@ class Sprite {
 
         accel = Math.abs(accel);
 
-        if(typeof(max) == 'number')
-        {
-            max = {y:max};
+        if (typeof(max) == 'number') {
+            max = {y: max};
 
         }
 
         this.assertSpeed();
 
-        let diff =  max.y - this.speed.y;
+        let diff = max.y - this.speed.y;
 
-        if(diff > 0)
-        {
+        if (diff > 0) {
             this.speed.y += Math.abs(diff) >= accel ? accel : diff;
 
-        };
+        }
+        ;
 
-        if(diff < 0)
-        {
+        if (diff < 0) {
             this.speed.y -= Math.abs(diff) >= accel ? accel : diff;
 
-        };
+        }
+        ;
 
     }
 
@@ -414,53 +478,133 @@ class Sprite {
 
         accel = Math.abs(accel);
 
-        if(typeof(max) == 'number')
-        {
-            max = {x:max};
+        if (typeof(max) == 'number') {
+            max = {x: max};
 
         }
 
         this.assertSpeed();
 
-        let diff =  max.x - this.speed.x;
+        let diff = max.x - this.speed.x;
 
-        if(diff > 0)
-        {
+        if (diff > 0) {
             this.speed.x += Math.abs(diff) >= accel ? accel : diff;
 
-        };
+        }
+        ;
 
-        if(diff < 0)
-        {
+        if (diff < 0) {
             this.speed.x -= Math.abs(diff) >= accel ? accel : diff;
 
-        };
+        }
+        ;
 
     }
 
+
+
+
     /*****************************
-     *  decelX
-     *  -decelerate on the X axis
-     *  -args: 1 float:amt
+     *  accel
+     *  -accelerate any acceleration -key
      ***************************/
 
-    deccelX(rate) {
+    accel(prop, key, accel, max) {
+
+        accel = Math.abs(accel);
+
+        if (typeof(max) == 'number') {
+            max = {x: max};
+
+        }
+
+        let speed = prop[key];
+
+       // this.assertSpeed();
+
+        let diff = max.x - prop[key];
+
+        if (diff > 0) {
+            prop[key] += Math.abs(diff) >= accel ? accel : diff;
+
+        }
+        ;
+
+        if (diff < 0) {
+            prop[key] -= Math.abs(diff) >= accel ? accel : diff;
+
+        }
+        ;
+
+    }
+
+
+
+    /*****************************
+     *  decel
+     *  -deceleration -key
+     ***************************/
+
+    decel(prop, key, rate) {
         if (typeof(rate) == 'object') {
 
             rate = rate.rate;
 
         }
 
-        if (this.speed['x'] > rate) {
+        rate = Math.abs(rate);
+
+        if(Math.abs(prop[key]) <= rate)
+        {
+            prop[key] = 0;
+        }
+
+       else if (prop[key] > 0) {
+            prop[key] -= rate;
+
+        }
+        else if (prop[key] < 0) {
+            prop[key] += rate;
+
+        }
+        else {
+
+            prop[key] = 0;
+
+        }
+    }
+
+
+    /*****************************
+         *  decelX
+         *  -decelerate on the X axis
+         *  -args: 1 float:amt
+         ***************************/
+
+        deccelX(rate) {
+            if (typeof(rate) == 'object') {
+
+            rate = rate.rate;
+
+        }
+
+        rate = Math.abs(rate);
+
+            if(Math.abs(this.speed['x']) <= rate)
+            {
+                this.speed['x'] = 0;
+
+            }
+
+        if (this.speed['x'] > 0) {
             this.speed['x'] -= rate;
 
         }
-        else if (this.speed['x'] < rate) {
+        else if (this.speed['x'] < 0) {
             this.speed['x'] += rate;
 
         }
-        else
-        {
+        else {
 
             this.speed['x'] = 0;
 
@@ -479,18 +623,15 @@ class Sprite {
 
         amt = Math.abs(amt);
 
-        if(Math.abs(this.speed.y) <= amt)
-        {
+        if (Math.abs(this.speed.y) <= amt) {
             this.speed.y = 0;
 
         }
-        else if(this.speed.y > amt)
-        {
+        else if (this.speed.y > amt) {
 
             this.speed.y -= amt;
         }
-        else if(this.speed.y < amt * -1)
-        {
+        else if (this.speed.y < amt * -1) {
 
             this.speed.y += amt;
         }
@@ -507,20 +648,20 @@ class Sprite {
 
         amt = Math.abs(amt);
 
-        if(Math.abs(this.speed.x) <= amt)
-        {
-            this.speed.x = 0;
 
-        }
-        else if(this.speed.x > amt)
-        {
+        if (this.speed.x > amt) {
 
             this.speed.x -= amt;
         }
-        else if(this.speed.x < amt * -1)
-        {
+        else if (this.speed.x < amt * -1) {
 
             this.speed.x += amt;
+        }
+
+        if (Math.abs(this.speed.x) <= amt) {
+
+            this.speed.x = 0;
+
         }
 
     }
@@ -532,13 +673,11 @@ class Sprite {
      *  -TODO : rename to fallstop || something that resembles a function strictly on Y-Axis
      ***************************/
 
-    collide_stop(item)
-    {
+    collide_stop(item) {
 
         var max_y = item.max ? item.max.y : item.position.y;
 
-        if(this.position.y + this.size.y >= max_y)
-        {
+        if (this.position.y + this.size.y >= max_y) {
 
             this.position.y = max_y - this.size.y;
 
@@ -554,11 +693,10 @@ class Sprite {
      *  -TODO: test this function
      ***************************/
 
-    fromFile(file_path)
-    {
+    fromFile(file_path) {
         var __inst = this;
 
-        $.getJSON(file_path, function(data){
+        $.getJSON(file_path, function (data) {
 
             __inst = new Sprite(data);
 
@@ -566,8 +704,8 @@ class Sprite {
 
     }
 
-};
-
+}
+;
 
 
 /****************
@@ -577,107 +715,106 @@ class Sprite {
 
 let SpriteInitializersOptions = {
 
-    Flight: {
+    ControllerStickMotion: {
 
         __args: {},
 
-        top_down_flight: function (sprite) {
-        },
+        __guiImageUrl:"no-exista",
 
-        side_scroll_flight: function (sprite) {
-        }
+        side_scroll_player_move_x: function (sprite) {
 
-    },
+            alert('applying initializer');
 
-    Running: {
-
-        __args: {},
-
-        side_scroll_runner: function (sprite) {
+            console.log('side_scroll_player_run:init-ing');
 
             let __lib = Quazar || Quick2d;
 
-            Quazar.GamepadAdapter.on('stick_left', 0, function(x, y){
+            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
-                accel = accel || 0.25; max = max || 7;
+                console.log('stick-x:' + x);
+
+                if(Math.abs(x) < 0.2)
+                {
+                    return 0;
+                }
+
+                var  accel =  0.2; //todo : options for accel
+                var  max =  7;
 
                 sprite.accelX(accel, x * max);
 
-                if(x < -0.2)
-                {
+                if (x < -0.2) {
                     sprite.flipX = true;
 
                 }
-                else if(x > 0.2)
-                {
+                else if (x > 0.2) {
                     sprite.flipX = false;
 
                 }
 
             });
 
-            sprite.onUpdate(function(spr){
+            sprite.onUpdate(function (spr) {
 
                 spr.decelX(0.1);
 
-                if(!spr.__falling){ spr.decelY(0.2) };
+                if (!spr.__falling) {
+                    spr.decelY(0.2)
+                }
+                ;
+
+            });
+
+
+        },
+
+        side_scroll_player_rotate_x: function (sprite) {
+
+            alert('applying initializer');
+
+
+            let __lib = Quazar || Quick2d;
+
+            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                console.log('stick-x:' + x);
+
+                if(Math.abs(x) < 0.2)
+                {
+                    return 0;
+                }
+
+                var  accel =  0.25; //todo : options for accel
+                var  max =  7;
+
+                sprite.accel(sprite.rot_speed, 'x', accel, x * max);
+
+                if (x < -0.2) {
+                    sprite.flipX = true;
+
+                }
+                else if (x > 0.2) {
+                    sprite.flipX = false;
+
+                }
+
+            });
+
+            sprite.onUpdate(function (spr) {
+
+                sprite.decel(sprite.rot_speed, 'x', 0.1);
+
+                if (!spr.__falling) {
+                    spr.decelY(0.2)
+                }
+                ;
 
             });
 
 
         }
 
-    },
 
-    Collision: {
-
-        __args: {},
-
-
-        basic_stop_collideable: function (sprite) {
-
-        },
-
-        top_stop_collideable: function (sprite) {
-
-
-        } //pass through bottom, but land on top, as with certain platforms
-
-
-    },
-
-    Powerups: {
-
-        __args: {},
-
-        grabbable_power_up: function (sprite) {
-        }
-
-    },
-
-    ControllerStickMotion: {
-
-        __args: {},
-
-        stick_move_x: function (sprite) {
-        },
-
-        stick_move_y: function (sprite) {
-        }
-
-    }
-
-    ,
-
-    Jumping: {
-
-        __args: {}
-
-    },
-
-    Shooting: {
-
-        __args: {}
 
     }
 

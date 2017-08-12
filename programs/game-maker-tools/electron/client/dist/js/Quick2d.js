@@ -1594,11 +1594,25 @@ var GamepadAdapter = function () {
 
                         gp.buttons = [];
 
+                        gp.extendFunc = function (f1, f2) {
+
+                                var fc = f2;
+
+                                return function (x, y) {
+
+                                        f2(x, y);
+
+                                        f1(x, y);
+                                };
+                        };
+
                         gp.on = function (key, callback) {
 
                                 if (this[key] && key !== "on") {
 
-                                        this[key] = callback;
+                                        var current_cb = typeof this[key] == 'function' ? this[key] : function (x, y) {};
+
+                                        this[key] = this.extendFunc(callback, current_cb);
                                 } else if (key.indexOf('button') >= 0 && key.indexOf('_') >= 0) {
                                         var parts = key.split('_');
 
@@ -1608,7 +1622,9 @@ var GamepadAdapter = function () {
 
                                                 number = parseInt(parts[1]);
 
-                                                this['buttons'][number] = callback;
+                                                var current_cb = typeof this['buttons'][number] == 'function' ? this['buttons'][number] : function (x, y) {};
+
+                                                this['buttons'][number] = this.extendFunc(callback, current_cb);
                                         } catch (e) {
                                                 console.error('could not parse "on" event with ' + key);
                                         }
@@ -2061,18 +2077,15 @@ var Circle = function Circle(args) {
 };
 
 ;
-
 var Sprite = function () {
         function Sprite(name, description, args) {
                 _classCallCheck(this, Sprite);
 
                 this.active = true; //active sprites are visible
 
-                this.__initializers = []; //apply options to this variable
 
                 if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
                         {
-
                                 args = name;
 
                                 this.name = args.name || "__";
@@ -2121,7 +2134,7 @@ var Sprite = function () {
 
                 this.speed = $Q.getArg(args, 'speed', new Vector3(0, 0, 0));
 
-                this.accel = $Q.getArg(args, 'accel', new Vector3(0, 0, 0));
+                this.acceleration = $Q.getArg(args, 'acceleration', new Vector3(0, 0, 0));
 
                 this.rot_speed = $Q.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
@@ -2147,11 +2160,44 @@ var Sprite = function () {
                 this.selected_animation = this.animations[0] || new Animation();
         }
 
-        /*****************************
-         * Getters
-         ***************************/
-
         _createClass(Sprite, [{
+                key: 'init',
+                value: function init() {}
+        }, {
+                key: 'onInit',
+                value: function onInit(fun) {
+
+                        if (typeof fun == 'string') {
+                                var __inst = this;
+
+                                var keys = fun.split('.');
+
+                                console.log('finding init from string:' + fun);
+
+                                if (!keys.length >= 2) {
+                                        return console.error('need min 2 string keys separated by "."');
+                                }
+
+                                var f = Quazar.options.SpriteInitializers[keys[0]][keys[1]];
+
+                                if (typeof f == 'function') {
+                                        alert('found func');
+
+                                        __inst.init = __inst.extendFunc(f, __inst.init);
+                                }
+                        } else if (typeof fun == 'function') {
+
+                                console.log('extending init:');
+
+                                __inst.extendFunc(initializer, this.init);
+                        }
+                }
+
+                /*****************************
+                 * Getters
+                 ***************************/
+
+        }, {
                 key: 'get_id',
                 value: function get_id() {
                         return this.id;
@@ -2281,11 +2327,11 @@ var Sprite = function () {
                                 }
                         }
 
-                        for (var x in this.accel) {
+                        for (var x in this.acceleration) {
 
-                                if (this.accel[x] > 0 || this.accel[x] < 0) {
+                                if (this.acceleration[x] > 0 || this.acceleration[x] < 0) {
 
-                                        this.speed[x] += this.accel[x];
+                                        this.speed[x] += this.acceleration[x];
                                 }
                         }
 
@@ -2305,6 +2351,31 @@ var Sprite = function () {
                                 }
                         }
                 }
+        }, {
+                key: 'resolveFunctionFromDoubleKeys',
+                value: function resolveFunctionFromDoubleKeys(keyString1, keyString2, obj, callback) {
+
+                        callback(typeof obj[keyString1][keyString2] == 'function' ? obj[keyString1][keyString2] : {});
+                }
+        }, {
+                key: 'extendFunc',
+                value: function extendFunc(fun, extendedFunc) {
+
+                        console.log('extending func');
+
+                        var ef = extendedFunc;
+
+                        var __inst = this;
+
+                        return function () {
+
+                                ef(__inst);
+
+                                //any new function comes after
+
+                                fun(__inst);
+                        };
+                }
 
                 /*****************************
                  *  onUpdate(fun)
@@ -2322,7 +2393,8 @@ var Sprite = function () {
                         var __inst = this;
 
                         this.update = function (__inst) {
-                                update(__inst);fun(__inst);
+                                update(__inst);
+                                fun(__inst);
                         };
                 }
 
@@ -2402,7 +2474,8 @@ var Sprite = function () {
 
                                 if (animation) {
                                         this.setAnimation(animation);
-                                };
+                                }
+                                ;
 
                                 this.selected_animation.animate();
 
@@ -2432,11 +2505,13 @@ var Sprite = function () {
 
                         if (diff > 0) {
                                 this.speed.y += Math.abs(diff) >= accel ? accel : diff;
-                        };
+                        }
+                        ;
 
                         if (diff < 0) {
                                 this.speed.y -= Math.abs(diff) >= accel ? accel : diff;
-                        };
+                        }
+                        ;
                 }
 
                 /*****************************
@@ -2461,18 +2536,79 @@ var Sprite = function () {
 
                         if (diff > 0) {
                                 this.speed.x += Math.abs(diff) >= accel ? accel : diff;
-                        };
+                        }
+                        ;
 
                         if (diff < 0) {
                                 this.speed.x -= Math.abs(diff) >= accel ? accel : diff;
-                        };
+                        }
+                        ;
                 }
 
                 /*****************************
-                 *  decelX
-                 *  -decelerate on the X axis
-                 *  -args: 1 float:amt
+                 *  accel
+                 *  -accelerate any acceleration -key
                  ***************************/
+
+        }, {
+                key: 'accel',
+                value: function accel(prop, key, _accel, max) {
+
+                        _accel = Math.abs(_accel);
+
+                        if (typeof max == 'number') {
+                                max = { x: max };
+                        }
+
+                        var speed = prop[key];
+
+                        // this.assertSpeed();
+
+                        var diff = max.x - prop[key];
+
+                        if (diff > 0) {
+                                prop[key] += Math.abs(diff) >= _accel ? _accel : diff;
+                        }
+                        ;
+
+                        if (diff < 0) {
+                                prop[key] -= Math.abs(diff) >= _accel ? _accel : diff;
+                        }
+                        ;
+                }
+
+                /*****************************
+                 *  decel
+                 *  -deceleration -key
+                 ***************************/
+
+        }, {
+                key: 'decel',
+                value: function decel(prop, key, rate) {
+                        if ((typeof rate === 'undefined' ? 'undefined' : _typeof(rate)) == 'object') {
+
+                                rate = rate.rate;
+                        }
+
+                        rate = Math.abs(rate);
+
+                        if (Math.abs(prop[key]) <= rate) {
+                                prop[key] = 0;
+                        } else if (prop[key] > 0) {
+                                prop[key] -= rate;
+                        } else if (prop[key] < 0) {
+                                prop[key] += rate;
+                        } else {
+
+                                prop[key] = 0;
+                        }
+                }
+
+                /*****************************
+                     *  decelX
+                     *  -decelerate on the X axis
+                     *  -args: 1 float:amt
+                     ***************************/
 
         }, {
                 key: 'deccelX',
@@ -2482,9 +2618,15 @@ var Sprite = function () {
                                 rate = rate.rate;
                         }
 
-                        if (this.speed['x'] > rate) {
+                        rate = Math.abs(rate);
+
+                        if (Math.abs(this.speed['x']) <= rate) {
+                                this.speed['x'] = 0;
+                        }
+
+                        if (this.speed['x'] > 0) {
                                 this.speed['x'] -= rate;
-                        } else if (this.speed['x'] < rate) {
+                        } else if (this.speed['x'] < 0) {
                                 this.speed['x'] += rate;
                         } else {
 
@@ -2527,14 +2669,17 @@ var Sprite = function () {
 
                         amt = Math.abs(amt);
 
-                        if (Math.abs(this.speed.x) <= amt) {
-                                this.speed.x = 0;
-                        } else if (this.speed.x > amt) {
+                        if (this.speed.x > amt) {
 
                                 this.speed.x -= amt;
                         } else if (this.speed.x < amt * -1) {
 
                                 this.speed.x += amt;
+                        }
+
+                        if (Math.abs(this.speed.x) <= amt) {
+
+                                this.speed.x = 0;
                         }
                 }
 
@@ -2589,27 +2734,28 @@ var Sprite = function () {
 
 var SpriteInitializersOptions = {
 
-        Flight: {
+        ControllerStickMotion: {
 
                 __args: {},
 
-                top_down_flight: function top_down_flight(sprite) {},
+                side_scroll_player_move_x: function side_scroll_player_move_x(sprite) {
 
-                side_scroll_flight: function side_scroll_flight(sprite) {}
+                        alert('applying initializer');
 
-        },
-
-        Running: {
-
-                __args: {},
-
-                side_scroll_runner: function side_scroll_runner(sprite) {
+                        console.log('side_scroll_player_run:init-ing');
 
                         var __lib = Quazar || Quick2d;
 
                         Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
-                                accel = accel || 0.25;max = max || 7;
+                                console.log('stick-x:' + x);
+
+                                if (Math.abs(x) < 0.2) {
+                                        return 0;
+                                }
+
+                                var accel = 0.2; //todo : options for accel
+                                var max = 7;
 
                                 sprite.accelX(accel, x * max);
 
@@ -2626,50 +2772,47 @@ var SpriteInitializersOptions = {
 
                                 if (!spr.__falling) {
                                         spr.decelY(0.2);
-                                };
+                                }
+                                ;
+                        });
+                },
+
+                side_scroll_player_rotate_x: function side_scroll_player_rotate_x(sprite) {
+
+                        alert('applying initializer');
+
+                        var __lib = Quazar || Quick2d;
+
+                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+
+                                console.log('stick-x:' + x);
+
+                                if (Math.abs(x) < 0.2) {
+                                        return 0;
+                                }
+
+                                var accel = 0.25; //todo : options for accel
+                                var max = 7;
+
+                                sprite.accel(sprite.rot_speed, 'x', accel, x * max);
+
+                                if (x < -0.2) {
+                                        sprite.flipX = true;
+                                } else if (x > 0.2) {
+                                        sprite.flipX = false;
+                                }
+                        });
+
+                        sprite.onUpdate(function (spr) {
+
+                                sprite.decel(sprite.rot_speed, 'x', 0.1);
+
+                                if (!spr.__falling) {
+                                        spr.decelY(0.2);
+                                }
+                                ;
                         });
                 }
-
-        },
-
-        Collision: {
-
-                __args: {},
-
-                basic_stop_collideable: function basic_stop_collideable(sprite) {},
-
-                top_stop_collideable: function top_stop_collideable(sprite) {} //pass through bottom, but land on top, as with certain platforms
-
-
-        },
-
-        Powerups: {
-
-                __args: {},
-
-                grabbable_power_up: function grabbable_power_up(sprite) {}
-
-        },
-
-        ControllerStickMotion: {
-
-                __args: {},
-
-                stick_move_x: function stick_move_x(sprite) {},
-
-                stick_move_y: function stick_move_y(sprite) {}
-
-        },
-
-        Jumping: {
-
-                __args: {}
-
-        },
-
-        Shooting: {
-
-                __args: {}
 
         }
 

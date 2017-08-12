@@ -103,13 +103,31 @@ class GamepadAdapter {
 
         gp.buttons = [];
 
+        gp.extendFunc = function(f1, f2)
+        {
+
+            var fc = f2;
+
+           return function(x, y){
+
+                f2(x, y);
+
+               f1(x, y);
+
+            }
+
+
+        };
+
         gp.on = function(key, callback)
         {
 
             if(this[key] && key !== "on")
             {
 
-                this[key] = callback;
+                var current_cb =  typeof(this[key]) == 'function' ? this[key] : function(x, y){};
+
+               this[key] = this.extendFunc(callback, current_cb);
 
 
             }
@@ -125,7 +143,10 @@ class GamepadAdapter {
 
                     number = parseInt(parts[1]);
 
-                    this['buttons'][number] = callback;
+
+                    var current_cb =  typeof(this['buttons'][number]) == 'function' ? this['buttons'][number] : function(x, y){};
+
+                    this['buttons'][number] = this.extendFunc(callback, current_cb);
 
                 }
                 catch (e)

@@ -14,6 +14,32 @@ li.motions_member, li.animations_member, li.sounds_member
 
 }
 
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 175px;
+    padding: 0 5px;
+}
+
+input[type=range].slider-x
+{
+
+    position:fixed;
+
+    bottom:0px;
+
+}
+
+input[type=range].slider-y
+{
+    position:fixed;
+
+    right:0px;
+
+
+}
 
 select
 {
