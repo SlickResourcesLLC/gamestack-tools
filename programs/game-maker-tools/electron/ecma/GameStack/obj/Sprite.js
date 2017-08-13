@@ -1,24 +1,31 @@
+
+
+
+/**
+ * Sprite({name:string, description:string, size:Vector3, position:Vector3})
+ *
+ * <ul >
+ *  <li> an Object-container for multiple animations
+ *  <li> supports a variety of game objects and logic
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {Sprite} object of Sprite()
+ * */
+
 class Sprite {
-    constructor(name, description, args) {
+    constructor(args) {
+
+        if(!args)
+        {
+            args = {};
+        }
 
         this.active = true; //active sprites are visible
 
-        if (typeof name == 'object') //accept first argument as full args object
-        {
-            args = name;
+        this.name = args.name || "__";
 
-            this.name = args.name || "__";
-
-            this.description = args.description || "__";
-
-        }
-        else {
-
-            this.name = name || "__";
-
-            this.description = description || "__";
-
-        };
+        this.description = args.description || "__";
 
         this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
@@ -66,20 +73,20 @@ class Sprite {
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
-        $.each(this.sounds, function (ix, item) {
+        $Q.each(this.sounds, function (ix, item) {
 
             __inst.sounds[ix] = new Sound(item);
 
         });
 
-        $.each(this.motions, function (ix, item) {
+        $Q.each(this.motions, function (ix, item) {
 
             __inst.motions[ix] = new Motion(item);
 
         });
 
 
-        $.each(this.animations, function (ix, item) {
+        $Q.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
 
@@ -88,7 +95,7 @@ class Sprite {
 
         //Apply initializers:
 
-        $.each(this.__initializers, function(ix, item){
+        $Q.each(this.__initializers, function(ix, item){
 
             __inst.onInit(item);
 
@@ -98,11 +105,24 @@ class Sprite {
 
     }
 
+    /**
+     * This function initializes sprites when necessary. Called automatically on GameStack.add(mySprite);
+     *
+     * @function
+     * @memberof Sprite
+     **********/
 
     init() {
 
 
     }
+
+    /**
+     * This function extends the init() function. Takes single function() argument OR single string argument
+     * @function
+     * @memberof Sprite
+     * @param {function} fun the function to be passed into the init() event of the Sprite()
+     **********/
 
     onInit(fun) {
 
@@ -158,11 +178,22 @@ class Sprite {
      * Getters
      ***************************/
 
+    /**
+     * This function gets the 'id' of the object()
+     * <ul>
+     *     <li>See usage links</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @returns {string}
+     **********/
+
     get_id() {
         return this.id;
     }
 
     to_map_object(size, framesize) {
+
         this.__mapSize = new Vector3(size || this.size);
 
         this.frameSize = new Vector3(framesize || this.size);
@@ -175,11 +206,31 @@ class Sprite {
      * Setters and Creators
      ***************************/
 
+    /**
+     * This function creates the 'id' of the Sprite()
+     * <ul>
+     *     <li>Called automatically on constructor()</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @returns {string}
+     **********/
+
     create_id() {
 
         return Quick2d.create_id();
 
     }
+
+
+    /**
+     * This function sets the size of the Sprite()
+     * <ul>
+     *     <li></li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     **********/
 
     setSize(size) {
         this.size = new Vector3(size.x, size.y, size.z);
@@ -211,6 +262,16 @@ class Sprite {
      *  setAnimation(anime)
      *  -set the select_animation of this sprite
      ***************************/
+
+    /**
+     * This function sets the 'selected_animation' property of the Sprite()
+     * <ul>
+     *     <li></li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {Animation}
+     **********/
 
     setAnimation(anime) {
 
@@ -250,6 +311,16 @@ class Sprite {
      * -detects if object is on the screen
      ***************************/
 
+    /**
+     * This function detects whether the Sprite() is onScreen, according to its size and position on the GameStack.canvas
+     * <ul>
+     *     <li></li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     **********/
+
+
     onScreen(w, h) {
         return this.position.x + this.size.x >= 0 && this.position.x < w
             && this.position.y + this.size.y >= 0 && this.position.y < h;
@@ -265,6 +336,18 @@ class Sprite {
      * -starts empty:: is used by Quick2d.js as the main sprite update
      ***************************/
 
+    /**
+     * This function is the recursive update() for the Sprite()
+     *
+     * <ul>
+     *     <li>*Called automatically by the GameStack library</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {sprite}
+     **********/
+
+
     update(sprite) {
     }
 
@@ -273,6 +356,18 @@ class Sprite {
      * -applies speed and other default factors of movement::
      * -is used by Quick2d.js as the system def_update (default update)
      ***************************/
+
+    /**
+     * This function updates various speed and rotational-speed properties for the Sprite()
+     *
+     * <ul>
+     *     <li>Normally no need to use this. It is called automatically by the GameStack init()</li>
+     *     <li>*Allows properties of Sprite().speed, Sprite().rot_speed, and Sprite().accel, Sprite().rot_accel to control speed and acceleration.</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {sprite}
+     **********/
 
     def_update(sprite) {
 
@@ -318,12 +413,35 @@ class Sprite {
         }
     }
 
+    /**
+     * This function is for persistence of data and behavior for the Sprite()
+     *
+     * <ul>
+     *     <li>a function may be resolved from keyString args from within the obj arg.</li>
+     *     <li>Callback is then triggered on this function</li>
+     *     <li>Used by GameStack to restore the behavioral options of Sprites from GameStack.options.SpriteInitializers</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {keyString1, keyString2, obj, callback}
+     **********/
+
     resolveFunctionFromDoubleKeys(keyString1, keyString2, obj, callback) {
 
         callback(typeof obj[keyString1][keyString2] == 'function' ? obj[keyString1][keyString2] : {});
 
     }
 
+    /**
+     * This function will extend 2nd function arg with 1st function arg, and return the combined function()
+     *
+     * <ul>
+     *     <li>Applied in GameStack for extending functions when onInit(fun) is called</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {fun, extendedFunc}
+     **********/
 
     extendFunc(fun, extendedFunc) {
 
@@ -355,6 +473,17 @@ class Sprite {
      * -overrides and maintains existing code for update(){} function
      ***************************/
 
+    /**
+     * This function will extend the update of a Sprite()
+     *
+     * <ul>
+     *     <li>Use this function to apply multiple update-calls for an object</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {fun}
+     **********/
+
     onUpdate(fun) {
         fun = fun || function () {
             };
@@ -379,6 +508,18 @@ class Sprite {
      * -TODO:allow stateffects, graphiceffects into the collision function
      ***************************/
 
+    /**
+     * Get the boolean(T || F) results of a Collision between two Sprites(), based on their position Vector3's and Size()
+     * <ul>
+     *     <li>A rectangular style position</li>
+     *      <li>Takes another sprite as argument</li>
+     *       <li>Returns basic true || false during runtime</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {sprite}
+     **********/
+
     collidesRectangular(sprite) {
 
         return Quazar.Collision.spriteRectanglesCollide(sprite);
@@ -392,6 +533,17 @@ class Sprite {
      *  -provides a more realistic collision than basic rectangular
      ***************************/
 
+    /**
+     * Get the boolean(T || F) results of a Collision between two Sprites(), based on non-transparent pixels
+     * <ul>
+     *     <li>Detects collision or overlap of any non-transparent pixels</li>
+     *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {sprite}
+     **********/
+
     collidesByPixels(sprite) {
 
         return console.info("TODO: Sprite().collidesByPixels(sprite): finish this function");
@@ -404,6 +556,17 @@ class Sprite {
      *  -takes options{} for number of shots, anglePerShot, etc...
      *  -TODO: complete and test this code
      ***************************/
+
+    /**
+     * Sprites() fires a projectile object
+     * <ul>
+     *     <li>Easy instantiator for bullets and propelled objects in GameStack</li>
+     *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {options} *numerous args
+     **********/
 
     shoot(options) {
         //character shoots an animation
@@ -439,6 +602,17 @@ class Sprite {
      *  -simply animate, set the animation to the arg 'animation'
      ***************************/
 
+    /**
+     * Simple call to animate the sprite
+     * <ul>
+     *     <li>Calls animate on the Sprite.selected_animation</li>
+     *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {animation}
+     **********/
+
     animate(animation) {
 
         alert('calling animation');
@@ -463,6 +637,14 @@ class Sprite {
      *  -accelerate on Y-Axis with 'accel' and 'max' (speed) arguments
      *  -example-use: gravitation of sprite || up / down movement
      ***************************/
+
+    /**
+     * This function accelerates the Sprite() on the y-axis
+
+     * @function
+     * @memberof Sprite
+     * @params {accel, max}
+     **********/
 
     accelY(accel, max) {
 
@@ -497,6 +679,14 @@ class Sprite {
      *  -accelerate on X-Axis with 'accel' and 'max' (speed) arguments
      *  -example-use: running of sprite || left / right movement
      ***************************/
+
+    /**
+     * This function accelerates the Sprite() on the y-axis
+
+     * @function
+     * @memberof Sprite
+     * @params {accel, max}
+     **********/
 
     accelX(accel, max) {
 
@@ -533,6 +723,14 @@ class Sprite {
      *  -accelerate any acceleration -key
      ***************************/
 
+    /**
+     * This function accelerates the Sprite() on any or all axis, depending on arguments
+
+     * @function
+     * @memberof Sprite
+     * @params {prop, key, accel, max}
+     **********/
+
     accel(prop, key, accel, max) {
 
         accel = Math.abs(accel);
@@ -568,6 +766,15 @@ class Sprite {
      *  decel
      *  -deceleration -key
      ***************************/
+
+    /**
+     * This function decelerates the Sprite() on any or all axis, depending on arguments
+
+     * @function
+     * @memberof Sprite
+     * @params {prop, key, accel, max}
+     **********/
+
 
     decel(prop, key, rate) {
         if (typeof(rate) == 'object') {
@@ -716,6 +923,16 @@ class Sprite {
      *  -TODO : complete this function based on code to load Sprite() from file, located in the spritemaker.html file
      *  -TODO: test this function
      ***************************/
+
+
+    /**
+     * This function restores a Sprite() from json file
+
+     * @function
+     * @memberof Sprite
+     * @params {file_path}
+     **********/
+
 
     fromFile(file_path) {
         var __inst = this;

@@ -1533,12 +1533,6 @@
     });
 
 
-    var jstr = function (obj) {
-
-        return JSON.stringify(obj);
-
-    };
-
 
     var Game = {
 
@@ -2642,7 +2636,7 @@
                 var img = mapElement.img;
                 // console.log("Img src:" + img.src);
 
-                var sprite = new Sprite('MapElement', 'A level-builder element');
+                var sprite = new Sprite({name:'MapElement', description:'A level-builder element'});
 
                 sprite.active = true;
 
@@ -2690,7 +2684,7 @@
                 var img = mapElement.img;
                 //  console.log("Img src:" + img.src);
 
-                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
+                var sprite = new Sprite(JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
 
                 sprite.active = true;
 
@@ -2835,7 +2829,7 @@
 
         hoverSelectionImg.src = pathPref + "hover_selection.png";
 
-        __levelMaker.hover_selection_sprite = new Sprite('Selection Sprite', 'Shows selected area');
+        __levelMaker.hover_selection_sprite = new Sprite({name:'Hover Selection Sprite', description:'Shows hover-selected area.'});
 
         __levelMaker.discluded_sprites.push(__levelMaker.hover_selection_sprite);
 
@@ -2849,7 +2843,7 @@
 
         __levelMaker.hover_selection_sprite.setSize(fs);
 
-        __levelMaker.selection_sprite = new Sprite('Selection Sprite', 'Shows selected area');
+        __levelMaker.selection_sprite = new Sprite({name:'Selection Sprite', description:'Shows selected area.'});
 
         __levelMaker.selection_sprite.setSize(fs);
 

@@ -1,7 +1,15 @@
+
 /**
- * Created by The Blakes on 04-13-2017
+ * Force()
  *
- */
+ * <ul >
+ *  <li> a 'physics' object
+ *  <li> easily instantiate physical behaviors, applied to specific groups of objects
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {Force} object of Force()
+ * */
 
 class Force
 {

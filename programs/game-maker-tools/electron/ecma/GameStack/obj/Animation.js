@@ -1,9 +1,9 @@
+
 /**
- * Created by The Blakes on 04-13-2017
- *
- */
-
-
+ * Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})
+ * [See Live Demo with Usage-Example]{@link http://www.google.com}
+ * @returns {Animation} object of Animation()
+ * */
 
 class Animation {
     constructor(args) {

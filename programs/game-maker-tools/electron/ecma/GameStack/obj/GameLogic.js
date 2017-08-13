@@ -1,6 +1,3 @@
-/**
- * Created by The Blakes on 7/27/2017.
- */
 
 class StatEffect{
 
