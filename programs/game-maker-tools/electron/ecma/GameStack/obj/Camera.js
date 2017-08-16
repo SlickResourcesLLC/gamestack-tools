@@ -8,16 +8,10 @@
 class Camera
 {
 
-    constructor(position)
+    constructor(args)
     {
 
-      this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
-
-    }
-
-    follow(object, accel, max, distSize)
-    {
-
+      this.position = new Vector3(0, 0, 0);
 
     }
 

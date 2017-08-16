@@ -250,6 +250,9 @@ let GameStackLibrary = function () {
 
         animate: function (time) {
 
+            __gameStack.isAtPlay = true;
+
+
             TWEEN.update(time);
 
             requestAnimationFrame(__gameStack.animate);
@@ -273,10 +276,21 @@ let GameStackLibrary = function () {
 
         Collision: {
 
-            spriteRectanglesCollide(obj1, obj2)
+            spriteRectanglesCollide(obj1, obj2, padding)
             {
-                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x &&
-                    obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                if(!padding)
+                {
+                    padding = 0;
+                }
+
+               var paddingX = padding * obj1.size.x,
+
+                   paddingY = padding * obj1.size.y, left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
+
+               top = obj1.position.y + paddingY, bottom = obj1.position.y + obj1.size.y - paddingY;
+
+                if (right > obj2.position.x && left < obj2.position.x + obj2.size.x &&
+                   bottom > obj2.position.y && top < obj2.position.y + obj2.size.y) {
 
                     return true;
 
@@ -356,10 +370,6 @@ let GameStackLibrary = function () {
 
             });
 
-
-            __gameInstance.isAtPlay = true;
-
-
             this.InputEvents.init();
 
         }
@@ -387,6 +397,20 @@ let GameStackLibrary = function () {
 
             }
 
+            if (obj instanceof Force) {
+
+                this.__gameWindow.forces.push(obj);
+
+            }
+
+
+            if (obj instanceof Camera) {
+
+                this.__gameWindow.camera = obj;
+
+            }
+
+
             if (obj instanceof Sprite) {
 
                 this.__gameWindow.sprites.push(obj);
@@ -400,6 +424,20 @@ let GameStackLibrary = function () {
         }
 
         ,
+
+        remove: function (obj) {
+            //1: if Sprite(), Add object to the existing __gameWindow
+
+
+            if (obj instanceof Sprite) {
+
+                var ix = this.__gameWindow.sprites.indexOf(obj);
+
+                this.__gameWindow.sprites.splice(ix, 1);
+
+            }
+
+        },
 
         all_objects: [],
 
@@ -513,6 +551,7 @@ function $Q(selector) {
 
     //declare events:
 
+
     var $GFunx = {};
 
     $GFunx.each = function(callback)
@@ -536,12 +575,46 @@ function $Q(selector) {
     $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
     {
 
-        var contentsAny = function(list, string)
+
+        if(__gameStack.isAtPlay)
+        {
+            return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
+
+        }
+
+        var criterion = $Q.between('[', ']', evt_key);
+
+        if(criterion.indexOf('===') >= 0)
+        {
+            criterion = criterion.replace('===', '=');
+        }
+
+        if(criterion.indexOf('==') >= 0)
+        {
+            criterion =  criterion.replace('==', '=').replace('==', 0);
+        }
+
+       var cparts = criterion.split('=');
+
+        var  __targetType = "*", __targetName = "*";
+
+        if(evt_key.indexOf('[') >= 0)
+        {
+            evt_key = $Q.before('[', evt_key).trim();
+
+        }
+
+
+        var padding = 0;
+
+        if(cparts[0].toLowerCase() == 'padding')
         {
 
+            padding = parseFloat(cparts[1]);
 
+            alert('padding:' + padding);
 
-        };
+        }
 
         //if controller_ix is function, and callback not present, then controller_ix is the callback aka optional argument
 
@@ -579,8 +652,8 @@ function $Q(selector) {
 
             Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
-                if(!button_mode){callback();}
-                else if(x){callback();};
+                if(!button_mode){callback(x, y);}
+                else if(x){callback(x);};
 
             });
 
@@ -600,6 +673,33 @@ function $Q(selector) {
             console.info('detected collision event key in:' +  evt_profile.evt_key);
 
             console.info('TODO: rig collision events');
+
+            this.each(function(ix, item1){
+
+                selectorObject.each(function(iy, item2){
+
+
+                    if(typeof(item1.onUpdate) == 'function')
+                    {
+
+                        item1.onUpdate(function(sprite){
+
+                            if(item1.collidesRectangular(item2, padding))
+                            {
+
+                              callback(item1, item2);
+
+                            };
+
+                        });
+
+                    }
+
+
+                });
+
+            });
+
 
         }
 
@@ -654,8 +754,6 @@ function $Q(selector) {
             }
 
             evt_parts = key.split(condition);
-
-
 
             for(var x = 0; x < evt_parts.length; x++)
             {
@@ -826,9 +924,9 @@ function $Q(selector) {
 
     }
 
-  var criterion = $Q.between('[', ']', s), cparts = criterion.split('=');
+         var criterion = $Q.between('[', ']', s), cparts = criterion.split('=');
 
-  var  __targetType = "*", __targetName = "*";
+        var  __targetType = "*", __targetName = "*";
 
   var getParts = function() {
 
@@ -1136,19 +1234,6 @@ GameStack.InputEvents = { //PC input events
 
         };
 
-        if (!GameStack.canvas) {
-            console.info('The GameStack canvas was not defined: creating one now.');
-
-            var canvas = document.createElement('CANVAS');
-
-            document.body.append(canvas);
-
-            GameStack.canvas = document.getElementsByTagName('CANVAS')[0];
-
-            GameStack.ctx = GameStack.canvas.getContext('2d');
-
-        }
-
 
         GameStack.canvas.onmousedown = function (e) {
 
@@ -1347,11 +1432,12 @@ window.onload = function () {
 
 
 var Canvas = {
+
+    __levelMaker:false,
+
     draw: function (sprite, ctx) {
 
-        if(NODRAW){return 0; }
-
-        if (sprite.active && sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT)) {
+        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
 
             this.drawPortion(sprite, ctx);
 
@@ -1411,28 +1497,15 @@ var Canvas = {
 
             }
 
-            var x = sprite.position.x;
-            var y = sprite.position.y;
+            var p = sprite.position;
 
-            var camera = __gameStack.camera || {pos: {x: 0, y: 0, z: 0}};
+            var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
 
-
-            if (true) {
-
-                if (!isNaN(camera.pos.x)) {
-
-                    x += camera.pos.x;
-                }
-
-                if (!isNaN(camera.pos.y)) {
-
-                    y += camera.pos.y;
-                }
-
-            }
-            ;
+            var x = p.x, y = p.y;
 
 
+            x -= camera.position.x || 0;
+            y -= camera.position.y  || 0;
             //optional animation : gameSize
 
             var targetSize = sprite.size || sprite.selected_animation.size;
@@ -1488,7 +1561,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update}) {
+    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -1499,6 +1572,7 @@ class GameWindow {
         this.forces = forces instanceof Array ? forces : [];
 
         this.canvas = canvas|| false;
+
 
         if(!this.canvas)
         {
@@ -1516,13 +1590,25 @@ class GameWindow {
 
             this.canvas.style.background = 'black';
 
-            __gameStack.WIDTH = this.canvas.width;
-            __gameStack.HEIGHT = this.canvas.height;
+            var c = this.canvas;
+
+            this.adjustSize();
         }
 
         this.ctx = this.canvas.getContext('2d');
 
-        this.__camera = new Vector3(0, 0, 0);
+
+        window.onresize = function(){
+
+            __gameStack.__gameWindow.adjustSize();
+
+        };
+
+        this.camera = new Camera();
+
+        this.camera.target = false;
+
+        __gameStack.camera = this.camera;
 
         if (typeof update == 'function') {
             this.onUpdate(update);
@@ -1535,6 +1621,23 @@ class GameWindow {
         __gameStack.ctx = this.ctx;
 
        __gameStack.__gameWindow = this;
+
+    }
+
+
+    adjustSize(w, h)
+    {
+        w = w || this.canvas.clientWidth;
+
+        h = h || this.canvas.clientHeight;
+
+        __gameStack.WIDTH = w;
+
+        __gameStack.HEIGHT = h;
+
+        this.canvas.width = w;
+
+        this.canvas.height = h;
 
     }
 
@@ -1570,6 +1673,7 @@ class GameWindow {
 
     update() {
 
+
         GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.update) == 'function') {
@@ -1587,20 +1691,40 @@ class GameWindow {
         });
 
 
-    }
 
-    onUpdate(arg) {
-        if (typeof(arg) == 'function') {
-            let up = this.update;
+        GameStack.each(this.forces, function (ix, item) {
 
-            this.update = function (sprites) {
-                up(sprites);
-                arg(sprites);
+            if (typeof(item.update) == 'function') {
+
+                item.update(item);
+
             }
 
-        }
+            if (typeof(item.def_update) == 'function') {
+                //  console.log('def_update');
+
+                item.def_update(item);
+
+            }
+
+        });
+
+
 
     }
+
+
+
+    loadLevelFile(filepath, callback)
+    {
+
+        $.getJSON(filepath, function(data) {
+
+            callback(false, data);
+
+        });
+    }
+
 
     draw() {
 

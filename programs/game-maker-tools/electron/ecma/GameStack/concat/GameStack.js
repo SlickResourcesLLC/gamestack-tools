@@ -250,6 +250,9 @@ let GameStackLibrary = function () {
 
         animate: function (time) {
 
+            __gameStack.isAtPlay = true;
+
+
             TWEEN.update(time);
 
             requestAnimationFrame(__gameStack.animate);
@@ -273,10 +276,21 @@ let GameStackLibrary = function () {
 
         Collision: {
 
-            spriteRectanglesCollide(obj1, obj2)
+            spriteRectanglesCollide(obj1, obj2, padding)
             {
-                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x &&
-                    obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                if(!padding)
+                {
+                    padding = 0;
+                }
+
+               var paddingX = padding * obj1.size.x,
+
+                   paddingY = padding * obj1.size.y, left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
+
+               top = obj1.position.y + paddingY, bottom = obj1.position.y + obj1.size.y - paddingY;
+
+                if (right > obj2.position.x && left < obj2.position.x + obj2.size.x &&
+                   bottom > obj2.position.y && top < obj2.position.y + obj2.size.y) {
 
                     return true;
 
@@ -356,10 +370,6 @@ let GameStackLibrary = function () {
 
             });
 
-
-            __gameInstance.isAtPlay = true;
-
-
             this.InputEvents.init();
 
         }
@@ -387,6 +397,20 @@ let GameStackLibrary = function () {
 
             }
 
+            if (obj instanceof Force) {
+
+                this.__gameWindow.forces.push(obj);
+
+            }
+
+
+            if (obj instanceof Camera) {
+
+                this.__gameWindow.camera = obj;
+
+            }
+
+
             if (obj instanceof Sprite) {
 
                 this.__gameWindow.sprites.push(obj);
@@ -400,6 +424,20 @@ let GameStackLibrary = function () {
         }
 
         ,
+
+        remove: function (obj) {
+            //1: if Sprite(), Add object to the existing __gameWindow
+
+
+            if (obj instanceof Sprite) {
+
+                var ix = this.__gameWindow.sprites.indexOf(obj);
+
+                this.__gameWindow.sprites.splice(ix, 1);
+
+            }
+
+        },
 
         all_objects: [],
 
@@ -513,6 +551,7 @@ function $Q(selector) {
 
     //declare events:
 
+
     var $GFunx = {};
 
     $GFunx.each = function(callback)
@@ -536,12 +575,46 @@ function $Q(selector) {
     $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
     {
 
-        var contentsAny = function(list, string)
+
+        if(__gameStack.isAtPlay)
+        {
+            return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
+
+        }
+
+        var criterion = $Q.between('[', ']', evt_key);
+
+        if(criterion.indexOf('===') >= 0)
+        {
+            criterion = criterion.replace('===', '=');
+        }
+
+        if(criterion.indexOf('==') >= 0)
+        {
+            criterion =  criterion.replace('==', '=').replace('==', 0);
+        }
+
+       var cparts = criterion.split('=');
+
+        var  __targetType = "*", __targetName = "*";
+
+        if(evt_key.indexOf('[') >= 0)
+        {
+            evt_key = $Q.before('[', evt_key).trim();
+
+        }
+
+
+        var padding = 0;
+
+        if(cparts[0].toLowerCase() == 'padding')
         {
 
+            padding = parseFloat(cparts[1]);
 
+            alert('padding:' + padding);
 
-        };
+        }
 
         //if controller_ix is function, and callback not present, then controller_ix is the callback aka optional argument
 
@@ -579,8 +652,8 @@ function $Q(selector) {
 
             Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
-                if(!button_mode){callback();}
-                else if(x){callback();};
+                if(!button_mode){callback(x, y);}
+                else if(x){callback(x);};
 
             });
 
@@ -600,6 +673,33 @@ function $Q(selector) {
             console.info('detected collision event key in:' +  evt_profile.evt_key);
 
             console.info('TODO: rig collision events');
+
+            this.each(function(ix, item1){
+
+                selectorObject.each(function(iy, item2){
+
+
+                    if(typeof(item1.onUpdate) == 'function')
+                    {
+
+                        item1.onUpdate(function(sprite){
+
+                            if(item1.collidesRectangular(item2, padding))
+                            {
+
+                              callback(item1, item2);
+
+                            };
+
+                        });
+
+                    }
+
+
+                });
+
+            });
+
 
         }
 
@@ -654,8 +754,6 @@ function $Q(selector) {
             }
 
             evt_parts = key.split(condition);
-
-
 
             for(var x = 0; x < evt_parts.length; x++)
             {
@@ -826,9 +924,9 @@ function $Q(selector) {
 
     }
 
-  var criterion = $Q.between('[', ']', s), cparts = criterion.split('=');
+         var criterion = $Q.between('[', ']', s), cparts = criterion.split('=');
 
-  var  __targetType = "*", __targetName = "*";
+        var  __targetType = "*", __targetName = "*";
 
   var getParts = function() {
 
@@ -1136,19 +1234,6 @@ GameStack.InputEvents = { //PC input events
 
         };
 
-        if (!GameStack.canvas) {
-            console.info('The GameStack canvas was not defined: creating one now.');
-
-            var canvas = document.createElement('CANVAS');
-
-            document.body.append(canvas);
-
-            GameStack.canvas = document.getElementsByTagName('CANVAS')[0];
-
-            GameStack.ctx = GameStack.canvas.getContext('2d');
-
-        }
-
 
         GameStack.canvas.onmousedown = function (e) {
 
@@ -1347,11 +1432,12 @@ window.onload = function () {
 
 
 var Canvas = {
+
+    __levelMaker:false,
+
     draw: function (sprite, ctx) {
 
-        if(NODRAW){return 0; }
-
-        if (sprite.active && sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT)) {
+        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
 
             this.drawPortion(sprite, ctx);
 
@@ -1411,28 +1497,15 @@ var Canvas = {
 
             }
 
-            var x = sprite.position.x;
-            var y = sprite.position.y;
+            var p = sprite.position;
 
-            var camera = __gameStack.camera || {pos: {x: 0, y: 0, z: 0}};
+            var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
 
-
-            if (true) {
-
-                if (!isNaN(camera.pos.x)) {
-
-                    x += camera.pos.x;
-                }
-
-                if (!isNaN(camera.pos.y)) {
-
-                    y += camera.pos.y;
-                }
-
-            }
-            ;
+            var x = p.x, y = p.y;
 
 
+            x -= camera.position.x || 0;
+            y -= camera.position.y  || 0;
             //optional animation : gameSize
 
             var targetSize = sprite.size || sprite.selected_animation.size;
@@ -1488,7 +1561,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update}) {
+    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -1499,6 +1572,7 @@ class GameWindow {
         this.forces = forces instanceof Array ? forces : [];
 
         this.canvas = canvas|| false;
+
 
         if(!this.canvas)
         {
@@ -1516,13 +1590,25 @@ class GameWindow {
 
             this.canvas.style.background = 'black';
 
-            __gameStack.WIDTH = this.canvas.width;
-            __gameStack.HEIGHT = this.canvas.height;
+            var c = this.canvas;
+
+            this.adjustSize();
         }
 
         this.ctx = this.canvas.getContext('2d');
 
-        this.__camera = new Vector3(0, 0, 0);
+
+        window.onresize = function(){
+
+            __gameStack.__gameWindow.adjustSize();
+
+        };
+
+        this.camera = new Camera();
+
+        this.camera.target = false;
+
+        __gameStack.camera = this.camera;
 
         if (typeof update == 'function') {
             this.onUpdate(update);
@@ -1535,6 +1621,23 @@ class GameWindow {
         __gameStack.ctx = this.ctx;
 
        __gameStack.__gameWindow = this;
+
+    }
+
+
+    adjustSize(w, h)
+    {
+        w = w || this.canvas.clientWidth;
+
+        h = h || this.canvas.clientHeight;
+
+        __gameStack.WIDTH = w;
+
+        __gameStack.HEIGHT = h;
+
+        this.canvas.width = w;
+
+        this.canvas.height = h;
 
     }
 
@@ -1570,6 +1673,7 @@ class GameWindow {
 
     update() {
 
+
         GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.update) == 'function') {
@@ -1587,20 +1691,40 @@ class GameWindow {
         });
 
 
-    }
 
-    onUpdate(arg) {
-        if (typeof(arg) == 'function') {
-            let up = this.update;
+        GameStack.each(this.forces, function (ix, item) {
 
-            this.update = function (sprites) {
-                up(sprites);
-                arg(sprites);
+            if (typeof(item.update) == 'function') {
+
+                item.update(item);
+
             }
 
-        }
+            if (typeof(item.def_update) == 'function') {
+                //  console.log('def_update');
+
+                item.def_update(item);
+
+            }
+
+        });
+
+
 
     }
+
+
+
+    loadLevelFile(filepath, callback)
+    {
+
+        $.getJSON(filepath, function(data) {
+
+            callback(false, data);
+
+        });
+    }
+
 
     draw() {
 
@@ -1715,8 +1839,7 @@ class Animation {
 
         this.frames = this.getArg(args, 'frames', []);
 
-        this.image = new GameImage( this.getArg(args, 'src',  this.getArg(args, 'image', false)));
-
+        this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
         this.src = this.image.domElement.src;
 
@@ -1728,12 +1851,13 @@ class Animation {
 
         this.cix = 0;
 
-        this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+        this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
         this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
+        this.extras = this.getArg(args, 'extras', false);
 
       if(typeof(args) == 'object' && args.frameBounds && args.frameSize){  this.apply2DFrames(args.parent || {}) };
 
@@ -1905,6 +2029,12 @@ engage(duration, complete)
 
     var duration = duration || typeof(this.duration) == 'number' ? this.duration : this.frames.length * 20;
 
+    if(this.cix == 0 && this.extras)
+    {
+        this.extras.call(); //fire any extras attached
+
+    }
+
     //we have a target
   this.tween = new TWEEN.Tween(this)
         .easing(__inst.curve || TWEEN.Easing.Linear.None)
@@ -1952,9 +2082,7 @@ onComplete(fun)
 
         this.timer += 1;
 
-        Quazar.log('ANIMATING with frame count:' + this.frames.length);
-
-        if(this.timer % this.delay == 0) {
+        if(this.delay == 0 || this.timer % this.delay == 0) {
 
             if(this.hang)
             {
@@ -1969,6 +2097,18 @@ onComplete(fun)
             }
             else
             {
+
+                if(this.cix == 0 && this.extras)
+                {
+                    this.extras.call(); //fire any extras attached
+
+                }
+
+                if(this.cix >= this.frames.length - 1 && typeof(this.complete) == 'function')
+                {
+                    this.complete(this);
+
+                }
 
                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
             }
@@ -1990,16 +2130,10 @@ onComplete(fun)
 class Camera
 {
 
-    constructor(position)
+    constructor(args)
     {
 
-      this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0) ) );
-
-    }
-
-    follow(object, accel, max, distSize)
-    {
-
+      this.position = new Vector3(0, 0, 0);
 
     }
 
@@ -2061,22 +2195,44 @@ class Controls {
 
 
 ;
-Quick2d.Extras =  {
+class Extras
+{
 
-    call(items)
+    constructor(args)
     {
-        if(!(items instanceof Array))
+        this.items = args || [];
+
+        if(typeof(this.items)== 'object')
+        {
+            this.items = [this.items]; //assert array from single object
+        }
+
+        if(!(this.items instanceof Array))
         {
 
-          return console.error('Quick2d.Extras.call(), needs array argument');
+            return console.error('Quick2d.Extras.call(), needs array argument');
 
         }
+
+    }
+
+    call()
+    {
+
+        var items = this.items;
 
         //a callable item can be one-time executed: it will have any of the following functions attached
 
         for(var x = 0; x < items.length; x++)
         {
             var item = items[x];
+
+            if(typeof(item.play) == 'function')
+            {
+                item.play();
+
+            }
+
 
             if(typeof(item.engage) == 'function')
             {
@@ -2136,7 +2292,7 @@ Quick2d.Extras =  {
  * @returns {Force} object of Force()
  * */
 
-class Force
+class GravityForce
 {
     constructor(args)
     {
@@ -2177,7 +2333,7 @@ class Force
     }
 
 
-    gravitateY()
+    update()
     {
 
       var  subjects = this.subjects;
@@ -2190,13 +2346,13 @@ class Force
 
         var max =  this.max || {};
 
-        $.each(subjects, function(ix, itemx){
+        __gameStack.each(subjects, function(ix, itemx){
 
            itemx.accelY(accel, max);
 
-           itemx.__falling = true;
+           itemx.__inAir = true;
 
-            $.each(massObjects, function(iy, itemy){
+            __gameStack.each(massObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 
@@ -2205,6 +2361,8 @@ class Force
         });
     }
 };
+
+let Force = GravityForce;
 
 
 
@@ -3050,10 +3208,7 @@ class Circle
 
 }
 
-;
-
-
-/**
+;/**
  * Sprite({name:string, description:string, size:Vector3, position:Vector3})
  *
  * <ul >
@@ -3068,8 +3223,7 @@ class Circle
 class Sprite {
     constructor(args) {
 
-        if(!args)
-        {
+        if (!args) {
             args = {};
         }
 
@@ -3103,9 +3257,11 @@ class Sprite {
 
         this.sounds = __gameStack.getArg(args, 'sounds', []);
 
-        this.image = __gameStack.getArg(args, 'image', new GameImage(__gameStack.getArg(args, 'src', false)));
+        this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
+
 
         this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
+
 
         this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
 
@@ -3147,15 +3303,38 @@ class Sprite {
 
         //Apply initializers:
 
-        $Q.each(this.__initializers, function(ix, item){
+        $Q.each(this.__initializers, function (ix, item) {
 
             __inst.onInit(item);
 
         });
 
-        this.selected_animation = this.animations[0] || new Animation();
+
+        this.__clippedX = false;
+
+        this.__clippedY = false;
+
+        if (args.selected_animation) {
+            this.selected_animation = new Animation(args.selected_animation);
+
+        }
+        else {
+
+            this.setAnimation(this.animations[0] || new Animation({
+
+                    image: this.image,
+
+                    frameSize: new Vector3(this.image.domElement.width, this.image.domElement.height),
+
+                    frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+
+
+                }));
+
+        }
 
     }
+
 
     /**
      * This function initializes sprites when necessary. Called automatically on GameStack.add(mySprite);
@@ -3180,7 +3359,10 @@ class Sprite {
 
         if (typeof fun == 'string') {
 
-           if(this.__initializers.indexOf(fun) < 0){ this.__initializers.push(fun) };
+            if (this.__initializers.indexOf(fun) < 0) {
+                this.__initializers.push(fun)
+            }
+            ;
 
             var __inst = this;
 
@@ -3188,19 +3370,26 @@ class Sprite {
 
             console.log('finding init from string:' + fun);
 
-            if(!keys.length >= 2)
-            {
+            if (!keys.length >= 2) {
                 return console.error('need min 2 string keys separated by "."');
             }
 
             var f = Quazar.options.SpriteInitializers[keys[0]][keys[1]];
 
-            if(typeof(f) == 'function')
-            {
+            if (typeof(f) == 'function') {
                 alert('found func');
 
+                var __inst = this;
 
-                __inst.init =   __inst.extendFunc(f, __inst.init);
+                var f_init = this.init;
+
+                this.init = function (sprite) {
+
+                    f_init(sprite);
+
+                    f(sprite);
+
+                };
 
             }
 
@@ -3211,7 +3400,16 @@ class Sprite {
 
             console.log('extending init:');
 
-            __inst.extendFunc(initializer, this.init);
+
+            var f_init = this.init;
+
+            this.init = function (sprite) {
+
+                f_init(sprite);
+
+                fun(sprite);
+
+            };
 
 
         }
@@ -3220,7 +3418,7 @@ class Sprite {
 
             console.log('extending init:');
 
-           console.info('Quick2D does not yet implement onInit() from arg of object type');
+            console.info('Quick2D does not yet implement onInit() from arg of object type');
 
         }
 
@@ -3296,6 +3494,20 @@ class Sprite {
 
     }
 
+
+    getAbsolutePosition(offset) {
+
+        if (this.position instanceof Vector3) {
+
+        }
+        else {
+            this.position = new Vector3(this.position);
+        }
+
+        return this.position.add(offset);
+
+    }
+
     /*****************************
      *  assertSpeed()
      *  -assert the existence of a speed{} object
@@ -3327,8 +3539,7 @@ class Sprite {
 
     setAnimation(anime) {
 
-        if(anime instanceof Animation && this.animations.indexOf(anime) < 0)
-        {
+        if (anime instanceof Animation && this.animations.indexOf(anime) < 0) {
             this.animations.push(anime);
         }
 
@@ -3374,8 +3585,17 @@ class Sprite {
 
 
     onScreen(w, h) {
-        return this.position.x + this.size.x >= 0 && this.position.x < w
-            && this.position.y + this.size.y >= 0 && this.position.y < h;
+
+        w = w || __gameStack.WIDTH;
+
+        h = h || __gameStack.HEIGHT;
+
+        var camera = __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
+
+        var p = new Vector3(this.position.x - camera.position.x, this.position.y - camera.position.y, this.position.z - camera.position.z);
+
+        return p.x - this.size.x >= -10000 && p.x < 10000
+            && p.y + this.size.y >= -1000 && p.y < 10000;
 
     }
 
@@ -3422,6 +3642,7 @@ class Sprite {
      **********/
 
     def_update(sprite) {
+
 
         for (var x in this.speed) {
 
@@ -3503,15 +3724,14 @@ class Sprite {
 
         var __inst = this;
 
-       return function () {
+        return function () {
 
 
             ef(__inst);
 
             //any new function comes after
 
-           fun(__inst);
-
+            fun(__inst);
 
 
         };
@@ -3572,9 +3792,9 @@ class Sprite {
      * @params {sprite}
      **********/
 
-    collidesRectangular(sprite) {
+    collidesRectangular(sprite, padding) {
 
-        return Quazar.Collision.spriteRectanglesCollide(sprite);
+        return Quazar.Collision.spriteRectanglesCollide(this, sprite, padding);
 
     }
 
@@ -3605,7 +3825,7 @@ class Sprite {
     /*****************************
      *  shoot(sprite)
      *  -fire a shot from the sprite:: as in a firing gun or spaceship
-     *  -takes options{} for number of shots, anglePerShot, etc...
+     *  -takes options{} for number of shots anglePerShot etc...
      *  -TODO: complete and test this code
      ***************************/
 
@@ -3620,39 +3840,119 @@ class Sprite {
      * @params {options} *numerous args
      **********/
 
+
     shoot(options) {
         //character shoots an animation
 
         this.prep_key = 'shoot';
 
-        let spread = options.spread || options.angleSpread || false;
+        let animation = options.bullet || options.animation || new Animation();
 
-        let total = options.total || options.totalBullets || options.numberBullets || false;
+        let speed = options.speed || 1;
 
-        let animation = options.bullet || options.animation || false;
+        let position = options.position || new Vector3(0, 0, 0);
 
-        let duration = options.duration || options.screenDuration || false;
+        let size = options.size || new Vector3(10, 10, 0);
 
-        let speed = options.speed || false;
+        let rot_offset = options.rot_offset || new Vector3(0, 0, 0);
 
         if (__gameInstance.isAtPlay) {
 
+            var bx = position.x, by = position.y, bw = size.x, bh = size.y;
+
+            var shot = __gameStack.add(new Sprite({
+
+                active: true,
+
+                position: position,
+
+                size: size,
+
+                image: animation.image,
+
+                rotation: new Vector3(0, 0, 0),
+
+                flipX: false
+
+            }));
+
+            shot.setAnimation(animation);
+
+            if (typeof(rot_offset) == 'number') {
+                rot_offset = new Vector3(rot_offset, 0, 0);
+            }
+
+            shot.position.x = bx, shot.position.y = by;
+            shot.rotation.x = 0 + rot_offset.x;
+
+            shot.stats = {
+                damage: 1
+
+            };
+
+            shot.speed.x = Math.cos((shot.rotation.x) * 3.14 / 180) * speed;
+
+            shot.speed.y = Math.sin((shot.rotation.x) * 3.14 / 180) * speed;
+
 
         }
-        else {
-
-            this.event_arg(this.prep_key, '_', options);
-
-        }
-
-        return this;
 
     }
 
-    /*****************************
-     *  animate(animation)
-     *  -simply animate, set the animation to the arg 'animation'
-     ***************************/
+
+    /**
+     * Creates a subsprite
+     * <ul>
+     *     <li>Use this function to anchor one sprite to another.</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {options} object
+     * @params {options.animation} Animation()
+     * @params {options.position} Position()
+     * @params {options.offset} Position()
+     * @params {options.size} Size()
+     **********/
+
+    subsprite(options) {
+
+        let animation = options.animation || new Animation();
+
+        let position = options.position || this.position;
+
+        let offset = options.offset || new Vector3(0, 0, 0);
+
+        let size = options.size || this.size;
+
+        if (__gameInstance.isAtPlay) {
+
+            var subsprite = __gameStack.add(new Sprite({
+
+                active: true,
+
+                position: position,
+
+                size: size,
+
+                offset: offset,
+
+                image: animation.image,
+
+                rotation: new Vector3(0, 0, 0),
+
+                flipX: false
+
+            }));
+
+            subsprite.setAnimation(animation);
+
+            var __parent = this;
+
+            return subsprite;
+
+        }
+
+    }
 
     /**
      * Simple call to animate the sprite
@@ -3667,20 +3967,31 @@ class Sprite {
 
     animate(animation) {
 
-        alert('calling animation');
-
         if (__gameInstance.isAtPlay) {
 
             if (animation) {
                 this.setAnimation(animation)
             }
-            ;
 
             this.selected_animation.animate();
 
-            return this;
-
         }
+
+    }
+
+
+    /**
+     * Overwrites the complete() function of the selected animation
+     * <ul>
+     *     <li>Use this function when a change must be made, but not until the current animation is complete</li>
+     * </ul>
+     * @function
+     * @memberof Sprite
+     * @params {fun} function
+     **********/
+
+    onAnimationComplete(fun) {
+        this.selected_animation.onComplete(fun);
 
     }
 
@@ -3768,8 +4079,6 @@ class Sprite {
     }
 
 
-
-
     /*****************************
      *  accel
      *  -accelerate any acceleration -key
@@ -3794,7 +4103,7 @@ class Sprite {
 
         let speed = prop[key];
 
-       // this.assertSpeed();
+        // this.assertSpeed();
 
         let diff = max.x - prop[key];
 
@@ -3811,7 +4120,6 @@ class Sprite {
         ;
 
     }
-
 
 
     /*****************************
@@ -3837,12 +4145,11 @@ class Sprite {
 
         rate = Math.abs(rate);
 
-        if(Math.abs(prop[key]) <= rate)
-        {
+        if (Math.abs(prop[key]) <= rate) {
             prop[key] = 0;
         }
 
-       else if (prop[key] > 0) {
+        else if (prop[key] > 0) {
             prop[key] -= rate;
 
         }
@@ -3859,13 +4166,13 @@ class Sprite {
 
 
     /*****************************
-         *  decelX
-         *  -decelerate on the X axis
-         *  -args: 1 float:amt
-         ***************************/
+     *  decelX
+     *  -decelerate on the X axis
+     *  -args: 1 float:amt
+     ***************************/
 
-        deccelX(rate) {
-            if (typeof(rate) == 'object') {
+    deccelX(rate) {
+        if (typeof(rate) == 'object') {
 
             rate = rate.rate;
 
@@ -3873,11 +4180,10 @@ class Sprite {
 
         rate = Math.abs(rate);
 
-            if(Math.abs(this.speed['x']) <= rate)
-            {
-                this.speed['x'] = 0;
+        if (Math.abs(this.speed['x']) <= rate) {
+            this.speed['x'] = 0;
 
-            }
+        }
 
         if (this.speed['x'] > 0) {
             this.speed['x'] -= rate;
@@ -3956,19 +4262,207 @@ class Sprite {
      *  -TODO : rename to fallstop || something that resembles a function strictly on Y-Axis
      ***************************/
 
-    collide_stop(item) {
+    shortest_stop(item, callback) {
+        var diff_min_y = item.min ? item.min.y : Math.abs(item.position.y - this.position.y + this.size.y);
 
-        var max_y = item.max ? item.max.y : item.position.y;
+        var diff_min_x = item.min ? item.min.x : Math.abs(item.position.x - this.position.x + this.size.x);
 
-        if (this.position.y + this.size.y >= max_y) {
+        var diff_max_y = item.max ? item.max.y : Math.abs(item.position.y + item.size.y - this.position.y);
 
-            this.position.y = max_y - this.size.y;
+        var diff_max_x = item.max ? item.max.x : Math.abs(item.position.x + item.size.x - this.position.y);
 
-            this.__falling = false;
+        var dimens = {top: diff_min_y, left: diff_min_x, bottom: diff_max_y, right: diff_max_x};
+
+        var minkey = "", min = 10000000;
+
+        for (var x in dimens) {
+            if (dimens[x] < min) {
+                min = dimens[x];
+                minkey = x; // a key of top left bottom or right
+
+            }
+        }
+
+        callback(minkey);
+
+    }
+
+    center() {
+        return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+
+    }
+
+    /*************
+     * #BE CAREFUL
+     * -with this function :: change sensitive / tricky / 4 way collision
+     * *************/
+
+    overlap_x(item, padding) {
+        if (!padding) {
+            padding = 0;
+        }
+
+        var paddingX = padding * this.size.x,
+
+            paddingY = padding * this.size.y, left = this.position.x + paddingX,
+            right = this.position.x + this.size.x - paddingX,
+
+            top = this.position.y + paddingY, bottom = this.position.y + this.size.y - paddingY;
+
+        return right > item.position.x && left < item.position.x + item.size.x;
+
+
+    }
+
+    /*************
+     * #BE CAREFUL
+     * -with this function :: change sensitive / tricky / 4 way collision
+     * *************/
+
+    overlap_y(item, padding) {
+        if (!padding) {
+            padding = 0;
+        }
+
+        var paddingX = padding * this.size.x,
+
+            paddingY = padding * this.size.y, left = this.position.x + paddingX,
+            right = this.position.x + this.size.x - paddingX,
+
+            top = this.position.y + paddingY, bottom = this.position.y + this.size.y - paddingY;
+
+        return bottom > item.position.y && top < item.position.y + item.size.y;
+
+    }
+
+    /*************
+     * #BE CAREFUL
+     * -with this function :: change sensitive / tricky / 4 way collision
+     * *************/
+
+    collide_stop_x(item)
+    {
+
+        var apart = false;
+
+            var ct = 10000;
+
+            while (!apart && ct > 0) {
+
+                ct--;
+
+                var diffX = this.center().sub(item.center()).x;
+
+                var distX = Math.abs(this.size.x / 2 + item.size.x / 2);
+
+                if (Math.abs(diffX) < distX) {
+
+                    this.position.x -= diffX > 0 ? -1 : 1;
+
+
+
+                }
+                else
+                {
+
+                    apart = true;
+
+
+
+                }
+
 
         }
 
+
     }
+
+    /*************
+     * #BE CAREFUL
+     * -with this function :: change sensitive / tricky / 4 way collision
+     * *************/
+
+    collide_stop(item) {
+
+        // collide top
+
+
+        this.__clippedX = false;
+
+        this.__clippedY = false;
+
+
+        if(this.id == item.id)
+        {
+            return false;
+
+        }
+
+        if(this.collidesRectangular(item)) {
+
+            var diff = this.center().sub(item.center());
+
+           if(this.overlap_x(item, 0.3) && Math.abs(diff.x) < Math.abs(diff.y))
+           {
+
+                   var apart = false;
+
+                   var ct = 10000;
+
+                   while (!apart && ct > 0) {
+
+                       ct--;
+
+                       var diffY = this.center().sub(item.center()).y;
+
+                       var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
+
+                       if (Math.abs(diffY) < distY) {
+
+                           this.position.y -= diffY > 0 ? -1 : 1;
+
+
+
+                       }
+
+                     else {
+
+                           if (diffY < 0){
+                               this.__inAir = false;
+                           };
+
+                           if(diffY > 0){ this.__clippedY = true; } //clippedY / 'top_stop'
+
+                           apart = true;
+
+
+                       }
+
+
+               }
+
+
+
+           }
+          if(this.overlap_y(item, 0.3)) {
+
+               this.collide_stop_x(item);
+
+           }
+
+        }
+
+
+    }
+
+
+    restoreFrom(data) {
+        data.image = new GameImage(data.src || data.image.src);
+
+        return new Sprite(data);
+
+    }
+
 
     /*****************************
      *  fromFile(file_path)
@@ -3987,17 +4481,24 @@ class Sprite {
 
 
     fromFile(file_path) {
-        var __inst = this;
 
-        $.getJSON(file_path, function (data) {
+        if (typeof file_path == 'string') {
 
-            __inst = new Sprite(data);
+            var __inst = this;
 
-        });
+            $.getJSON(file_path, function (data) {
+
+                __inst = new Sprite(data);
+
+            });
+
+        }
+
 
     }
 
-};
+}
+;
 
 /****************
  * TODO : Complete SpritePresetsOptions::
@@ -4023,13 +4524,12 @@ let SpriteInitializersOptions = {
 
                 console.log('stick-x:' + x);
 
-                if(Math.abs(x) < 0.2)
-                {
+                if (Math.abs(x) < 0.2) {
                     return 0;
                 }
 
-                var  accel =  0.2; //todo : options for accel
-                var  max =  7;
+                var accel = 0.2; //todo : options for accel
+                var max = 7;
 
                 sprite.accelX(accel, x * max);
 
@@ -4070,18 +4570,16 @@ let SpriteInitializersOptions = {
 
                 console.log('stick-x:' + x);
 
-                if(Math.abs(x) < 0.2)
-                {
+                if (Math.abs(x) < 0.2) {
                     x = 0;
                 }
 
-                if(Math.abs(y) < 0.2)
-                {
+                if (Math.abs(y) < 0.2) {
                     y = 0;
                 }
 
-                var  accel =  0.2; //todo : options for accel
-                var  max =  7;
+                var accel = 0.2; //todo : options for accel
+                var max = 7;
 
                 sprite.accelX(accel, x * max);
 
@@ -4120,13 +4618,12 @@ let SpriteInitializersOptions = {
 
                 console.log('stick-x:' + x);
 
-                if(Math.abs(x) < 0.2)
-                {
+                if (Math.abs(x) < 0.2) {
                     return 0;
                 }
 
-                var  accel =  0.25; //todo : options for accel
-                var  max =  7;
+                var accel = 0.25; //todo : options for accel
+                var max = 7;
 
                 sprite.accel(sprite.rot_speed, 'x', accel, x * max);
 
@@ -4154,7 +4651,6 @@ let SpriteInitializersOptions = {
 
 
         }
-
 
 
     }

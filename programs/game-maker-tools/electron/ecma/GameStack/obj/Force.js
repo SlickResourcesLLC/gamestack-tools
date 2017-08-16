@@ -11,7 +11,7 @@
  * @returns {Force} object of Force()
  * */
 
-class Force
+class GravityForce
 {
     constructor(args)
     {
@@ -52,7 +52,7 @@ class Force
     }
 
 
-    gravitateY()
+    update()
     {
 
       var  subjects = this.subjects;
@@ -65,13 +65,13 @@ class Force
 
         var max =  this.max || {};
 
-        $.each(subjects, function(ix, itemx){
+        __gameStack.each(subjects, function(ix, itemx){
 
            itemx.accelY(accel, max);
 
-           itemx.__falling = true;
+           itemx.__inAir = true;
 
-            $.each(massObjects, function(iy, itemy){
+            __gameStack.each(massObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 
@@ -80,6 +80,8 @@ class Force
         });
     }
 };
+
+let Force = GravityForce;
 
 
 

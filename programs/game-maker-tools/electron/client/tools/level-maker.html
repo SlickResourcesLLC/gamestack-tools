@@ -504,6 +504,9 @@
 <script>
 
 
+    Canvas.__levelMaker = true;
+
+
     //App{}: a collection of UI functionality
 
     var App = {
@@ -540,35 +543,38 @@
 
         create_level: function (data, callback) {
 
+
+            var __inst = Game;
+
+            if(data && data.settings)
+            {
+                __inst.settings = data.settings;
+
+            }
+
+
+            if(data && data.sprites instanceof Array)
+            {
+
+                alert('applying sprites');
+
+                $.each(data.sprites, function(ix, item){
+
+                    __inst.sprites[ix] = new Sprite().restoreFrom(item);
+
+                });
+
+
+            }
+
+
+
             var start_level = function () {
 
-                var __inst = Game;
-
-                if(data && data.settings)
-                {
-                    __inst.settings = data.settings;
-
-                }
 
                 __levelMaker.htmlSettings();
 
                 __levelMaker.applySettings(__levelMaker.settings);
-
-
-                if(data && data.sprites instanceof Array)
-                {
-
-                    $.each(data.sprites, function(ix, item){
-
-                        data.sprites[ix] = new Sprite(item);
-
-                        data.sprites[ix].init();
-
-                    });
-
-                    __inst.sprites = data.sprites;
-
-                }
 
                 __inst.canvas = document.getElementById('myCanvas');
 
@@ -580,7 +586,7 @@
 
                 __inst.GameWindow = new GameWindow({
                     canvas: __inst.canvas,
-                    ctx: __inst.ctx,
+                    ctx:__inst.ctx,
                     sprites: __inst.sprites,
                     collective_forces: __inst.collective_forces
                 }, function () {
@@ -856,9 +862,9 @@
                         elements[x] = __levelMaker.createMapElement(elements[x]);
 
 
-                        //  Quazar.addImageSrc(elements[x].img.src, elements[x].img_id || false);
+                        //  __gameStack.addImageSrc(elements[x].img.src, elements[x].img_id || false);
 
-                        //  elements[x].img_id = Quazar.getImageId(elements[x].img.src);
+                        //  elements[x].img_id = __gameStack.getImageId(elements[x].img.src);
 
                     }
 
@@ -1091,7 +1097,7 @@
 
             });
 
-            Quazar.InputEvents.init();
+            __gameStack.InputEvents.init();
 
         },
 
@@ -2412,7 +2418,7 @@
 
                 var sprites = [];
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (item.selected) {
                         sprites.push(item);
@@ -2431,7 +2437,7 @@
 
             release_select: function () {
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     //  item.selected = false;
 
@@ -2445,7 +2451,7 @@
 
             release_hover_select: function () {
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     //  item.selected = false;
 
@@ -2456,7 +2462,7 @@
 
             release_drag_select: function () {
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     //  item.selected = false;
 
@@ -2469,7 +2475,7 @@
 
                 var getSpr = false;
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (item.hover_selected) {
 
@@ -2497,7 +2503,7 @@
 
             moveSelected: function (x, y) {
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (item.drag_selected) {
 
@@ -2541,7 +2547,7 @@
 
                 var selection = false;
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     item.drag_selected = false;
 
@@ -2575,7 +2581,7 @@
 
                 var selection = false, basic_selection = false;
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (item.drag_selected) {
                         basic_selection = true;
@@ -2584,7 +2590,7 @@
 
                 });
 
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (x > item.position.x && x < item.position.x + item.size.x &&
                         y > item.position.y && y < item.position.y + item.size.y) {
@@ -2604,7 +2610,7 @@
 
             },
             rightClick: function (x, y) {
-                Quazar.each(Game.sprites, function (ix, item) {
+                __gameStack.each(Game.sprites, function (ix, item) {
 
                     if (x > item.position.x && x < item.position.x + item.size.x &&
                         y > item.position.y && y < item.position.y + item.size.y) {
@@ -2722,6 +2728,10 @@
                     }; //turn off the motion, we are just mapping
 
                 }
+
+
+
+                console.log(sprite.selected_animation);
 
                 Game.sprites.push(sprite);
 
@@ -2888,7 +2898,7 @@
 
     }, 500);
 
-    Quazar.ready(function (lib) {
+    __gameStack.ready(function (lib) {
 
         // alert('quazar on ready');
 
@@ -2932,7 +2942,7 @@
 
             var hoverSelect = false;
 
-            Quazar.each(Game.sprites, function (ix, item) {
+            __gameStack.each(Game.sprites, function (ix, item) {
 
                 item.hoverSelected = false;
 
@@ -3008,7 +3018,7 @@
     };
 
 
-    Quazar.ready(function (lib) {
+    __gameStack.ready(function (lib) {
 
         Game.init(function () {
             App.setInputEvents(lib);
@@ -3244,7 +3254,7 @@
 
         }, 1000);
 
-        __levelMaker.offsetTop = $(Quazar.canvas).offset().top;
+        __levelMaker.offsetTop = $(__gameStack.canvas).offset().top;
 
     });
 

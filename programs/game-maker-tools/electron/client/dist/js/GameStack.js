@@ -217,6 +217,8 @@ var GameStackLibrary = function GameStackLibrary() {
 
                 animate: function animate(time) {
 
+                        __gameStack.isAtPlay = true;
+
                         TWEEN.update(time);
 
                         requestAnimationFrame(__gameStack.animate);
@@ -234,8 +236,19 @@ var GameStackLibrary = function GameStackLibrary() {
                 },
 
                 Collision: {
-                        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2) {
-                                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x && obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2, padding) {
+                                if (!padding) {
+                                        padding = 0;
+                                }
+
+                                var paddingX = padding * obj1.size.x,
+                                    paddingY = padding * obj1.size.y,
+                                    left = obj1.position.x + paddingX,
+                                    right = obj1.position.x + obj1.size.x - paddingX,
+                                    top = obj1.position.y + paddingY,
+                                    bottom = obj1.position.y + obj1.size.y - paddingY;
+
+                                if (right > obj2.position.x && left < obj2.position.x + obj2.size.x && bottom > obj2.position.y && top < obj2.position.y + obj2.size.y) {
 
                                         return true;
                                 }
@@ -297,8 +310,6 @@ var GameStackLibrary = function GameStackLibrary() {
                                 call(lib, gameWindow, sprites);
                         });
 
-                        __gameInstance.isAtPlay = true;
-
                         this.InputEvents.init();
                 },
 
@@ -318,6 +329,16 @@ var GameStackLibrary = function GameStackLibrary() {
                                 this.__gameWindow = obj;
                         }
 
+                        if (obj instanceof Force) {
+
+                                this.__gameWindow.forces.push(obj);
+                        }
+
+                        if (obj instanceof Camera) {
+
+                                this.__gameWindow.camera = obj;
+                        }
+
                         if (obj instanceof Sprite) {
 
                                 this.__gameWindow.sprites.push(obj);
@@ -326,6 +347,18 @@ var GameStackLibrary = function GameStackLibrary() {
                         this.collect(obj);
 
                         return obj;
+                },
+
+                remove: function remove(obj) {
+                        //1: if Sprite(), Add object to the existing __gameWindow
+
+
+                        if (obj instanceof Sprite) {
+
+                                var ix = this.__gameWindow.sprites.indexOf(obj);
+
+                                this.__gameWindow.sprites.splice(ix, 1);
+                        }
                 },
 
                 all_objects: [],
@@ -425,6 +458,7 @@ function $Q(selector) {
 
         //declare events:
 
+
         var $GFunx = {};
 
         $GFunx.each = function (callback) {
@@ -442,7 +476,37 @@ function $Q(selector) {
         $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
         {
 
-                var contentsAny = function contentsAny(list, string) {};
+                if (__gameStack.isAtPlay) {
+                        return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
+                }
+
+                var criterion = $Q.between('[', ']', evt_key);
+
+                if (criterion.indexOf('===') >= 0) {
+                        criterion = criterion.replace('===', '=');
+                }
+
+                if (criterion.indexOf('==') >= 0) {
+                        criterion = criterion.replace('==', '=').replace('==', 0);
+                }
+
+                var cparts = criterion.split('=');
+
+                var __targetType = "*",
+                    __targetName = "*";
+
+                if (evt_key.indexOf('[') >= 0) {
+                        evt_key = $Q.before('[', evt_key).trim();
+                }
+
+                var padding = 0;
+
+                if (cparts[0].toLowerCase() == 'padding') {
+
+                        padding = parseFloat(cparts[1]);
+
+                        alert('padding:' + padding);
+                }
 
                 //if controller_ix is function, and callback not present, then controller_ix is the callback aka optional argument
 
@@ -478,9 +542,9 @@ function $Q(selector) {
                         Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
                                 if (!button_mode) {
-                                        callback();
+                                        callback(x, y);
                                 } else if (x) {
-                                        callback();
+                                        callback(x);
                                 };
                         });
 
@@ -498,6 +562,23 @@ function $Q(selector) {
                                 console.info('detected collision event key in:' + evt_profile.evt_key);
 
                                 console.info('TODO: rig collision events');
+
+                                this.each(function (ix, item1) {
+
+                                        selectorObject.each(function (iy, item2) {
+
+                                                if (typeof item1.onUpdate == 'function') {
+
+                                                        item1.onUpdate(function (sprite) {
+
+                                                                if (item1.collidesRectangular(item2, padding)) {
+
+                                                                        callback(item1, item2);
+                                                                };
+                                                        });
+                                                }
+                                        });
+                                });
                         } else {
                                 console.info('Rigging a property event');
 
@@ -958,18 +1039,6 @@ GameStack.InputEvents = { //PC input events
                         }
                 };
 
-                if (!GameStack.canvas) {
-                        console.info('The GameStack canvas was not defined: creating one now.');
-
-                        var canvas = document.createElement('CANVAS');
-
-                        document.body.append(canvas);
-
-                        GameStack.canvas = document.getElementsByTagName('CANVAS')[0];
-
-                        GameStack.ctx = GameStack.canvas.getContext('2d');
-                }
-
                 GameStack.canvas.onmousedown = function (e) {
 
                         //    alert(JSON.stringify(GameStack.InputEvents, true, 2));
@@ -1129,13 +1198,12 @@ window.onload = function () {
  * */
 
 var Canvas = {
+
+        __levelMaker: false,
+
         draw: function draw(sprite, ctx) {
 
-                if (NODRAW) {
-                        return 0;
-                }
-
-                if (sprite.active && sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT)) {
+                if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
 
                         this.drawPortion(sprite, ctx);
                 }
@@ -1186,25 +1254,15 @@ var Canvas = {
                                 console.error('Sprite is missing arguments');
                         }
 
-                        var x = sprite.position.x;
-                        var y = sprite.position.y;
+                        var p = sprite.position;
 
-                        var camera = __gameStack.camera || { pos: { x: 0, y: 0, z: 0 } };
+                        var camera = __gameStack.__gameWindow.camera || { pos: { x: 0, y: 0, z: 0 } };
 
-                        if (true) {
+                        var x = p.x,
+                            y = p.y;
 
-                                if (!isNaN(camera.pos.x)) {
-
-                                        x += camera.pos.x;
-                                }
-
-                                if (!isNaN(camera.pos.y)) {
-
-                                        y += camera.pos.y;
-                                }
-                        }
-                        ;
-
+                        x -= camera.position.x || 0;
+                        y -= camera.position.y || 0;
                         //optional animation : gameSize
 
                         var targetSize = sprite.size || sprite.selected_animation.size;
@@ -1254,7 +1312,8 @@ var GameWindow = function () {
                     backgrounds = _ref.backgrounds,
                     interactives = _ref.interactives,
                     forces = _ref.forces,
-                    update = _ref.update;
+                    update = _ref.update,
+                    camera = _ref.camera;
 
                 _classCallCheck(this, GameWindow);
 
@@ -1282,13 +1341,23 @@ var GameWindow = function () {
 
                         this.canvas.style.background = 'black';
 
-                        __gameStack.WIDTH = this.canvas.width;
-                        __gameStack.HEIGHT = this.canvas.height;
+                        var c = this.canvas;
+
+                        this.adjustSize();
                 }
 
                 this.ctx = this.canvas.getContext('2d');
 
-                this.__camera = new Vector3(0, 0, 0);
+                window.onresize = function () {
+
+                        __gameStack.__gameWindow.adjustSize();
+                };
+
+                this.camera = new Camera();
+
+                this.camera.target = false;
+
+                __gameStack.camera = this.camera;
 
                 if (typeof update == 'function') {
                         this.onUpdate(update);
@@ -1302,6 +1371,21 @@ var GameWindow = function () {
         }
 
         _createClass(GameWindow, [{
+                key: 'adjustSize',
+                value: function adjustSize(w, h) {
+                        w = w || this.canvas.clientWidth;
+
+                        h = h || this.canvas.clientHeight;
+
+                        __gameStack.WIDTH = w;
+
+                        __gameStack.HEIGHT = h;
+
+                        this.canvas.width = w;
+
+                        this.canvas.height = h;
+                }
+        }, {
                 key: 'uniques',
                 value: function uniques(list) {
 
@@ -1344,18 +1428,29 @@ var GameWindow = function () {
                                         item.def_update(item);
                                 }
                         });
+
+                        GameStack.each(this.forces, function (ix, item) {
+
+                                if (typeof item.update == 'function') {
+
+                                        item.update(item);
+                                }
+
+                                if (typeof item.def_update == 'function') {
+                                        //  console.log('def_update');
+
+                                        item.def_update(item);
+                                }
+                        });
                 }
         }, {
-                key: 'onUpdate',
-                value: function onUpdate(arg) {
-                        if (typeof arg == 'function') {
-                                var up = this.update;
+                key: 'loadLevelFile',
+                value: function loadLevelFile(filepath, callback) {
 
-                                this.update = function (sprites) {
-                                        up(sprites);
-                                        arg(sprites);
-                                };
-                        }
+                        $.getJSON(filepath, function (data) {
+
+                                callback(false, data);
+                        });
                 }
         }, {
                 key: 'draw',
@@ -1475,7 +1570,7 @@ var Animation = function () {
 
                 this.frames = this.getArg(args, 'frames', []);
 
-                this.image = new GameImage(this.getArg(args, 'src', this.getArg(args, 'image', false)));
+                this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
                 this.src = this.image.domElement.src;
 
@@ -1487,11 +1582,13 @@ var Animation = function () {
 
                 this.cix = 0;
 
-                this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+                this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
                 this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
                 this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
+
+                this.extras = this.getArg(args, 'extras', false);
 
                 if ((typeof args === 'undefined' ? 'undefined' : _typeof(args)) == 'object' && args.frameBounds && args.frameSize) {
                         this.apply2DFrames(args.parent || {});
@@ -1643,6 +1740,10 @@ var Animation = function () {
 
                         var duration = duration || typeof this.duration == 'number' ? this.duration : this.frames.length * 20;
 
+                        if (this.cix == 0 && this.extras) {
+                                this.extras.call(); //fire any extras attached
+                        }
+
                         //we have a target
                         this.tween = new TWEEN.Tween(this).easing(__inst.curve || TWEEN.Easing.Linear.None).to({ cix: __inst.frames.length - 1 }, duration).onUpdate(function () {
                                 //console.log(objects[0].position.x,objects[0].position.y);
@@ -1678,9 +1779,7 @@ var Animation = function () {
 
                         this.timer += 1;
 
-                        Quazar.log('ANIMATING with frame count:' + this.frames.length);
-
-                        if (this.timer % this.delay == 0) {
+                        if (this.delay == 0 || this.timer % this.delay == 0) {
 
                                 if (this.hang) {
                                         this.cix = this.cix + 1;
@@ -1689,6 +1788,14 @@ var Animation = function () {
                                                 this.cix = this.frames.length - 1;
                                         }
                                 } else {
+
+                                        if (this.cix == 0 && this.extras) {
+                                                this.extras.call(); //fire any extras attached
+                                        }
+
+                                        if (this.cix >= this.frames.length - 1 && typeof this.complete == 'function') {
+                                                this.complete(this);
+                                        }
 
                                         this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
                                 }
@@ -1708,20 +1815,11 @@ var Animation = function () {
   * *TODO : implement camera class
   */
 
-var Camera = function () {
-        function Camera(position) {
-                _classCallCheck(this, Camera);
+var Camera = function Camera(args) {
+        _classCallCheck(this, Camera);
 
-                this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0)));
-        }
-
-        _createClass(Camera, [{
-                key: 'follow',
-                value: function follow(object, accel, max, distSize) {}
-        }]);
-
-        return Camera;
-}();
+        this.position = new Vector3(0, 0, 0);
+};
 
 ;
 /*****************
@@ -1771,40 +1869,65 @@ var Controls = function () {
 ;
 
 ;
-Quick2d.Extras = {
-        call: function call(items) {
-                if (!(items instanceof Array)) {
+
+var Extras = function () {
+        function Extras(args) {
+                _classCallCheck(this, Extras);
+
+                this.items = args || [];
+
+                if (_typeof(this.items) == 'object') {
+                        this.items = [this.items]; //assert array from single object
+                }
+
+                if (!(this.items instanceof Array)) {
 
                         return console.error('Quick2d.Extras.call(), needs array argument');
                 }
+        }
 
-                //a callable item can be one-time executed: it will have any of the following functions attached
+        _createClass(Extras, [{
+                key: 'call',
+                value: function call() {
 
-                for (var x = 0; x < items.length; x++) {
-                        var item = items[x];
+                        var items = this.items;
 
-                        if (typeof item.engage == 'function') {
-                                item.engage();
-                        }
+                        //a callable item can be one-time executed: it will have any of the following functions attached
 
-                        if (typeof item.fire == 'function') {
-                                item.fire();
-                        }
+                        for (var x = 0; x < items.length; x++) {
+                                var item = items[x];
 
-                        if (typeof item.start == 'function') {
-                                item.start();
-                        }
+                                if (typeof item.play == 'function') {
+                                        item.play();
+                                }
 
-                        if (typeof item.run == 'function') {
-                                item.run();
-                        }
+                                if (typeof item.engage == 'function') {
+                                        item.engage();
+                                }
 
-                        if (typeof item.process == 'function') {
-                                item.process();
+                                if (typeof item.fire == 'function') {
+                                        item.fire();
+                                }
+
+                                if (typeof item.start == 'function') {
+                                        item.start();
+                                }
+
+                                if (typeof item.run == 'function') {
+                                        item.run();
+                                }
+
+                                if (typeof item.process == 'function') {
+                                        item.process();
+                                }
                         }
                 }
-        }
-};
+        }]);
+
+        return Extras;
+}();
+
+;
 /**
  * Force()
  *
@@ -1817,9 +1940,9 @@ Quick2d.Extras = {
  * @returns {Force} object of Force()
  * */
 
-var Force = function () {
-        function Force(args) {
-                _classCallCheck(this, Force);
+var GravityForce = function () {
+        function GravityForce(args) {
+                _classCallCheck(this, GravityForce);
 
                 this.name = args.name || "";
 
@@ -1839,7 +1962,7 @@ var Force = function () {
                 }
         }
 
-        _createClass(Force, [{
+        _createClass(GravityForce, [{
                 key: 'getArg',
                 value: function getArg(args, key, fallback) {
 
@@ -1851,8 +1974,8 @@ var Force = function () {
                         }
                 }
         }, {
-                key: 'gravitateY',
-                value: function gravitateY() {
+                key: 'update',
+                value: function update() {
 
                         var subjects = this.subjects;
 
@@ -1864,13 +1987,13 @@ var Force = function () {
 
                         var max = this.max || {};
 
-                        $.each(subjects, function (ix, itemx) {
+                        __gameStack.each(subjects, function (ix, itemx) {
 
                                 itemx.accelY(accel, max);
 
-                                itemx.__falling = true;
+                                itemx.__inAir = true;
 
-                                $.each(massObjects, function (iy, itemy) {
+                                __gameStack.each(massObjects, function (iy, itemy) {
 
                                         itemx.collide_stop(itemy);
                                 });
@@ -1878,10 +2001,12 @@ var Force = function () {
                 }
         }]);
 
-        return Force;
+        return GravityForce;
 }();
 
 ;
+
+var Force = GravityForce;
 
 ;
 
@@ -2580,19 +2705,17 @@ var Circle = function Circle(args) {
         this.radius = this.getArgs(args, 'radius', 100);
 };
 
-;
-
-/**
- * Sprite({name:string, description:string, size:Vector3, position:Vector3})
- *
- * <ul >
- *  <li> an Object-container for multiple animations
- *  <li> supports a variety of game objects and logic
- * </ul>
- *
- * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
- * @returns {Sprite} object of Sprite()
- * */
+; /**
+  * Sprite({name:string, description:string, size:Vector3, position:Vector3})
+  *
+  * <ul >
+  *  <li> an Object-container for multiple animations
+  *  <li> supports a variety of game objects and logic
+  * </ul>
+  *
+  * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+  * @returns {Sprite} object of Sprite()
+  * */
 
 var Sprite = function () {
         function Sprite(args) {
@@ -2632,7 +2755,7 @@ var Sprite = function () {
 
                 this.sounds = __gameStack.getArg(args, 'sounds', []);
 
-                this.image = __gameStack.getArg(args, 'image', new GameImage(__gameStack.getArg(args, 'src', false)));
+                this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
                 this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
 
@@ -2676,7 +2799,24 @@ var Sprite = function () {
                         __inst.onInit(item);
                 });
 
-                this.selected_animation = this.animations[0] || new Animation();
+                this.__clippedX = false;
+
+                this.__clippedY = false;
+
+                if (args.selected_animation) {
+                        this.selected_animation = new Animation(args.selected_animation);
+                } else {
+
+                        this.setAnimation(this.animations[0] || new Animation({
+
+                                image: this.image,
+
+                                frameSize: new Vector3(this.image.domElement.width, this.image.domElement.height),
+
+                                frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+
+                        }));
+                }
         }
 
         /**
@@ -2705,7 +2845,8 @@ var Sprite = function () {
 
                                 if (this.__initializers.indexOf(fun) < 0) {
                                         this.__initializers.push(fun);
-                                };
+                                }
+                                ;
 
                                 var __inst = this;
 
@@ -2722,13 +2863,29 @@ var Sprite = function () {
                                 if (typeof f == 'function') {
                                         alert('found func');
 
-                                        __inst.init = __inst.extendFunc(f, __inst.init);
+                                        var __inst = this;
+
+                                        var f_init = this.init;
+
+                                        this.init = function (sprite) {
+
+                                                f_init(sprite);
+
+                                                f(sprite);
+                                        };
                                 }
                         } else if (typeof fun == 'function') {
 
                                 console.log('extending init:');
 
-                                __inst.extendFunc(initializer, this.init);
+                                var f_init = this.init;
+
+                                this.init = function (sprite) {
+
+                                        f_init(sprite);
+
+                                        fun(sprite);
+                                };
                         } else if ((typeof fun === 'undefined' ? 'undefined' : _typeof(fun)) == 'object') {
 
                                 console.log('extending init:');
@@ -2808,6 +2965,16 @@ var Sprite = function () {
                 key: 'setPos',
                 value: function setPos(pos) {
                         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
+                }
+        }, {
+                key: 'getAbsolutePosition',
+                value: function getAbsolutePosition(offset) {
+
+                        if (this.position instanceof Vector3) {} else {
+                                this.position = new Vector3(this.position);
+                        }
+
+                        return this.position.add(offset);
                 }
 
                 /*****************************
@@ -2890,7 +3057,16 @@ var Sprite = function () {
         }, {
                 key: 'onScreen',
                 value: function onScreen(w, h) {
-                        return this.position.x + this.size.x >= 0 && this.position.x < w && this.position.y + this.size.y >= 0 && this.position.y < h;
+
+                        w = w || __gameStack.WIDTH;
+
+                        h = h || __gameStack.HEIGHT;
+
+                        var camera = __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
+
+                        var p = new Vector3(this.position.x - camera.position.x, this.position.y - camera.position.y, this.position.z - camera.position.z);
+
+                        return p.x - this.size.x >= -10000 && p.x < 10000 && p.y + this.size.y >= -1000 && p.y < 10000;
                 }
 
                 /*****************************
@@ -3077,9 +3253,9 @@ var Sprite = function () {
 
         }, {
                 key: 'collidesRectangular',
-                value: function collidesRectangular(sprite) {
+                value: function collidesRectangular(sprite, padding) {
 
-                        return Quazar.Collision.spriteRectanglesCollide(sprite);
+                        return Quazar.Collision.spriteRectanglesCollide(this, sprite, padding);
                 }
 
                 /*****************************
@@ -3110,7 +3286,7 @@ var Sprite = function () {
                 /*****************************
                  *  shoot(sprite)
                  *  -fire a shot from the sprite:: as in a firing gun or spaceship
-                 *  -takes options{} for number of shots, anglePerShot, etc...
+                 *  -takes options{} for number of shots anglePerShot etc...
                  *  -TODO: complete and test this code
                  ***************************/
 
@@ -3132,28 +3308,112 @@ var Sprite = function () {
 
                         this.prep_key = 'shoot';
 
-                        var spread = options.spread || options.angleSpread || false;
+                        var animation = options.bullet || options.animation || new Animation();
 
-                        var total = options.total || options.totalBullets || options.numberBullets || false;
+                        var speed = options.speed || 1;
 
-                        var animation = options.bullet || options.animation || false;
+                        var position = options.position || new Vector3(0, 0, 0);
 
-                        var duration = options.duration || options.screenDuration || false;
+                        var size = options.size || new Vector3(10, 10, 0);
 
-                        var speed = options.speed || false;
+                        var rot_offset = options.rot_offset || new Vector3(0, 0, 0);
 
-                        if (__gameInstance.isAtPlay) {} else {
+                        if (__gameInstance.isAtPlay) {
 
-                                this.event_arg(this.prep_key, '_', options);
+                                var bx = position.x,
+                                    by = position.y,
+                                    bw = size.x,
+                                    bh = size.y;
+
+                                var shot = __gameStack.add(new Sprite({
+
+                                        active: true,
+
+                                        position: position,
+
+                                        size: size,
+
+                                        image: animation.image,
+
+                                        rotation: new Vector3(0, 0, 0),
+
+                                        flipX: false
+
+                                }));
+
+                                shot.setAnimation(animation);
+
+                                if (typeof rot_offset == 'number') {
+                                        rot_offset = new Vector3(rot_offset, 0, 0);
+                                }
+
+                                shot.position.x = bx, shot.position.y = by;
+                                shot.rotation.x = 0 + rot_offset.x;
+
+                                shot.stats = {
+                                        damage: 1
+
+                                };
+
+                                shot.speed.x = Math.cos(shot.rotation.x * 3.14 / 180) * speed;
+
+                                shot.speed.y = Math.sin(shot.rotation.x * 3.14 / 180) * speed;
                         }
-
-                        return this;
                 }
 
-                /*****************************
-                 *  animate(animation)
-                 *  -simply animate, set the animation to the arg 'animation'
-                 ***************************/
+                /**
+                 * Creates a subsprite
+                 * <ul>
+                 *     <li>Use this function to anchor one sprite to another.</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {options} object
+                 * @params {options.animation} Animation()
+                 * @params {options.position} Position()
+                 * @params {options.offset} Position()
+                 * @params {options.size} Size()
+                 **********/
+
+        }, {
+                key: 'subsprite',
+                value: function subsprite(options) {
+
+                        var animation = options.animation || new Animation();
+
+                        var position = options.position || this.position;
+
+                        var offset = options.offset || new Vector3(0, 0, 0);
+
+                        var size = options.size || this.size;
+
+                        if (__gameInstance.isAtPlay) {
+
+                                var subsprite = __gameStack.add(new Sprite({
+
+                                        active: true,
+
+                                        position: position,
+
+                                        size: size,
+
+                                        offset: offset,
+
+                                        image: animation.image,
+
+                                        rotation: new Vector3(0, 0, 0),
+
+                                        flipX: false
+
+                                }));
+
+                                subsprite.setAnimation(animation);
+
+                                var __parent = this;
+
+                                return subsprite;
+                        }
+                }
 
                 /**
                  * Simple call to animate the sprite
@@ -3170,19 +3430,30 @@ var Sprite = function () {
                 key: 'animate',
                 value: function animate(animation) {
 
-                        alert('calling animation');
-
                         if (__gameInstance.isAtPlay) {
 
                                 if (animation) {
                                         this.setAnimation(animation);
                                 }
-                                ;
 
                                 this.selected_animation.animate();
-
-                                return this;
                         }
+                }
+
+                /**
+                 * Overwrites the complete() function of the selected animation
+                 * <ul>
+                 *     <li>Use this function when a change must be made, but not until the current animation is complete</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {fun} function
+                 **********/
+
+        }, {
+                key: 'onAnimationComplete',
+                value: function onAnimationComplete(fun) {
+                        this.selected_animation.onComplete(fun);
                 }
 
                 /*****************************
@@ -3335,10 +3606,10 @@ var Sprite = function () {
                 }
 
                 /*****************************
-                     *  decelX
-                     *  -decelerate on the X axis
-                     *  -args: 1 float:amt
-                     ***************************/
+                 *  decelX
+                 *  -decelerate on the X axis
+                 *  -args: 1 float:amt
+                 ***************************/
 
         }, {
                 key: 'deccelX',
@@ -3421,17 +3692,178 @@ var Sprite = function () {
                  ***************************/
 
         }, {
+                key: 'shortest_stop',
+                value: function shortest_stop(item, callback) {
+                        var diff_min_y = item.min ? item.min.y : Math.abs(item.position.y - this.position.y + this.size.y);
+
+                        var diff_min_x = item.min ? item.min.x : Math.abs(item.position.x - this.position.x + this.size.x);
+
+                        var diff_max_y = item.max ? item.max.y : Math.abs(item.position.y + item.size.y - this.position.y);
+
+                        var diff_max_x = item.max ? item.max.x : Math.abs(item.position.x + item.size.x - this.position.y);
+
+                        var dimens = { top: diff_min_y, left: diff_min_x, bottom: diff_max_y, right: diff_max_x };
+
+                        var minkey = "",
+                            min = 10000000;
+
+                        for (var x in dimens) {
+                                if (dimens[x] < min) {
+                                        min = dimens[x];
+                                        minkey = x; // a key of top left bottom or right
+                                }
+                        }
+
+                        callback(minkey);
+                }
+        }, {
+                key: 'center',
+                value: function center() {
+                        return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'overlap_x',
+                value: function overlap_x(item, padding) {
+                        if (!padding) {
+                                padding = 0;
+                        }
+
+                        var paddingX = padding * this.size.x,
+                            paddingY = padding * this.size.y,
+                            left = this.position.x + paddingX,
+                            right = this.position.x + this.size.x - paddingX,
+                            top = this.position.y + paddingY,
+                            bottom = this.position.y + this.size.y - paddingY;
+
+                        return right > item.position.x && left < item.position.x + item.size.x;
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'overlap_y',
+                value: function overlap_y(item, padding) {
+                        if (!padding) {
+                                padding = 0;
+                        }
+
+                        var paddingX = padding * this.size.x,
+                            paddingY = padding * this.size.y,
+                            left = this.position.x + paddingX,
+                            right = this.position.x + this.size.x - paddingX,
+                            top = this.position.y + paddingY,
+                            bottom = this.position.y + this.size.y - paddingY;
+
+                        return bottom > item.position.y && top < item.position.y + item.size.y;
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'collide_stop_x',
+                value: function collide_stop_x(item) {
+
+                        var apart = false;
+
+                        var ct = 10000;
+
+                        while (!apart && ct > 0) {
+
+                                ct--;
+
+                                var diffX = this.center().sub(item.center()).x;
+
+                                var distX = Math.abs(this.size.x / 2 + item.size.x / 2);
+
+                                if (Math.abs(diffX) < distX) {
+
+                                        this.position.x -= diffX > 0 ? -1 : 1;
+                                } else {
+
+                                        apart = true;
+                                }
+                        }
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
                 key: 'collide_stop',
                 value: function collide_stop(item) {
 
-                        var max_y = item.max ? item.max.y : item.position.y;
+                        // collide top
 
-                        if (this.position.y + this.size.y >= max_y) {
 
-                                this.position.y = max_y - this.size.y;
+                        this.__clippedX = false;
 
-                                this.__falling = false;
+                        this.__clippedY = false;
+
+                        if (this.id == item.id) {
+                                return false;
                         }
+
+                        if (this.collidesRectangular(item)) {
+
+                                var diff = this.center().sub(item.center());
+
+                                if (this.overlap_x(item, 0.3) && Math.abs(diff.x) < Math.abs(diff.y)) {
+
+                                        var apart = false;
+
+                                        var ct = 10000;
+
+                                        while (!apart && ct > 0) {
+
+                                                ct--;
+
+                                                var diffY = this.center().sub(item.center()).y;
+
+                                                var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
+
+                                                if (Math.abs(diffY) < distY) {
+
+                                                        this.position.y -= diffY > 0 ? -1 : 1;
+                                                } else {
+
+                                                        if (diffY < 0) {
+                                                                this.__inAir = false;
+                                                        };
+
+                                                        if (diffY > 0) {
+                                                                this.__clippedY = true;
+                                                        } //clippedY / 'top_stop'
+
+                                                        apart = true;
+                                                }
+                                        }
+                                }
+                                if (this.overlap_y(item, 0.3)) {
+
+                                        this.collide_stop_x(item);
+                                }
+                        }
+                }
+        }, {
+                key: 'restoreFrom',
+                value: function restoreFrom(data) {
+                        data.image = new GameImage(data.src || data.image.src);
+
+                        return new Sprite(data);
                 }
 
                 /*****************************
@@ -3450,12 +3882,16 @@ var Sprite = function () {
         }, {
                 key: 'fromFile',
                 value: function fromFile(file_path) {
-                        var __inst = this;
 
-                        $.getJSON(file_path, function (data) {
+                        if (typeof file_path == 'string') {
 
-                                __inst = new Sprite(data);
-                        });
+                                var __inst = this;
+
+                                $.getJSON(file_path, function (data) {
+
+                                        __inst = new Sprite(data);
+                                });
+                        }
                 }
         }]);
 
