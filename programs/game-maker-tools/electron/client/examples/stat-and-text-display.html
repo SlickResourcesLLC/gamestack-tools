@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Load Level and Running Sprite</title>
+
+    <script src="../assets/js/ui/Tween.js"></script>
+
+    <script src="../assets/js/ui/Velocity.js"></script>
+
+    <script src="../dist/js/GameStack.js"></script>
+
+</head>
+<body>
+
+<script>
+
+    GameStack.ready(function(lib, sprites){
+
+      alert('__gameStack is running');
+
+      new GameWindow();
+
+      var text = new TextDisplay({fontSize:"50px", text:"Text Displays are easy in GameStack.js", fromRight:true, duration:3000, color:"orange"});
+
+      text.onComplete(function(){
+
+          var text2 = new TextDisplay({fontSize:"30px", text:"Use arguments and onComplete() function to display subsequent text elements.", fromLeft:true, fromTop:true, duration:7000, color:"lightblue"});
+
+          text2.show();
+
+      });
+
+      text.show();
+
+    });
+
+</script>
+
+
+</body>
+</html>

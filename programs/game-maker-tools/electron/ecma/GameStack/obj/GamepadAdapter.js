@@ -1,11 +1,16 @@
 
 
-/*****************
- *  GamepadAdapter:
+/**
+ * GamepadAdapter()
  *
- *  Dependencies: (1) :
- *      -HTML5 Gamepad Api
- ******************/
+ * <ul >
+ *  <li> supports game-controller input for web-games
+ *  <li> accesses live gamepad input from the HTML5 Gamepad Api
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {GamepadAdapter} object of GamepadAdapter()
+ * */
 
 class GamepadAdapter {
 
@@ -37,8 +42,6 @@ class GamepadAdapter {
 
 
         }, 20);
-
-
 
     }
 

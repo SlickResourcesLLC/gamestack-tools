@@ -1,5 +1,17 @@
 
-//Vector3:
+
+/**
+ * Vector3({x:number,y:number,z:number,r:number})
+ *
+ * required arguments: x, y
+ * optional arguments: z, r
+ *
+ * [See Live Demo with Usage-Example]{@link http://www.google.com}
+ * @returns {Vector3} object of Vector3()
+ *
+ * Vector objects are treated alike in GameStack.js, with Vector() and Vector2() equivalent to Vector3()
+ * Other class names synonymous with Vector() are Pos(), Size(), Position(), Rotation()
+ * */
 
 class Vector3 {
     constructor(x, y, z, r) {
@@ -18,14 +30,8 @@ class Vector3 {
         this.z = z;
         this.r = r;
 
-        this.__relativeTo = false;
-
     }
 
-    relativeTo(v)
-    {
-        this.__relativeTo = v;
-    }
 
     sub(v)
     {

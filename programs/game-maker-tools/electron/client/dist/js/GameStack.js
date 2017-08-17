@@ -11,21 +11,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Created by The Blakes on 3/16/2017.
- */
-
-/*
- * #Section Media
- *
- * */
-
-/*
  * Sound
- *
- * Simple Sound object:: uses Jquery: audio
- *
- * TODO : test Sound() for multiple simultaneous sounds, modify as needed
- *
+ * :Simple Sound object:: uses Jquery: audio
+ * @param   {string} src : source path / name of the targeted sound-file
+
+ * @returns {Sound} object of Sound()
  * */
 
 var Sound = function () {
@@ -69,11 +59,14 @@ var Sound = function () {
         return Sound;
 }();
 
-/*
+/**
  * GameImage
  *
  * Simple GameImage
- *
+ * @param   {string} src : source path / name of the targeted image-file
+
+ * @returns {GameImage} object of GameImage()
+
  * */
 
 var GameImage = function () {
@@ -175,7 +168,7 @@ var GameStackLibrary = function GameStackLibrary() {
 
                         var actionables = [];
 
-                        $.each(this.sprites, function (ix, item) {
+                        $Q.each(this.sprites, function (ix, item) {
 
                                 actionables.concat(item.sounds);
 
@@ -222,16 +215,19 @@ var GameStackLibrary = function GameStackLibrary() {
 
                 //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
-                animate: function animate() {
+                animate: function animate(time) {
+
+                        __gameStack.isAtPlay = true;
+
                         TWEEN.update(time);
 
-                        requestAnimationFrame(this.animate);
+                        requestAnimationFrame(__gameStack.animate);
 
-                        this.__gameWindow.update();
+                        __gameStack.__gameWindow.update();
 
-                        this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
+                        __gameStack.__gameWindow.ctx.clearRect(0, 0, __gameStack.__gameWindow.canvas.width, __gameStack.__gameWindow.canvas.height);
 
-                        this.__gameWindow.draw();
+                        __gameStack.__gameWindow.draw();
                 },
 
                 start: function start() {
@@ -240,8 +236,19 @@ var GameStackLibrary = function GameStackLibrary() {
                 },
 
                 Collision: {
-                        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2) {
-                                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x && obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                        spriteRectanglesCollide: function spriteRectanglesCollide(obj1, obj2, padding) {
+                                if (!padding) {
+                                        padding = 0;
+                                }
+
+                                var paddingX = padding * obj1.size.x,
+                                    paddingY = padding * obj1.size.y,
+                                    left = obj1.position.x + paddingX,
+                                    right = obj1.position.x + obj1.size.x - paddingX,
+                                    top = obj1.position.y + paddingY,
+                                    bottom = obj1.position.y + obj1.size.y - paddingY;
+
+                                if (right > obj2.position.x && left < obj2.position.x + obj2.size.x && bottom > obj2.position.y && top < obj2.position.y + obj2.size.y) {
 
                                         return true;
                                 }
@@ -303,8 +310,6 @@ var GameStackLibrary = function GameStackLibrary() {
                                 call(lib, gameWindow, sprites);
                         });
 
-                        __gameInstance.isAtPlay = true;
-
                         this.InputEvents.init();
                 },
 
@@ -314,6 +319,98 @@ var GameStackLibrary = function GameStackLibrary() {
                         } else {
                                 return fallback;
                         }
+                },
+
+                add: function add(obj) {
+                        //1: if Sprite(), Add object to the existing __gameWindow
+
+                        if (obj instanceof GameWindow) {
+
+                                this.__gameWindow = obj;
+                        }
+
+                        if (obj instanceof Force) {
+
+                                this.__gameWindow.forces.push(obj);
+                        }
+
+                        if (obj instanceof Camera) {
+
+                                this.__gameWindow.camera = obj;
+                        }
+
+                        if (obj instanceof Sprite) {
+
+                                this.__gameWindow.sprites.push(obj);
+                        }
+
+                        this.collect(obj);
+
+                        return obj;
+                },
+
+                remove: function remove(obj) {
+                        //1: if Sprite(), Add object to the existing __gameWindow
+
+
+                        if (obj instanceof Sprite) {
+
+                                var ix = this.__gameWindow.sprites.indexOf(obj);
+
+                                this.__gameWindow.sprites.splice(ix, 1);
+                        }
+                },
+
+                all_objects: [],
+
+                collect: function collect(obj) {
+
+                        this.all_objects.push(obj);
+                },
+
+                isNormalStringMatch: function isNormalStringMatch(str1, str2) {
+
+                        return str1.toLowerCase().replace(' ', '') == str2.toLowerCase().replace(' ', '');
+                },
+
+                instance_type_pairs: function instance_type_pairs() {
+                        //get an array of all instance/type pairs added to the library
+
+                        //example : [ {constructor_name:Sprite, type:enemy_basic}, {constructor_name:Animation, type:enemy_attack}  ];
+
+                        var objectList = [];
+
+                        this.each(this.all_objects, function (ix, item) {
+
+                                objectList.push({ constructor_name: item.constructor.name, type: item.type });
+                        });
+
+                        return objectList;
+                },
+
+                select: function select(constructor_name, name, type /*ignoring spaces and CAPS/CASE on type match*/) {
+
+                        var objects_out = [];
+
+                        var normalizedType;
+
+                        var __inst = this;
+
+                        this.each(this.all_objects, function (ix, item) {
+
+                                if (constructor_name == '*' || item.constructor.name == constructor_name) {
+
+                                        if (type == '*' || __inst.isNormalStringMatch(type, item.type)) {
+
+                                                if (name == '*' || __inst.isNormalStringMatch(name, item.name)) {
+
+                                                        objects_out.push(item);
+                                                }
+                                        }
+                                }
+                        });
+
+                        return objects_out;
                 }
 
         };
@@ -342,144 +439,498 @@ var __gameInstance = GameStack;
  *
  * ****************/
 
+/********
+ * jstr() : public function for stringified objects and arrays (uses pretty print style)
+ * *********/
+
+function jstr(obj) {
+
+        return JSON.stringify(obj);
+};
+
 /**********
- * $Q : Selector Function
- *
+ * $Q : Selector Function *in development
+ *  -allows string selection of library collections, etc...
+ * Example Calls
  * **********/
 
-function $Q(_ref) {
-        var selector = _ref.selector;
+function $Q(selector) {
 
-        this.selector = selector;
+        //declare events:
 
-        this.before = function (c1, str) {
-                var test_str = str || this.selector;
-                var start_pos = 0;
-                var end_pos = test_str.indexOf(c1, start_pos);
-                return test_str.substring(start_pos, end_pos);
-        };
 
-        this.contains = function (c1, str) {
-                var test_str = str || this.selector;
+        var $GFunx = {};
 
-                return test_str.indexOf(c1) >= 0;
-        };
+        $GFunx.each = function (callback) {
 
-        this.contains_all = function (cList, str) {
-                var test_str = str || this.selector;
+                var objects = [];
 
-                for (var x = 0; x < cList.length; x++) {
-                        if (test_str.indexOf(cList[x]) < 0) {
-                                return false;
+                for (var x = 0; x < this.length; x++) {
+                        if (typeof x == 'number') {
+
+                                callback(x, this[x]);
                         }
                 }
-
-                return true;
         };
 
-        this.contains_any = function (cList, str) {
-                var test_str = str || this.selector;
+        $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
+        {
 
-                for (var x = 0; x < cList.length; x++) {
-                        if (test_str.indexOf(cList[x]) >= 0) {
-                                return true;
-                        }
+                if (__gameStack.isAtPlay) {
+                        return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
                 }
 
-                return false;
+                var criterion = $Q.between('[', ']', evt_key);
+
+                if (criterion.indexOf('===') >= 0) {
+                        criterion = criterion.replace('===', '=');
+                }
+
+                if (criterion.indexOf('==') >= 0) {
+                        criterion = criterion.replace('==', '=').replace('==', 0);
+                }
+
+                var cparts = criterion.split('=');
+
+                var __targetType = "*",
+                    __targetName = "*";
+
+                if (evt_key.indexOf('[') >= 0) {
+                        evt_key = $Q.before('[', evt_key).trim();
+                }
+
+                var padding = 0;
+
+                if (cparts[0].toLowerCase() == 'padding') {
+
+                        padding = parseFloat(cparts[1]);
+
+                        alert('padding:' + padding);
+                }
+
+                //if controller_ix is function, and callback not present, then controller_ix is the callback aka optional argument
+
+                if (controller_ix && typeof controller_ix == 'function' && !callback) {
+                        callback = controller_ix;
+                        controller_ix = 0;
+                }
+
+                //if controller_ix is function, and callback not present, then selectorObject is the callback aka optional argument
+
+                if (selectorObject && typeof selectorObject == 'function' && !callback) {
+
+                        callback = selectorObject;
+
+                        selectorObject = $Q('*');
+
+                        controller_ix = 0;
+                };
+
+                var evt_profile = {};
+
+                //which controller?
+
+                evt_profile.cix = controller_ix;
+
+                //Need the control key: 'left_stick', 'button_0', etc..
+
+                evt_profile.evt_key = evt_key;
+
+                if ($Q.contains_any(['stick', 'button', 'click', 'key'], evt_profile.evt_key)) {
+
+                        var button_mode = evt_profile.evt_key.indexOf('button') >= 0;
+
+                        Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
+
+                                if (!button_mode) {
+                                        callback(x, y);
+                                } else if (x) {
+                                        callback(x);
+                                };
+                        });
+
+                        console.info('detected input event key in:' + evt_profile.evt_key);
+
+                        console.info('TODO: rig events');
+                }
+
+                //TODO: test collision events:
+
+                else if ($Q.contains_any(['collide', 'collision', 'hit', 'touch'], evt_profile.evt_key)) {
+
+                                console.info('Rigging a collision event');
+
+                                console.info('detected collision event key in:' + evt_profile.evt_key);
+
+                                console.info('TODO: rig collision events');
+
+                                this.each(function (ix, item1) {
+
+                                        selectorObject.each(function (iy, item2) {
+
+                                                if (typeof item1.onUpdate == 'function') {
+
+                                                        item1.onUpdate(function (sprite) {
+
+                                                                if (item1.collidesRectangular(item2, padding)) {
+
+                                                                        callback(item1, item2);
+                                                                };
+                                                        });
+                                                }
+                                        });
+                                });
+                        } else {
+                                console.info('Rigging a property event');
+
+                                //TODO: test property-watch events:
+
+                                console.info('detected property threshhold event key in:' + evt_profile.evt_key);
+
+                                console.info('TODO: rig property events');
+
+                                var condition = "_",
+                                    key = evt_profile.evt_key;
+
+                                if (key.indexOf('[') >= 0 || key.indexOf(']') >= 0) {
+                                        key = key.replace('[', '').replace('[', ']');
+                                }
+
+                                var evt_parts = [];
+
+                                var run = function run() {
+                                        console.error('Sprite property check was not set correctly');
+                                };
+
+                                if (key.indexOf('>=') >= 0) {
+                                        condition = ">=";
+                                } else if (key.indexOf('<=') >= 0) {
+                                        condition = "<=";
+                                } else if (key.indexOf('>') >= 0) {
+                                        condition = ">";
+                                } else if (key.indexOf('<') >= 0) {
+                                        condition = "<";
+                                } else if (key.indexOf('=') >= 0) {
+                                        condition = "=";
+                                }
+
+                                evt_parts = key.split(condition);
+
+                                for (var x = 0; x < evt_parts.length; x++) {
+                                        evt_parts[x] = evt_parts[x].replace('=', '').replace('=', '').trim(); //remove any trailing equals and trim()
+                                }
+
+                                var mykey, number;
+
+                                // alert(evt_parts[0]);
+
+                                try {
+
+                                        mykey = evt_parts[0];
+
+                                        number = parseFloat(evt_parts[1]);
+                                } catch (e) {
+                                        console.log(e);
+                                }
+
+                                console.info('Processing condition with:' + condition);
+
+                                switch (condition) {
+
+                                        case ">=":
+
+                                                run = function run(obj, key) {
+                                                        if (obj[key] >= number) {
+                                                                callback();
+                                                        }
+                                                };
+
+                                                break;
+
+                                        case "<=":
+
+                                                run = function run(obj, key) {
+                                                        if (obj[key] <= number) {
+                                                                callback();
+                                                        }
+                                                };
+
+                                                break;
+
+                                        case ">":
+
+                                                run = function run(obj, key) {
+                                                        if (obj[key] > number) {
+                                                                callback();
+                                                        }
+                                                };
+
+                                                break;
+
+                                        case "<":
+
+                                                run = function run(obj, key) {
+                                                        if (obj[key] < number) {
+                                                                callback();
+                                                        }
+                                                };
+
+                                                break;
+
+                                        case "=":
+
+                                                run = function run(obj, key) {
+                                                        if (obj[key] == number) {
+                                                                callback();
+                                                        }
+                                                };
+
+                                                break;
+
+                                }
+
+                                /************
+                                 * Attach update to each member
+                                 *
+                                 * **************/
+
+                                var keys = mykey.split('.'),
+                                    propkey = "";
+
+                                this.each(function (ix, item) {
+
+                                        var object = {};
+
+                                        if (keys.length == 1) {
+                                                object = item;
+
+                                                propkey = mykey;
+                                        } else if (keys.length == 2) {
+                                                object = item[keys[0]];
+
+                                                propkey = keys[1];
+                                        } else if (keys.length == 3) {
+                                                object = item[keys[0]][keys[1]];
+
+                                                propkey = keys[2];
+                                        } else {
+                                                console.error(":length of '.' notation out of range. We use max length of 3 or prop.prop.key.");
+                                        }
+
+                                        if (typeof item.onUpdate == 'function') {
+
+                                                var spr = item;
+
+                                                item.onUpdate(function (sprite) {
+
+                                                        run(object, propkey);
+                                                });
+                                        }
+                                });
+                        }
         };
 
-        this.after = function (c1, str) {
-                var test_str = str || this.selector;
-                var start_pos = 0;
-                var end_pos = test_str.length;
-                return test_str.substring(start_pos, end_pos);
-        };
+        var object_out = {};
 
-        this.between = function (c1, c2, str) {
-                var test_str = str || this.selector;
-                var start_pos = test_str.indexOf(c1) + 1;
-                var end_pos = test_str.indexOf(c2, start_pos);
-                return test_str.substring(start_pos, end_pos);
-        };
+        //handle selector / selection of objects:
 
-        var mainSelector = this.before('[').trim(),
-            msfChar = mainSelector.substring(0, 1);
+        if (selector && selector !== '*') {
 
-        var __targetClassName = "*";
+                var s = selector || '';
 
-        switch (msfChar.toLowerCase()) {
-                case ".":
+                console.info('selector:' + s);
 
-                        console.info('Selecting by class');
+                var mainSelector = $Q.before('[', s).trim(),
+                    msfChar = mainSelector.substring(0, 1);
 
-                        __targetClassName = this.after('.', mainSelector);
+                var __targetClassName = "*";
 
-                        break;
+                var output = [];
 
+                var cleanSelectorString = function cleanSelectorString(str) {
+                        return str.replace(",", "");
+                };
+
+                switch (msfChar.toLowerCase()) {
+                        case ".":
+
+                                console.info('Selecting by "." or class');
+
+                                __targetClassName = cleanSelectorString($Q.after('.', mainSelector));
+
+                                console.info('Target class is:' + __targetClassName);
+
+                                break;
+
+                        case "*":
+
+                                console.info('Selecting by "*" or ANY object in the library instance');
+
+                                __targetClassName = "*";
+
+                                break;
+
+                }
+
+                var criterion = $Q.between('[', ']', s),
+                    cparts = criterion.split('=');
+
+                var __targetType = "*",
+                    __targetName = "*";
+
+                var getParts = function getParts() {
+
+                        if (cparts.length >= 2) {
+
+                                switch (cparts[0].toLowerCase()) {
+
+                                        case "name":
+
+                                                //get all objects according to name=name
+
+                                                console.log('Detected parts in selector:' + jstr(cparts));
+
+                                                __targetName = cleanSelectorString(cparts[1]);
+
+                                                break;
+
+                                        case "type":
+
+                                                console.log('Detected parts in selector:' + jstr(cparts));
+
+                                                __targetType = cleanSelectorString(cparts[1]);
+
+                                                break;
+
+                                }
+                        }
+
+                        if (cparts.length >= 4) {
+
+                                cparts[2] = cparts[2].replace(",", "");
+
+                                switch (cparts[2].toLowerCase()) {
+
+                                        case "name":
+
+                                                //get all objects according to name=name
+
+                                                console.log('Detected parts in selector:' + jstr(cparts));
+
+                                                __targetName = cleanSelectorString(cparts[3]);
+
+                                                break;
+
+                                        case "type":
+
+                                                console.log('Detected parts in selector:' + jstr(cparts));
+
+                                                __targetType = cleanSelectorString(cparts[3]);
+
+                                                break;
+
+                                }
+                        }
+                };
+
+                getParts(cparts);
+
+                object_out = GameStack.select(__targetClassName, __targetName, __targetType);
+        } else if (selector == '*') {
+                object_out = GameStack.all_objects;
         }
 
-        var criterion = this.between('[', ']'),
-            cparts = criterion.split('=');
-
-        switch (cparts[0].toLowerCase()) {
-                case "name":
-
-                        //get all objects according to name=name
-
-                        break;
-
-                case "type":
-
-                        //get all objects according to type=type
-
-                        break;
-
+        for (var x in $GFunx) {
+                object_out[x] = $GFunx[x];
         };
 
-        this.getEventProfileFromKey = function (evt_key) {
+        return object_out;
+}
 
-                var isControl = evt_key.indexOf('stick') >= 0 || evt_key.indexOf('button') >= 0;
+$Q.each = function (obj, callback, complete) {
 
-                var isCollision = evt_key.indexOf('collide') >= 0,
-                    isPropertyLimit = this.contains_any([">", "<", "="], evt_key);
+        for (var x in obj) {
+                callback(obj);
+        }
 
-                return {
+        if (typeof complete == 'function') {
+                complete(obj);
+        }
+};
 
-                        isControl: isControl,
+$Q.before = function (c1, test_str) {
+        var start_pos = 0;
+        var end_pos = test_str.indexOf(c1, start_pos);
+        return test_str.substring(start_pos, end_pos);
+};
 
-                        isCollision: isCollision,
+$Q.contains = function (c1, test_str) {
+        return test_str.indexOf(c1) >= 0;
+};
 
-                        isProperty: isProperty
-
-                };
-        };
-
-        var __;
-
-        return {
-
-                on: function on(evt_key, callback) //handle each event, such as on('collide') OR on('stick_left_0') << first controller, stick_left
-                {
-
-                        //where does the event go?
-
-                        var profile = this.getEventProfileFromKey(evt_key);
-
-                        if (profile.isControl) {
-                                console.info('Rigging a control event');
-                        }
-
-                        if (profile.isCollision) {
-                                console.info('Rigging a collision event');
-                        }
-
-                        if (profile.isProperty) {
-                                console.info('Rigging a property event');
-                        }
+$Q.contains_all = function (cList, test_str) {
+        for (var x = 0; x < cList.length; x++) {
+                if (test_str.indexOf(cList[x]) < 0) {
+                        return false;
                 }
+        }
 
-        };
+        return true;
+};
+
+$Q.contains_any = function (cList, test_str) {
+
+        for (var x = 0; x < cList.length; x++) {
+                if (test_str.indexOf(cList[x]) >= 0) {
+                        return true;
+                }
+        }
+
+        return false;
+};
+
+$Q.after = function (c1, test_str) {
+        var start_pos = test_str.indexOf(c1) + 1;
+        var end_pos = test_str.length;
+        return test_str.substring(start_pos, end_pos);
+};
+
+$Q.between = function (c1, c2, test_str) {
+        var start_pos = test_str.indexOf(c1) + 1;
+        var end_pos = test_str.indexOf(c2, start_pos);
+        return test_str.substring(start_pos, end_pos);
+};
+
+$Q.test_selector_method = function () {
+        var Q_TestStrings = ['*', '.Sprite', '*[type="enemy_type_0"]', '.Sprite[type="enemy_type_0"]'];
+
+        for (var x = 0; x < Q_TestStrings.length; x++) {
+                var test = Q_TestStrings[x];
+
+                console.info('testing:' + test);
+
+                $Q(test);
+        }
+
+        console.log('Testing stick left');
+
+        this.on('stick_left_0');
+
+        console.log('Testing button');
+
+        this.on('button_0');
+
+        console.log('Testing collide');
+
+        this.on('collide');
+
+        console.log('Testing button');
+
+        this.on('collide');
+
+        console.log('Testing prop');
+
+        this.on('health>=0');
 };
 
 /********************
@@ -748,9 +1199,12 @@ window.onload = function () {
  * */
 
 var Canvas = {
+
+        __levelMaker: false,
+
         draw: function draw(sprite, ctx) {
 
-                if (sprite.active && sprite.onScreen(Game.WIDTH, Game.HEIGHT)) {
+                if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
 
                         this.drawPortion(sprite, ctx);
                 }
@@ -801,25 +1255,15 @@ var Canvas = {
                                 console.error('Sprite is missing arguments');
                         }
 
-                        var x = sprite.position.x;
-                        var y = sprite.position.y;
+                        var p = sprite.position;
 
-                        var camera = __gameStack.camera || { pos: { x: 0, y: 0, z: 0 } };
+                        var camera = __gameStack.__gameWindow.camera || { pos: { x: 0, y: 0, z: 0 } };
 
-                        if (true) {
+                        var x = p.x,
+                            y = p.y;
 
-                                if (!isNaN(camera.pos.x)) {
-
-                                        x += camera.pos.x;
-                                }
-
-                                if (!isNaN(camera.pos.y)) {
-
-                                        y += camera.pos.y;
-                                }
-                        }
-                        ;
-
+                        x -= camera.position.x || 0;
+                        y -= camera.position.y || 0;
                         //optional animation : gameSize
 
                         var targetSize = sprite.size || sprite.selected_animation.size;
@@ -862,14 +1306,16 @@ GameStack.ready(function (lib) {
  */
 
 var GameWindow = function () {
-        function GameWindow(_ref2) {
-                var canvas = _ref2.canvas,
-                    ctx = _ref2.ctx,
-                    sprites = _ref2.sprites,
-                    backgrounds = _ref2.backgrounds,
-                    interactives = _ref2.interactives,
-                    forces = _ref2.forces,
-                    update = _ref2.update;
+        function GameWindow() {
+                var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+                    canvas = _ref.canvas,
+                    ctx = _ref.ctx,
+                    sprites = _ref.sprites,
+                    backgrounds = _ref.backgrounds,
+                    interactives = _ref.interactives,
+                    forces = _ref.forces,
+                    update = _ref.update,
+                    camera = _ref.camera;
 
                 _classCallCheck(this, GameWindow);
 
@@ -881,35 +1327,79 @@ var GameWindow = function () {
 
                 this.forces = forces instanceof Array ? forces : [];
 
-                this.canvas = canvas;
+                this.canvas = canvas || false;
+
+                document.body.style.position = "absolute";
+
+                document.body.style.width = "100%";
+
+                document.body.style.height = "100%";
 
                 if (!this.canvas) {
+                        console.info('creating new canvas');
                         this.canvas = document.createElement('CANVAS');
-                        console.info('GameWindow(): Created New Canvas');
+
+                        document.body.append(this.canvas);
+
+                        this.canvas.style.position = 'absolute';
+
+                        this.canvas.style.width = '100%';
+
+                        this.canvas.style.height = '100%';
+
+                        this.canvas.style.background = 'black';
+
+                        var c = this.canvas;
+
+                        this.adjustSize();
                 }
 
-                this.ctx = ctx || canvas.getContext('2d');
+                this.ctx = this.canvas.getContext('2d');
 
-                this.__camera = new Vector3(0, 0, 0);
+                __gameStack.canvas = this.canvas;
+
+                __gameStack.ctx = this.ctx;
+
+                window.onresize = function () {
+
+                        __gameStack.__gameWindow.adjustSize();
+                };
+
+                this.camera = new Camera();
+
+                this.camera.target = false;
+
+                __gameStack.camera = this.camera;
 
                 if (typeof update == 'function') {
                         this.onUpdate(update);
                 }
 
-                GameStack.__gameWindow = this;
-
-                GameStack.canvas = this.canvas;
-
-                GameStack.ctx = this.ctx;
+                __gameStack.__gameWindow = this;
         }
 
         _createClass(GameWindow, [{
+                key: 'adjustSize',
+                value: function adjustSize(w, h) {
+                        w = w || this.canvas.clientWidth;
+
+                        h = h || this.canvas.clientHeight;
+
+                        __gameStack.WIDTH = w;
+
+                        __gameStack.HEIGHT = h;
+
+                        this.canvas.width = w;
+
+                        this.canvas.height = h;
+                }
+        }, {
                 key: 'uniques',
                 value: function uniques(list) {
 
                         var listout = [];
 
-                        $.each(list, function (ix, item) {
+                        $Q.each(list, function (ix, item) {
 
                                 if (!listout.indexOf(item.id) >= 0) {
 
@@ -946,18 +1436,29 @@ var GameWindow = function () {
                                         item.def_update(item);
                                 }
                         });
+
+                        GameStack.each(this.forces, function (ix, item) {
+
+                                if (typeof item.update == 'function') {
+
+                                        item.update(item);
+                                }
+
+                                if (typeof item.def_update == 'function') {
+                                        //  console.log('def_update');
+
+                                        item.def_update(item);
+                                }
+                        });
                 }
         }, {
-                key: 'onUpdate',
-                value: function onUpdate(arg) {
-                        if (typeof arg == 'function') {
-                                var up = this.update;
+                key: 'loadLevelFile',
+                value: function loadLevelFile(filepath, callback) {
 
-                                this.update = function (sprites) {
-                                        up(sprites);
-                                        arg(sprites);
-                                };
-                        }
+                        $.getJSON(filepath, function (data) {
+
+                                callback(false, data);
+                        });
                 }
         }, {
                 key: 'draw',
@@ -977,9 +1478,143 @@ var GameWindow = function () {
 
 ;
 
-var TextDisplay = function TextDisplay() {
-        _classCallCheck(this, TextDisplay);
-};
+var TextDisplay = function () {
+        function TextDisplay(args) {
+                _classCallCheck(this, TextDisplay);
+
+                if (!args) {
+                        args = {};
+                }
+
+                this.widthFloat = args.width || args.widthFloat || 0.5;
+
+                this.heightFloat = args.height || args.heightFloat || 0.5;
+
+                this.topFloat = args.top || 0.25;
+
+                this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+
+                this.leftFloat = args.left || 0.25;
+
+                this.targetLeft = this.get_target(this.leftFloat, document.body.clientWidth);
+
+                this.color = args.color || '#ffffff';
+
+                this.text = args.text || "This is the text";
+
+                this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+                this.fadeIn = args.fadeIn || args.fade || true;
+
+                this.border = "2px inset " + this.color;
+
+                this.fontSize = args.fontSize || "20px";
+
+                this.fromLeft = args.fromLeft || false;
+
+                if (this.fromLeft) {
+                        this.leftFloat = 1.5;
+                }
+
+                this.fromRight = args.fromRight || false;
+
+                if (this.fromRight) {
+                        this.leftFloat = -0.5;
+                }
+
+                this.fromTop = args.fromTop || false;
+
+                if (this.fromTop) {
+                        this.topFloat = -0.5;
+                }
+
+                this.fromBottom = args.fromBottom || false;
+
+                if (this.fromBottom) {
+                        this.topFloat = 1.5;
+                }
+
+                this.duration = args.duration || 5000;
+
+                this.stay_duration = Math.round(this.duration / 2);
+
+                this.complete = args.complete || function () {};
+        }
+
+        _createClass(TextDisplay, [{
+                key: 'get_target',
+                value: function get_target(float, dimen) {
+                        return Math.round(dimen * float) + 'px';
+                }
+        }, {
+                key: 'onComplete',
+                value: function onComplete(fun) {
+
+                        this.complete = fun;
+                }
+        }, {
+                key: 'show',
+                value: function show() {
+                        //create an html element
+
+                        this.domElement = document.createElement('P');
+
+                        this.domElement.style.position = "fixed";
+
+                        this.domElement.style.color = this.color;
+
+                        this.domElement.style.padding = "10px";
+
+                        this.domElement.style.top = Math.round(document.body.clientHeight * this.topFloat) + 'px';
+
+                        this.domElement.style.left = Math.round(document.body.clientWidth * this.leftFloat) + 'px';
+
+                        this.domElement.style.width = Math.round(document.body.clientWidth * this.widthFloat) + 'px';
+
+                        this.domElement.style.height = Math.round(document.body.clientHeight * this.heightFloat) + 'px';
+
+                        this.domElement.style.fontFamily = this.fontFamily;
+
+                        this.domElement.style.fontSize = this.fontSize;
+
+                        this.domElement.style.display = "block";
+
+                        this.domElement.style.textAlign = "center";
+
+                        this.domElement.style.zIndex = "9999";
+
+                        this.domElement.innerText = this.text;
+
+                        this.domElement.textContent = this.text;
+
+                        this.domElement.style.opacity = this.fadeIn ? 0 : 1.0;
+
+                        this.domElement.id = GameStack.create_id();
+
+                        document.body.append(this.domElement);
+
+                        var __inst = this;
+
+                        Velocity(this.domElement, { opacity: 1.0, top: this.targetTop, left: this.targetLeft }, { duration: this.duration, easing: "quadratic" });
+
+                        window.setTimeout(function () {
+
+                                if (__inst.stay_duration >= 1) {
+                                        window.setTimeout(function () {
+
+                                                Velocity(__inst.domElement, { opacity: 0, display: 'none' }, { duration: 300, easing: "linear" });
+
+                                                if (typeof __inst.complete == 'function') {
+                                                        __inst.complete();
+                                                }
+                                        }, __inst.stay_duration);
+                                }
+                        }, this.duration);
+                }
+        }]);
+
+        return TextDisplay;
+}();
 
 /**TODO:complete the following
  *  class: StatDisplay:
@@ -989,9 +1624,9 @@ var TextDisplay = function TextDisplay() {
 
 var ItemDisplay //show an item display (image with text/number to the right
 = function () {
-        function ItemDisplay(_ref3) {
-                var font = _ref3.font,
-                    fontSize = _ref3.fontSize;
+        function ItemDisplay(_ref2) {
+                var font = _ref2.font,
+                    fontSize = _ref2.fontSize;
 
                 _classCallCheck(this, ItemDisplay);
         }
@@ -1012,9 +1647,9 @@ var ItemDisplay //show an item display (image with text/number to the right
 
 var BarDisplay //show a display bar such as health bar
 = function () {
-        function BarDisplay(_ref4) {
-                var font = _ref4.font,
-                    fontSize = _ref4.fontSize;
+        function BarDisplay(_ref3) {
+                var font = _ref3.font,
+                    fontSize = _ref3.fontSize;
 
                 _classCallCheck(this, BarDisplay);
         }
@@ -1035,9 +1670,9 @@ var BarDisplay //show a display bar such as health bar
 
 var VideoDisplay //show a video
 = function () {
-        function VideoDisplay(_ref5) {
-                var src = _ref5.src,
-                    size = _ref5.size;
+        function VideoDisplay(_ref4) {
+                var src = _ref4.src,
+                    size = _ref4.size;
 
                 _classCallCheck(this, VideoDisplay);
 
@@ -1058,10 +1693,12 @@ var VideoDisplay //show a video
         return VideoDisplay;
 }();
 
-; /**
-  * Created by The Blakes on 04-13-2017
-  *
-  */
+;
+/**
+ * Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})
+ * [See Live Demo with Usage-Example]{@link http://www.google.com}
+ * @returns {Animation} object of Animation()
+ * */
 
 var Animation = function () {
         function Animation(args) {
@@ -1075,7 +1712,7 @@ var Animation = function () {
 
                 this.frames = this.getArg(args, 'frames', []);
 
-                this.image = new GameImage(this.getArg(args, 'src', this.getArg(args, 'image', false)));
+                this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
                 this.src = this.image.domElement.src;
 
@@ -1087,11 +1724,13 @@ var Animation = function () {
 
                 this.cix = 0;
 
-                this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+                this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
                 this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
                 this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
+
+                this.extras = this.getArg(args, 'extras', false);
 
                 if ((typeof args === 'undefined' ? 'undefined' : _typeof(args)) == 'object' && args.frameBounds && args.frameSize) {
                         this.apply2DFrames(args.parent || {});
@@ -1243,6 +1882,10 @@ var Animation = function () {
 
                         var duration = duration || typeof this.duration == 'number' ? this.duration : this.frames.length * 20;
 
+                        if (this.cix == 0 && this.extras) {
+                                this.extras.call(); //fire any extras attached
+                        }
+
                         //we have a target
                         this.tween = new TWEEN.Tween(this).easing(__inst.curve || TWEEN.Easing.Linear.None).to({ cix: __inst.frames.length - 1 }, duration).onUpdate(function () {
                                 //console.log(objects[0].position.x,objects[0].position.y);
@@ -1278,9 +1921,7 @@ var Animation = function () {
 
                         this.timer += 1;
 
-                        Quazar.log('ANIMATING with frame count:' + this.frames.length);
-
-                        if (this.timer % this.delay == 0) {
+                        if (this.delay == 0 || this.timer % this.delay == 0) {
 
                                 if (this.hang) {
                                         this.cix = this.cix + 1;
@@ -1289,6 +1930,14 @@ var Animation = function () {
                                                 this.cix = this.frames.length - 1;
                                         }
                                 } else {
+
+                                        if (this.cix == 0 && this.extras) {
+                                                this.extras.call(); //fire any extras attached
+                                        }
+
+                                        if (this.cix >= this.frames.length - 1 && typeof this.complete == 'function') {
+                                                this.complete(this);
+                                        }
 
                                         this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
                                 }
@@ -1303,121 +1952,96 @@ var Animation = function () {
 
 ;
 ; /**
-  * Created by The Blakes on 04-13-2017
-  *
   * Camera : has simple x, y, z, position / Vector, follows a specific sprite
   *
-  * *incomplete as of 07-20-2017
+  * *TODO : implement camera class
   */
 
-var Camera = function () {
-        function Camera(position) {
-                _classCallCheck(this, Camera);
+var Camera = function Camera(args) {
+        _classCallCheck(this, Camera);
 
-                this.position = GameStack.getArg(args, 'position', GameStack.getArg(args, 'pos', new Vector3(0, 0, 0)));
-        }
-
-        _createClass(Camera, [{
-                key: 'follow',
-                value: function follow(object, accel, max, distSize) {}
-        }]);
-
-        return Camera;
-}();
-
-;
-/*****************
- *  Controls():
- *
- *  Dependencies: (1) :
- *      -Quick2d.GamepadAdapter, HTML5 Gamepad Api
- ******************/
-
-var Controls = function () {
-        function Controls(args) {
-                _classCallCheck(this, Controls);
-
-                this.__controller = args.controller;
-        }
-
-        _createClass(Controls, [{
-                key: 'extendedCall',
-                value: function extendedCall(_call, extension) {
-
-                        var formerCall = _call;
-
-                        _call = function call() {
-                                _call();extension();
-                        };
-
-                        return _call;
-                }
-        }, {
-                key: 'on',
-                value: function on(key, callback) {
-
-                        if (_typeof(this.__controller) == 'object' && typeof this.__controller[key] == 'function') {
-
-                                console.info('applying controller function:' + key);
-
-                                this.__controller[key] = this.extendedCall(this.__controller[key], callback);
-                        } else {
-                                console.error('could not apply controller function');
-                        }
-                }
-        }]);
-
-        return Controls;
-}();
+        this.position = new Vector3(0, 0, 0);
+};
 
 ;
 
-; /**
-  * Created by The Blakes on 04-13-2017
-  *
-  */
+var Extras = function () {
+        function Extras(args) {
+                _classCallCheck(this, Extras);
 
-Quick2d.Extras = {
-        call: function call(items) {
-                if (!(items instanceof Array)) {
+                this.items = args || [];
+
+                if (_typeof(this.items) == 'object') {
+                        this.items = [this.items]; //assert array from single object
+                }
+
+                var allowedTypes = ['Sound', 'GameText', 'StatDisplay', 'Menu'];
+
+                if (!(this.items instanceof Array)) {
 
                         return console.error('Quick2d.Extras.call(), needs array argument');
-                }
-
-                //a callable item can be one-time executed: it will have any of the following functions attached
-
-                for (var x = 0; x < items.length; x++) {
-                        var item = items[x];
-
-                        if (typeof item.engage == 'function') {
-                                item.engage();
-                        }
-
-                        if (typeof item.fire == 'function') {
-                                item.fire();
-                        }
-
-                        if (typeof item.start == 'function') {
-                                item.start();
-                        }
-
-                        if (typeof item.run == 'function') {
-                                item.run();
-                        }
-
-                        if (typeof item.process == 'function') {
-                                item.process();
-                        }
+                } else {
+                        GameStack.each(items, function (ix, item) {});
                 }
         }
-}; /**
-   * Created by The Blakes on 04-13-2017
-   *
-   */
 
-var Force = function () {
-        function Force(args) {
-                _classCallCheck(this, Force);
+        _createClass(Extras, [{
+                key: 'call',
+                value: function call() {
+
+                        var items = this.items;
+
+                        //a callable item can be one-time executed: it will have any of the following functions attached
+
+                        for (var x = 0; x < items.length; x++) {
+                                var item = items[x];
+
+                                if (typeof item.play == 'function') {
+                                        item.play();
+                                }
+
+                                if (typeof item.engage == 'function') {
+                                        item.engage();
+                                }
+
+                                if (typeof item.fire == 'function') {
+                                        item.fire();
+                                }
+
+                                if (typeof item.start == 'function') {
+                                        item.start();
+                                }
+
+                                if (typeof item.run == 'function') {
+                                        item.run();
+                                }
+
+                                if (typeof item.process == 'function') {
+                                        item.process();
+                                }
+                        }
+                }
+        }]);
+
+        return Extras;
+}();
+
+;
+/**
+ * Force()
+ *
+ * <ul >
+ *  <li> a 'physics' object
+ *  <li> easily instantiate physical behaviors, applied to specific groups of objects
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {Force} object of Force()
+ * */
+
+var GravityForce = function () {
+        function GravityForce(args) {
+                _classCallCheck(this, GravityForce);
 
                 this.name = args.name || "";
 
@@ -1437,7 +2061,7 @@ var Force = function () {
                 }
         }
 
-        _createClass(Force, [{
+        _createClass(GravityForce, [{
                 key: 'getArg',
                 value: function getArg(args, key, fallback) {
 
@@ -1449,8 +2073,8 @@ var Force = function () {
                         }
                 }
         }, {
-                key: 'gravitateY',
-                value: function gravitateY() {
+                key: 'update',
+                value: function update() {
 
                         var subjects = this.subjects;
 
@@ -1462,13 +2086,13 @@ var Force = function () {
 
                         var max = this.max || {};
 
-                        $.each(subjects, function (ix, itemx) {
+                        __gameStack.each(subjects, function (ix, itemx) {
 
                                 itemx.accelY(accel, max);
 
-                                itemx.__falling = true;
+                                itemx.__inAir = true;
 
-                                $.each(massObjects, function (iy, itemy) {
+                                __gameStack.each(massObjects, function (iy, itemy) {
 
                                         itemx.collide_stop(itemy);
                                 });
@@ -1476,171 +2100,26 @@ var Force = function () {
                 }
         }]);
 
-        return Force;
+        return GravityForce;
 }();
 
 ;
 
-;
-
-var FrameEffectsApi = function () {
-        function FrameEffectsApi() {
-                _classCallCheck(this, FrameEffectsApi);
-
-                this.__effects = [];
-        }
-
-        _createClass(FrameEffectsApi, [{
-                key: 'add',
-                value: function add(effect) {
-                        this.__effects.push(effect);
-                }
-        }]);
-
-        return FrameEffectsApi;
-}();
+var Force = GravityForce;
 
 ;
 
-; /**
-  * Created by The Blakes on 7/27/2017.
-  */
-
-var StatEffect = function () {
-        function StatEffect(name, value) {
-                _classCallCheck(this, StatEffect);
-
-                this.__is = "a game logic effect";
-
-                this.name = name;
-
-                this.value = value;
-        }
-
-        _createClass(StatEffect, [{
-                key: 'process',
-                value: function process(object) {
-                        //if the object has any property by effect.name, the property is incremenented by effect value
-                        //a health decrease is triggered by Effect('health', -10);
-
-
-                        for (var x in object) {
-                                if (x.toLowerCase() == this.name.toLowerCase() && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == _typeof(object[x])) {
-
-                                        object[x] += this.value;
-                                }
-                        }
-                }
-        }]);
-
-        return StatEffect;
-}();
-
-var Collision = function () {
-        function Collision(_ref6) {
-                var object = _ref6.object,
-                    collideables = _ref6.collideables,
-                    extras = _ref6.extras;
-
-                _classCallCheck(this, Collision);
-
-                this.object = object || [];
-
-                this.collideables = collideables instanceof Array ? collideables : [];
-
-                this.extras = extras instanceof Array ? extras : []; //anything extra to execute onCollision
-                //note: extras are any StatEffect, Animation, Movement to be simultaneously executed with this Collision
-        }
-
-        _createClass(Collision, [{
-                key: 'Object',
-                value: function Object(object) {
-                        this.object = object;
-
-                        return this;
-                }
-        }, {
-                key: 'Extras',
-                value: function Extras(extras) {
-                        this.extras = extras;
-
-                        return this;
-                }
-        }, {
-                key: 'Collideables',
-                value: function Collideables(collideables) {
-                        this.collideables = collideables;
-
-                        return this;
-                }
-        }, {
-                key: 'onCollide',
-                value: function onCollide(fun) {
-                        this.callback = fun;
-
-                        return this;
-                }
-        }, {
-                key: 'collide',
-                value: function collide() {
-                        this.callback();
-                }
-        }, {
-                key: 'process',
-                value: function process() {
-                        //if collision, call collide()
-
-                }
-        }]);
-
-        return Collision;
-}();
-
-;
-
-var GameLogic = function () {
-        function GameLogic(gameEffectList) {
-                _classCallCheck(this, GameLogic);
-
-                if (!gameEffectList instanceof Array) {
-
-                        console.info('GameLogic: gameEffectList was not an array');
-
-                        gameEffectList = [];
-                }
-
-                this.gameEffects = gameEffectList;
-        }
-
-        _createClass(GameLogic, [{
-                key: 'process_all',
-                value: function process_all() {
-                        //process all game logic objects::
-
-                        for (var x = 0; x < this.gameEffects.length; x++) {
-
-                                this.gameEffects[x].process();
-                        }
-                }
-        }, {
-                key: 'add',
-                value: function add(gameeffect) {
-
-                        this.gameEffects.push(gameeffect);
-                }
-        }]);
-
-        return GameLogic;
-}();
-
-;
-
-/*****************
- *  GamepadAdapter:
+/**
+ * GamepadAdapter()
  *
- *  Dependencies: (1) :
- *      -HTML5 Gamepad Api
- ******************/
+ * <ul >
+ *  <li> supports game-controller input for web-games
+ *  <li> accesses live gamepad input from the HTML5 Gamepad Api
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {GamepadAdapter} object of GamepadAdapter()
+ * */
 
 var GamepadAdapter = function () {
         function GamepadAdapter() {
@@ -1892,10 +2371,7 @@ if (!__gameInstance.GamepadAdapter) {
         // __gameInstance.gamepads.push(gamepad);
 };
 
-; /**
-  * Created by Jordan Blake on 04-13-2017
-  *
-  */
+;
 
 var GravityAction = function GravityAction() {
         _classCallCheck(this, GravityAction);
@@ -1909,10 +2385,7 @@ var GravitationalRay = function GravitationalRay(args) {
         _classCallCheck(this, GravitationalRay);
 };
 
-; /**
-  * Created by The Blakes on 04-13-2017
-  *
-  */
+;
 
 var Motion = function () {
         function Motion(args) {
@@ -2163,9 +2636,7 @@ var Motion = function () {
         return Motion;
 }();
 
-; /**
-  * Created by Administrator on 7/15/2017.
-  */
+;
 
 var Rectangle = function Rectangle(min, max) {
         _classCallCheck(this, Rectangle);
@@ -2204,26 +2675,31 @@ var Circle = function Circle(args) {
         this.radius = this.getArgs(args, 'radius', 100);
 };
 
-;
+; /**
+  * Sprite({name:string, description:string, size:Vector3, position:Vector3})
+  *
+  * <ul >
+  *  <li> an Object-container for multiple animations
+  *  <li> supports a variety of game objects and logic
+  * </ul>
+  *
+  * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+  * @returns {Sprite} object of Sprite()
+  * */
+
 var Sprite = function () {
-        function Sprite(name, description, args) {
+        function Sprite(args) {
                 _classCallCheck(this, Sprite);
+
+                if (!args) {
+                        args = {};
+                }
 
                 this.active = true; //active sprites are visible
 
-                if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) == 'object') //accept first argument as full args object
-                        {
-                                args = name;
+                this.name = args.name || "__";
 
-                                this.name = args.name || "__";
-
-                                this.description = args.description || "__";
-                        } else {
-
-                        this.name = name || "__";
-
-                        this.description = description || "__";
-                };
+                this.description = args.description || "__";
 
                 this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
@@ -2249,7 +2725,7 @@ var Sprite = function () {
 
                 this.sounds = __gameStack.getArg(args, 'sounds', []);
 
-                this.image = __gameStack.getArg(args, 'image', new GameImage(__gameStack.getArg(args, 'src', false)));
+                this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
                 this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
 
@@ -2271,34 +2747,62 @@ var Sprite = function () {
 
                 //Apply / instantiate Sound(), Motion(), and Animation() args...
 
-                $.each(this.sounds, function (ix, item) {
+                $Q.each(this.sounds, function (ix, item) {
 
                         __inst.sounds[ix] = new Sound(item);
                 });
 
-                $.each(this.motions, function (ix, item) {
+                $Q.each(this.motions, function (ix, item) {
 
                         __inst.motions[ix] = new Motion(item);
                 });
 
-                $.each(this.animations, function (ix, item) {
+                $Q.each(this.animations, function (ix, item) {
 
                         __inst.animations[ix] = new Animation(item);
                 });
 
                 //Apply initializers:
 
-                $.each(this.__initializers, function (ix, item) {
+                $Q.each(this.__initializers, function (ix, item) {
 
                         __inst.onInit(item);
                 });
 
-                this.selected_animation = this.animations[0] || new Animation();
+                if (args.selected_animation) {
+                        this.selected_animation = new Animation(args.selected_animation);
+                } else {
+
+                        this.setAnimation(this.animations[0] || new Animation({
+
+                                image: this.image,
+
+                                frameSize: new Vector3(this.image.domElement.width, this.image.domElement.height),
+
+                                frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+
+                        }));
+                }
         }
+
+        /**
+         * This function initializes sprites when necessary. Called automatically on GameStack.add(mySprite);
+         *
+         * @function
+         * @memberof Sprite
+         **********/
 
         _createClass(Sprite, [{
                 key: 'init',
                 value: function init() {}
+
+                /**
+                 * This function extends the init() function. Takes single function() argument OR single string argument
+                 * @function
+                 * @memberof Sprite
+                 * @param {function} fun the function to be passed into the init() event of the Sprite()
+                 **********/
+
         }, {
                 key: 'onInit',
                 value: function onInit(fun) {
@@ -2307,7 +2811,8 @@ var Sprite = function () {
 
                                 if (this.__initializers.indexOf(fun) < 0) {
                                         this.__initializers.push(fun);
-                                };
+                                }
+                                ;
 
                                 var __inst = this;
 
@@ -2324,13 +2829,29 @@ var Sprite = function () {
                                 if (typeof f == 'function') {
                                         alert('found func');
 
-                                        __inst.init = __inst.extendFunc(f, __inst.init);
+                                        var __inst = this;
+
+                                        var f_init = this.init;
+
+                                        this.init = function (sprite) {
+
+                                                f_init(sprite);
+
+                                                f(sprite);
+                                        };
                                 }
                         } else if (typeof fun == 'function') {
 
                                 console.log('extending init:');
 
-                                __inst.extendFunc(initializer, this.init);
+                                var f_init = this.init;
+
+                                this.init = function (sprite) {
+
+                                        f_init(sprite);
+
+                                        fun(sprite);
+                                };
                         } else if ((typeof fun === 'undefined' ? 'undefined' : _typeof(fun)) == 'object') {
 
                                 console.log('extending init:');
@@ -2343,6 +2864,16 @@ var Sprite = function () {
                  * Getters
                  ***************************/
 
+                /**
+                 * This function gets the 'id' of the object()
+                 * <ul>
+                 *     <li>See usage links</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @returns {string}
+                 **********/
+
         }, {
                 key: 'get_id',
                 value: function get_id() {
@@ -2351,6 +2882,7 @@ var Sprite = function () {
         }, {
                 key: 'to_map_object',
                 value: function to_map_object(size, framesize) {
+
                         this.__mapSize = new Vector3(size || this.size);
 
                         this.frameSize = new Vector3(framesize || this.size);
@@ -2362,12 +2894,32 @@ var Sprite = function () {
                  * Setters and Creators
                  ***************************/
 
+                /**
+                 * This function creates the 'id' of the Sprite()
+                 * <ul>
+                 *     <li>Called automatically on constructor()</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @returns {string}
+                 **********/
+
         }, {
                 key: 'create_id',
                 value: function create_id() {
 
                         return Quick2d.create_id();
                 }
+
+                /**
+                 * This function sets the size of the Sprite()
+                 * <ul>
+                 *     <li></li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 **********/
+
         }, {
                 key: 'setSize',
                 value: function setSize(size) {
@@ -2379,6 +2931,16 @@ var Sprite = function () {
                 key: 'setPos',
                 value: function setPos(pos) {
                         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
+                }
+        }, {
+                key: 'getAbsolutePosition',
+                value: function getAbsolutePosition(offset) {
+
+                        if (this.position instanceof Vector3) {} else {
+                                this.position = new Vector3(this.position);
+                        }
+
+                        return this.position.add(offset);
                 }
 
                 /*****************************
@@ -2399,6 +2961,16 @@ var Sprite = function () {
                  *  setAnimation(anime)
                  *  -set the select_animation of this sprite
                  ***************************/
+
+                /**
+                 * This function sets the 'selected_animation' property of the Sprite()
+                 * <ul>
+                 *     <li></li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {Animation}
+                 **********/
 
         }, {
                 key: 'setAnimation',
@@ -2439,10 +3011,28 @@ var Sprite = function () {
                  * -detects if object is on the screen
                  ***************************/
 
+                /**
+                 * This function detects whether the Sprite() is onScreen, according to its size and position on the GameStack.canvas
+                 * <ul>
+                 *     <li></li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 **********/
+
         }, {
                 key: 'onScreen',
                 value: function onScreen(w, h) {
-                        return this.position.x + this.size.x >= 0 && this.position.x < w && this.position.y + this.size.y >= 0 && this.position.y < h;
+
+                        w = w || __gameStack.WIDTH;
+
+                        h = h || __gameStack.HEIGHT;
+
+                        var camera = __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
+
+                        var p = new Vector3(this.position.x - camera.position.x, this.position.y - camera.position.y, this.position.z - camera.position.z);
+
+                        return p.x - this.size.x >= -10000 && p.x < 10000 && p.y + this.size.y >= -1000 && p.y < 10000;
                 }
 
                 /*****************************
@@ -2454,6 +3044,17 @@ var Sprite = function () {
                  * -starts empty:: is used by Quick2d.js as the main sprite update
                  ***************************/
 
+                /**
+                 * This function is the recursive update() for the Sprite()
+                 *
+                 * <ul>
+                 *     <li>*Called automatically by the GameStack library</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {sprite}
+                 **********/
+
         }, {
                 key: 'update',
                 value: function update(sprite) {}
@@ -2463,6 +3064,18 @@ var Sprite = function () {
                  * -applies speed and other default factors of movement::
                  * -is used by Quick2d.js as the system def_update (default update)
                  ***************************/
+
+                /**
+                 * This function updates various speed and rotational-speed properties for the Sprite()
+                 *
+                 * <ul>
+                 *     <li>Normally no need to use this. It is called automatically by the GameStack init()</li>
+                 *     <li>*Allows properties of Sprite().speed, Sprite().rot_speed, and Sprite().accel, Sprite().rot_accel to control speed and acceleration.</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {sprite}
+                 **********/
 
         }, {
                 key: 'def_update',
@@ -2500,12 +3113,38 @@ var Sprite = function () {
                                 }
                         }
                 }
+
+                /**
+                 * This function is for persistence of data and behavior for the Sprite()
+                 *
+                 * <ul>
+                 *     <li>a function may be resolved from keyString args from within the obj arg.</li>
+                 *     <li>Callback is then triggered on this function</li>
+                 *     <li>Used by GameStack to restore the behavioral options of Sprites from GameStack.options.SpriteInitializers</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {keyString1, keyString2, obj, callback}
+                 **********/
+
         }, {
                 key: 'resolveFunctionFromDoubleKeys',
                 value: function resolveFunctionFromDoubleKeys(keyString1, keyString2, obj, callback) {
 
                         callback(typeof obj[keyString1][keyString2] == 'function' ? obj[keyString1][keyString2] : {});
                 }
+
+                /**
+                 * This function will extend 2nd function arg with 1st function arg, and return the combined function()
+                 *
+                 * <ul>
+                 *     <li>Applied in GameStack for extending functions when onInit(fun) is called</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {fun, extendedFunc}
+                 **********/
+
         }, {
                 key: 'extendFunc',
                 value: function extendFunc(fun, extendedFunc) {
@@ -2532,6 +3171,17 @@ var Sprite = function () {
                  * -overrides and maintains existing code for update(){} function
                  ***************************/
 
+                /**
+                 * This function will extend the update of a Sprite()
+                 *
+                 * <ul>
+                 *     <li>Use this function to apply multiple update-calls for an object</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {fun}
+                 **********/
+
         }, {
                 key: 'onUpdate',
                 value: function onUpdate(fun) {
@@ -2555,11 +3205,23 @@ var Sprite = function () {
                  * -TODO:allow stateffects, graphiceffects into the collision function
                  ***************************/
 
+                /**
+                 * Get the boolean(T || F) results of a Collision between two Sprites(), based on their position Vector3's and Size()
+                 * <ul>
+                 *     <li>A rectangular style position</li>
+                 *      <li>Takes another sprite as argument</li>
+                 *       <li>Returns basic true || false during runtime</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {sprite}
+                 **********/
+
         }, {
                 key: 'collidesRectangular',
-                value: function collidesRectangular(sprite) {
+                value: function collidesRectangular(sprite, padding) {
 
-                        return Quazar.Collision.spriteRectanglesCollide(sprite);
+                        return Quazar.Collision.spriteRectanglesCollide(this, sprite, padding);
                 }
 
                 /*****************************
@@ -2568,6 +3230,17 @@ var Sprite = function () {
                  *  -process collision according to the non-transparent pixels of the sprite::
                  *  -provides a more realistic collision than basic rectangular
                  ***************************/
+
+                /**
+                 * Get the boolean(T || F) results of a Collision between two Sprites(), based on non-transparent pixels
+                 * <ul>
+                 *     <li>Detects collision or overlap of any non-transparent pixels</li>
+                 *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {sprite}
+                 **********/
 
         }, {
                 key: 'collidesByPixels',
@@ -2579,9 +3252,20 @@ var Sprite = function () {
                 /*****************************
                  *  shoot(sprite)
                  *  -fire a shot from the sprite:: as in a firing gun or spaceship
-                 *  -takes options{} for number of shots, anglePerShot, etc...
+                 *  -takes options{} for number of shots anglePerShot etc...
                  *  -TODO: complete and test this code
                  ***************************/
+
+                /**
+                 * Sprites() fires a projectile object
+                 * <ul>
+                 *     <li>Easy instantiator for bullets and propelled objects in GameStack</li>
+                 *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {options} *numerous args
+                 **********/
 
         }, {
                 key: 'shoot',
@@ -2590,46 +3274,152 @@ var Sprite = function () {
 
                         this.prep_key = 'shoot';
 
-                        var spread = options.spread || options.angleSpread || false;
+                        var animation = options.bullet || options.animation || new Animation();
 
-                        var total = options.total || options.totalBullets || options.numberBullets || false;
+                        var speed = options.speed || 1;
 
-                        var animation = options.bullet || options.animation || false;
+                        var position = options.position || new Vector3(0, 0, 0);
 
-                        var duration = options.duration || options.screenDuration || false;
+                        var size = options.size || new Vector3(10, 10, 0);
 
-                        var speed = options.speed || false;
+                        var rot_offset = options.rot_offset || new Vector3(0, 0, 0);
 
-                        if (__gameInstance.isAtPlay) {} else {
+                        if (__gameInstance.isAtPlay) {
 
-                                this.event_arg(this.prep_key, '_', options);
+                                var bx = position.x,
+                                    by = position.y,
+                                    bw = size.x,
+                                    bh = size.y;
+
+                                var shot = __gameStack.add(new Sprite({
+
+                                        active: true,
+
+                                        position: position,
+
+                                        size: size,
+
+                                        image: animation.image,
+
+                                        rotation: new Vector3(0, 0, 0),
+
+                                        flipX: false
+
+                                }));
+
+                                shot.setAnimation(animation);
+
+                                if (typeof rot_offset == 'number') {
+                                        rot_offset = new Vector3(rot_offset, 0, 0);
+                                }
+
+                                shot.position.x = bx, shot.position.y = by;
+                                shot.rotation.x = 0 + rot_offset.x;
+
+                                shot.stats = {
+                                        damage: 1
+
+                                };
+
+                                shot.speed.x = Math.cos(shot.rotation.x * 3.14 / 180) * speed;
+
+                                shot.speed.y = Math.sin(shot.rotation.x * 3.14 / 180) * speed;
                         }
-
-                        return this;
                 }
 
-                /*****************************
-                 *  animate(animation)
-                 *  -simply animate, set the animation to the arg 'animation'
-                 ***************************/
+                /**
+                 * Creates a subsprite
+                 * <ul>
+                 *     <li>Use this function to anchor one sprite to another.</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {options} object
+                 * @params {options.animation} Animation()
+                 * @params {options.position} Position()
+                 * @params {options.offset} Position()
+                 * @params {options.size} Size()
+                 **********/
+
+        }, {
+                key: 'subsprite',
+                value: function subsprite(options) {
+
+                        var animation = options.animation || new Animation();
+
+                        var position = options.position || this.position;
+
+                        var offset = options.offset || new Vector3(0, 0, 0);
+
+                        var size = options.size || this.size;
+
+                        if (__gameInstance.isAtPlay) {
+
+                                var subsprite = __gameStack.add(new Sprite({
+
+                                        active: true,
+
+                                        position: position,
+
+                                        size: size,
+
+                                        offset: offset,
+
+                                        image: animation.image,
+
+                                        rotation: new Vector3(0, 0, 0),
+
+                                        flipX: false
+
+                                }));
+
+                                subsprite.setAnimation(animation);
+
+                                var __parent = this;
+
+                                return subsprite;
+                        }
+                }
+
+                /**
+                 * Simple call to animate the sprite
+                 * <ul>
+                 *     <li>Calls animate on the Sprite.selected_animation</li>
+                 *     <li>*TODO: This function is not-yet implemented in GameStack</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {animation}
+                 **********/
 
         }, {
                 key: 'animate',
                 value: function animate(animation) {
-
-                        alert('calling animation');
 
                         if (__gameInstance.isAtPlay) {
 
                                 if (animation) {
                                         this.setAnimation(animation);
                                 }
-                                ;
 
                                 this.selected_animation.animate();
-
-                                return this;
                         }
+                }
+
+                /**
+                 * Overwrites the complete() function of the selected animation
+                 * <ul>
+                 *     <li>Use this function when a change must be made, but not until the current animation is complete</li>
+                 * </ul>
+                 * @function
+                 * @memberof Sprite
+                 * @params {fun} function
+                 **********/
+
+        }, {
+                key: 'onAnimationComplete',
+                value: function onAnimationComplete(fun) {
+                        this.selected_animation.onComplete(fun);
                 }
 
                 /*****************************
@@ -2637,6 +3427,13 @@ var Sprite = function () {
                  *  -accelerate on Y-Axis with 'accel' and 'max' (speed) arguments
                  *  -example-use: gravitation of sprite || up / down movement
                  ***************************/
+
+                /**
+                 * This function accelerates the Sprite() on the y-axis
+                   * @function
+                 * @memberof Sprite
+                 * @params {accel, max}
+                 **********/
 
         }, {
                 key: 'accelY',
@@ -2669,6 +3466,13 @@ var Sprite = function () {
                  *  -example-use: running of sprite || left / right movement
                  ***************************/
 
+                /**
+                 * This function accelerates the Sprite() on the y-axis
+                   * @function
+                 * @memberof Sprite
+                 * @params {accel, max}
+                 **********/
+
         }, {
                 key: 'accelX',
                 value: function accelX(accel, max) {
@@ -2698,6 +3502,13 @@ var Sprite = function () {
                  *  accel
                  *  -accelerate any acceleration -key
                  ***************************/
+
+                /**
+                 * This function accelerates the Sprite() on any or all axis, depending on arguments
+                   * @function
+                 * @memberof Sprite
+                 * @params {prop, key, accel, max}
+                 **********/
 
         }, {
                 key: 'accel',
@@ -2731,6 +3542,13 @@ var Sprite = function () {
                  *  -deceleration -key
                  ***************************/
 
+                /**
+                 * This function decelerates the Sprite() on any or all axis, depending on arguments
+                   * @function
+                 * @memberof Sprite
+                 * @params {prop, key, accel, max}
+                 **********/
+
         }, {
                 key: 'decel',
                 value: function decel(prop, key, rate) {
@@ -2754,10 +3572,10 @@ var Sprite = function () {
                 }
 
                 /*****************************
-                     *  decelX
-                     *  -decelerate on the X axis
-                     *  -args: 1 float:amt
-                     ***************************/
+                 *  decelX
+                 *  -decelerate on the X axis
+                 *  -args: 1 float:amt
+                 ***************************/
 
         }, {
                 key: 'deccelX',
@@ -2840,17 +3658,170 @@ var Sprite = function () {
                  ***************************/
 
         }, {
+                key: 'shortest_stop',
+                value: function shortest_stop(item, callback) {
+                        var diff_min_y = item.min ? item.min.y : Math.abs(item.position.y - this.position.y + this.size.y);
+
+                        var diff_min_x = item.min ? item.min.x : Math.abs(item.position.x - this.position.x + this.size.x);
+
+                        var diff_max_y = item.max ? item.max.y : Math.abs(item.position.y + item.size.y - this.position.y);
+
+                        var diff_max_x = item.max ? item.max.x : Math.abs(item.position.x + item.size.x - this.position.y);
+
+                        var dimens = { top: diff_min_y, left: diff_min_x, bottom: diff_max_y, right: diff_max_x };
+
+                        var minkey = "",
+                            min = 10000000;
+
+                        for (var x in dimens) {
+                                if (dimens[x] < min) {
+                                        min = dimens[x];
+                                        minkey = x; // a key of top left bottom or right
+                                }
+                        }
+
+                        callback(minkey);
+                }
+        }, {
+                key: 'center',
+                value: function center() {
+                        return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'overlap_x',
+                value: function overlap_x(item, padding) {
+                        if (!padding) {
+                                padding = 0;
+                        }
+
+                        var paddingX = padding * this.size.x,
+                            paddingY = padding * this.size.y,
+                            left = this.position.x + paddingX,
+                            right = this.position.x + this.size.x - paddingX,
+                            top = this.position.y + paddingY,
+                            bottom = this.position.y + this.size.y - paddingY;
+
+                        return right > item.position.x && left < item.position.x + item.size.x;
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'overlap_y',
+                value: function overlap_y(item, padding) {
+                        if (!padding) {
+                                padding = 0;
+                        }
+
+                        var paddingX = padding * this.size.x,
+                            paddingY = padding * this.size.y,
+                            left = this.position.x + paddingX,
+                            right = this.position.x + this.size.x - paddingX,
+                            top = this.position.y + paddingY,
+                            bottom = this.position.y + this.size.y - paddingY;
+
+                        return bottom > item.position.y && top < item.position.y + item.size.y;
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
+                key: 'collide_stop_x',
+                value: function collide_stop_x(item) {
+
+                        var apart = false;
+
+                        var ct = 10000;
+
+                        while (!apart && ct > 0) {
+
+                                ct--;
+
+                                var diffX = this.center().sub(item.center()).x;
+
+                                var distX = Math.abs(this.size.x / 2 + item.size.x / 2);
+
+                                if (Math.abs(diffX) < distX) {
+
+                                        this.position.x -= diffX > 0 ? -1 : 1;
+                                } else {
+
+                                        apart = true;
+                                }
+                        }
+                }
+
+                /*************
+                 * #BE CAREFUL
+                 * -with this function :: change sensitive / tricky / 4 way collision
+                 * *************/
+
+        }, {
                 key: 'collide_stop',
                 value: function collide_stop(item) {
 
-                        var max_y = item.max ? item.max.y : item.position.y;
+                        // collide top
 
-                        if (this.position.y + this.size.y >= max_y) {
 
-                                this.position.y = max_y - this.size.y;
-
-                                this.__falling = false;
+                        if (this.id == item.id) {
+                                return false;
                         }
+
+                        if (this.collidesRectangular(item)) {
+
+                                var diff = this.center().sub(item.center());
+
+                                if (this.overlap_x(item, 0.3) && Math.abs(diff.x) < Math.abs(diff.y)) {
+
+                                        var apart = false;
+
+                                        var ct = 10000;
+
+                                        while (!apart && ct > 0) {
+
+                                                ct--;
+
+                                                var diffY = this.center().sub(item.center()).y;
+
+                                                var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
+
+                                                if (Math.abs(diffY) < distY) {
+
+                                                        this.position.y -= diffY > 0 ? -1 : 1;
+                                                } else {
+
+                                                        if (diffY < 0) {
+                                                                this.__inAir = false;
+                                                        };
+
+                                                        apart = true;
+                                                }
+                                        }
+                                }
+                                if (this.overlap_y(item, 0.3)) {
+
+                                        this.collide_stop_x(item);
+                                }
+                        }
+                }
+        }, {
+                key: 'restoreFrom',
+                value: function restoreFrom(data) {
+                        data.image = new GameImage(data.src || data.image.src);
+
+                        return new Sprite(data);
                 }
 
                 /*****************************
@@ -2859,15 +3830,26 @@ var Sprite = function () {
                  *  -TODO: test this function
                  ***************************/
 
+                /**
+                 * This function restores a Sprite() from json file
+                   * @function
+                 * @memberof Sprite
+                 * @params {file_path}
+                 **********/
+
         }, {
                 key: 'fromFile',
                 value: function fromFile(file_path) {
-                        var __inst = this;
 
-                        $.getJSON(file_path, function (data) {
+                        if (typeof file_path == 'string') {
 
-                                __inst = new Sprite(data);
-                        });
+                                var __inst = this;
+
+                                $.getJSON(file_path, function (data) {
+
+                                        __inst = new Sprite(data);
+                                });
+                        }
                 }
         }]);
 
@@ -3012,7 +3994,19 @@ var SpriteInitializersOptions = {
 Quazar.options = Quazar.options || {};
 
 Quazar.options.SpriteInitializers = SpriteInitializersOptions;;
-//Vector3:
+
+/**
+ * Vector3({x:number,y:number,z:number,r:number})
+ *
+ * required arguments: x, y
+ * optional arguments: z, r
+ *
+ * [See Live Demo with Usage-Example]{@link http://www.google.com}
+ * @returns {Vector3} object of Vector3()
+ *
+ * Vector objects are treated alike in GameStack.js, with Vector() and Vector2() equivalent to Vector3()
+ * Other class names synonymous with Vector() are Pos(), Size(), Position(), Rotation()
+ * */
 
 var Vector3 = function () {
         function Vector3(x, y, z, r) {
@@ -3031,16 +4025,9 @@ var Vector3 = function () {
                 this.y = y;
                 this.z = z;
                 this.r = r;
-
-                this.__relativeTo = false;
         }
 
         _createClass(Vector3, [{
-                key: 'relativeTo',
-                value: function relativeTo(v) {
-                        this.__relativeTo = v;
-                }
-        }, {
                 key: 'sub',
                 value: function sub(v) {
                         if (typeof v == 'number') {
@@ -3131,10 +4118,10 @@ var Pos = Vector3,
   */
 
 var InterfaceCallback = function () {
-        function InterfaceCallback(_ref7) {
-                var name = _ref7.name,
-                    description = _ref7.description,
-                    callback = _ref7.callback;
+        function InterfaceCallback(_ref5) {
+                var name = _ref5.name,
+                    description = _ref5.description,
+                    callback = _ref5.callback;
 
                 _classCallCheck(this, InterfaceCallback);
 
@@ -3158,9 +4145,9 @@ var InterfaceCallback = function () {
         return InterfaceCallback;
 }();
 
-var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref8) {
-        var name = _ref8.name,
-            description = _ref8.description;
+var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref6) {
+        var name = _ref6.name,
+            description = _ref6.description;
 
         _classCallCheck(this, SpeechInterfaceStructure);
 

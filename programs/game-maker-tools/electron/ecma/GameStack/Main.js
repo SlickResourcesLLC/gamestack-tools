@@ -1,22 +1,10 @@
+
 /**
- * Created by The Blakes on 3/16/2017.
- */
-
-
-
-/*
- * #Section Media
- *
- * */
-
-
-/*
  * Sound
- *
- * Simple Sound object:: uses Jquery: audio
- *
- * TODO : test Sound() for multiple simultaneous sounds, modify as needed
- *
+ * :Simple Sound object:: uses Jquery: audio
+ * @param   {string} src : source path / name of the targeted sound-file
+
+ * @returns {Sound} object of Sound()
  * */
 
 class Sound {
@@ -69,11 +57,14 @@ class Sound {
 }
 
 
-/*
+/**
  * GameImage
  *
  * Simple GameImage
- *
+ * @param   {string} src : source path / name of the targeted image-file
+
+ * @returns {GameImage} object of GameImage()
+
  * */
 
 class GameImage {
@@ -134,12 +125,15 @@ class GameImage {
 
     }
 
+
     getImage() {
         return this.image;
     }
 
 }
-    let GameStackLibrary = function () {
+
+
+let GameStackLibrary = function () {
 
 
     var lib = {
@@ -170,7 +164,7 @@ class GameImage {
         create_id: function () {
 
             var d = new Date().getTime();
-            if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
                 d += performance.now(); //use high-precision timer if available
             }
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -190,7 +184,7 @@ class GameImage {
 
             let actionables = [];
 
-            $.each(this.sprites, function (ix, item) {
+            $Q.each(this.sprites, function (ix, item) {
 
                 actionables.concat(item.sounds);
 
@@ -254,16 +248,20 @@ class GameImage {
 
         //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
-        animate: function () {
+        animate: function (time) {
+
+            __gameStack.isAtPlay = true;
+
+
             TWEEN.update(time);
 
-            requestAnimationFrame(this.animate);
+            requestAnimationFrame(__gameStack.animate);
 
-            this.__gameWindow.update();
+            __gameStack.__gameWindow.update();
 
-            this.__gameWindow.ctx.clearRect(0, 0, this.__gameWindow.canvas.width, this.__gameWindow.canvas.height);
+            __gameStack.__gameWindow.ctx.clearRect(0, 0, __gameStack.__gameWindow.canvas.width, __gameStack.__gameWindow.canvas.height);
 
-            this.__gameWindow.draw();
+            __gameStack.__gameWindow.draw();
 
         }
         ,
@@ -278,10 +276,21 @@ class GameImage {
 
         Collision: {
 
-            spriteRectanglesCollide(obj1, obj2)
+            spriteRectanglesCollide(obj1, obj2, padding)
             {
-                if (obj1.position.x + obj1.size.x > obj2.size.x && obj1.position.x < obj2.size.x + obj2.size.x &&
-                    obj1.position.y + obj1.size.y > obj2.size.y && obj1.position.y < obj2.size.y + obj2.size.y) {
+                if(!padding)
+                {
+                    padding = 0;
+                }
+
+               var paddingX = padding * obj1.size.x,
+
+                   paddingY = padding * obj1.size.y, left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
+
+               top = obj1.position.y + paddingY, bottom = obj1.position.y + obj1.size.y - paddingY;
+
+                if (right > obj2.position.x && left < obj2.position.x + obj2.size.x &&
+                   bottom > obj2.position.y && top < obj2.position.y + obj2.size.y) {
 
                     return true;
 
@@ -361,10 +370,6 @@ class GameImage {
 
             });
 
-
-            __gameInstance.isAtPlay = true;
-
-
             this.InputEvents.init();
 
         }
@@ -381,7 +386,122 @@ class GameImage {
 
         }
 
+        ,
 
+        add: function (obj) {
+            //1: if Sprite(), Add object to the existing __gameWindow
+
+            if (obj instanceof GameWindow) {
+
+                this.__gameWindow = obj;
+
+            }
+
+            if (obj instanceof Force) {
+
+                this.__gameWindow.forces.push(obj);
+
+            }
+
+
+            if (obj instanceof Camera) {
+
+                this.__gameWindow.camera = obj;
+
+            }
+
+
+            if (obj instanceof Sprite) {
+
+                this.__gameWindow.sprites.push(obj);
+
+            }
+
+            this.collect(obj);
+
+            return obj;
+
+        }
+
+        ,
+
+        remove: function (obj) {
+            //1: if Sprite(), Add object to the existing __gameWindow
+
+
+            if (obj instanceof Sprite) {
+
+                var ix = this.__gameWindow.sprites.indexOf(obj);
+
+                this.__gameWindow.sprites.splice(ix, 1);
+
+            }
+
+        },
+
+        all_objects: [],
+
+        collect: function (obj) {
+
+            this.all_objects.push(obj);
+
+        },
+
+
+        isNormalStringMatch: function (str1, str2) {
+
+            return str1.toLowerCase().replace(' ', '') == str2.toLowerCase().replace(' ', '');
+
+        },
+
+        instance_type_pairs: function () {
+            //get an array of all instance/type pairs added to the library
+
+            //example : [ {constructor_name:Sprite, type:enemy_basic}, {constructor_name:Animation, type:enemy_attack}  ];
+
+            var objectList = [];
+
+            this.each(this.all_objects, function (ix, item) {
+
+
+                objectList.push({constructor_name: item.constructor.name, type: item.type});
+
+            });
+
+            return objectList;
+
+        },
+
+        select: function (constructor_name, name, type /*ignoring spaces and CAPS/CASE on type match*/) {
+
+            var objects_out = [];
+
+            var normalizedType
+
+            var __inst = this;
+
+            this.each(this.all_objects, function (ix, item) {
+
+                if (constructor_name == '*' || item.constructor.name == constructor_name) {
+
+                    if (type == '*' || __inst.isNormalStringMatch(type, item.type)) {
+
+                        if (name == '*' || __inst.isNormalStringMatch(name, item.name)) {
+
+                            objects_out.push(item);
+
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+            return objects_out;
+
+        }
 
     }
 
@@ -411,6 +531,15 @@ let __gameInstance = GameStack;
  *
  * ****************/
 
+/********
+ * jstr() : public function for stringified objects and arrays (uses pretty print style)
+ * *********/
+
+function jstr(obj) {
+
+    return JSON.stringify(obj);
+
+};
 
 /**********
  * $Q : Selector Function *in development
@@ -418,167 +547,569 @@ let __gameInstance = GameStack;
  * Example Calls
  * **********/
 
-function $Q({selector})
-{
-    this.selector = selector;
+function $Q(selector) {
 
-    this.before = function(c1, str)
+    //declare events:
+
+
+    var $GFunx = {};
+
+    $GFunx.each = function(callback)
     {
-        var test_str = str || this.selector;
-        var start_pos = 0;
-        var end_pos = test_str.indexOf(c1,start_pos);
-       return test_str.substring(start_pos,end_pos);
-    };
 
+        var objects = [];
 
-    this.contains = function(c1, str)
-    {
-        var test_str = str || this.selector;
-
-        return test_str.indexOf(c1) >= 0;
-    };
-
-    this.contains_all = function(cList, str)
-    {
-        var test_str = str || this.selector;
-
-        for(var x = 0; x < cList.length; x++)
+        for(var x = 0; x < this.length; x++)
         {
-            if(test_str.indexOf(cList[x]) < 0)
+            if(typeof x == 'number')
             {
-                return false;
 
+                callback(x, this[x]);
             }
 
         }
 
-        return true;
 
     };
 
-
-    this.contains_any = function(cList, str)
+    $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
     {
-        var test_str = str || this.selector;
 
-        for(var x = 0; x < cList.length; x++)
+        if(__gameStack.isAtPlay)
         {
-            if(test_str.indexOf(cList[x]) >= 0)
-            {
-                return true;
-
-            }
+            return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
 
         }
 
-        return false;
+        var criterion = $Q.between('[', ']', evt_key);
+
+        if(criterion.indexOf('===') >= 0)
+        {
+            criterion = criterion.replace('===', '=');
+        }
+
+        if(criterion.indexOf('==') >= 0)
+        {
+            criterion =  criterion.replace('==', '=').replace('==', 0);
+        }
+
+       var cparts = criterion.split('=');
+
+        var  __targetType = "*", __targetName = "*";
+
+        if(evt_key.indexOf('[') >= 0)
+        {
+            evt_key = $Q.before('[', evt_key).trim();
+
+        }
+
+
+        var padding = 0;
+
+        if(cparts[0].toLowerCase() == 'padding')
+        {
+
+            padding = parseFloat(cparts[1]);
+
+            alert('padding:' + padding);
+
+        }
+
+        //if controller_ix is function, and callback not present, then controller_ix is the callback aka optional argument
+
+        if(controller_ix && typeof controller_ix == 'function' && !callback)
+        {
+            callback = controller_ix;
+            controller_ix = 0;
+        }
+
+        //if controller_ix is function, and callback not present, then selectorObject is the callback aka optional argument
+
+        if(selectorObject && typeof selectorObject == 'function' && !callback)
+        {
+
+            callback = selectorObject;
+
+            selectorObject = $Q('*');
+
+            controller_ix = 0;
+        };
+
+        var evt_profile = {};
+
+        //which controller?
+
+        evt_profile.cix = controller_ix;
+
+        //Need the control key: 'left_stick', 'button_0', etc..
+
+        evt_profile.evt_key = evt_key;
+
+        if($Q.contains_any(['stick', 'button', 'click', 'key'], evt_profile.evt_key))
+        {
+
+            var button_mode = evt_profile.evt_key.indexOf('button') >= 0;
+
+            Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
+
+                if(!button_mode){callback(x, y);}
+                else if(x){callback(x);};
+
+            });
+
+            console.info('detected input event key in:' + evt_profile.evt_key);
+
+            console.info('TODO: rig events');
+
+        }
+
+        //TODO: test collision events:
+
+      else if($Q.contains_any(['collide', 'collision', 'hit', 'touch'],  evt_profile.evt_key))
+        {
+
+            console.info('Rigging a collision event');
+
+            console.info('detected collision event key in:' +  evt_profile.evt_key);
+
+            console.info('TODO: rig collision events');
+
+            this.each(function(ix, item1){
+
+                selectorObject.each(function(iy, item2){
+
+
+                    if(typeof(item1.onUpdate) == 'function')
+                    {
+
+                        item1.onUpdate(function(sprite){
+
+                            if(item1.collidesRectangular(item2, padding))
+                            {
+
+                              callback(item1, item2);
+
+                            };
+
+                        });
+
+                    }
+
+
+                });
+
+            });
+
+
+        }
+
+
+       else {
+            console.info('Rigging a property event');
+
+            //TODO: test property-watch events:
+
+            console.info('detected property threshhold event key in:' + evt_profile.evt_key);
+
+            console.info('TODO: rig property events');
+
+            var condition = "_", key = evt_profile.evt_key;
+
+            if(key.indexOf('[') >= 0 || key.indexOf(']') >= 0)
+            {
+                key = key.replace('[', '').replace('[', ']');
+
+            }
+
+            var evt_parts = [];
+
+            var run = function()
+            {
+                console.error('Sprite property check was not set correctly');
+
+            };
+
+            if(key.indexOf('>=') >= 0)
+            {
+                condition = ">=";
+
+
+            }
+           else if(key.indexOf('<=') >= 0)
+            {
+                condition = "<=";
+            }
+           else if(key.indexOf('>') >= 0)
+            {
+                condition = ">";
+            }
+          else if(key.indexOf('<') >= 0)
+            {
+                condition = "<";
+            }
+
+            else if(key.indexOf('=') >= 0)
+            {
+                condition = "=";
+            }
+
+            evt_parts = key.split(condition);
+
+            for(var x = 0; x < evt_parts.length; x++)
+            {
+                evt_parts[x] = evt_parts[x].replace('=', '').replace('=', '').trim(); //remove any trailing equals and trim()
+
+            }
+
+            var mykey, number;
+
+           // alert(evt_parts[0]);
+
+            try{
+
+            mykey = evt_parts[0];
+
+            number = parseFloat(evt_parts[1]);
+
+            }
+            catch(e)
+            {
+                console.log(e);
+            }
+
+            console.info('Processing condition with:' + condition);
+
+            switch(condition)
+            {
+
+                case ">=":
+
+
+                    run = function(obj, key){ if(obj[key] >= number){ callback(); } };
+
+                    break;
+
+                case "<=":
+
+                    run = function(obj, key){ if(obj[key] <= number){ callback(); } };
+
+                    break;
+
+
+                case ">":
+
+                    run = function(obj, key){ if(obj[key] > number){ callback(); } };
+
+                    break;
+
+                case "<":
+
+                    run = function(obj, key){ if(obj[key] < number){ callback(); } };
+
+                    break;
+
+                case "=":
+
+                    run = function(obj, key){ if(obj[key] == number){ callback(); } };
+
+                    break;
+
+            }
+
+
+            /************
+             * Attach update to each member
+             *
+             * **************/
+
+            var keys = mykey.split('.'), propkey = "";
+
+            this.each(function(ix, item){
+
+                var object = {};
+
+                if(keys.length == 1)
+                {
+                    object = item;
+
+                    propkey = mykey;
+
+                }
+                else if(keys.length == 2)
+                {
+                    object = item[keys[0]];
+
+                    propkey = keys[1];
+
+
+                }
+
+                else if(keys.length == 3)
+                {
+                    object = item[keys[0]][keys[1]];
+
+                    propkey = keys[2];
+
+                }
+                else
+                {
+                    console.error(":length of '.' notation out of range. We use max length of 3 or prop.prop.key.");
+
+                }
+
+                if(typeof item.onUpdate == 'function')
+                {
+
+
+                    var spr = item;
+
+                    item.onUpdate(function(sprite){
+
+                        run(object, propkey);
+
+                    });
+
+                }
+
+            });
+
+
+
+
+        }
 
     };
 
-    this.after = function(c1, str)
+
+    var object_out = {};
+
+    //handle selector / selection of objects:
+
+    if(selector && selector !== '*')
     {
-        var test_str = str || this.selector;
-        var start_pos = 0;
-        var end_pos = test_str.length;
-        return test_str.substring(start_pos,end_pos);
-    };
 
-    this.between = function(c1, c2, str)
-    {
-        var test_str = str || this.selector;
-        var start_pos = test_str.indexOf(c1) + 1;
-        var end_pos = test_str.indexOf(c2,start_pos);
-        return test_str.substring(start_pos,end_pos)
-    };
+    var s = selector || '';
 
-    var mainSelector = this.before('[').trim(), msfChar = mainSelector.substring(0, 1);
+    console.info('selector:' + s);
 
+    var mainSelector = $Q.before('[', s).trim(), msfChar = mainSelector.substring(0, 1);
 
     var __targetClassName = "*";
 
-    switch(msfChar.toLowerCase())
+    var output = [];
+
+    var cleanSelectorString = function(str)
     {
+        return str.replace(",", "");
+    };
+
+    switch (msfChar.toLowerCase()) {
         case ".":
 
-            console.info('Selecting by class');
+            console.info('Selecting by "." or class');
 
-            __targetClassName =  this.after('.', mainSelector);
+            __targetClassName = cleanSelectorString($Q.after('.', mainSelector));
+
+            console.info('Target class is:' + __targetClassName);
+
+            break;
+
+        case "*":
+
+            console.info('Selecting by "*" or ANY object in the library instance');
+
+            __targetClassName = "*";
 
             break;
 
     }
 
+         var criterion = $Q.between('[', ']', s), cparts = criterion.split('=');
 
-    var criterion = this.between('[', ']'), cparts = criterion.split('=');
+        var  __targetType = "*", __targetName = "*";
 
-    switch(cparts[0].toLowerCase())
+  var getParts = function() {
+
+      if(cparts.length >= 2) {
+
+          switch (cparts[0].toLowerCase()) {
+
+              case "name":
+
+                  //get all objects according to name=name
+
+                  console.log('Detected parts in selector:' + jstr(cparts));
+
+                  __targetName =  cleanSelectorString(cparts[1]);
+
+                  break;
+
+              case  "type":
+
+                  console.log('Detected parts in selector:' + jstr(cparts));
+
+                  __targetType =  cleanSelectorString(cparts[1]);
+
+                  break;
+
+          }
+
+      }
+
+      if(cparts.length >= 4) {
+
+          cparts[2] = cparts[2].replace(",", "");
+
+          switch (cparts[2].toLowerCase()) {
+
+              case "name":
+
+                  //get all objects according to name=name
+
+                  console.log('Detected parts in selector:' + jstr(cparts));
+
+                  __targetName =  cleanSelectorString(cparts[3]);
+
+                  break;
+
+              case  "type":
+
+                  console.log('Detected parts in selector:' + jstr(cparts));
+
+                  __targetType =  cleanSelectorString(cparts[3]);
+
+                  break;
+
+          }
+
+      }
+
+      };
+
+  getParts(cparts);
+
+
+        object_out = GameStack.select(__targetClassName, __targetName, __targetType);
+    }
+   else if(selector == '*')
     {
-        case "name":
+        object_out = GameStack.all_objects;
 
-            //get all objects according to name=name
+    }
 
-            break;
+   for(var x in $GFunx)
+   {
+       object_out[x] = $GFunx[x];
 
-        case  "type":
+   };
 
-            //get all objects according to type=type
+   return object_out;
 
-            break;
+}
 
-    };
 
-    this.getEventProfileFromKey = function(evt_key)
+$Q.each = function (obj, callback, complete) {
+
+    for(var x in obj)
     {
+        callback(obj);
 
-        var isControl = evt_key.indexOf('stick') >= 0 || evt_key.indexOf('button') >= 0;
+    }
 
-        var isCollision = evt_key.indexOf('collide') >= 0,
+    if(typeof(complete) == 'function')
+    {
+        complete(obj);
 
-        isPropertyLimit = this.contains_any([">", "<", "="], evt_key);
+    }
 
-        return{
+};
 
-            isControl:isControl,
 
-            isCollision:isCollision,
 
-            isProperty:isProperty
+$Q.before = function (c1, test_str) {
+    var start_pos = 0;
+    var end_pos = test_str.indexOf(c1, start_pos);
+    return test_str.substring(start_pos, end_pos);
+};
 
-        }
-    };
 
-    var __
+$Q.contains = function (c1, test_str) {
+    return test_str.indexOf(c1) >= 0;
+};
 
-    return{
-
-        on:function(evt_key, callback) //handle each event, such as on('collide') OR on('stick_left_0') << first controller, stick_left
-        {
-
-            //where does the event go?
-
-            var profile = this.getEventProfileFromKey(evt_key);
-
-            if(profile.isControl)
-            {
-                console.info('Rigging a control event');
-
-            }
-
-            if(profile.isCollision)
-            {
-                console.info('Rigging a collision event');
-
-            }
-
-            if(profile.isProperty)
-            {
-                console.info('Rigging a property event');
-
-            }
+$Q.contains_all = function (cList, test_str) {
+    for (var x = 0; x < cList.length; x++) {
+        if (test_str.indexOf(cList[x]) < 0) {
+            return false;
 
         }
 
     }
+
+    return true;
+
+};
+
+$Q.contains_any = function (cList, test_str) {
+
+    for (var x = 0; x < cList.length; x++) {
+        if (test_str.indexOf(cList[x]) >= 0) {
+            return true;
+
+        }
+    }
+
+    return false;
+
+};
+
+$Q.after = function (c1, test_str) {
+    var start_pos = test_str.indexOf(c1) + 1;
+    var end_pos = test_str.length;
+    return test_str.substring(start_pos, end_pos);
+};
+
+$Q.between = function (c1, c2, test_str) {
+    var start_pos = test_str.indexOf(c1) + 1;
+    var end_pos = test_str.indexOf(c2, start_pos);
+    return test_str.substring(start_pos, end_pos)
+};
+
+
+$Q.test_selector_method =  function () {
+    var Q_TestStrings = ['*', '.Sprite', '*[type="enemy_type_0"]', '.Sprite[type="enemy_type_0"]'];
+
+    for (var x = 0; x < Q_TestStrings.length; x++) {
+        var test = Q_TestStrings[x];
+
+        console.info('testing:' + test);
+
+        $Q(test);
+    }
+
+    console.log('Testing stick left');
+
+    this.on('stick_left_0');
+
+    console.log('Testing button');
+
+    this.on('button_0');
+
+
+    console.log('Testing collide');
+
+    this.on('collide');
+
+
+    console.log('Testing button');
+
+    this.on('collide');
+
+    console.log('Testing prop');
+
+    this.on('health>=0');
+
+
 };
 
 
@@ -702,6 +1233,7 @@ GameStack.InputEvents = { //PC input events
             }
 
         };
+
 
         GameStack.canvas.onmousedown = function (e) {
 
@@ -900,9 +1432,12 @@ window.onload = function () {
 
 
 var Canvas = {
+
+    __levelMaker:false,
+
     draw: function (sprite, ctx) {
 
-        if (sprite.active && sprite.onScreen(Game.WIDTH, Game.HEIGHT)) {
+        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
 
             this.drawPortion(sprite, ctx);
 
@@ -962,28 +1497,15 @@ var Canvas = {
 
             }
 
-            var x = sprite.position.x;
-            var y = sprite.position.y;
+            var p = sprite.position;
 
-            var camera = __gameStack.camera || {pos: {x: 0, y: 0, z: 0}};
+            var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
 
-
-            if (true) {
-
-                if (!isNaN(camera.pos.x)) {
-
-                    x += camera.pos.x;
-                }
-
-                if (!isNaN(camera.pos.y)) {
-
-                    y += camera.pos.y;
-                }
-
-            }
-            ;
+            var x = p.x, y = p.y;
 
 
+            x -= camera.position.x || 0;
+            y -= camera.position.y  || 0;
             //optional animation : gameSize
 
             var targetSize = sprite.size || sprite.selected_animation.size;
@@ -1039,7 +1561,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update}) {
+    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -1049,27 +1571,79 @@ class GameWindow {
 
         this.forces = forces instanceof Array ? forces : [];
 
-        this.canvas = canvas;
+        this.canvas = canvas|| false;
 
-        if (!this.canvas) {
+
+        document.body.style.position = "absolute";
+
+        document.body.style.width = "100%";
+
+        document.body.style.height = "100%";
+
+        if(!this.canvas)
+        {
+            console.info('creating new canvas');
             this.canvas = document.createElement('CANVAS');
-            console.info('GameWindow(): Created New Canvas');
+
+            document.body.append(this.canvas);
+
+            this.canvas.style.position = 'absolute';
+
+
+            this.canvas.style.width = '100%';
+
+            this.canvas.style.height = '100%';
+
+            this.canvas.style.background = 'black';
+
+            var c = this.canvas;
+
+            this.adjustSize();
         }
 
-        this.ctx = ctx || canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d');
 
-        this.__camera = new Vector3(0, 0, 0);
+        __gameStack.canvas = this.canvas;
+
+        __gameStack.ctx = this.ctx;
+
+        window.onresize = function(){
+
+            __gameStack.__gameWindow.adjustSize();
+
+        };
+
+        this.camera = new Camera();
+
+        this.camera.target = false;
+
+        __gameStack.camera = this.camera;
 
         if (typeof update == 'function') {
             this.onUpdate(update);
 
         }
 
-        GameStack.__gameWindow = this;
 
-        GameStack.canvas = this.canvas;
 
-        GameStack.ctx = this.ctx;
+       __gameStack.__gameWindow = this;
+
+    }
+
+
+    adjustSize(w, h)
+    {
+        w = w || this.canvas.clientWidth;
+
+        h = h || this.canvas.clientHeight;
+
+        __gameStack.WIDTH = w;
+
+        __gameStack.HEIGHT = h;
+
+        this.canvas.width = w;
+
+        this.canvas.height = h;
 
     }
 
@@ -1077,7 +1651,7 @@ class GameWindow {
 
         var listout = [];
 
-        $.each(list, function (ix, item) {
+        $Q.each(list, function (ix, item) {
 
             if (!listout.indexOf(item.id) >= 0) {
 
@@ -1105,6 +1679,7 @@ class GameWindow {
 
     update() {
 
+
         GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.update) == 'function') {
@@ -1122,20 +1697,40 @@ class GameWindow {
         });
 
 
-    }
 
-    onUpdate(arg) {
-        if (typeof(arg) == 'function') {
-            let up = this.update;
+        GameStack.each(this.forces, function (ix, item) {
 
-            this.update = function (sprites) {
-                up(sprites);
-                arg(sprites);
+            if (typeof(item.update) == 'function') {
+
+                item.update(item);
+
             }
 
-        }
+            if (typeof(item.def_update) == 'function') {
+                //  console.log('def_update');
+
+                item.def_update(item);
+
+            }
+
+        });
+
+
 
     }
+
+
+
+    loadLevelFile(filepath, callback)
+    {
+
+        $.getJSON(filepath, function(data) {
+
+            callback(false, data);
+
+        });
+    }
+
 
     draw() {
 
@@ -1155,6 +1750,142 @@ class GameWindow {
 
 class TextDisplay {
 
+    constructor(args)
+    {
+        if(!args)
+        {
+            args = {};
+
+        }
+
+        this.widthFloat = args.width || args.widthFloat || 0.5;
+
+        this.heightFloat = args.height || args.heightFloat || 0.5;
+
+        this.topFloat = args.top || 0.25;
+
+        this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+
+        this.leftFloat = args.left || 0.25;
+
+        this.targetLeft = this.get_target(this.leftFloat,document.body.clientWidth);
+
+        this.color = args.color || '#ffffff';
+
+        this.text = args.text || "This is the text";
+
+        this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+        this.fadeIn = args.fadeIn || args.fade || true;
+
+        this.border = "2px inset " + this.color;
+
+        this.fontSize = args.fontSize || "20px";
+
+        this.fromLeft = args.fromLeft || false;
+
+        if(this.fromLeft){ this.leftFloat = 1.5; }
+
+        this.fromRight = args.fromRight || false;
+
+        if(this.fromRight){ this.leftFloat = -0.5; }
+
+        this.fromTop = args.fromTop || false;
+
+        if(this.fromTop){ this.topFloat = -0.5; }
+
+        this.fromBottom = args.fromBottom || false;
+
+        if(this.fromBottom){ this.topFloat = 1.5; }
+
+        this.duration = args.duration || 5000;
+
+        this.stay_duration = Math.round(this.duration / 2);
+
+        this.complete = args.complete || function(){};
+
+    }
+
+    get_target(float, dimen)
+    {
+        return  Math.round(dimen * float) + 'px';
+    }
+
+    onComplete(fun){
+
+        this.complete = fun;
+
+    }
+
+    show()
+    {
+        //create an html element
+
+        this.domElement = document.createElement('P');
+
+        this.domElement.style.position = "fixed";
+
+        this.domElement.style.color = this.color;
+
+        this.domElement.style.padding = "10px";
+
+        this.domElement.style.top = Math.round(document.body.clientHeight * this.topFloat) + 'px';
+
+        this.domElement.style.left = Math.round(document.body.clientWidth * this.leftFloat) + 'px';
+
+        this.domElement.style.width = Math.round(document.body.clientWidth * this.widthFloat) + 'px';
+
+        this.domElement.style.height = Math.round(document.body.clientHeight * this.heightFloat) + 'px';
+
+        this.domElement.style.fontFamily = this.fontFamily;
+
+        this.domElement.style.fontSize = this.fontSize;
+
+        this.domElement.style.display = "block";
+
+        this.domElement.style.textAlign = "center";
+
+        this.domElement.style.zIndex = "9999";
+
+        this.domElement.innerText = this.text;
+
+        this.domElement.textContent = this.text;
+
+        this.domElement.style.opacity = this.fadeIn ?  0 : 1.0;
+
+        this.domElement.id = GameStack.create_id();
+
+        document.body.append(this.domElement);
+
+
+        var __inst = this;
+
+        Velocity(this.domElement, { opacity:1.0, top:this.targetTop, left:this.targetLeft}, { duration: this.duration, easing:"quadratic"});
+
+        window.setTimeout(function(){
+
+            if(__inst.stay_duration >= 1)
+            {
+                window.setTimeout(function(){
+
+                    Velocity(__inst.domElement, { opacity:0, display:'none'}, { duration:300, easing:"linear"});
+
+                    if(typeof(__inst.complete) == 'function')
+                    {
+                        __inst.complete();
+
+                    }
+
+
+
+                }, __inst.stay_duration);
+
+            }
+
+
+        }, this.duration);
+
+    }
 
 }
 

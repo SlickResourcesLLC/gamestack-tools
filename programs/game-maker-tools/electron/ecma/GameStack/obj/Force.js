@@ -1,9 +1,17 @@
-/**
- * Created by The Blakes on 04-13-2017
- *
- */
 
-class Force
+/**
+ * Force()
+ *
+ * <ul >
+ *  <li> a 'physics' object
+ *  <li> easily instantiate physical behaviors, applied to specific groups of objects
+ * </ul>
+ *
+ * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
+ * @returns {Force} object of Force()
+ * */
+
+class GravityForce
 {
     constructor(args)
     {
@@ -44,7 +52,7 @@ class Force
     }
 
 
-    gravitateY()
+    update()
     {
 
       var  subjects = this.subjects;
@@ -57,13 +65,13 @@ class Force
 
         var max =  this.max || {};
 
-        $.each(subjects, function(ix, itemx){
+        __gameStack.each(subjects, function(ix, itemx){
 
            itemx.accelY(accel, max);
 
-           itemx.__falling = true;
+           itemx.__inAir = true;
 
-            $.each(massObjects, function(iy, itemy){
+            __gameStack.each(massObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 
@@ -72,6 +80,8 @@ class Force
         });
     }
 };
+
+let Force = GravityForce;
 
 
 

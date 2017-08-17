@@ -1,9 +1,9 @@
+
 /**
- * Created by The Blakes on 04-13-2017
- *
- */
-
-
+ * Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})
+ * [See Live Demo with Usage-Example]{@link http://www.google.com}
+ * @returns {Animation} object of Animation()
+ * */
 
 class Animation {
     constructor(args) {
@@ -18,8 +18,7 @@ class Animation {
 
         this.frames = this.getArg(args, 'frames', []);
 
-        this.image = new GameImage( this.getArg(args, 'src',  this.getArg(args, 'image', false)));
-
+        this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
         this.src = this.image.domElement.src;
 
@@ -31,12 +30,13 @@ class Animation {
 
         this.cix = 0;
 
-        this.frameSize = this.getArg(args, 'frameSize', new Vector3(0, 0, 0));
+        this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
         this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
+        this.extras = this.getArg(args, 'extras', false);
 
       if(typeof(args) == 'object' && args.frameBounds && args.frameSize){  this.apply2DFrames(args.parent || {}) };
 
@@ -208,6 +208,12 @@ engage(duration, complete)
 
     var duration = duration || typeof(this.duration) == 'number' ? this.duration : this.frames.length * 20;
 
+    if(this.cix == 0 && this.extras)
+    {
+        this.extras.call(); //fire any extras attached
+
+    }
+
     //we have a target
   this.tween = new TWEEN.Tween(this)
         .easing(__inst.curve || TWEEN.Easing.Linear.None)
@@ -255,9 +261,7 @@ onComplete(fun)
 
         this.timer += 1;
 
-        Quazar.log('ANIMATING with frame count:' + this.frames.length);
-
-        if(this.timer % this.delay == 0) {
+        if(this.delay == 0 || this.timer % this.delay == 0) {
 
             if(this.hang)
             {
@@ -272,6 +276,18 @@ onComplete(fun)
             }
             else
             {
+
+                if(this.cix == 0 && this.extras)
+                {
+                    this.extras.call(); //fire any extras attached
+
+                }
+
+                if(this.cix >= this.frames.length - 1 && typeof(this.complete) == 'function')
+                {
+                    this.complete(this);
+
+                }
 
                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
             }
