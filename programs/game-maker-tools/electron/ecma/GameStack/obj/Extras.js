@@ -11,10 +11,22 @@ class Extras
             this.items = [this.items]; //assert array from single object
         }
 
+        var allowedTypes = ['Sound', 'GameText', 'StatDisplay', 'Menu'];
+
         if(!(this.items instanceof Array))
         {
 
             return console.error('Quick2d.Extras.call(), needs array argument');
+
+        }
+        else
+        {
+            GameStack.each(items, function(ix, item){
+
+
+
+
+            });
 
         }
 

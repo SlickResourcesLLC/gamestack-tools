@@ -575,7 +575,6 @@ function $Q(selector) {
     $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
     {
 
-
         if(__gameStack.isAtPlay)
         {
             return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
@@ -628,12 +627,13 @@ function $Q(selector) {
 
         if(selectorObject && typeof selectorObject == 'function' && !callback)
         {
+
             callback = selectorObject;
 
             selectorObject = $Q('*');
 
             controller_ix = 0;
-        }
+        };
 
         var evt_profile = {};
 
@@ -1561,7 +1561,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}) {
+    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -1573,6 +1573,12 @@ class GameWindow {
 
         this.canvas = canvas|| false;
 
+
+        document.body.style.position = "absolute";
+
+        document.body.style.width = "100%";
+
+        document.body.style.height = "100%";
 
         if(!this.canvas)
         {
@@ -1597,6 +1603,9 @@ class GameWindow {
 
         this.ctx = this.canvas.getContext('2d');
 
+        __gameStack.canvas = this.canvas;
+
+        __gameStack.ctx = this.ctx;
 
         window.onresize = function(){
 
@@ -1616,9 +1625,6 @@ class GameWindow {
         }
 
 
-        __gameStack.canvas = this.canvas;
-
-        __gameStack.ctx = this.ctx;
 
        __gameStack.__gameWindow = this;
 
@@ -1744,6 +1750,142 @@ class GameWindow {
 
 class TextDisplay {
 
+    constructor(args)
+    {
+        if(!args)
+        {
+            args = {};
+
+        }
+
+        this.widthFloat = args.width || args.widthFloat || 0.5;
+
+        this.heightFloat = args.height || args.heightFloat || 0.5;
+
+        this.topFloat = args.top || 0.25;
+
+        this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+
+        this.leftFloat = args.left || 0.25;
+
+        this.targetLeft = this.get_target(this.leftFloat,document.body.clientWidth);
+
+        this.color = args.color || '#ffffff';
+
+        this.text = args.text || "This is the text";
+
+        this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+        this.fadeIn = args.fadeIn || args.fade || true;
+
+        this.border = "2px inset " + this.color;
+
+        this.fontSize = args.fontSize || "20px";
+
+        this.fromLeft = args.fromLeft || false;
+
+        if(this.fromLeft){ this.leftFloat = 1.5; }
+
+        this.fromRight = args.fromRight || false;
+
+        if(this.fromRight){ this.leftFloat = -0.5; }
+
+        this.fromTop = args.fromTop || false;
+
+        if(this.fromTop){ this.topFloat = -0.5; }
+
+        this.fromBottom = args.fromBottom || false;
+
+        if(this.fromBottom){ this.topFloat = 1.5; }
+
+        this.duration = args.duration || 5000;
+
+        this.stay_duration = Math.round(this.duration / 2);
+
+        this.complete = args.complete || function(){};
+
+    }
+
+    get_target(float, dimen)
+    {
+        return  Math.round(dimen * float) + 'px';
+    }
+
+    onComplete(fun){
+
+        this.complete = fun;
+
+    }
+
+    show()
+    {
+        //create an html element
+
+        this.domElement = document.createElement('P');
+
+        this.domElement.style.position = "fixed";
+
+        this.domElement.style.color = this.color;
+
+        this.domElement.style.padding = "10px";
+
+        this.domElement.style.top = Math.round(document.body.clientHeight * this.topFloat) + 'px';
+
+        this.domElement.style.left = Math.round(document.body.clientWidth * this.leftFloat) + 'px';
+
+        this.domElement.style.width = Math.round(document.body.clientWidth * this.widthFloat) + 'px';
+
+        this.domElement.style.height = Math.round(document.body.clientHeight * this.heightFloat) + 'px';
+
+        this.domElement.style.fontFamily = this.fontFamily;
+
+        this.domElement.style.fontSize = this.fontSize;
+
+        this.domElement.style.display = "block";
+
+        this.domElement.style.textAlign = "center";
+
+        this.domElement.style.zIndex = "9999";
+
+        this.domElement.innerText = this.text;
+
+        this.domElement.textContent = this.text;
+
+        this.domElement.style.opacity = this.fadeIn ?  0 : 1.0;
+
+        this.domElement.id = GameStack.create_id();
+
+        document.body.append(this.domElement);
+
+
+        var __inst = this;
+
+        Velocity(this.domElement, { opacity:1.0, top:this.targetTop, left:this.targetLeft}, { duration: this.duration, easing:"quadratic"});
+
+        window.setTimeout(function(){
+
+            if(__inst.stay_duration >= 1)
+            {
+                window.setTimeout(function(){
+
+                    Velocity(__inst.domElement, { opacity:0, display:'none'}, { duration:300, easing:"linear"});
+
+                    if(typeof(__inst.complete) == 'function')
+                    {
+                        __inst.complete();
+
+                    }
+
+
+
+                }, __inst.stay_duration);
+
+            }
+
+
+        }, this.duration);
+
+    }
 
 }
 
@@ -2142,59 +2284,6 @@ class Camera
 
 
 ;
-/*****************
- *  Controls():
- *
- *  Dependencies: (1) :
- *      -Quick2d.GamepadAdapter, HTML5 Gamepad Api
- ******************/
-
-class Controls {
-
-    constructor(args) {
-
-
-        this.__controller = args.controller;
-
-    }
-
-    extendedCall(call, extension)
-    {
-
-        var formerCall = call;
-
-        call = function(){ call(); extension(); };
-
-        return call;
-
-    }
-
-    on(key, callback)
-    {
-
-        if(typeof(this.__controller) == 'object' && typeof(this.__controller[key]) == 'function')
-        {
-
-            console.info('applying controller function:' + key);
-
-            this.__controller[key] = this.extendedCall(this.__controller[key], callback);
-
-        }
-        else
-        {
-            console.error('could not apply controller function');
-
-        }
-
-    }
-
-
-};
-
-
-
-
-;
 class Extras
 {
 
@@ -2207,10 +2296,22 @@ class Extras
             this.items = [this.items]; //assert array from single object
         }
 
+        var allowedTypes = ['Sound', 'GameText', 'StatDisplay', 'Menu'];
+
         if(!(this.items instanceof Array))
         {
 
             return console.error('Quick2d.Extras.call(), needs array argument');
+
+        }
+        else
+        {
+            GameStack.each(items, function(ix, item){
+
+
+
+
+            });
 
         }
 
@@ -2369,137 +2470,6 @@ let Force = GravityForce;
 
 
 
-;
-class StatEffect{
-
-    constructor(name, value) {
-
-        this.__is = "a game logic effect";
-
-        this.name =name;
-
-        this.value = value;
-
-    }
-
-    process(object)
-    {
-        //if the object has any property by effect.name, the property is incremenented by effect value
-        //a health decrease is triggered by Effect('health', -10);
-
-
-        for(var x in object)
-        {
-            if(x.toLowerCase() == this.name.toLowerCase() && typeof(value) == typeof(object[x]))
-            {
-
-                object[x] += this.value;
-
-            }
-
-        }
-
-    }
-
-}
-
-class Collision
-{
-    constructor({object, collideables, extras})
-    {
-        this.object = object || [];
-
-        this.collideables = collideables instanceof Array ? collideables : [];
-
-        this.extras = extras instanceof Array ? extras : []; //anything extra to execute onCollision
-        //note: extras are any StatEffect, Animation, Movement to be simultaneously executed with this Collision
-
-    }
-
-    Object(object)
-    {
-        this.object = object;
-
-        return this;
-
-    }
-
-    Extras(extras)
-    {
-        this.extras = extras;
-
-        return this;
-
-    }
-
-    Collideables(collideables)
-    {
-        this.collideables = collideables;
-
-        return this;
-
-    }
-
-    onCollide(fun)
-    {
-        this.callback = fun;
-
-        return this;
-
-    }
-
-    collide()
-    {
-        this.callback();
-    }
-
-    process()
-    {
-        //if collision, call collide()
-
-    }
-
-
-};
-
-
-
-class GameLogic {
-
-    constructor(gameEffectList)
-    {
-        if(!gameEffectList instanceof Array)
-        {
-
-            console.info('GameLogic: gameEffectList was not an array');
-
-            gameEffectList = [];
-
-        }
-
-       this.gameEffects = gameEffectList;
-
-    }
-    process_all()
-    {
-        //process all game logic objects::
-
-            for(var x = 0; x < this.gameEffects.length; x++)
-            {
-
-                this.gameEffects[x].process();
-
-            }
-
-    }
-    add(gameeffect)
-    {
-
-        this.gameEffects.push(gameeffect);
-
-    }
-
-}
 ;
 
 /**
@@ -3309,10 +3279,6 @@ class Sprite {
 
         });
 
-
-        this.__clippedX = false;
-
-        this.__clippedY = false;
 
         if (args.selected_animation) {
             this.selected_animation = new Animation(args.selected_animation);
@@ -4387,10 +4353,6 @@ class Sprite {
         // collide top
 
 
-        this.__clippedX = false;
-
-        this.__clippedY = false;
-
 
         if(this.id == item.id)
         {
@@ -4431,7 +4393,6 @@ class Sprite {
                                this.__inAir = false;
                            };
 
-                           if(diffY > 0){ this.__clippedY = true; } //clippedY / 'top_stop'
 
                            apart = true;
 

@@ -575,7 +575,6 @@ function $Q(selector) {
     $GFunx.on = function (evt_key, selectorObject, controller_ix, callback) //handle each event such as on('collide') OR on('stick_left_0') << first controller stick_left
     {
 
-
         if(__gameStack.isAtPlay)
         {
             return console.error('Cannot call $Q().on while game is at play. Please rig your events before gameplay.');
@@ -628,12 +627,13 @@ function $Q(selector) {
 
         if(selectorObject && typeof selectorObject == 'function' && !callback)
         {
+
             callback = selectorObject;
 
             selectorObject = $Q('*');
 
             controller_ix = 0;
-        }
+        };
 
         var evt_profile = {};
 
@@ -1561,7 +1561,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}) {
+    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -1573,6 +1573,12 @@ class GameWindow {
 
         this.canvas = canvas|| false;
 
+
+        document.body.style.position = "absolute";
+
+        document.body.style.width = "100%";
+
+        document.body.style.height = "100%";
 
         if(!this.canvas)
         {
@@ -1597,6 +1603,9 @@ class GameWindow {
 
         this.ctx = this.canvas.getContext('2d');
 
+        __gameStack.canvas = this.canvas;
+
+        __gameStack.ctx = this.ctx;
 
         window.onresize = function(){
 
@@ -1616,9 +1625,6 @@ class GameWindow {
         }
 
 
-        __gameStack.canvas = this.canvas;
-
-        __gameStack.ctx = this.ctx;
 
        __gameStack.__gameWindow = this;
 
@@ -1744,6 +1750,142 @@ class GameWindow {
 
 class TextDisplay {
 
+    constructor(args)
+    {
+        if(!args)
+        {
+            args = {};
+
+        }
+
+        this.widthFloat = args.width || args.widthFloat || 0.5;
+
+        this.heightFloat = args.height || args.heightFloat || 0.5;
+
+        this.topFloat = args.top || 0.25;
+
+        this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+
+        this.leftFloat = args.left || 0.25;
+
+        this.targetLeft = this.get_target(this.leftFloat,document.body.clientWidth);
+
+        this.color = args.color || '#ffffff';
+
+        this.text = args.text || "This is the text";
+
+        this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+        this.fadeIn = args.fadeIn || args.fade || true;
+
+        this.border = "2px inset " + this.color;
+
+        this.fontSize = args.fontSize || "20px";
+
+        this.fromLeft = args.fromLeft || false;
+
+        if(this.fromLeft){ this.leftFloat = 1.5; }
+
+        this.fromRight = args.fromRight || false;
+
+        if(this.fromRight){ this.leftFloat = -0.5; }
+
+        this.fromTop = args.fromTop || false;
+
+        if(this.fromTop){ this.topFloat = -0.5; }
+
+        this.fromBottom = args.fromBottom || false;
+
+        if(this.fromBottom){ this.topFloat = 1.5; }
+
+        this.duration = args.duration || 5000;
+
+        this.stay_duration = Math.round(this.duration / 2);
+
+        this.complete = args.complete || function(){};
+
+    }
+
+    get_target(float, dimen)
+    {
+        return  Math.round(dimen * float) + 'px';
+    }
+
+    onComplete(fun){
+
+        this.complete = fun;
+
+    }
+
+    show()
+    {
+        //create an html element
+
+        this.domElement = document.createElement('P');
+
+        this.domElement.style.position = "fixed";
+
+        this.domElement.style.color = this.color;
+
+        this.domElement.style.padding = "10px";
+
+        this.domElement.style.top = Math.round(document.body.clientHeight * this.topFloat) + 'px';
+
+        this.domElement.style.left = Math.round(document.body.clientWidth * this.leftFloat) + 'px';
+
+        this.domElement.style.width = Math.round(document.body.clientWidth * this.widthFloat) + 'px';
+
+        this.domElement.style.height = Math.round(document.body.clientHeight * this.heightFloat) + 'px';
+
+        this.domElement.style.fontFamily = this.fontFamily;
+
+        this.domElement.style.fontSize = this.fontSize;
+
+        this.domElement.style.display = "block";
+
+        this.domElement.style.textAlign = "center";
+
+        this.domElement.style.zIndex = "9999";
+
+        this.domElement.innerText = this.text;
+
+        this.domElement.textContent = this.text;
+
+        this.domElement.style.opacity = this.fadeIn ?  0 : 1.0;
+
+        this.domElement.id = GameStack.create_id();
+
+        document.body.append(this.domElement);
+
+
+        var __inst = this;
+
+        Velocity(this.domElement, { opacity:1.0, top:this.targetTop, left:this.targetLeft}, { duration: this.duration, easing:"quadratic"});
+
+        window.setTimeout(function(){
+
+            if(__inst.stay_duration >= 1)
+            {
+                window.setTimeout(function(){
+
+                    Velocity(__inst.domElement, { opacity:0, display:'none'}, { duration:300, easing:"linear"});
+
+                    if(typeof(__inst.complete) == 'function')
+                    {
+                        __inst.complete();
+
+                    }
+
+
+
+                }, __inst.stay_duration);
+
+            }
+
+
+        }, this.duration);
+
+    }
 
 }
 

@@ -24,8 +24,7 @@
           weapon_animations:{
 
               normal_bullet:new Animation({
-                  src:"../assets/builder/error-symbol.png",
-
+                  src:"../assets/builder/question-mark.png",
                   frameSize: new Vector3(44, 44, 0),
                   frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
               })
@@ -45,12 +44,7 @@
 
         };
 
-
-
-
         var __GameWindow = lib.add(new GameWindow({}));
-
-        lib.animate();
 
         /**
          *
@@ -65,7 +59,6 @@
          * 1. Instantiate the Sprite()
          *
          */
-
 
         var player = lib.add(new Sprite(
             {
@@ -97,7 +90,6 @@
 
         player.position.x = 300;
 
-
         var enemy = lib.add(new Sprite(
             {
                 name:"enemy",
@@ -117,10 +109,9 @@
             frameBounds: new VectorFrameBounds(new Vector3(7, 0), new Vector3(7, 0))
         }));
 
-
         /**
          *
-         * @tutorial The $Q(), GameStack.js Query function: We can use this to intercept controller input, collision, and variables beyond or below a given number (such as sprite.health < 0)
+         * @tutorial The $Q(), GameStack.js $Q() function: We can use this to intercept controller input, collision, and obj[property] > || < value (such as sprite.health < 0)
          *
          * @tutorial-description This allows interception of game events with short calls to the $Q() query function.
          */
@@ -132,27 +123,27 @@
             if(!player.normalWeaponLocked)
             {
 
-            for(var x = 0; x <= 4; x++) {
+                for(var x = 0; x <= 4; x++) {
 
-                var bulletPosition = new Vector3(player.position.x + 41, player.position.y + 10, player.position.z);
+                    var bulletPosition = new Vector3(player.position.x + 41, player.position.y + 10, player.position.z).add(player.speed);
 
-                player.shoot({
+                    player.shoot({
 
-                    animation: GameAssets.weapon_animations.normal_bullet,
+                        animation: GameAssets.weapon_animations.normal_bullet,
 
-                    speed: 9,
+                        speed: 9,
 
-                    position: bulletPosition,
+                        position: bulletPosition,
 
-                    rot_offset: -40 + (20 * x) - 90
-                });
+                        rot_offset: -40 + (20 * x) - 90
+                    });
 
 
-            }
+                }
 
                 player.normalWeaponLocked = true;
 
-            //unlock in 1/5 second
+                //unlock in 1/5 second
 
                 window.setTimeout(function(){
 
@@ -190,9 +181,24 @@
 
             console.log('LSTICK');
 
-            if(Math.abs(x) > 0.03) {  player.position.x += x * 6; }
+            if(Math.abs(x) > 0.03) {
+                player.speed.x = x * 6;
+            }
+            else
+            {
+                player.decel(player.speed, 'x', 0.2);
 
-            if(Math.abs(y) > 0.03) {  player.position.y += y * 6; }
+            }
+
+
+           if(Math.abs(y) > 0.03) {
+                player.speed.y = y * 6;
+            }
+           else
+            {
+                player.decel(player.speed, 'y', 0.2);
+
+            }
 
             //use the x value to set the 'tilt' frame of the sprite-sheet (see image for frames)
 
@@ -213,6 +219,8 @@
 
         });
 
+
+
         /**
          * @tutorial-step Intercept the collision of two 'types' of sprite as follows
          */
@@ -224,7 +232,7 @@
 
         $Q('.Sprite[type=player]').on('collide[padding==0.4]', $Q('.Sprite[type=enemy]'), function(obj1, obj2){
 
-           // alert('A collision has occurred');
+            // alert('A collision has occurred');
 
             if(!obj1.dead)
             {
@@ -262,14 +270,19 @@
 
                 obj1.dead = true;
 
-
             }
-
-
 
         });
 
-    });
+        /***************
+         *
+         * Call lib.animate()
+         *
+         * *************/
+
+        lib.animate();
+
+           });
 
 </script>
 

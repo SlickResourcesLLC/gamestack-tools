@@ -37,8 +37,6 @@
 
     var __gameWindow;
 
-
-
     /**************
      *
      * Create a function to load the level sprites from file, using __gameWindow.loadLevelFile, and callback(err, data)
@@ -105,6 +103,12 @@
     GameStack.ready(function(lib) {
 
         console.info('library is ready');
+
+        /*************
+         *
+         * Create an organized GameAssets{} object for later reference
+         *
+         * *************/
 
         var GameAssets = {
 
@@ -201,8 +205,6 @@
             this.update();
 
         };
-
-
 
 
         /*********
@@ -501,7 +503,6 @@
 
                 }
 
-
             });
 
 
@@ -540,18 +541,7 @@
 
             lib.animate();
 
-
-
         };
-
-       //
-
-        /**
-         *
-         * @tutorial Sprites and Animations: There are two steps to creating an animated Sprite() in GameStack.js
-         *
-         *
-         */
 
 
     });

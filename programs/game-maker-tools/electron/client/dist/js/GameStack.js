@@ -518,12 +518,13 @@ function $Q(selector) {
                 //if controller_ix is function, and callback not present, then selectorObject is the callback aka optional argument
 
                 if (selectorObject && typeof selectorObject == 'function' && !callback) {
+
                         callback = selectorObject;
 
                         selectorObject = $Q('*');
 
                         controller_ix = 0;
-                }
+                };
 
                 var evt_profile = {};
 
@@ -1305,8 +1306,9 @@ GameStack.ready(function (lib) {
  */
 
 var GameWindow = function () {
-        function GameWindow(_ref) {
-                var canvas = _ref.canvas,
+        function GameWindow() {
+                var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+                    canvas = _ref.canvas,
                     ctx = _ref.ctx,
                     sprites = _ref.sprites,
                     backgrounds = _ref.backgrounds,
@@ -1326,6 +1328,12 @@ var GameWindow = function () {
                 this.forces = forces instanceof Array ? forces : [];
 
                 this.canvas = canvas || false;
+
+                document.body.style.position = "absolute";
+
+                document.body.style.width = "100%";
+
+                document.body.style.height = "100%";
 
                 if (!this.canvas) {
                         console.info('creating new canvas');
@@ -1348,6 +1356,10 @@ var GameWindow = function () {
 
                 this.ctx = this.canvas.getContext('2d');
 
+                __gameStack.canvas = this.canvas;
+
+                __gameStack.ctx = this.ctx;
+
                 window.onresize = function () {
 
                         __gameStack.__gameWindow.adjustSize();
@@ -1362,10 +1374,6 @@ var GameWindow = function () {
                 if (typeof update == 'function') {
                         this.onUpdate(update);
                 }
-
-                __gameStack.canvas = this.canvas;
-
-                __gameStack.ctx = this.ctx;
 
                 __gameStack.__gameWindow = this;
         }
@@ -1470,9 +1478,143 @@ var GameWindow = function () {
 
 ;
 
-var TextDisplay = function TextDisplay() {
-        _classCallCheck(this, TextDisplay);
-};
+var TextDisplay = function () {
+        function TextDisplay(args) {
+                _classCallCheck(this, TextDisplay);
+
+                if (!args) {
+                        args = {};
+                }
+
+                this.widthFloat = args.width || args.widthFloat || 0.5;
+
+                this.heightFloat = args.height || args.heightFloat || 0.5;
+
+                this.topFloat = args.top || 0.25;
+
+                this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+
+                this.leftFloat = args.left || 0.25;
+
+                this.targetLeft = this.get_target(this.leftFloat, document.body.clientWidth);
+
+                this.color = args.color || '#ffffff';
+
+                this.text = args.text || "This is the text";
+
+                this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+                this.fadeIn = args.fadeIn || args.fade || true;
+
+                this.border = "2px inset " + this.color;
+
+                this.fontSize = args.fontSize || "20px";
+
+                this.fromLeft = args.fromLeft || false;
+
+                if (this.fromLeft) {
+                        this.leftFloat = 1.5;
+                }
+
+                this.fromRight = args.fromRight || false;
+
+                if (this.fromRight) {
+                        this.leftFloat = -0.5;
+                }
+
+                this.fromTop = args.fromTop || false;
+
+                if (this.fromTop) {
+                        this.topFloat = -0.5;
+                }
+
+                this.fromBottom = args.fromBottom || false;
+
+                if (this.fromBottom) {
+                        this.topFloat = 1.5;
+                }
+
+                this.duration = args.duration || 5000;
+
+                this.stay_duration = Math.round(this.duration / 2);
+
+                this.complete = args.complete || function () {};
+        }
+
+        _createClass(TextDisplay, [{
+                key: 'get_target',
+                value: function get_target(float, dimen) {
+                        return Math.round(dimen * float) + 'px';
+                }
+        }, {
+                key: 'onComplete',
+                value: function onComplete(fun) {
+
+                        this.complete = fun;
+                }
+        }, {
+                key: 'show',
+                value: function show() {
+                        //create an html element
+
+                        this.domElement = document.createElement('P');
+
+                        this.domElement.style.position = "fixed";
+
+                        this.domElement.style.color = this.color;
+
+                        this.domElement.style.padding = "10px";
+
+                        this.domElement.style.top = Math.round(document.body.clientHeight * this.topFloat) + 'px';
+
+                        this.domElement.style.left = Math.round(document.body.clientWidth * this.leftFloat) + 'px';
+
+                        this.domElement.style.width = Math.round(document.body.clientWidth * this.widthFloat) + 'px';
+
+                        this.domElement.style.height = Math.round(document.body.clientHeight * this.heightFloat) + 'px';
+
+                        this.domElement.style.fontFamily = this.fontFamily;
+
+                        this.domElement.style.fontSize = this.fontSize;
+
+                        this.domElement.style.display = "block";
+
+                        this.domElement.style.textAlign = "center";
+
+                        this.domElement.style.zIndex = "9999";
+
+                        this.domElement.innerText = this.text;
+
+                        this.domElement.textContent = this.text;
+
+                        this.domElement.style.opacity = this.fadeIn ? 0 : 1.0;
+
+                        this.domElement.id = GameStack.create_id();
+
+                        document.body.append(this.domElement);
+
+                        var __inst = this;
+
+                        Velocity(this.domElement, { opacity: 1.0, top: this.targetTop, left: this.targetLeft }, { duration: this.duration, easing: "quadratic" });
+
+                        window.setTimeout(function () {
+
+                                if (__inst.stay_duration >= 1) {
+                                        window.setTimeout(function () {
+
+                                                Velocity(__inst.domElement, { opacity: 0, display: 'none' }, { duration: 300, easing: "linear" });
+
+                                                if (typeof __inst.complete == 'function') {
+                                                        __inst.complete();
+                                                }
+                                        }, __inst.stay_duration);
+                                }
+                        }, this.duration);
+                }
+        }]);
+
+        return TextDisplay;
+}();
 
 /**TODO:complete the following
  *  class: StatDisplay:
@@ -1822,53 +1964,6 @@ var Camera = function Camera(args) {
 };
 
 ;
-/*****************
- *  Controls():
- *
- *  Dependencies: (1) :
- *      -Quick2d.GamepadAdapter, HTML5 Gamepad Api
- ******************/
-
-var Controls = function () {
-        function Controls(args) {
-                _classCallCheck(this, Controls);
-
-                this.__controller = args.controller;
-        }
-
-        _createClass(Controls, [{
-                key: 'extendedCall',
-                value: function extendedCall(_call, extension) {
-
-                        var formerCall = _call;
-
-                        _call = function call() {
-                                _call();extension();
-                        };
-
-                        return _call;
-                }
-        }, {
-                key: 'on',
-                value: function on(key, callback) {
-
-                        if (_typeof(this.__controller) == 'object' && typeof this.__controller[key] == 'function') {
-
-                                console.info('applying controller function:' + key);
-
-                                this.__controller[key] = this.extendedCall(this.__controller[key], callback);
-                        } else {
-                                console.error('could not apply controller function');
-                        }
-                }
-        }]);
-
-        return Controls;
-}();
-
-;
-
-;
 
 var Extras = function () {
         function Extras(args) {
@@ -1880,9 +1975,13 @@ var Extras = function () {
                         this.items = [this.items]; //assert array from single object
                 }
 
+                var allowedTypes = ['Sound', 'GameText', 'StatDisplay', 'Menu'];
+
                 if (!(this.items instanceof Array)) {
 
                         return console.error('Quick2d.Extras.call(), needs array argument');
+                } else {
+                        GameStack.each(items, function (ix, item) {});
                 }
         }
 
@@ -2007,135 +2106,6 @@ var GravityForce = function () {
 ;
 
 var Force = GravityForce;
-
-;
-
-var StatEffect = function () {
-        function StatEffect(name, value) {
-                _classCallCheck(this, StatEffect);
-
-                this.__is = "a game logic effect";
-
-                this.name = name;
-
-                this.value = value;
-        }
-
-        _createClass(StatEffect, [{
-                key: 'process',
-                value: function process(object) {
-                        //if the object has any property by effect.name, the property is incremenented by effect value
-                        //a health decrease is triggered by Effect('health', -10);
-
-
-                        for (var x in object) {
-                                if (x.toLowerCase() == this.name.toLowerCase() && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == _typeof(object[x])) {
-
-                                        object[x] += this.value;
-                                }
-                        }
-                }
-        }]);
-
-        return StatEffect;
-}();
-
-var Collision = function () {
-        function Collision(_ref5) {
-                var object = _ref5.object,
-                    collideables = _ref5.collideables,
-                    extras = _ref5.extras;
-
-                _classCallCheck(this, Collision);
-
-                this.object = object || [];
-
-                this.collideables = collideables instanceof Array ? collideables : [];
-
-                this.extras = extras instanceof Array ? extras : []; //anything extra to execute onCollision
-                //note: extras are any StatEffect, Animation, Movement to be simultaneously executed with this Collision
-        }
-
-        _createClass(Collision, [{
-                key: 'Object',
-                value: function Object(object) {
-                        this.object = object;
-
-                        return this;
-                }
-        }, {
-                key: 'Extras',
-                value: function Extras(extras) {
-                        this.extras = extras;
-
-                        return this;
-                }
-        }, {
-                key: 'Collideables',
-                value: function Collideables(collideables) {
-                        this.collideables = collideables;
-
-                        return this;
-                }
-        }, {
-                key: 'onCollide',
-                value: function onCollide(fun) {
-                        this.callback = fun;
-
-                        return this;
-                }
-        }, {
-                key: 'collide',
-                value: function collide() {
-                        this.callback();
-                }
-        }, {
-                key: 'process',
-                value: function process() {
-                        //if collision, call collide()
-
-                }
-        }]);
-
-        return Collision;
-}();
-
-;
-
-var GameLogic = function () {
-        function GameLogic(gameEffectList) {
-                _classCallCheck(this, GameLogic);
-
-                if (!gameEffectList instanceof Array) {
-
-                        console.info('GameLogic: gameEffectList was not an array');
-
-                        gameEffectList = [];
-                }
-
-                this.gameEffects = gameEffectList;
-        }
-
-        _createClass(GameLogic, [{
-                key: 'process_all',
-                value: function process_all() {
-                        //process all game logic objects::
-
-                        for (var x = 0; x < this.gameEffects.length; x++) {
-
-                                this.gameEffects[x].process();
-                        }
-                }
-        }, {
-                key: 'add',
-                value: function add(gameeffect) {
-
-                        this.gameEffects.push(gameeffect);
-                }
-        }]);
-
-        return GameLogic;
-}();
 
 ;
 
@@ -2798,10 +2768,6 @@ var Sprite = function () {
 
                         __inst.onInit(item);
                 });
-
-                this.__clippedX = false;
-
-                this.__clippedY = false;
 
                 if (args.selected_animation) {
                         this.selected_animation = new Animation(args.selected_animation);
@@ -3809,10 +3775,6 @@ var Sprite = function () {
                         // collide top
 
 
-                        this.__clippedX = false;
-
-                        this.__clippedY = false;
-
                         if (this.id == item.id) {
                                 return false;
                         }
@@ -3843,10 +3805,6 @@ var Sprite = function () {
                                                         if (diffY < 0) {
                                                                 this.__inAir = false;
                                                         };
-
-                                                        if (diffY > 0) {
-                                                                this.__clippedY = true;
-                                                        } //clippedY / 'top_stop'
 
                                                         apart = true;
                                                 }
@@ -4160,10 +4118,10 @@ var Pos = Vector3,
   */
 
 var InterfaceCallback = function () {
-        function InterfaceCallback(_ref6) {
-                var name = _ref6.name,
-                    description = _ref6.description,
-                    callback = _ref6.callback;
+        function InterfaceCallback(_ref5) {
+                var name = _ref5.name,
+                    description = _ref5.description,
+                    callback = _ref5.callback;
 
                 _classCallCheck(this, InterfaceCallback);
 
@@ -4187,9 +4145,9 @@ var InterfaceCallback = function () {
         return InterfaceCallback;
 }();
 
-var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref7) {
-        var name = _ref7.name,
-            description = _ref7.description;
+var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref6) {
+        var name = _ref6.name,
+            description = _ref6.description;
 
         _classCallCheck(this, SpeechInterfaceStructure);
 
