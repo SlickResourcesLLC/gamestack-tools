@@ -16,23 +16,81 @@
 
 <script>
 
-    GameStack.ready(function(lib, sprites){
+    GameStack.ready(function (lib, sprites) {
 
-      alert('__gameStack is running');
+        alert('__gameStack is running');
 
-      new GameWindow();
+        new GameWindow(); //Simply instantiate GameWindow
 
-      var text = new TextDisplay({fontSize:"50px", text:"Text Displays are easy in GameStack.js", fromRight:true, duration:3000, color:"orange"});
+        var bd = new BarDisplay({
+            key: "health",
+            border: "1px inset teal",
+            fill_color: "goldenrod",
+            bar_src: "url(../assets/builder/items/healthbar_blue.png)",
+            height: "30px;",
+            width: "200px;"
+        });
+        bd.portion_top(0.95);
+        bd.portion_left(0.05);
+        bd.portion_width(0.1);
+        bd.portion_height(0.02);
 
-      text.onComplete(function(){
+        //Fill the bar with a float portion of its width:: .75 / 75%
+        bd.update(0.75);
 
-          var text2 = new TextDisplay({fontSize:"30px", text:"Use arguments and onComplete() function to display subsequent text elements.", fromLeft:true, fromTop:true, duration:7000, color:"lightblue"});
 
-          text2.show();
+        //Show applies as an item display
 
-      });
+        var items = new ItemDisplay({
+            size: new Vector3(25, 25),
+            fontSize: "18px",
+            src: "../assets/builder/items/apple_blue.png",
+            top: 0.04,
+            left: 0.03,
+            text: "Item Count"
+        });
 
-      text.show();
+
+        //Show the item display::
+
+        items.show();
+
+        //Update value of item display::
+
+        items.update(10);
+
+
+        //Create text display:: (useful for story, subtitles)
+
+        var text = new TextDisplay({
+            fontSize: "50px",
+            text: "Text Displays are easy with GameStack.js",
+            fromRight: true,
+            duration: 3000,
+            color: "orange"
+        });
+
+
+        var text2 = new TextDisplay({
+            fontSize: "30px",
+            text: "Use arguments and onComplete() function to display subsequent text elements.",
+            fromLeft: true,
+            fromTop: true,
+            duration: 7000,
+            color: "lightblue"
+        });
+
+        //add onComplete update for first text: when this text is complete, another one follows
+
+        text.onComplete(function () {
+
+            text2.show();
+
+        });
+
+        //Show the first text display, resulting in display of both
+
+        text.show();
 
     });
 
