@@ -2,6 +2,7 @@
   "elements": [
     {
       "tag": "brick_block",
+      "type":"basic_block",
       "img": {},
       "src": "../assets/builder/bricks/square_brick.png",
       "frameSize": {

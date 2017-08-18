@@ -32,9 +32,6 @@
 
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
-    <script src="../assets/js/ui/jquery.fileDownload.js"></script>
-
-
     <script src="../assets/js/ui/contextMenu.js"></script>
 
 
@@ -156,6 +153,8 @@
 
 <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
+
+
 <script src="../assets/js/ui/dat.gui.js"></script>
 
 <script src="../assets/js/ui/squeezetabs.js"></script>
@@ -191,17 +190,18 @@
 
 <body>
 
-<div id="top-gui">
 
+
+<script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+<div id="top-gui">
     <select id="forceSelect">
         <option>Strong Gravity</option>
         <option>Medium Gravity</option>
         <option>Weak Gravity</option>
-
     </select>
-
     <button type="button" id="add_tween_stack_ctrl" class="main-play" style=" "><span>&#9654;</span></button>
-
 </div>
 
 <input type="file" name="level-file-input" id="level-file-input"/>
@@ -711,11 +711,11 @@
 
         },
 
-        saveLevel: function (filename) {
+        saveLevel: function () {
 
-            var str = JSON.stringify({settings: __levelMaker.settings, sprites: Game.sprites}, null, 2); // spacing level = 2
+            var data = "data:text/json," + jstr(__levelMaker.MapData(Game.sprites, __levelMaker.settings));
 
-            App.triggerDownload(__levelMaker.settings.name + ".json", str);
+            App.triggerDownload(__levelMaker.settings.name + ".json", data);
 
         },
 
@@ -1612,7 +1612,6 @@
 
             var filename = App.recent_files[App.recent_files.length - 1];
 
-
             App.create_level(false, function () {
 
                 if (typeof(callback) == 'function') {
@@ -1623,13 +1622,11 @@
 
             });
 
-
             $('#settings-space input').change(function () {
 
                 __levelMaker.applySettings();
 
             });
-
 
             $('#create_map_object').click(function () {
 
@@ -1647,12 +1644,9 @@
 
             $('#download').click(function () {
 
-
                 var sprites = Game.sprites;
 
-
                 var remove = function (list, my_item) {
-
 
                     $.each(list, function (ix, item) {
 
@@ -1667,9 +1661,7 @@
 
                 };
 
-
                 $.each(sprites, function (ix, item) {
-
 
                     if (item == __levelMaker.selection_sprite || item == __levelMaker.hover_selection_sprite) {
                         //  alert('removing sprite');
@@ -1680,11 +1672,9 @@
 
                 });
 
+                //$(this).prop('download', __levelMaker.settings.name + '.json');
 
-                $(this).prop('download', __levelMaker.settings.name + '.json');
-
-
-                $(this).prop('target', '_blank');
+               // $(this).prop('target', '_blank');
 
                 function roughSizeOfObject(object) {
 
@@ -1719,18 +1709,7 @@
                     return bytes;
                 };
 
-
-                $(this).prop('href', "data:text/json," + jstr(__levelMaker.MapData(Game.sprites, __levelMaker.settings)));
-
-                alert(($(this).prop('href') + "").length);
-
-                $(this).prop('name', __levelMaker.settings.name + '.json');
-
-                $.fileDownload($(this).prop('href'), {
-                    preparingMessageHtml: "We are preparing your report, please wait...",
-                    failMessageHtml: "There was a problem generating your report, please try again."
-                });
-                return false; //this is critical to stop the click event which will trigger a normal file download!
+               App.saveLevel();
 
             });
 
@@ -2083,26 +2062,32 @@
 
                     console.log('Making objects in create event');
 
-                    var args = {type: type, description: description};
+                    var mapElementArgs = {name:name, type: type, description: description};
 
                     args.size = new Vector3(w, h, 0);
 
-                    if (name && description) {
+                    if (mapElementArgs.name && mapElementArgs.description) {
+
+                        var sprite = __levelMaker.createMapElement(mapElementArgs, function (sprite) {
+
+                            sprite.frameSize = new Vector3(fw, fh, 0);
+
+                            sprite.__mapSize = new Vector3(w, h, 0);
+
+                            sprite.mapSize = sprite.__mapSize;
+
+                            sprite.setSize(sprite.__mapSize);
+
+                            __levelMaker.addLevelObjectToUI(sprite);
+
+                            //  alert('last file');
+                            App.dialog(App._UI_OPTION_MAP.my_objects,
+                                0, 120, function () {
+                                    console.log('dialog shown');
+                                });
 
 
-                        __levelMaker.selectedSprite = __levelMaker.createMapElement({
-                                name: name,
-                                src: __levelMaker.selected_image_src,
-                                frameSize: new Vector3(fw, fh, 0),
-                                __mapSize: new Vector3(w, h, 0)
-                            },
-                            args);
-
-                        __levelMaker.selectedSprite.img.onload = function () {
-
-                            __levelMaker.addLevelObjectToUI(__levelMaker.selectedSprite);
-
-                        };
+                        });
 
                         $('#map-item-space form').hide();
 

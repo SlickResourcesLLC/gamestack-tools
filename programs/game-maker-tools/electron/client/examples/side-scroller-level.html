@@ -276,7 +276,7 @@
 
                 //Control player state and movements (jump)
 
-                var targetJumpY = Math.round(player.position.y - __gameStack.HEIGHT / 3);
+                var targetJumpY = Math.round(player.position.y - __gameStack.HEIGHT / 2.5);
 
                 if(player.state !== 'jumping' && !player.__inAir) {
 
@@ -312,8 +312,6 @@
 
             });
 
-
-
             //select all '.Sprite[type=player]' (the player), set collide event with '.Sprite[type=basic_block]'
 
             $Q('.Sprite[type=player]').on('collide', $Q('.Sprite[type=basic_block]'), function(obj1, obj2){
@@ -330,10 +328,7 @@
 
                 }
 
-
             });
-
-
 
             //declare player.setState for controlling player animations and state
 
@@ -378,8 +373,6 @@
 
             };
 
-
-
             //player.onUpdate: animate any selected animation
 
             player.onUpdate(function(sprite){
@@ -388,8 +381,6 @@
 
 
             });
-
-
 
             //StickLeft event::
 
@@ -439,13 +430,6 @@
                       // player.accel(player.rot_speed, 'x', 2, (x * 15));
 
                    }
-
-
-
-
-
-
-
 
                     }
 
