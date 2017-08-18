@@ -1492,11 +1492,11 @@ var TextDisplay = function () {
 
                 this.topFloat = args.top || 0.25;
 
-                this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+                this.targetTop = this.get_float_pixels(this.topFloat, document.body.clientHeight);
 
                 this.leftFloat = args.left || 0.25;
 
-                this.targetLeft = this.get_target(this.leftFloat, document.body.clientWidth);
+                this.targetLeft = this.get_float_pixels(this.leftFloat, document.body.clientWidth);
 
                 this.color = args.color || '#ffffff';
 
@@ -1542,8 +1542,8 @@ var TextDisplay = function () {
         }
 
         _createClass(TextDisplay, [{
-                key: 'get_target',
-                value: function get_target(float, dimen) {
+                key: 'get_float_pixels',
+                value: function get_float_pixels(float, dimen) {
                         return Math.round(dimen * float) + 'px';
                 }
         }, {
@@ -1617,52 +1617,257 @@ var TextDisplay = function () {
 }();
 
 /**TODO:complete the following
- *  class: StatDisplay:
- *  class: BarDisplay
- *  class: VideoDisplay
+ *  class: ItemDisplay
  */
 
 var ItemDisplay //show an item display (image with text/number to the right
 = function () {
-        function ItemDisplay(_ref2) {
-                var font = _ref2.font,
-                    fontSize = _ref2.fontSize;
-
+        function ItemDisplay(args) {
                 _classCallCheck(this, ItemDisplay);
+
+                this.src = args.src || "__NONE";
+
+                this.size = args.size || new Vector3(50, 50);
+
+                this.topFloat = args.top || 0;
+
+                this.targetTop = this.get_float_pixels(this.topFloat, GameStack.HEIGHT);
+
+                this.leftFloat = args.left || 0;
+
+                this.targetLeft = this.get_float_pixels(this.leftFloat, GameStack.WIDTH);
+
+                this.color = args.color || '#ffffff';
+
+                this.text = args.text || "This is the text";
+
+                this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+                this.fontSize = args.fontSize || args.textSize || "15px";
+
+                this.text_id = GameStack.create_id();
+
+                this.id = GameStack.create_id();
+
+                this.img_id = GameStack.create_id();
         }
 
         _createClass(ItemDisplay, [{
-                key: 'set',
-                value: function set(text, image, color, font) {}
+                key: 'setValue',
+                value: function setValue(value) {
+                        document.getElementById(this.text_id);
+                }
         }, {
-                key: 'size',
-                value: function size() {}
+                key: 'get_float_pixels',
+                value: function get_float_pixels(float, dimen) {
+                        return Math.round(dimen * float) + 'px';
+                }
         }, {
-                key: 'render',
-                value: function render() {}
+                key: 'get_id',
+                value: function get_id() {
+                        return this.id;
+                }
+        }, {
+                key: 'update',
+                value: function update(v) {
+                        var e = document.getElementById(this.text_id);
+
+                        this.text = v + "";
+
+                        e.innerText = this.text;
+                }
+        }, {
+                key: 'show',
+                value: function show() {
+
+                        //create an html element
+
+                        this.domElement = document.createElement('DIV');
+
+                        this.domElement.setAttribute('class', 'gameStack-stats');
+
+                        this.domElement.innerHTML += '<img style="float:left;" width="' + this.size.x + '" height="' + this.size.y + '" id="' + this.img_id + '" src="' + this.src + '"/>';
+
+                        this.domElement.style.color = this.color;
+
+                        this.domElement.innerHTML += '<span id="' + this.text_id + '" style="padding:5px; vertical-align:middle; display:table-cell; font-size:' + this.fontSize + '; color:' + this.color + ';">' + this.text + '</span>';
+
+                        this.domElement.style.position = "fixed";
+
+                        //this.domElement.style.padding = "10px";
+
+                        this.domElement.style.top = this.targetTop;
+
+                        this.domElement.style.left = this.targetLeft;
+
+                        this.domElement.style.fontFamily = this.fontFamily;
+
+                        this.domElement.style.fontSize = this.fontSize;
+
+                        this.domElement.style.zIndex = "9999";
+
+                        this.domElement.id = this.id;
+
+                        document.body.append(this.domElement);
+                }
         }]);
 
         return ItemDisplay;
 }();
 
+var Bar = function () {
+        function Bar(background, border) {
+                _classCallCheck(this, Bar);
+
+                this.background = background;
+                var e = document.createElement("SPAN");
+
+                e.style.position = 'fixed';
+
+                e.style.background = this.background;
+
+                e.style.zIndex = "9999";
+
+                e.style.backgroundSize = "100% 100%";
+
+                e.style.backgroundPosition = "center bottom";
+
+                if (border) {
+                        e.style.border = border;
+                }
+
+                this.domElement = e;
+        }
+
+        _createClass(Bar, [{
+                key: 'width',
+                value: function width(w) {
+                        this.domElement.style.width = w;
+
+                        return this;
+                }
+        }, {
+                key: 'height',
+                value: function height(h) {
+                        this.domElement.style.height = h;
+
+                        return this;
+                }
+        }]);
+
+        return Bar;
+}();
+
+var BarFill = function () {
+        function BarFill(background) {
+                _classCallCheck(this, BarFill);
+
+                this.background = background;
+                var e = document.createElement("SPAN");
+
+                e.style.background = this.background;
+
+                e.style.position = 'fixed';
+
+                e.style.zIndex = "9995";
+
+                this.domElement = e;
+        }
+
+        _createClass(BarFill, [{
+                key: 'width',
+                value: function width(w) {
+                        this.domElement.style.width = w;
+
+                        return this;
+                }
+        }, {
+                key: 'height',
+                value: function height(h) {
+                        this.domElement.style.height = h;
+
+                        return this;
+                }
+        }]);
+
+        return BarFill;
+}();
+
 var BarDisplay //show a display bar such as health bar
 = function () {
-        function BarDisplay(_ref3) {
-                var font = _ref3.font,
-                    fontSize = _ref3.fontSize;
+        function BarDisplay() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
                 _classCallCheck(this, BarDisplay);
+
+                this.border = args.border || "none";
+
+                if (args.fill_src) {
+                        this.fill = new BarFill(args.fill_src).width(args.fill_width || "80px").height(args.fill_height || "10px");
+                } else {
+                        this.fill = args.fill || new BarFill(args.fill_color || 'green').width(args.fill_width || "80px").height(args.fill_height || "10px");
+                }
+
+                if (args.bar_src) {
+                        this.bar = new Bar(args.bar_src, this.border).width(args.bar_width || "80px").height(args.bar_height || "10px");
+                } else {
+                        this.bar = new Bar(args.bar_color || 'goldenrod', this.border).width(args.bar_width || "80px").height(args.bar_height || "10px");
+                }
+
+                this.topFloat = args.top || args.topFloat || 0.25;
+
+                this.leftFloat = args.left || args.leftFloat || 0.25;
+
+                this.widthFloat = args.width || args.widthFloat || 0.25;
+
+                this.heightFloat = args.height || args.heightFloat || 0.25;
+
+                document.body.append(this.fill.domElement);
+
+                document.body.append(this.bar.domElement);
         }
 
         _createClass(BarDisplay, [{
-                key: 'set',
-                value: function set(text, image, color, font) {}
+                key: 'get_float_pixels',
+                value: function get_float_pixels(float, dimen) {
+                        return Math.round(dimen * float) + 'px';
+                }
         }, {
-                key: 'size',
-                value: function size() {}
+                key: 'portion_top',
+                value: function portion_top(v) {
+
+                        this.fill.domElement.style.top = this.get_float_pixels(v || this.topFloat, GameStack.HEIGHT);
+
+                        this.bar.domElement.style.top = this.get_float_pixels(v || this.topFloat, GameStack.HEIGHT);
+                }
         }, {
-                key: 'render',
-                value: function render() {}
+                key: 'portion_left',
+                value: function portion_left(v) {
+
+                        this.fill.domElement.style.left = this.get_float_pixels(v || this.leftFloat, GameStack.WIDTH);
+
+                        this.bar.domElement.style.left = this.get_float_pixels(v || this.leftFloat, GameStack.WIDTH);
+                }
+        }, {
+                key: 'portion_width',
+                value: function portion_width(w) {
+
+                        this.fill.domElement.style.width = this.get_float_pixels(w || this.widthFloat, GameStack.WIDTH);
+
+                        this.bar.domElement.style.width = this.get_float_pixels(w || this.widthFloat, GameStack.WIDTH);
+                }
+        }, {
+                key: 'portion_height',
+                value: function portion_height(h) {
+                        this.fill.domElement.style.height = this.get_float_pixels(h || this.heightFloat, GameStack.HEIGHT);
+
+                        this.bar.domElement.style.height = this.get_float_pixels(h || this.heightFloat, GameStack.HEIGHT);
+                }
+        }, {
+                key: 'update',
+                value: function update(f) {
+                        this.fill.domElement.style.width = this.get_float_pixels(f || 0, parseFloat(this.bar.domElement.style.width));
+                }
         }]);
 
         return BarDisplay;
@@ -1670,9 +1875,9 @@ var BarDisplay //show a display bar such as health bar
 
 var VideoDisplay //show a video
 = function () {
-        function VideoDisplay(_ref4) {
-                var src = _ref4.src,
-                    size = _ref4.size;
+        function VideoDisplay(_ref2) {
+                var src = _ref2.src,
+                    size = _ref2.size;
 
                 _classCallCheck(this, VideoDisplay);
 
@@ -4116,10 +4321,10 @@ var Pos = Vector3,
   */
 
 var InterfaceCallback = function () {
-        function InterfaceCallback(_ref5) {
-                var name = _ref5.name,
-                    description = _ref5.description,
-                    callback = _ref5.callback;
+        function InterfaceCallback(_ref3) {
+                var name = _ref3.name,
+                    description = _ref3.description,
+                    callback = _ref3.callback;
 
                 _classCallCheck(this, InterfaceCallback);
 
@@ -4143,9 +4348,9 @@ var InterfaceCallback = function () {
         return InterfaceCallback;
 }();
 
-var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref6) {
-        var name = _ref6.name,
-            description = _ref6.description;
+var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref4) {
+        var name = _ref4.name,
+            description = _ref4.description;
 
         _classCallCheck(this, SpeechInterfaceStructure);
 

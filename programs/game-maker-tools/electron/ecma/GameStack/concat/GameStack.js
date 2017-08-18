@@ -1748,6 +1748,7 @@ class GameWindow {
 ;
 
 
+
 class TextDisplay {
 
     constructor(args)
@@ -1764,11 +1765,11 @@ class TextDisplay {
 
         this.topFloat = args.top || 0.25;
 
-        this.targetTop = this.get_target(this.topFloat, document.body.clientHeight);
+        this.targetTop = this.get_float_pixels(this.topFloat, document.body.clientHeight);
 
         this.leftFloat = args.left || 0.25;
 
-        this.targetLeft = this.get_target(this.leftFloat,document.body.clientWidth);
+        this.targetLeft = this.get_float_pixels(this.leftFloat,document.body.clientWidth);
 
         this.color = args.color || '#ffffff';
 
@@ -1806,7 +1807,7 @@ class TextDisplay {
 
     }
 
-    get_target(float, dimen)
+    get_float_pixels(float, dimen)
     {
         return  Math.round(dimen * float) + 'px';
     }
@@ -1891,30 +1892,179 @@ class TextDisplay {
 
 
 /**TODO:complete the following
- *  class: StatDisplay:
- *  class: BarDisplay
- *  class: VideoDisplay
+ *  class: ItemDisplay
  */
 
 
 class ItemDisplay //show an item display (image with text/number to the right
 {
-    constructor({font, fontSize}) {
+    constructor(args) {
+
+        this.src = args.src || "__NONE";
+
+        this.size = args.size || new Vector3(50, 50);
+
+        this.topFloat = args.top || 0;
+
+        this.targetTop = this.get_float_pixels(this.topFloat, GameStack.HEIGHT);
+
+        this.leftFloat = args.left || 0;
+
+        this.targetLeft = this.get_float_pixels(this.leftFloat,GameStack.WIDTH);
+
+        this.color = args.color || '#ffffff';
+
+        this.text = args.text || "This is the text";
+
+        this.fontFamily = args.font || args.fontFamily || "GameStack";
+
+        this.fontSize = args.fontSize || args.textSize || "15px";
+
+        this.text_id = GameStack.create_id();
+
+        this.id = GameStack.create_id();
+
+        this.img_id = GameStack.create_id();
 
     }
 
-    set(text, image, color, font) {
+    setValue(value)
+    {
+        document.getElementById(this.text_id)
+    }
 
+    get_float_pixels(float, dimen)
+    {
+        return  Math.round(dimen * float) + 'px';
+    }
+
+
+    get_id()
+    {
+        return  this.id;
+    }
+
+    update(v)
+    {
+        var e = document.getElementById(this.text_id);
+
+        this.text = v + "";
+
+        e.innerText = this.text;
+    }
+
+    show() {
+
+        //create an html element
+
+        this.domElement = document.createElement('DIV');
+
+        this.domElement.setAttribute('class', 'gameStack-stats');
+
+        this.domElement.innerHTML+='<img style="float:left;" width="'+this.size.x+'" height="'+this.size.y+'" id="'+this.img_id+'" src="'+this.src+'"/>';
+
+        this.domElement.style.color = this.color;
+
+        this.domElement.innerHTML+='<span id="'+this.text_id+'" style="padding:5px; vertical-align:middle; display:table-cell; font-size:'+this.fontSize+'; color:'+this.color+';">'+this.text+'</span>';
+
+        this.domElement.style.position = "fixed";
+
+        //this.domElement.style.padding = "10px";
+
+        this.domElement.style.top = this.targetTop;
+
+        this.domElement.style.left = this.targetLeft;
+
+        this.domElement.style.fontFamily = this.fontFamily;
+
+        this.domElement.style.fontSize = this.fontSize;
+
+        this.domElement.style.zIndex = "9999";
+
+        this.domElement.id = this.id;
+
+        document.body.append(this.domElement);
+    }
+}
+
+
+class Bar
+{
+    constructor(background, border)
+    {
+        this.background = background;
+        var e = document.createElement("SPAN");
+
+        e.style.position = 'fixed';
+
+        e.style.background=this.background;
+
+        e.style.zIndex = "9999";
+
+        e.style.backgroundSize = "100% 100%";
+
+        e.style.backgroundPosition = "center bottom";
+
+        if(border)
+        {
+            e.style.border = border;
+
+        }
+
+
+        this.domElement = e;
 
     }
 
-    size() {
 
+    width(w)
+    {
+        this.domElement.style.width = w;
+
+        return this;
+    }
+
+    height(h)
+    {
+        this.domElement.style.height = h;
+
+        return this;
+    }
+
+}
+
+
+class BarFill
+{
+    constructor(background)
+    {
+        this.background = background;
+        var e = document.createElement("SPAN");
+
+        e.style.background=this.background;
+
+        e.style.position = 'fixed';
+
+
+        e.style.zIndex = "9995";
+
+
+        this.domElement = e;
 
     }
 
-    render() {
+    width(w)
+    {
+        this.domElement.style.width = w;
 
+        return this;
+    }
+
+    height(h)
+    {
+        this.domElement.style.height = h;
+
+        return this;
     }
 
 }
@@ -1922,21 +2072,89 @@ class ItemDisplay //show an item display (image with text/number to the right
 
 class BarDisplay //show a display bar such as health bar
 {
-    constructor({font, fontSize}) {
+    constructor(args={}) {
+
+        this.border = args.border || "none";
+
+        if(args.fill_src)
+        {
+            this.fill = new BarFill(args.fill_src).width(args.fill_width || "80px").height(args.fill_height || "10px");
+        }
+        else
+        {
+            this.fill = args.fill || new BarFill(args.fill_color || 'green').width(args.fill_width || "80px").height(args.fill_height || "10px");
+        }
+
+        if(args.bar_src)
+        {
+            this.bar = new Bar(args.bar_src, this.border).width(args.bar_width || "80px").height(args.bar_height  || "10px");
+        }
+        else
+        {
+            this.bar = new Bar(args.bar_color || 'goldenrod', this.border).width(args.bar_width  || "80px").height(args.bar_height || "10px");
+        }
+
+
+        this.topFloat = args.top || args.topFloat || 0.25;
+
+        this.leftFloat = args.left || args.leftFloat || 0.25;
+
+        this.widthFloat = args.width || args.widthFloat || 0.25;
+
+        this.heightFloat = args.height || args.heightFloat || 0.25;
+
+        document.body.append(this.fill.domElement);
+
+        document.body.append(this.bar.domElement);
+
 
     }
 
-    set(text, image, color, font) {
+
+    get_float_pixels(float, dimen)
+    {
+        return  Math.round(dimen * float) + 'px';
+    }
+
+    portion_top(v)
+    {
+
+        this.fill.domElement.style.top = this.get_float_pixels(v || this.topFloat, GameStack.HEIGHT);
+
+        this.bar.domElement.style.top = this.get_float_pixels(v || this.topFloat, GameStack.HEIGHT);
+
+    }
+
+    portion_left(v)
+    {
+
+        this.fill.domElement.style.left = this.get_float_pixels(v || this.leftFloat, GameStack.WIDTH);
+
+        this.bar.domElement.style.left = this.get_float_pixels(v || this.leftFloat, GameStack.WIDTH);
+
+    }
+
+    portion_width(w)
+    {
+
+        this.fill.domElement.style.width = this.get_float_pixels(w || this.widthFloat, GameStack.WIDTH);
+
+        this.bar.domElement.style.width = this.get_float_pixels(w || this.widthFloat, GameStack.WIDTH);
 
 
     }
 
-    size() {
+    portion_height(h)
+    {
+        this.fill.domElement.style.height = this.get_float_pixels(h || this.heightFloat, GameStack.HEIGHT);
 
+        this.bar.domElement.style.height = this.get_float_pixels(h || this.heightFloat, GameStack.HEIGHT);
 
     }
 
-    render() {
+    update(f)
+    {
+        this.fill.domElement.style.width = this.get_float_pixels(f || 0,  parseFloat(this.bar.domElement.style.width));
 
     }
 
