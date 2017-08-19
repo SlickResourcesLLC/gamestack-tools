@@ -128,7 +128,7 @@
     #dat-gui-container {
         position: fixed;
 
-        z-index: 9999;
+        z-index: 9997;
 
         top: 50px;
 
@@ -186,6 +186,12 @@
     }
 
 
+
+
+
+
+
+
 </style>
 
 <body>
@@ -193,6 +199,9 @@
 
 
 <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+
 
 
 <div id="top-gui">
@@ -497,8 +506,7 @@
 </div>
 
 <div id="overlay">
-
-
+    <div id="message"> <span></span> </div>
 </div>
 
 <script>
@@ -540,6 +548,114 @@
         },
 
         image_upload: __ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
+
+        superSelectOptions(name, options, callback)
+        {
+            var addListHTML = '<div class="add-list">' +
+
+                '<label>'+name+'</label>' +
+
+                '<button type="button" class="add-list add">+</button>' +
+
+                '<ul class="add-list"> </ul>' +
+                '</div>';
+
+            App.message(addListHTML);
+
+            var setForAddition = function () {
+
+                $('div#message').find('input.list').each(function (ix, item) {
+
+                    $(item).on('change', function (evt) {
+
+                        options[ix] = $(item).val();
+
+
+                    });
+
+                });
+
+            };
+
+            var setForDeletion = function () {
+
+                $('div#message').find('button.list-delete').each(function (ix, item) {
+
+                    $(item).on('click', function (evt) {
+
+                        var value = $(this).parent().find('input').val();
+
+                        if(value == ""){ value = $(this).parent().find('input').prop('placeholder');}
+
+                        var li = options[ix];
+
+                        var alist = options;
+
+                        for (var x in alist) {
+
+                            if (alist[x] == value) {
+                                options.splice(x, 1);
+
+                            }
+
+                        }
+
+                        $(this).parent().remove();
+
+
+                    });
+
+                });
+
+            };
+
+            $('div.add-list button.add').unbind().on('click', function (evt) {
+
+                var len = $(this).parent().find('li').length, tvalue = "list_value_" + len;
+
+                while (__levelMaker.settings.psuedoTypes.indexOf(tvalue) >= 0) {
+                    tvalue += '_c';
+
+                }
+
+                $(this).parent().find('ul').append('<li> <input type="text" class="list" placeholder="' + tvalue + '" /> <button type="button" class="list-delete">X</button></li>');
+
+                setForDeletion();
+
+                setForAddition();
+
+                evt.preventDefault();
+
+                return false;
+
+            });
+
+            $.each(options, function(ix, item){
+
+                $('div#message ul').append('<li> <input type="text" class="list" placeholder="' + item + '" /> <button type="button" class="list-delete">X</button> </li>');
+
+            });
+
+
+            setForAddition();
+
+            setForDeletion();
+
+            $('button#message-ok').click(function(){
+
+               if(callback)
+               {
+                   callback();
+
+               }
+
+
+
+            });
+
+
+
+        },
 
         create_level: function (data, callback) {
 
@@ -711,11 +827,76 @@
 
         },
 
-        saveLevel: function () {
+        closeMessage(callback)
+        {
 
-            var data = "data:text/json," + jstr(__levelMaker.MapData(Game.sprites, __levelMaker.settings));
+            $('#message').hide();
 
-            App.triggerDownload(__levelMaker.settings.name + ".json", data);
+
+        },
+
+        message:function(v)
+        {
+
+            $('#message span').html(v + "<br/><button class='ok' id='message-ok' onclick='App.closeMessage();'>OK</button>");
+
+            $('#message').show();
+
+        },
+
+        applyLevelSave:function()
+        {
+
+            var name = $('#message-file-name').val();
+
+            App.saveLevel(name);
+
+        },
+
+        beginLevelSave:function()
+        {
+
+            $('#message span').html( "Enter File Name" +
+
+                 "<br/><input id='message-file-name' type='text' class='message-file'  />" +
+
+                "<br/><button class='ok' onclick='App.applyLevelSave();'>OK</button><button class='cancel' onclick='App.closeMessage();'>Cancel</button>");
+
+            $('#message').show();
+
+        },
+
+
+        saveLevel: function (name) {
+
+            if(name == "")
+            {
+                alert('Applying default level name:' + __levelMaker.settings.name);
+                name = false;
+            }
+
+
+            __levelMaker.settings.name = name || __levelMaker.settings.name;
+
+            if(!__levelMaker.settings.name.endsWith('.json'))
+            {
+                __levelMaker.settings.name += ".json";
+            }
+
+            var data = jstr(__levelMaker.MapData(Game.sprites, __levelMaker.settings));
+
+            App.triggerDownload(__levelMaker.settings.name, data, function(data){
+
+                data = JSON.parse(data);
+
+                if(data.path)
+                {
+
+                  App.message('file saved to:' + '<a target="_blank" href="file:///'+data.path + '" >'+data.path+'</a>');
+
+                }
+
+            });
 
         },
 
@@ -882,14 +1063,14 @@
 
         },
 
-        triggerDownload: function (filename, content) {
+        triggerDownload: function (filename, content, callback) {
 
             $.post("http://localhost:3137/save", {filename: filename, content: content})
                 .done(function (data) {
 
                     if (typeof(callback) == 'function') {
 
-                        callback();
+                        callback(data);
 
                     }
 
@@ -1709,7 +1890,13 @@
                     return bytes;
                 };
 
-               App.saveLevel();
+                App.beginLevelSave(function(bool){
+
+                    console.log('Level Saved:' + bool);
+
+                });
+
+
 
             });
 
@@ -1771,13 +1958,13 @@
 
                 testPlayer:"TODO",
 
-                spriteTypes: ['player', 'enemy', 'background', 'interactive'], //The minimum spriteTypes,
+                psuedoTypes: ['player', 'enemy', 'background', 'interactive'], //The minimum psuedoTypes,
 
                 show: function () {
 
                     $('div.add-list.sprite-types ul li').remove();
 
-                    $.each(__levelMaker.settings.spriteTypes, function (ix, item) {
+                    $.each(__levelMaker.settings.psuedoTypes, function (ix, item) {
 
                         $('div.add-list.sprite-types ul').append('<li> <input type="text" class="list" value="' + item + '" /> <button type="button" class="list-delete">X</button> </li>');
 
@@ -1799,7 +1986,7 @@
 
                             $(item).on('change', function (evt) {
 
-                                __levelMaker.settings.spriteTypes[ix] = $(item).val();
+                                __levelMaker.settings.psuedoTypes[ix] = $(item).val();
 
 
                             });
@@ -1816,14 +2003,14 @@
 
                                 var value = $(this).parent().find('input').val();
 
-                                var li = __levelMaker.settings.spriteTypes[ix];
+                                var li = __levelMaker.settings.psuedoTypes[ix];
 
-                                var alist = __levelMaker.settings.spriteTypes;
+                                var alist = __levelMaker.settings.psuedoTypes;
 
                                 for (var x in alist) {
 
                                     if (alist[x] == value) {
-                                        __levelMaker.settings.spriteTypes.splice(x, 1);
+                                        __levelMaker.settings.psuedoTypes.splice(x, 1);
 
                                     }
 
@@ -1847,7 +2034,7 @@
 
                         var len = $(this).parent().find('li').length, tvalue = "list_value_" + len;
 
-                        while (__levelMaker.settings.spriteTypes.indexOf(tvalue) >= 0) {
+                        while (__levelMaker.settings.psuedoTypes.indexOf(tvalue) >= 0) {
                             tvalue += '_c';
 
                         }
@@ -3189,9 +3376,9 @@
             }
             ,
 
-            spriteTypes: {
+            psuedoTypes: {
 
-                key: 'spriteTypes',
+                key: 'psuedoTypes',
                 type: 'array'
 
             }
@@ -3240,6 +3427,7 @@
         }, 1000);
 
         __levelMaker.offsetTop = $(__gameStack.canvas).offset().top;
+
 
     });
 

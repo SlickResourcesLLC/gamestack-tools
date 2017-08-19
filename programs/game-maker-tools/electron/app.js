@@ -58,16 +58,22 @@ module.exports = function() {
 
            if(filename.indexOf('.json') >= 0)
            {
-               relpath = 'client/assets/json/' + filename;
+
                // Save decoded binary image to disk
                try
                {
+
+
                    require('fs').writeFile(relpath, content,
                        function()
                        {
                            console.log('DEBUG - feed:message: Saved to disk json attached by user:', relpath);
 
-                           res.end(JSON.stringify({relpath:relpath, content:content}));
+                           var path = __dirname +  "/" + relpath;
+
+                           res.end(JSON.stringify({action:"download", status:"complete", path:path}));
+
+                          // res.end(JSON.stringify({relpath:relpath, content:content}));
 
                        });
                }

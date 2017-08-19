@@ -47,6 +47,44 @@ var DatGui = {
 
     },
 
+    addSuperSelectButton(gui, object, key, list)
+    {
+
+        var type = gui.add(object, 'type', __levelMaker.settings.psuedoTypes);
+
+        var dom = type.domElement;
+
+        if(dom) {
+
+           var button = $(dom).parent().find('#edit-button');
+
+           if($(button).length)
+           {
+            $(button).remove()
+
+           }
+
+            $(dom).parent().find('.c').append('<button id="edit-button" class="edit-button"></button>');
+
+            $(dom).parent().find('.c #edit-button').click(function(){
+
+                App.superSelectOptions("Update Avaiable Types", list, function () {
+
+                  var el = $(dom).find('select');
+                  $(el).html('');
+
+                    $.each(list, function(key,value) {
+                        $(el).append($("<option></option>")
+                            .attr("value", value).text(value));
+                    });
+
+                });
+
+            });
+
+        }
+
+    },
 
     expandOnArray:function(parent, key, cl, save_callback)
     {
@@ -730,12 +768,11 @@ var DatGui = {
         {
             alert('TODO: level edit for Sprite()');
 
-
             var name = gui.add(object, 'name');
 
             var description = gui.add(object, 'description');
 
-            var type = gui.add(object, 'type');
+            DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoTypes);
 
             var obj = object.selected_animation;
 

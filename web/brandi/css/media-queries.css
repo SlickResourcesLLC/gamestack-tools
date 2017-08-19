@@ -2,30 +2,20 @@
 	For Small Desktop
 ==============================================================*/
 
-@media (min-width: 980px) and (max-width: 1150px) {
-
-/* slider */
-.carousel-caption h3 {
-  font-size: 45px;
-}
-
-/* works */
-
-
-/* team */
-
-.member-thumb {
-  width: auto;
-}
-
-}
-
-
 /*============================================================
 	Tablet (Portrait) Design for a width of 768px
 ==============================================================*/
 
-@media (min-width: 768px) and (max-width: 979px) {
+
+section div.container
+{
+
+  width:100%;
+
+}
+
+
+@media (min-width: 768px)  {
 
 
 /* slider */

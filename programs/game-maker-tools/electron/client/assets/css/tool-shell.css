@@ -7,12 +7,101 @@ body, html {
     -ms-user-select: none;
     user-select: none;
 }
+
+
+div#message
+{
+    position:fixed;
+
+    z-index:9999;
+
+    top:25%;
+
+    left:20%;
+
+    right:20%;
+
+    display:block;
+
+    text-align:center;
+
+    background: url('img/hash-medium.png');
+
+    border:2px outset grey;
+
+}
+
+.main select
+{
+    float:right;
+
+    margin-left:40px;
+
+}
+
+button.edit-button
+{
+    position:relative;
+
+    height:30px;
+
+    width:30px;
+
+    padding:0; margin:0;
+
+    top:-3px;
+
+    background: url('img/eye_icon_white.png');
+
+    background-size:100% 100%;
+
+    border:none;
+
+}
+
+div#message span
+{
+
+    color:lightgrey;
+
+}
+
+#message button.ok, #message button.cancel
+{
+
+    left:0;
+
+    color:white;
+
+    border:2px inset grey;
+
+}
+
+#message input[type="text"]
+{
+
+    color:black;
+
+
+}
+
+
+#message button.list-delete
+{
+    margin-top:0px;
+
+    float:right;
+
+}
+
+
 li.motions_member, li.animations_member, li.sounds_member
 {
 
     border-bottom:1px solid teal;
 
 }
+
 
 input[type=range][orient=vertical]
 {
@@ -50,9 +139,8 @@ select
 div.add-list
 {
     padding:15px;
-    background:steelblue;
-}
 
+}
 
 button.list-delete
 {
@@ -813,7 +901,7 @@ div#settings-space
 {
     position:fixed;
 
-    z-index:9999;
+    z-index:9997;
 
 }
 

@@ -873,9 +873,6 @@ function $Q(selector) {
 
             });
 
-
-
-
         }
 
     };
@@ -1573,7 +1570,6 @@ class GameWindow {
 
         this.canvas = canvas|| false;
 
-
         document.body.style.position = "absolute";
 
         document.body.style.width = "100%";
@@ -1588,7 +1584,6 @@ class GameWindow {
             document.body.append(this.canvas);
 
             this.canvas.style.position = 'absolute';
-
 
             this.canvas.style.width = '100%';
 
@@ -1624,12 +1619,9 @@ class GameWindow {
 
         }
 
-
-
        __gameStack.__gameWindow = this;
 
     }
-
 
     adjustSize(w, h)
     {
@@ -1746,7 +1738,6 @@ class GameWindow {
 
 }
 ;
-
 
 
 class TextDisplay {

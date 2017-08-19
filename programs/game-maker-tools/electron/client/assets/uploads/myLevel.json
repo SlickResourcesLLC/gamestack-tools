@@ -1,0 +1,1 @@
+{"sprites":[],"settings":{"name":"myLevel","description":"the default level for our game","pixelSnap":10,"levelSizeX":5000,"levelSizeY":5000,"levelSizeZ":0,"game_scale":2,"testGravity":"TODO","testPlayer":"TODO","spriteTypes":["player","enemy","background","interactive"]}}
