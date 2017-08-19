@@ -73,7 +73,7 @@ class Animation {
 
         this.frameSize = frameSize;
 
-        this.size = size;
+        this.size = size || this.frameSize;
 
         this.selected_frame = {
             image: this.image,
@@ -83,6 +83,7 @@ class Animation {
 
         this.frames[0] = this.selected_frame;
 
+        return this;
 
     }
 
@@ -105,7 +106,6 @@ class Animation {
         this.frames = [];
 
         var fcount = 0;
-
 
         var quitLoop = false;
 

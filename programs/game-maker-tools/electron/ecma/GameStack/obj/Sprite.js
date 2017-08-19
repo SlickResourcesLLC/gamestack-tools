@@ -49,9 +49,7 @@ class Sprite {
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
-
         this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
-
 
         this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
 
@@ -106,16 +104,24 @@ class Sprite {
         }
         else {
 
-            this.setAnimation(this.animations[0] || new Animation({
+            this.image.domElement.onload = function(){
 
-                    image: this.image,
+                __inst.setAnimation(__inst.animations[0] || new Animation({
 
-                    frameSize: new Vector3(this.image.domElement.width, this.image.domElement.height),
+                        image:  __inst.image,
 
-                    frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+                        frameSize: new Vector3( __inst.image.domElement.width,  __inst.image.domElement.height),
+
+                        frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
 
 
-                }));
+                    }));
+
+            };
+
+
+
+
 
         }
 
@@ -279,7 +285,31 @@ class Sprite {
         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
 
     }
+    minDimensionsXY(mx, my)
+    {
 
+        var wth = this.size.x / this.size.y;
+
+        var htw = this.size.y / this.size.x;
+
+        if(this.size.x > mx)
+        {
+            this.size.x = mx;
+
+            this.size.y = this.size.x * wth;
+
+        }
+
+        if(this.size.y > my)
+        {
+            this.size.y = my;
+
+            this.size.x = this.size.y * htw;
+
+        }
+
+
+    }
 
     getAbsolutePosition(offset) {
 

@@ -68,7 +68,7 @@ var DatGui = {
 
             $(dom).parent().find('.c #edit-button').click(function(){
 
-                App.superSelectOptions("Update Avaiable Types", list, function () {
+                App.superSelectOptions("Update Available Types", list, function () {
 
                   var el = $(dom).find('select');
                   $(el).html('');
@@ -354,7 +354,7 @@ var DatGui = {
 
     },
 
-    addVectorFromProperty:function(gui, prop, name, min, max)
+    addVectorFromProperty:function(gui, prop, name, min, max, callback)
     {
 
         var fui = gui.addFolder(name);
@@ -367,7 +367,20 @@ var DatGui = {
 
         for(var x in prop)
         {
-            fui.add(prop, x).min(min).max(max);
+            if(typeof(prop[x])=='number') {
+
+                var g = fui.add(prop, x).min(min).max(max);
+
+                g.onChange(function (value) {
+
+                    if (callback) {
+                        callback();
+
+                    }
+
+                });
+
+            }
 
         }
 
@@ -477,9 +490,6 @@ var DatGui = {
             });
 
             c.setValue('Quadratic_InOut');
-
-
-
 
             window.setTimeout(function(){
 
@@ -640,7 +650,6 @@ var DatGui = {
 
                                     var filename = $(input).val().split('\\').pop();
 
-
                                     DatGui.image_upload(filename, imagesrc, function(relpath, content){
 
                                         relpath = relpath.replace('client/', '../');
@@ -655,7 +664,7 @@ var DatGui = {
 
                                         obj.image = new GameImage(relpath);
 
-                                        obj.image.onload = function()
+                                        obj.image.domElement.onload = function()
                                         {
 
                                             obj = new Animation(obj);
@@ -695,27 +704,11 @@ var DatGui = {
 
                 }
 
-
-
-
-
             }
-
 
             return  this.main_gui;
 
         },
-
-
-
-
-    /*
-    * TODO: scopeDatRecursive:
-    *
-    *       -apply serious error defense to this function:: it will have to loop through an very broad scope
-    *
-    *
-    * */
 
      count:0,
 
@@ -760,13 +753,10 @@ var DatGui = {
 
     getLevelObjectGui:function(mode, object){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
 
-
         var gui = new dat.GUI({autoPlace:false});
-
 
         if(mode.toLowerCase() == 'mapobject' && object instanceof Sprite)
         {
-            alert('TODO: level edit for Sprite()');
 
             var name = gui.add(object, 'name');
 
@@ -774,32 +764,32 @@ var DatGui = {
 
             DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoTypes);
 
+            object.selected_animation = new Animation({ frameSize: new Vector3(object.size),
+            frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))});
+
             var obj = object.selected_animation;
+
+
 
             for(var x in object)
             {
-                if(x == '__mapSize' && object[x] instanceof Vector3)
+                if(x == 'size' && object[x] instanceof Vector3)
                 {
                     console.log('found vector');
 
-                    DatGui.addVectorFromProperty(gui, object[x], '__mapSize', 0, 1000);
+                    DatGui.addVectorFromProperty(gui, object[x], 'size', 0, 1000);
 
                 }
 
-                if(x == 'frameSize' && object[x] instanceof Vector3)
-                {
-                    console.log('found vector');
-
-                    DatGui.addVectorFromProperty(gui, object[x], 'frameSize', 0, 1000);
-
-                }
 
             }
-
 
             window.setTimeout(function(){
 
                 if(obj instanceof Animation || obj instanceof  Sound) {
+
+
+                    obj.framePos = new Vector3(0, 0, 0);
 
                     var first_list = $('div#sprite-space div.main ul')[0];
 
@@ -814,27 +804,25 @@ var DatGui = {
                             fname = obj.src.substring(0, 270);
                         }
 
-                        $(first_list).prepend("<input type='file' id='" + id + "'  class='dat_gui_file'/>" +
-                            "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + (fname || obj.src) + "</label>");
+                        $(first_list).prepend("<img style='display:none;'/><input type='file' id='" + id + "'  class='dat_gui_file'/>" +
+                            "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + (fname || obj.src) + "</label>" +
+                        "<canvas id='image-test-canvas'></canvas>");
 
                         $('#' + id).change(function (evt) {
 
                             var input = evt.target;
 
-                            var file = levelMaker.getRawImageFile(this, function (imagesrc) {
+                            __levelMaker.getRawImageFile(this, function (image) {
 
                                 if (obj instanceof Animation) {
 
                                     var filename = $(input).val().split('\\').pop();
 
-
-                                    DatGui.image_upload(filename, imagesrc, function (relpath, content) {
+                                    DatGui.image_upload(filename, image, function (relpath, content) {
 
                                         relpath = relpath.replace('client/', '../');
 
-
-                                        alert('uploaded image:' + filename + ":using relative path:" + relpath);
-
+                                       // alert('uploaded image:' + filename + ":using relative path:" + relpath);
 
                                         $('file_special' + id).text(relpath);
 
@@ -842,18 +830,39 @@ var DatGui = {
 
                                         obj.image = new GameImage(relpath);
 
-                                        obj.image.onload = function () {
+                                        object.image = obj.image;
 
-                                            obj = new Animation(obj);
+                                        object.selected_animation = new Animation(obj).singleFrame(object.frameSize);
 
-                                            Game.sprites[0].selected_animation = obj;
+                                        var img = object.selected_animation.image.domElement;
 
+                                        object.selected_animation.image.domElement.onload = function () {
+
+                                            object.position = new Vector3(0, 0, 0);
+
+                                            object.size = new Vector3(this.width, this.height, 0);
+
+                                            object.selected_animation = new Animation({ image:this, frameSize: new Vector3(object.size),
+                                                frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))});
+
+                                                console.log('found vector');
+
+                                            object.frameSize = object.selected_animation.selected_frame.frameSize;
+
+                                                DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function(){
+
+
+
+                                                    object.size = new Vector3(object.selected_animation.selected_frame.frameSize);
+
+                                                    __levelMaker.imagePreview(object);
+
+                                                });
+
+                                            __levelMaker.imagePreview(object);
 
                                         };
-
-
                                     });
-
                                 }
 
                                 else if (obj instanceof Sound) {
@@ -868,7 +877,7 @@ var DatGui = {
 
                             });
 
-                            DatGui.get(obj);
+                            //DatGui.get(obj);
 
                             evt.preventDefault();
 

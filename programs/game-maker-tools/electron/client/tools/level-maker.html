@@ -186,23 +186,11 @@
     }
 
 
-
-
-
-
-
-
 </style>
 
 <body>
 
-
-
 <script src="../assets/js/ui/jquery.fileDownload.js"></script>
-
-
-
-
 
 <div id="top-gui">
     <select id="forceSelect">
@@ -314,7 +302,7 @@
 
         <br/>
     </ul>
-    <button id="auto_place" class="ok">Apply</button>
+    <button id="auto_place" class="ok">PKL</button>
     <button type="button" id="cancel_dispersion" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
 </form>
 
@@ -322,70 +310,13 @@
 
     <form id="settings" method="GET">
 
-
         <h3>Level Settings</h3>
 
         <div id="level-settings-gui"></div>
 
         <input type="hidden" value="image_data" id="image_data" name="image_data"/>
 
-        <label>File-Name</label>
-
-        <input type="text" placeholder="name" id="map_name" name="map_name"/>
-
-        <label>Description</label>
-
-        <input type="text" placeholder="description" id="map_description" name="map_description"/>
-
-        <label>Type</label>
-
-        <input type="text" placeholder="type" id="map_type" name="map_type"/>
-
-        <label>Map_Id</label>
-
-        <input type="text" placeholder="map_id" id="map_id" name="map_id"/>
-
-        <div class="add-list sprite-types">
-
-            <label>Sprite Types</label>
-            <button type="button" class="add-sprite-type add">+</button>
-
-            <ul class="add-list">
-
-
-            </ul>
-
-        </div>
-
-        <label>Pixel Snap</label>
-
-        <select id="map_snap_size">
-
-            <option id="1">1px</option>
-
-            <option selected="true" id="10">10px</option>
-
-            <option id="20">20px</option>
-
-            <option id="50">50px</option>
-
-        </select>
-
-        <label>Level-Width</label>
-
-        <input id="map_level_size_x" type="range" value="5000" step="10" name="width" min="0" max="10000"/>
-
-        <label>Level-Height</label>
-
-        <input id="map_level_size_y" type="range" value="5000" step="10" name="height" min="0" max="10000"/>
-
-        <label>Intended Game Scale</label>
-
-        <input id="map_game_scale" type="range" value="1.5" name="gameScale" min="1.0" max="40"/>
-
-        <button type="button" id="apply_map_settings" class="ok">Apply</button>
-
-        <button id="cancel_map_settings" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
+        <button type="button" id="apply_map_settings" class="center_ok" onclick="$(this).parent().hide();">OK</button>
 
     </form>
 
@@ -399,69 +330,15 @@
 
         <div id="sprite-space" class="sprite-space gui-space"></div>
 
-        <div class="form-pair" id="file-space">
-
-            <input type="file" value="Select Image File" name="file" onchange="__levelMaker.getRawImageFile(this);"/>
-
-            <img style="display:none;"/>
-
-            <canvas id="testCanvas"></canvas>
-
-        </div>
-
         <input type="hidden" value="image_data" id="image_data" name="image_data"/>
 
-        <label>Name</label>
-
-        <input type="text" placeholder="name" id="name" name="name"/>
-
-        <label>Description</label>
-
-        <input type="text" placeholder="description" id="description" name="description"/>
-
-        <label>Type</label>
-
-        <input type="text" placeholder="type" id="type" name="type"/>
-
-        <label>ID</label>
-
-        <input type="text" placeholder="id" id="id" name="id"/>
-
-
-        <label>Width</label>
-
-        <input id="width" type="range" value="0" step="10" name="width" min="0" max="4000"/>
-
-        <label>Height</label>
-
-        <input id="height" type="range" value="0" step="10" name="height" min="0" max="4000"/>
-
-
-        <label>FrameX Position</label>
-
-        <input id="frameX" type="range" value="0" name="frameX" min="0" max="4000"/>
-
-        <label>FrameY Position</label>
-
-        <input id="frameY" type="range" value="0" name="frameY" min="0" max="4000"/>
-
-        <label>FrameWidth</label>
-
-        <input id="framewidth" type="range" value="64" name="framewidth" min="0" max="4000"/>
-
-        <label>FrameHeight</label>
-
-        <input id="frameheight" type="range" value="64" name="frameheight" min="0" max="4000"/>
-
-        <label class="major">Motion Constants</label>
+        <label class="major">Persistent Motion</label>
 
         <label class="minor">Speed</label>
 
         <div class="motion-speed-gui" id="motion-speed-gui">
 
         </div>
-
-        <label class="minor">Travel Mode</label>
 
         <div class="travel-mode-gui" id="travel-mode-gui">
 
@@ -485,9 +362,9 @@
 
         </div>
 
-        <button id="create_object" class="ok">Apply</button>
+        <button id="create_object" class="ok">OK</button>
 
-        <button type="button" id="cancel_map_settings" class="cancel">Cancel</button>
+        <button type="button" id="close" class="cancel">Cancel</button>
 
     </form>
 
@@ -858,7 +735,7 @@
 
             $('#message span').html( "Enter File Name" +
 
-                 "<br/><input id='message-file-name' type='text' class='message-file'  />" +
+                 "<br/><input id='message-file-name' type='text' value='"+__levelMaker.settings.name+"' class='message-file'  />" +
 
                 "<br/><button class='ok' onclick='App.applyLevelSave();'>OK</button><button class='cancel' onclick='App.closeMessage();'>Cancel</button>");
 
@@ -1390,7 +1267,7 @@
 
                 var cm_id = "cmd_" + item.text;
 
-                $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.img.src + '"  /></li>');
+                $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.image.domElement.src + '"  /></li>');
 
                 var link = $('.free-select ul li a')[x];
 
@@ -1452,15 +1329,6 @@
 
         });
 
-
-        $('#apply_map_settings').click(function () {
-
-            __levelMaker.applySettings();
-
-            //  alert('applied map settings: with :' + __levelMaker.settings.name);
-
-
-        });
 
         $('#new-level').click(function () {
 
@@ -1803,11 +1671,6 @@
 
             });
 
-            $('#settings-space input').change(function () {
-
-                __levelMaker.applySettings();
-
-            });
 
             $('#create_map_object').click(function () {
 
@@ -1952,7 +1815,7 @@
 
                 levelSizeZ: 0,
 
-                game_scale: 2.0,
+                gameScale: 2.0,
 
                 testGravity:"TODO",
 
@@ -1961,14 +1824,6 @@
                 psuedoTypes: ['player', 'enemy', 'background', 'interactive'], //The minimum psuedoTypes,
 
                 show: function () {
-
-                    $('div.add-list.sprite-types ul li').remove();
-
-                    $.each(__levelMaker.settings.psuedoTypes, function (ix, item) {
-
-                        $('div.add-list.sprite-types ul').append('<li> <input type="text" class="list" value="' + item + '" /> <button type="button" class="list-delete">X</button> </li>');
-
-                    });
 
 
                     $('form#settings').on('submit', function (evt) {
@@ -1979,79 +1834,6 @@
 
                     });
 
-
-                    var setForAddition = function () {
-
-                        $('div.add-list.sprite-types').find('input.list').each(function (ix, item) {
-
-                            $(item).on('change', function (evt) {
-
-                                __levelMaker.settings.psuedoTypes[ix] = $(item).val();
-
-
-                            });
-
-                        });
-
-                    };
-
-                    var setForDeletion = function () {
-
-                        $('div.add-list.sprite-types').find('button.list-delete').each(function (ix, item) {
-
-                            $(item).on('click', function (evt) {
-
-                                var value = $(this).parent().find('input').val();
-
-                                var li = __levelMaker.settings.psuedoTypes[ix];
-
-                                var alist = __levelMaker.settings.psuedoTypes;
-
-                                for (var x in alist) {
-
-                                    if (alist[x] == value) {
-                                        __levelMaker.settings.psuedoTypes.splice(x, 1);
-
-                                    }
-
-                                }
-
-                                $(this).parent().remove();
-
-
-                            });
-
-                        });
-
-                    };
-
-
-                    setForDeletion();
-
-                    setForAddition();
-
-                    $('div.add-list.sprite-types button.add').unbind().on('click', function (evt) {
-
-                        var len = $(this).parent().find('li').length, tvalue = "list_value_" + len;
-
-                        while (__levelMaker.settings.psuedoTypes.indexOf(tvalue) >= 0) {
-                            tvalue += '_c';
-
-                        }
-
-                        $(this).parent().find('ul').append('<li> <input type="text" class="list" value="' + tvalue + '" /> <button type="button" class="list-delete">X</button></li>');
-
-                        setForDeletion();
-
-                        setForAddition();
-
-
-                        evt.preventDefault();
-
-                        return false;
-
-
-                    });
 
                     $('div#settings-space form').show();
 
@@ -2152,45 +1934,19 @@
 
             applySettings: function (data) {
 
+                data = data || __levelMaker.settings;
+
                 if (typeof(data) == 'string') {
                     data = JSON.parse(data).settings;
 
                 }
 
-
-                if (!data) {
-
-                    data = {};
-
-                    data.name = $('#map_name').val();
-
-                    data.description = $('#map_description').val();
-
-                    data.type = $('#map_type').val();
-
-                    data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
-
-                    data.levelSizeX = parseInt($('#map_level_size_x').val());
-
-                    data.levelSizeY = parseInt($('#map_level_size_y').val());
-
-                }
-
-                for(var x in data)
-                {
-
-                    __levelMaker.settings[x] = data[x];
-                }
-
-
                 $('.level-maker-canvas').width(data.levelSizeX);
                 $('.level-maker-canvas').height(data.levelSizeY);
-
 
                 Game.canvas.width = data.levelSizeX;
 
                 Game.canvas.height = data.levelSizeY;
-
 
                 $('#map-item-space form').hide('slow');
 
@@ -2202,13 +1958,22 @@
 
                 $('#map-item-space form .sprite-space').html('');
 
-                var sprite_gui = DatGui.getLevelObjectGui('mapobject', new Sprite().to_map_object());
+                __levelMaker.assembled_sprite =  new Sprite().to_map_object();
+
+                var sprite_gui = DatGui.getLevelObjectGui('mapobject', __levelMaker.assembled_sprite);
 
                 $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
 
                 $('#map-item-space form').show();
 
-            },
+                 $('#map-item-space  button#close').click(function(){
+
+                     $('#map-item-space form').hide('fast');
+
+                 });
+
+
+                 },
 
             objectMakerFormEvents: function () {
 
@@ -2220,130 +1985,68 @@
 
                 $('#create_object').click(function () {
 
-                    var fx = parseFloat($('#frameX').val()),
+                    var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
 
-                        fy = parseFloat($('#frameY').val()),
+                    sprite.animate();
 
-                        w = parseFloat($('#width').val()),
+                    sprite.tag = sprite.name;
 
-                        h = parseFloat($('#height').val()),
+                    __levelMaker.addLevelObjectToUI(sprite);
 
-                        fw = parseFloat($('#framewidth').val()),
+                    //  alert('last file');
 
-                        fh = parseFloat($('#frameheight').val());
-
-
-                    var name = $('#name').val(),
-
-                        type = $('#type').val(),
-
-                        description = $('#description').val(),
-
-                        id = $('#id').val(),
-
-                        image_data = $('#image_data').val();
-
-                    //alert('Creating Map Object');
-
-                    __levelMaker.selected_image_src = image_data;
-
-                    console.log('Making objects in create event');
-
-                    var mapElementArgs = {name:name, type: type, description: description};
-
-                    args.size = new Vector3(w, h, 0);
-
-                    if (mapElementArgs.name && mapElementArgs.description) {
-
-                        var sprite = __levelMaker.createMapElement(mapElementArgs, function (sprite) {
-
-                            sprite.frameSize = new Vector3(fw, fh, 0);
-
-                            sprite.__mapSize = new Vector3(w, h, 0);
-
-                            sprite.mapSize = sprite.__mapSize;
-
-                            sprite.setSize(sprite.__mapSize);
-
-                            __levelMaker.addLevelObjectToUI(sprite);
-
-                            //  alert('last file');
-                            App.dialog(App._UI_OPTION_MAP.my_objects,
-                                0, 120, function () {
-                                    console.log('dialog shown');
-                                });
-
-
+                    App.dialog(App._UI_OPTION_MAP.my_objects,
+                        0, 120, function () {
+                            console.log('dialog shown');
                         });
 
-                        $('#map-item-space form').hide();
-
-                    }
-                    else {
-                        alert('map object must have name and description.');
-
-                    }
-
-                });
-
-
-                $("#object-maker input").change(function (evt) {
-
-                    var fx = parseFloat($('#frameX').val()),
-
-                        fy = parseFloat($('#frameY').val()),
-
-                        w = parseFloat($('#width').val()),
-
-                        h = parseFloat($('#height').val()),
-
-                        fw = parseFloat($('#framewidth').val()),
-
-                        fh = parseFloat($('#frameheight').val());
-
-                    __levelMaker.sizeImage(fx, fy, w, h, fw, fh);
 
                 });
 
             },
 
-            sizeImage: function (frameX, frameY, mapWidth, mapHeight, frameWidth, frameHeight) {
+            image_preview_interval:false,
 
-                var canvas = document.getElementById('testCanvas');
+            imagePreview: function (sprite_object) {
+
+                Canvas.__levelMaker = true;
+
+               // alert(jstr(sprite_object.selected_animation));
+
+                var canvas = document.getElementById('image-test-canvas');
 
                 var ctx = canvas.getContext('2d');
 
-                var image = $(canvas).parent().find('img')[0];
+                sprite_object.active = true;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                sprite_object.position.x = canvas.width / 2 - sprite_object.selected_animation.frameSize.x / 2;
 
-                var x = 0, y = 0;
+                sprite_object.position.y = canvas.height / 2 - sprite_object.selected_animation.frameSize.y / 2;
 
-                var width = mapWidth, height = mapHeight;
+                if(this.image_preview_interval)
+                {
+                    window.clearInterval(this.image_preview_interval);
 
-                var portion = canvas.width / canvas.height;
+                }
+                else
+                {
 
-                mapHeight = canvas.height;
+                    window.setInterval(function(){
 
-                mapWidth = mapHeight * portion;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                x = (canvas.width / 2) - mapWidth / 2;
+                        __levelMaker.selection_sprite.position = new Vector3(sprite_object.position);
 
-                y = (canvas.height / 2) - mapHeight / 2;
+                        __levelMaker.selection_sprite.size = new Vector3(sprite_object.selected_animation.selected_frame.frameSize);
 
-                $('#frameX').val(frameX);
+                        Canvas.draw(sprite_object, ctx);
 
-                $('#frameY').val(frameY);
+                        Canvas.draw(__levelMaker.selection_sprite, ctx);
 
-                $('#width').val(width);
 
-                $('#height').val(height);
+                    }, 500);
+                }
 
-                $('#framewidth').val(frameWidth);
-
-                $('#frameheight').val(frameHeight);
-
-                ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight, x, y, mapWidth, mapHeight);
 
             },
 
@@ -2354,6 +2057,7 @@
                 var reader = new FileReader();
 
                 reader.addEventListener("load", function () {
+
                     preview.src = reader.result;
 
                     __levelMaker.selected_image_src = preview.src;
@@ -2361,13 +2065,6 @@
                     $('#image_data').val(reader.result);
 
                     preview.onload = function () {
-                        var mapWidth = this.width,
-
-                            mapHeight = this.height;
-
-                        var x = 0, y = 0;
-
-                        __levelMaker.sizeImage(x, y, mapWidth, mapHeight, mapWidth, mapHeight);
 
                         if (typeof(callback) == 'function') {
                             callback(this);
@@ -2483,7 +2180,7 @@
                     for (var x = 0; x < this.mapElements.length; x++) {
 
                         if (hasTagMatch(this.mapElements[x], 'tag') || hasTagMatch(this.mapElements[x], 'name')) {
-                            //   alert('found object');
+
 
                             e = this.mapElements[x];
                         }
@@ -2495,19 +2192,34 @@
 
                 return e;
             },
-            createMapElement: function (args, callback) {
-                var img = document.createElement('IMG');
+            createMapElement: function (args, callback, pushNow) {
 
-                img.src = args.src || args.imgPath;
+                var img;
 
-                var mapElement = new Sprite({
-                    name: args.name || args.tag,
-                    img: img,
-                    src: img.src,
-                    __mapScale: args.__mapScale || false,
-                    __mapSize: new Vector3(args.__mapSize || args.mapSize || args.size),
-                    frameSize: new Vector3(args.frameSize)
-                });
+                var mapElement;
+
+                if(args instanceof Sprite) {
+
+                    mapElement = args;
+
+                }
+                else
+                {
+                    img = document.createElement('IMG');
+
+                    img.src = args.src || args.imgPath;
+
+
+                    mapElement  = new Sprite({
+                        name: args.name || args.tag,
+                        img: img,
+                        src: img.src,
+                        __mapScale: args.__mapScale || false,
+                        __mapSize: new Vector3(args.__mapSize || args.mapSize || args.size),
+                        frameSize: new Vector3(args.frameSize)
+                    });
+
+                }
 
                 //   alert(args.name + ":" + jstr(mapElement.__mapSize));
 
@@ -2540,7 +2252,7 @@
 
                 var __inst = this;
 
-                mapElement.img.onerror = function (e) {
+                mapElement.image.domElement.onerror = function (e) {
 
 
                     var ix = __inst.mapElements.indexOf(mapElement);
@@ -2552,9 +2264,11 @@
                 };
 
 
-                mapElement.img.onload = function () {
+                mapElement.image.domElement.onload = function () {
 
                     if (!this.__error) {
+
+                        alert('loaded');
 
                         __inst.mapElements.push(mapElement);
 
@@ -2564,6 +2278,13 @@
                     }
 
                 };
+
+                if(pushNow)
+                {
+
+                    __inst.mapElements.push(mapElement);
+
+                }
 
 
                 return mapElement;
@@ -2823,6 +2544,7 @@
 
                 var fs = mapElement.frameSize;
 
+
                 sprite.setAnimation(new Animation({
                     src: img,
                     frameSize: fs,
@@ -2859,7 +2581,7 @@
                     return false;
                 }
                 // console.log("Selected Element:" + JSON.stringify(mapElement));
-                var img = mapElement.img;
+                var img = mapElement.img || mapElement.image;
                 //  console.log("Img src:" + img.src);
 
                 var sprite = new Sprite(JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
@@ -2956,8 +2678,6 @@
                     console.log('1');
 
                     var value = $(element).text();
-
-                    // alert('click on:' + value);
 
                     __levelMaker.selectedElement = __levelMaker.get(value);
 
@@ -3243,6 +2963,7 @@
         });
 
 
+
         $('.switch-label').click(function (evt) {
 
 
@@ -3282,14 +3003,11 @@
 
                     }
 
-
                 }
 
             }
 
         });
-
-
 
         var settingsGuiArgs = {
 
@@ -3301,7 +3019,6 @@
             }
             ,
 
-
             description: {
 
                 key: 'description',
@@ -3309,7 +3026,6 @@
                 type: 'string'
             }
             ,
-
 
             pixelSnap: {
 
@@ -3381,7 +3097,15 @@
                 key: 'psuedoTypes',
                 type: 'array'
 
+            },
+
+            gameScale: {
+
+                key: 'gameScale',
+                type: 'number'
+
             }
+
         };
 
 
@@ -3427,7 +3151,6 @@
         }, 1000);
 
         __levelMaker.offsetTop = $(__gameStack.canvas).offset().top;
-
 
     });
 

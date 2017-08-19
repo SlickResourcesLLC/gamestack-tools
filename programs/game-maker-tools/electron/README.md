@@ -1,44 +1,33 @@
+GameStack.js
+============
 
-**Clone and run for a quick way to see Electron in action.**
+A powerful solution for rapid, easy game development with javascript
+--------------------------------------------------------------------
 
-This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start) within the Electron documentation.
+### Welcome to the repository ###
 
-**Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
+* Gamestack is a fast, easy-to-use library for Game objects and behavior in javascript and web-canvas. Gamestack includes
+speedy solutions for these areas of game development:
+  :2D Sprites with multiple animations and behaviors
+  :Mass processing of groups of game-objects during runtime
+  :Easily add sound where needed, such as the start of Animation().animate() call
+  :health meters, item totals, text displays, and similar screen displays
+  :Controller input and events
+  :powerful tools for building and organizing levels, sprites, and behaviors quickly
 
-A basic Electron application needs just these files:
+*Gamestack is free and open source. The development tools associated with Gamestack have a license fee.
 
-- `package.json` - Points to the app's main file and lists its details and dependencies.
-- `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
-- `index.html` - A web page to render. This is the app's **renderer process**.
+*Please try the tools, and donate to our project. The tools will make game development super easy with javascript, and the .json output of our toolset can be applied
+to just about any game engine.
 
-You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start).
 
-## To Use
+## Introductory Folders ##
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+client/examples :: These examples are meant to show off the library in action. Be sure to "npm start" the project with node-js, and browse examples from the home page of the project.
 
-```bash
-# Clone this repository
-git clone https://github.com/electron/electron-quick-start
-# Go into the repository
-cd electron-quick-start
-# Install dependencies
-npm install
-# Run the app
-npm start
-```
+client/tools    :: These tools will accelerate the development process. We can use them to quickly build and organize a system of game-objects and levels
 
-Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+## Website ##
 
-## Resources for Learning Electron
+****Put website here :: admin@08-19-2017
 
-- [electron.atom.io/docs](http://electron.atom.io/docs) - all of Electron's documentation
-- [electron.atom.io/community/#boilerplates](http://electron.atom.io/community/#boilerplates) - sample starter apps created by the community
-- [electron/electron-quick-start](https://github.com/electron/electron-quick-start) - a very basic starter Electron app
-- [electron/simple-samples](https://github.com/electron/simple-samples) - small applications with ideas for taking them further
-- [electron/electron-api-demos](https://github.com/electron/electron-api-demos) - an Electron app that teaches you how to use Electron
-- [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
-
-## License
-
-[CC0 1.0 (Public Domain)](LICENSE.md)

@@ -4,6 +4,14 @@ var __ServerSideImage = {
     image_upload:function(filename, content, callback)
     {
 
+        if(content.src)
+        {
+            alert('found src');
+
+        }
+
+        content = content.src;
+
         // Assign handlers immediately after making the request,
 // and remember the jqxhr object for this request
         var jqxhr = $.post( 'http://localhost:3137/save', {filename:filename, content:content}, function(data) {

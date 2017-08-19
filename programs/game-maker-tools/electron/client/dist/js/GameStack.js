@@ -1974,7 +1974,7 @@ var Animation = function () {
 
                         this.frameSize = frameSize;
 
-                        this.size = size;
+                        this.size = size || this.frameSize;
 
                         this.selected_frame = {
                                 image: this.image,
@@ -1983,6 +1983,8 @@ var Animation = function () {
                         };
 
                         this.frames[0] = this.selected_frame;
+
+                        return this;
                 }
         }, {
                 key: 'getArg',
@@ -2976,15 +2978,18 @@ var Sprite = function () {
                         this.selected_animation = new Animation(args.selected_animation);
                 } else {
 
-                        this.setAnimation(this.animations[0] || new Animation({
+                        this.image.domElement.onload = function () {
 
-                                image: this.image,
+                                __inst.setAnimation(__inst.animations[0] || new Animation({
 
-                                frameSize: new Vector3(this.image.domElement.width, this.image.domElement.height),
+                                        image: __inst.image,
 
-                                frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+                                        frameSize: new Vector3(__inst.image.domElement.width, __inst.image.domElement.height),
 
-                        }));
+                                        frameBounds: new VectorFrameBounds(new Vector3(), new Vector3())
+
+                                }));
+                        };
                 }
         }
 
@@ -3134,6 +3139,26 @@ var Sprite = function () {
                 key: 'setPos',
                 value: function setPos(pos) {
                         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
+                }
+        }, {
+                key: 'minDimensionsXY',
+                value: function minDimensionsXY(mx, my) {
+
+                        var wth = this.size.x / this.size.y;
+
+                        var htw = this.size.y / this.size.x;
+
+                        if (this.size.x > mx) {
+                                this.size.x = mx;
+
+                                this.size.y = this.size.x * wth;
+                        }
+
+                        if (this.size.y > my) {
+                                this.size.y = my;
+
+                                this.size.x = this.size.y * htw;
+                        }
                 }
         }, {
                 key: 'getAbsolutePosition',
