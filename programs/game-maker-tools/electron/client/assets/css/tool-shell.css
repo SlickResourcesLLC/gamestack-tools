@@ -477,6 +477,8 @@ label.file_special
 
     z-index:9997;
 
+    width:100%;
+
     padding:4px;
 
     background: #4c4c4c; /* Old browsers */
@@ -735,10 +737,10 @@ nav.top-menu  .button-top {
     background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
 
-    border: none;
+    border:1px outset grey;
     color: #FFFFFF;
     text-align: center;
-    font-size: 16px;
+
     padding: 10px;
 
     padding-right:20px;
@@ -751,6 +753,7 @@ nav.top-menu  .button-top {
 
     height:40px;
 
+    font-size:14px;
 
     vertical-align: middle;
 
@@ -802,7 +805,7 @@ nav.top-menu  .button-add {
     text-align: center;
     font-size: 20px;
 
-    height:40px;
+    height:39px;
     width:40px;
 
     vertical-align: middle;
@@ -816,15 +819,53 @@ nav.top-menu  .button-add {
 
 }
 
-.dropdown
+div.dropdown
 {
+    border-radius:0px;
+
 
     float:left;
 
-    margin-top:7px;
+    margin-top:5px;
 
-    height:60px;
+}
 
+div.dropdown button
+{
+
+    color:ghostwhite;
+
+    background:#333333;
+
+    border-radius:0px;
+
+    height:40px;
+
+    font-weight:lighter;
+
+    font-style:normal;
+
+    text-shadow:none;
+
+    font-size:14px;
+
+    border:1px outset grey;
+
+}
+
+
+.dropdown-submenu {
+
+    position: relative;
+
+    padding:3px;
+
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
 }
 
 
@@ -979,19 +1020,6 @@ div.free-select
 
     width:300px;
 
-
-}
-.dropdown-submenu {
-    position: relative;
-
-    padding:3px;
-
-}
-
-.dropdown-submenu .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -1px;
 }
 
 

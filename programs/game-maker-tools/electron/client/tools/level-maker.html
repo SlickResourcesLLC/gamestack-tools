@@ -313,7 +313,7 @@
 
     <form id="object-maker" method="GET">
 
-        <h3>Create Level-Map Sprite</h3>
+        <h3 id="title">Create Level-Map Sprite</h3>
 
         <div id="sprite-space" class="sprite-space gui-space"></div>
 
@@ -333,13 +333,16 @@
 
         </div>
 
-        <button id="create_object" class="ok">OK</button>
+        <div id="just-ok-space">  <button id="create_object" class="ok">OK</button> </div>
+        <div id="ok-cancel-space"> <button id="create_object" class="ok">OK</button>
 
-        <button type="button" id="close" class="cancel">Cancel</button>
+        <button type="button" id="close" class="cancel">Cancel</button></div>
 
     </form>
 
 </div>
+
+
 
 <div class="free-select center map-list">
 
@@ -532,8 +535,6 @@
 
             var start_level = function () {
 
-                __levelMaker.htmlSettings();
-
                 __levelMaker.applySettings(__levelMaker.settings);
 
                 __inst.canvas = document.getElementById('myCanvas');
@@ -572,7 +573,8 @@
 
                         $.each(__levelMaker.mapElements, function (ix, item) {
 
-                            App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                            App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
+                                
                                 console.log('1');
 
                                 var value = $(element).text();
@@ -592,7 +594,8 @@
 
                     $.each(__levelMaker.mapElements, function (ix, item) {
 
-                        App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                        App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
+                            
                             console.log('1');
 
                             var value = $(element).text();
@@ -801,13 +804,11 @@
 
                             var args = {type: "game object", description: "multi-loaded object"};
 
-
                             args.size = new Vector3(w, h, 0);
 
                             args.name = name;
 
                             if (args.name && args.description) {
-
 
                                 var mapElementArgs = {name: args.name, src: __levelMaker.selected_image_src};
 
@@ -827,7 +828,7 @@
 
                                         //  alert('last file');
 
-                                        App.dialog(App._UI_OPTION_MAP.my_objects,
+                                        App.dialog(App.map_objects,
                                             0, 120, function () {
                                                 console.log('dialog shown');
                                             });
@@ -882,7 +883,6 @@
 
                         elements[x] = __levelMaker.createMapElement(elements[x]);
 
-
                         //  __gameStack.addImageSrc(elements[x].img.src, elements[x].img_id || false);
 
                         //  elements[x].img_id = __gameStack.getImageId(elements[x].img.src);
@@ -893,6 +893,10 @@
                 }
 
                 __levelMaker.mapElements = myObject.elements;
+
+
+                __levelMaker.selectedElement = __levelMaker.get();
+
 
                 if (typeof(callback) == 'function') {
                     callback();
@@ -936,27 +940,7 @@
         },
 
         createDemo: function (lib) {
-
-
-            /*****************************************************
-             * Main Game Objects:
-             *
-             * -1 Blocks : small_block, medium_block, big_block
-             * -2.Platforms: platform_basic_small, platform_basic_medium, platform_basic_big
-             *
-             * -3.floating platforms : platform_floating_small, platform_floating_big, platform_floating_medium
-             *
-             * -4.fpw : or : floating_platform_waypoint : shows where the floating platform will go to
-             *
-             * -5. mushroom_platforms : mush_plat1, mush_plat2, etc..
-             *
-             * -6. power_boxes : pbxes 1, 2, 3, etc..
-             *
-             * -7. Houses : house_1, house_2, house_3, house_4 (a house could be a store, etc... or there just for fun
-             *
-             * -8. special_enemies : special_enemy_1, special_enemy_2, etc..
-             *
-             *****************************************************/
+            
 
             var pathPref = __levelMaker.url_prefix;
 
@@ -972,10 +956,7 @@
 
         },
 
-        _UI_OPTION_MAP: {
-            my_objects: []
-
-        },
+        map_objects:[],
 
         placeRCMenu: function (x, y, visible) {
 
@@ -1140,20 +1121,23 @@
 
         setRotationVectorGui: function () {
 
+
+            var rsgui = new dat.GUI({autoPlace:false});
+
+            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
+
             $('.rotation-speed-gui').append($(rsgui.domElement));
 
             var agui = new dat.GUI({autoPlace: false});
 
             agui.add(__levelMaker.assembled_sprite.rot_accel, 'x').min(-50).max(50);
-            agui.add(__levelMaker.assembled_sprite.rot_accel, 'y').min(-50).max(50);
-            agui.add(__levelMaker.assembled_sprite.rot_accel, 'z').min(-50).max(50);
 
             $('.rotation-accel-gui').append($(agui.domElement));
 
 
         },
 
-        ui_funx_assembler: function () {
+        option_funx_assembler: function () {
 
             var OptionActionList = function (text, data, callback) {
 
@@ -1178,7 +1162,6 @@
 
                 $('.free-select').show();
 
-
                 $('.free-select').css('top', targetPY);
 
                 $('.free-select').css('left', targetPX);
@@ -1201,7 +1184,7 @@
 
                 var data = item.data;
 
-                var cm_id = "cmd_" + item.text;
+                var cm_id = data.id;
 
                 $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.image.domElement.src + '"  /></li>');
 
@@ -1244,12 +1227,12 @@
     };
 
 
-    var UI_Funx = App.ui_funx_assembler();
+    var Option_Funx = App.option_funx_assembler();
+    
     /************
      * dialog()
      * -show a group of basic options in 'list view'
      ************/
-
 
     $(document).ready(function () {
 
@@ -1290,6 +1273,7 @@
 
 
         App.loadLevelReady();
+
 
         $('#auto-place').on("click", function (e) {
 
@@ -1458,7 +1442,7 @@
 
             var x = 0, y = 120;
 
-            App.dialog(App._UI_OPTION_MAP[id],
+            App.dialog(App.map_objects,
                 x, y, function () {
                     console.log('dialog shown');
                 });
@@ -1736,11 +1720,13 @@
 
         var mySettings = {
 
-                name: filename || "myLevel",
+                name: filename || "level",
 
-                description: "the default level for our game",
+                description: "the default level for this game",
 
-                pixelSnap: 10,
+                pixelSnapX: 10,
+
+                pixelSnapY: 10,
 
                 levelSizeX: 5000,
 
@@ -1848,22 +1834,6 @@
 
             ,
 
-            htmlSettings: function () {
-                var obj = __levelMaker.settings;
-
-                $('#map_name').val(obj.name);
-                $('#map_description').val(obj.description);
-                $('#map_type').val(obj.type);
-
-
-                $('#map_snap_size').val(obj.pixelSnap + 'px');
-
-                $('#map_level_size_x').val(obj.levelSizeX);
-                $('#map_level_size_y').val(obj.levelSizeX);
-
-                $('#map_game_scale').val(obj.game_scale);
-
-            },
 
             applySettings: function (data) {
 
@@ -1893,9 +1863,11 @@
 
                 __levelMaker.assembled_sprite =  new Sprite().to_map_object();
 
-                var sprite_gui = DatGui.getLevelObjectGui('mapobject', __levelMaker.assembled_sprite);
+                var sprite_gui = DatGui.getLevelObjectGui( __levelMaker.assembled_sprite, true);
 
                 $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
+
+                $('#map-item-space .title').text("Create Map Item Sprite");
 
                 $('#map-item-space form').show();
 
@@ -1905,12 +1877,6 @@
 
                  });
 
-
-                 },
-
-            objectMakerFormEvents: function () {
-
-                __levelMaker.assembled_sprite = new Sprite();
 
                 $('#create_object').click(function () {
 
@@ -1924,13 +1890,28 @@
 
                     //  alert('last file');
 
-                    App.dialog(App._UI_OPTION_MAP.my_objects,
+                    App.dialog(App.map_objects,
                         0, 120, function () {
                             console.log('dialog shown');
                         });
 
 
                 });
+
+
+                $('#map-item-space #ok-cancel-space').show();
+
+                $('#map-item-space #just-ok-space').hide();
+
+
+            },
+
+
+            objectMakerFormEvents: function () {
+
+                __levelMaker.assembled_sprite = new Sprite();
+
+                App.setRotationVectorGui();
 
             },
 
@@ -2141,6 +2122,7 @@
 
                     mapElement  = new Sprite({
                         name: args.name || args.tag,
+
                         img: img,
                         src: img.src,
                         __mapScale: args.__mapScale || false,
@@ -2149,8 +2131,6 @@
                     });
 
                 }
-
-                //   alert(args.name + ":" + jstr(mapElement.__mapSize));
 
                 //make name equal to tag:
 
@@ -2217,6 +2197,8 @@
                 return mapElement;
 
             },
+
+
             selectedSprite: false,
             selectedTag: "",
             selectedElement: {},
@@ -2314,9 +2296,9 @@
                 sprite.position.x = Math.floor(x - sprite.size.x / 2);
                 sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnap);
+                sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnapX);
 
-                sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnap);
+                sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnapY);
 
 
             },
@@ -2327,8 +2309,8 @@
 
                     if (item.drag_selected) {
 
-                        var x1 = x - (x % __levelMaker.settings.pixelSnap),
-                            y1 = y - (y % __levelMaker.settings.pixelSnap);
+                        var x1 = x - (x % __levelMaker.settings.pixelSnapX),
+                            y1 = y - (y % __levelMaker.settings.pixelSnapY);
 
 
                         __levelMaker.centerPos(item, x1, y1);
@@ -2345,6 +2327,11 @@
 
             leftClick: function (x, y) {
 
+                if($('form').is(':visible'))
+                {
+                    return console.log("can't plant sprite with form open");
+
+                }
 
                 if (typeof(this.leftClickExtra) == 'function') {
 
@@ -2391,7 +2378,7 @@
 
                 if (!selection) {
 
-                    __levelMaker.plantMapSprite(__levelMaker.selectedElement, x - (x % __levelMaker.settings.pixelSnap), y - (y % __levelMaker.settings.pixelSnap))
+                    __levelMaker.plantMapSprite(__levelMaker.selectedElement, x - (x % __levelMaker.settings.pixelSnapX), y - (y % __levelMaker.settings.pixelSnapY))
 
                     __levelMaker.lastPlantedCountRecordArray.push(1);
                 }
@@ -2448,9 +2435,9 @@
                 var x = Math.floor(x - object.size.x / 2);
                 var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
 
-                x = x - ( object.position.x % __levelMaker.settings.pixelSnap);
+                x = x - ( object.position.x % __levelMaker.settings.pixelSnapX);
 
-                y = y - ( object.position.y % __levelMaker.settings.pixelSnap);
+                y = y - ( object.position.y % __levelMaker.settings.pixelSnapY);
 
                 return {size: new Vector3(object.size), position: {x: x, y: y}};
 
@@ -2486,9 +2473,9 @@
                 sprite.position.x = Math.floor(x - sprite.size.x / 2);
                 sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnap);
+                sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnapX);
 
-                sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnap);
+                sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnapY);
 
                 this.selectedSprite = sprite;
 
@@ -2534,9 +2521,9 @@
                 sprite.position.x = Math.floor(x - sprite.size.x / 2);
                 sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
 
-                sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnap);
+               // sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnap);
 
-                sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnap);
+               // sprite.position.y = sprite.position.y - ( sprite.position.y % __levelMaker.settings.pixelSnap);
 
                 this.selectedSprite = sprite;
 
@@ -2593,10 +2580,26 @@
             },
 
 
-            addLevelObjectToUI: function (item) {
+            addLevelObjectToUI: function (item, replace) {
 
+                if(replace)
+                {
+                   $(".free-select li a").each(function(ix, a){
 
-                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                       if($(a).prop('id') == item.id)
+                       {
+                           alert('found id match');
+
+                           $(a).text(item.name);
+
+                       }
+
+                   });
+
+                }
+
+             App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
+
                     console.log('1');
 
                     var value = $(element).text();
@@ -2621,7 +2624,7 @@
 
     }
 
-    var __levelMaker = LevelMaker(filename);
+    var __levelMaker = LevelMaker("myLevel");
 
     var create_selections = function () {
 
@@ -2812,48 +2815,7 @@
 
         });
 
-        $.each($('input[type="range"]'), function (ix, item) {
-
-            $(item).change(function (evt) {
-
-                var value = $(this).val(),
-
-                    label = $(this).prev('label');
-
-                var lblVal = $(label).text() + "";
-
-                if (lblVal.indexOf('-') <= 0) {
-                    $(label).text($(label).text() + '-');
-
-                }
-
-                $(label).text(lblVal.substring(0, ($(label).text() + "").lastIndexOf('-')) + '-' + value);
-
-            });
-
-        });
-
-
-        $('.dropdown.rc input[type="radio"]').click(function (evt) {
-
-
-            alert('hi');
-
-            $('.dropdown.rc input[type="radio"]').attr('checked', false);
-
-            $(evt.target).attr('checked', true);
-
-
-            evt.preventDefault();
-
-            return false;
-
-        });
-
-
-
         $('.switch-label').click(function (evt) {
-
 
             $('.switch-label').removeClass('selected');
 
@@ -2872,20 +2834,15 @@
 
         $('div').click(function (evt) {
 
-            // $('form').hide();
-
             var type = $(evt.target).prop('tagName');
 
             var dissallowed = ['LI', 'UL', 'A', 'SPAN', 'IMG', 'BUTTON', 'INPUT', 'RADIO', 'LABEL'];
 
             if ($(evt.target).attr('id') !== 'container') {
 
-
                 if (!$(evt.target).find('form').length) {
 
                     if (dissallowed.indexOf(type) == -1 && !$(evt.target).parents('form').length >= 1) {
-
-                        $('form').hide('slow');
 
                         $('.free-select').hide('slow');
 
@@ -2915,17 +2872,6 @@
             }
             ,
 
-            pixelSnap: {
-
-                key: 'pixelSnap',
-
-                type: 'number',
-
-                options: [2, 5, 10, 20, 50, '1/8 Object-Size', '1/4 Object-Size', '1/2 Object-Size'],
-
-            }
-            ,
-
             levelSizeX: {
                 key: 'levelSizeX',
 
@@ -2938,6 +2884,12 @@
                 step: 200,
 
                 onChange: function (value) {
+
+                    if(value > 15000)
+                    {
+                        alert('Max level-size-dimension is 15000');
+
+                    }
 
                     __levelMaker.applySettings(__levelMaker.settings);
 

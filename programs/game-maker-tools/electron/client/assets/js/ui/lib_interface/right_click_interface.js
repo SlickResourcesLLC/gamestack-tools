@@ -21,7 +21,6 @@ var rightClickDisplayCalls = {
 
     },
 
-
     showExclusiveCheck:function(element){ //takes li element
 
         $(element).parent().find('span.check').remove();
@@ -361,7 +360,11 @@ var __rightClickInterface = [{
 
                     if(typeof(number) == 'number') {
 
-                        __levelMaker.settings.pixelSnap = number;
+                        __levelMaker.settings.pixelSnapX = number;
+
+                        __levelMaker.settings.pixelSnapY = number;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -378,7 +381,11 @@ var __rightClickInterface = [{
 
                     if(typeof(number) == 'number') {
 
-                        __levelMaker.settings.pixelSnap = number;
+                        __levelMaker.settings.pixelSnapX = number;
+
+                        __levelMaker.settings.pixelSnapY = number;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -388,14 +395,17 @@ var __rightClickInterface = [{
             {
                 name: '10px',
                 title: 'pixel_snap_one',
-
                 fun: function () {
 
                     var number = 10;
 
                     if(typeof(number) == 'number') {
 
-                        __levelMaker.settings.pixelSnap = number;
+                        __levelMaker.settings.pixelSnapX = number;
+
+                        __levelMaker.settings.pixelSnapY = number;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -411,7 +421,11 @@ var __rightClickInterface = [{
 
                     if(typeof(number) == 'number') {
 
-                        __levelMaker.settings.pixelSnap = number;
+                        __levelMaker.settings.pixelSnapX = number;
+
+                        __levelMaker.settings.pixelSnapY = number;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -427,7 +441,11 @@ var __rightClickInterface = [{
 
                     if(typeof(number) == 'number') {
 
-                        __levelMaker.settings.pixelSnap = number;
+                        __levelMaker.settings.pixelSnapX = number;
+
+                        __levelMaker.settings.pixelSnapY = number;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -439,11 +457,21 @@ var __rightClickInterface = [{
                 title: 'pixel_snap',
                 fun: function () {
 
-                    var number = Math.ceil(__levelMaker.selectedElement.size.x / 8);
+                    var numberX = Math.ceil(__levelMaker.selectedElement.size.x / 8),
 
-                    if(typeof(number) == 'number') {
+                        numberY = Math.ceil(__levelMaker.selectedElement.size.y / 8);
 
-                        __levelMaker.settings.pixelSnap = number;
+                    if(typeof(numberX) == 'number') {
+
+                        __levelMaker.settings.pixelSnapX = numberX;
+
+                    }
+
+                    if(typeof(numberY) == 'number') {
+
+                        __levelMaker.settings.pixelSnapY = numberY;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -456,11 +484,21 @@ var __rightClickInterface = [{
 
                 fun: function () {
 
-                    var number = Math.ceil(__levelMaker.selectedElement.size.x / 4);
+                    var numberX = Math.ceil(__levelMaker.selectedElement.size.x / 4),
 
-                    if(typeof(number) == 'number') {
+                        numberY = Math.ceil(__levelMaker.selectedElement.size.y / 4);
 
-                        __levelMaker.settings.pixelSnap = number;
+                    if(typeof(numberX) == 'number') {
+
+                        __levelMaker.settings.pixelSnapX = numberX;
+
+                    }
+
+                    if(typeof(numberY) == 'number') {
+
+                        __levelMaker.settings.pixelSnapY = numberY;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
 
                     }
 
@@ -473,13 +511,24 @@ var __rightClickInterface = [{
 
                 fun: function () {
 
-                    var number = Math.ceil(__levelMaker.selectedElement.size.x / 2);
+                    var numberX = Math.ceil(__levelMaker.selectedElement.size.x / 2),
 
-                    if(typeof(number) == 'number') {
+                        numberY = Math.ceil(__levelMaker.selectedElement.size.y / 2);
 
-                        __levelMaker.settings.pixelSnap = number;
+                    if(typeof(numberX) == 'number') {
+
+                        __levelMaker.settings.pixelSnapX = numberX;
 
                     }
+
+                    if(typeof(numberY) == 'number') {
+
+                        __levelMaker.settings.pixelSnapY = numberY;
+
+                        rightClickDisplayCalls.showExclusiveCheck($(this));
+
+                    }
+
 
                 }
             }
@@ -575,7 +624,36 @@ $(document).ready( function(){
 
                 if(confirm('This will effect all objects mapped from:' + __levelMaker.selectedElement.name)){
 
-                    DatGui.getLevelEdit('mapobject', __levelMaker.selectedElement);
+                    $('#map-item-space form .sprite-space').html('');
+
+                    var sprite = __levelMaker.get(__levelMaker.selectedElement.name);
+
+                    var sprite_gui = DatGui.getLevelObjectGui(__levelMaker.get(__levelMaker.selectedElement.name));
+
+                    $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
+
+                    $('#map-item-space .title').text("Edit Existing Map Item Sprite");
+
+                    $('#map-item-space form').show();
+
+                    $('#map-item-space  button#close').click(function(){
+
+                        $('#map-item-space form').hide('fast');
+
+                    });
+
+                    $('#map-item-space  button.ok').click(function(){
+
+                        __levelMaker.addLevelObjectToUI(sprite,true);
+
+                        $('#map-item-space form').hide('fast');
+
+                    });
+
+                    $('#map-item-space #ok-cancel-space').hide();
+
+                    $('#map-item-space #just-ok-space').show();
+
 
                 }else{
 
@@ -602,7 +680,6 @@ $(document).ready( function(){
 
         //Calling context menu
         $('body .map-list').contextMenu(__mapListRightClickInterface,{triggerOn:'contextmenu'});
-
         //Calling context menu
 
         $('body canvas').contextMenu(__rightClickInterface,{triggerOn:'contextmenu'});

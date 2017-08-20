@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Game-Builder Tools</title>
-
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
     <script src="../assets/js/ui/jquery.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
 
 </head>
 
@@ -96,61 +102,6 @@
         font-weight:normal;
     }
 
-    #by{
-        width:100%;
-
-        text-align:center;
-        position:relative;
-        color:white;
-        font-size:130%;
-        margin-top:50px;
-    }
-    #softDev
-    {
-
-        margin-left:5px;
-
-        color:orange;
-        text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
-        -1px 1px 0 black, 3px 3px 5px #333333;
-        font-size:150%;
-    }
-
-    #vividText {
-
-        position:relative;
-        margin-right:5px;
-
-        color:black;
-        text-shadow: 1px 1px 0 aqua, -1px -1px 0 aqua, 1px -1px 0 aqua,
-        -1px 1px 0 aqua, 2px 2px 3px snow;
-        font-size:190%;
-
-    }
-    #vividNameCase
-    {
-        position:relative;
-        display:block;
-        text-align:center;
-        margin-left:auto;
-        margin-right:auto;
-        margin-top:50px;
-    }
-
-    #appTitle
-    {
-        width:100%;
-        margin-top:9px;
-        display:block;
-        text-align:center;
-        position:relative;
-        font-size:270%;
-        color:white;
-        text-shadow: 1px 1px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
-        -1px 1px 0 grey;
-
-        font-family:iceDesign;
-    }
     #linkCase
     {
         position:relative;
@@ -262,23 +213,44 @@
 
     }
 
+    video
+    {
+        width:100%;
+
+        margin: 0 auto;
+
+    }
+
+    .title
+    {
+        color:white;
+        position:block;
+
+        text-align:center;
+    }
+
+
 </style>
 
 <body>
 
-
-
 <div class="fillGradient"  >
 </div>
 
-<img  id="appLogo"  src="img/logo.png" />
-<p  id="by" class="title"  >javascript engine & tools for game development</p>
+<video autoplay="true" id="intro-video">
+    <source src="video/intro.mp4"></source>
+</video>
+
+<img  id="appLogo"  src="img/logo.png" style="display:none;" />
+<p   class="title"  >js-framework + tools for web game development</p>
+
+
 <div class="screen-select" > <a class="screenlink" href="sprite-maker.html"> <img src="image/spritemaker-shot.png" /> <span >Sprite Maker</span></a>
 <a class="screenlink" href="level-maker.html"> <img src="image/levelmaker-shot.png" /> <span >Level Maker</span> </a>
     <a class="screenlink" href="level-maker.html"> <img src="image/levelmaker-shot.png" /> <span >Game-Resource Browser</span> </a>
 </div>
 
-<p  id="by" class="title"   >Usage examples</p>
+<p   class="title"   >Usage examples</p>
 <div class="screen-select" > <a class="screenlink" href="../examples/side-scroller-level.html"> <img src="image/spritemaker-shot.png" /> <span >Sprite: With level, from file</span></a>
 
 </div>
@@ -287,60 +259,74 @@
     //TODO: check local storage and cookies for member already signed in:
     var app = {
 
-        titleOps: new Array(),
+        showVideo:function(callback)
+        {
+            var elem = document.getElementById('intro-video');
 
-        complete:false,
+            var loaded = false;
 
-        opacityUpdate:function(){
-
-            app.opacityUp();
-
-        },
-
-        opacityUp:function(){
-
-            if ( app.titleOps[ app.titleOps.length - 1] >= 1.0)
-            {
-                app.complete = true;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
             }
-            for (var i = 0; i <  app.titleOps.length; i++)
-            {
-                if (app.titleOps[i] < 1.0)
-                {
-                    app.titleOps[i] += 0.025;
-                    var t = $('.title')[i];
 
-                    $(t).css('opacity', '' + app.titleOps[i]);
-                    return;
+           elem.addEventListener('ended',function(){
+
+                if(callback)
+                {
+                    callback();
+
+                    $('#intro-video').hide('fast');
+
+                    $('#appLogo').show('slow');
                 }
 
-            }
+            },false);
+
+            window.setTimeout(function(){
+
+                if(!loaded)
+                {
+                    if(callback)
+                    {
+                        callback();
+                    }
+
+                }
+
+            }, 1000);
 
         },
 
-        init:function(){
 
-            $(".title").each(function (index) {
-                $(this).css('opacity', '0.0');
-                app.titleOps.push(0);
-            });
-
-
-        }
-
+        complete:false
     }
 
 </script>
 
 <script  type="text/javascript">
 
-    $(document).ready(function () {
-        app.init();
-        window.setInterval('app.opacityUpdate();', 20);
+    window.onload = function()
+    {
 
-        $('#linkCenter').click(function () {
-            app.main();
+
+    };
+
+    $(document).ready(function(){
+
+        app.showVideo(function(){
+
+            $('#linkCenter').click(function () {
+                app.main();
+            });
+
         });
+
+
+
 
     });
 

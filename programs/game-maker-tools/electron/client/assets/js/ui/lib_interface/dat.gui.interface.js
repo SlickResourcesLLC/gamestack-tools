@@ -751,11 +751,11 @@ var DatGui = {
 
     },
 
-    getLevelObjectGui:function(mode, object){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
+    getLevelObjectGui:function(object, create_new){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
 
         var gui = new dat.GUI({autoPlace:false});
 
-        if(mode.toLowerCase() == 'mapobject' && object instanceof Sprite)
+        if(object instanceof Sprite)
         {
 
             var name = gui.add(object, 'name');
@@ -764,8 +764,13 @@ var DatGui = {
 
             DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoTypes);
 
-            object.selected_animation = new Animation({ frameSize: new Vector3(object.size),
-            frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))});
+           if(create_new) {
+               object.selected_animation = new Animation({
+                   frameSize: new Vector3(object.size),
+                   frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
+               });
+
+           }
 
             var obj = object.selected_animation;
 
@@ -786,8 +791,7 @@ var DatGui = {
 
             window.setTimeout(function(){
 
-                if(obj instanceof Animation || obj instanceof  Sound) {
-
+                if(create_new && (obj instanceof Animation || obj instanceof  Sound)) {
 
                     obj.framePos = new Vector3(0, 0, 0);
 
@@ -799,13 +803,14 @@ var DatGui = {
 
                         var fname;
 
-                        if (obj.src && obj.src.length > 270) {
+                        if (obj.image.domElement.src) {
 
-                            fname = obj.src.substring(0, 270);
+                            fname =  obj.image.domElement.src.length > 270 ? obj.image.domElement.src.substring(0, 270):obj.image.domElement.src;
                         }
 
-                        $(first_list).prepend("<img style='display:none;'/><input type='file' id='" + id + "'  class='dat_gui_file'/>" +
-                            "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + (fname || obj.src) + "</label>" +
+
+                        $(first_list).prepend("<img style='display:none;'/><input type='file' name='" + id + "' id='" + id + "'  class='dat_gui_file'/>" +
+                            "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + fname + "</label>" +
                         "<canvas id='image-test-canvas'></canvas>");
 
                         $('#' + id).change(function (evt) {
@@ -818,9 +823,13 @@ var DatGui = {
 
                                     var filename = $(input).val().split('\\').pop();
 
+
+
                                     DatGui.image_upload(filename, image, function (relpath, content) {
 
                                         relpath = relpath.replace('client/', '../');
+
+                                        $(input).parent().find('.file_special').html("Select File: <br/> " + relpath);
 
                                        // alert('uploaded image:' + filename + ":using relative path:" + relpath);
 
