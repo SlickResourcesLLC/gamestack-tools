@@ -55,7 +55,7 @@
 
     #container .iw-mTrigger {
         background: transparent;
-        margin-top: 70px;
+        margin-top: 50px;
 
     }
 
@@ -153,14 +153,11 @@
 
 <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
-
-
 <script src="../assets/js/ui/dat.gui.js"></script>
 
 <script src="../assets/js/ui/squeezetabs.js"></script>
 
 <style>
-
 
     .dg .c input[type=text] {
 
@@ -191,15 +188,6 @@
 <body>
 
 <script src="../assets/js/ui/jquery.fileDownload.js"></script>
-
-<div id="top-gui">
-    <select id="forceSelect">
-        <option>Strong Gravity</option>
-        <option>Medium Gravity</option>
-        <option>Weak Gravity</option>
-    </select>
-    <button type="button" id="add_tween_stack_ctrl" class="main-play" style=" "><span>&#9654;</span></button>
-</div>
 
 <input type="file" name="level-file-input" id="level-file-input"/>
 
@@ -283,7 +271,6 @@
 
 </div>
 
-
 <form id="auto_place_form" method="GET">
     <ul>
 
@@ -332,23 +319,7 @@
 
         <input type="hidden" value="image_data" id="image_data" name="image_data"/>
 
-        <label class="major">Persistent Motion</label>
-
-        <label class="minor">Speed</label>
-
-        <div class="motion-speed-gui" id="motion-speed-gui">
-
-        </div>
-
-        <div class="travel-mode-gui" id="travel-mode-gui">
-
-        </div>
-
-        <label class="minor">Acceleration</label>
-
-        <div class="motion-accel-gui" id="motion-accel-gui">
-
-        </div>
+        <label class="major">Persistent Rotation</label>
 
         <label class="minor">Rotational Speed</label>
 
@@ -388,13 +359,13 @@
 
 <script>
 
-
     Canvas.__levelMaker = true;
-
 
     //App{}: a collection of UI functionality
 
     var App = {
+
+
 
         TESTGAME:true,
 
@@ -530,26 +501,26 @@
 
             });
 
-
-
         },
 
         create_level: function (data, callback) {
 
-
             var __inst = Game;
+
+
+            var usingOptFile = true;
 
             if(data && data.settings)
             {
+
+                usingOptFile = false;
+
                 __inst.settings = data.settings;
 
             }
 
-
             if(data && data.sprites instanceof Array)
             {
-
-                alert('applying sprites');
 
                 $.each(data.sprites, function(ix, item){
 
@@ -557,13 +528,9 @@
 
                 });
 
-
-            }
-
-
+            };
 
             var start_level = function () {
-
 
                 __levelMaker.htmlSettings();
 
@@ -587,7 +554,6 @@
 
                 });
 
-
                 __levelMaker.selectedElement = __levelMaker.get();
 
                 var sprMapItem = __levelMaker.get();
@@ -598,8 +564,6 @@
 
                 __inst.is_init = true;
 
-
-                var usingOptFile = true;
 
                 if (usingOptFile) {
 
@@ -655,7 +619,6 @@
             start_level();
 
         },
-
 
         applyRecentFiles: function () {
             var files = localStorage.getItem('recent-files');
@@ -1175,34 +1138,7 @@
 
         },
 
-        setMotionVectorGui: function () {
-
-            var sgui = new dat.GUI({autoPlace: false});
-
-            sgui.add(__levelMaker.assembled_sprite.speed, 'x').min(-50).max(50);
-            sgui.add(__levelMaker.assembled_sprite.speed, 'y').min(-50).max(50);
-            sgui.add(__levelMaker.assembled_sprite.speed, 'z').min(-50).max(50);
-
-
-            $('.motion-speed-gui').append($(sgui.domElement));
-
-            var agui = new dat.GUI({autoPlace: false});
-
-
-            agui.add(__levelMaker.assembled_sprite.acceleration, 'x').min(-50).max(50);
-            agui.add(__levelMaker.assembled_sprite.acceleration, 'y').min(-50).max(50);
-            agui.add(__levelMaker.assembled_sprite.acceleration, 'z').min(-50).max(50);
-
-
-            $('.motion-accel-gui').append($(agui.domElement));
-
-
-            var rsgui = new dat.GUI({autoPlace: false});
-
-            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
-            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'y').min(-50).max(50);
-            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'z').min(-50).max(50);
-
+        setRotationVectorGui: function () {
 
             $('.rotation-speed-gui').append($(rsgui.domElement));
 
@@ -1619,7 +1555,6 @@
 
             }
 
-
             this.GameWindow.update();
 
         },
@@ -1777,17 +1712,6 @@
     };
 
 
-    /************
-     * o()
-     ************/
-
-    /***********************************************
-     * __levelMaker
-     * extends functionality of qui, to allow building of game levels
-     * -map out sprites of various types on the canvas
-     * -save them to a json file (2do)
-     *********************************************/
-
 
     jQuery.expr.filters.offscreen = function (el) {
         var rect = el.getBoundingClientRect();
@@ -1798,6 +1722,15 @@
         );
     };
 
+
+    /***********************************************
+     * __levelMaker
+     *
+     * :returns object{}
+     * allows building of game levels
+     * -map out sprites of various types on the canvas
+     * -save them to a json file
+     *********************************************/
 
     function LevelMaker(filename, settings) {
 
@@ -1978,10 +1911,6 @@
             objectMakerFormEvents: function () {
 
                 __levelMaker.assembled_sprite = new Sprite();
-
-                App.setMotionVectorGui();
-
-                //  App.setTravelModeGui();
 
                 $('#create_object').click(function () {
 
@@ -2267,8 +2196,6 @@
                 mapElement.image.domElement.onload = function () {
 
                     if (!this.__error) {
-
-                        alert('loaded');
 
                         __inst.mapElements.push(mapElement);
 
@@ -2602,10 +2529,7 @@
 
                 console.log(sprite);
 
-                // console.log(JSON.stringify(sprite));
-
                 sprite.init();
-
 
                 sprite.position.x = Math.floor(x - sprite.size.x / 2);
                 sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
@@ -2622,8 +2546,6 @@
                     }; //turn off the motion, we are just mapping
 
                 }
-
-
 
                 console.log(sprite.selected_animation);
 
@@ -2691,41 +2613,23 @@
 
     }
 
+    var filename = "myLevel";
 
-    /*
-     *
-     * *Temporary Calls::
-     *
-     * 1.reset filename storage
-     *
-     *
-     * */
+    if(settings)
+    {
+        filename = settings.name;
 
-    localStorage.setItem('recent-files', false);
-
-
-    App.applyRecentFiles();
-
-    var filename = App.recent_files[App.recent_files.length - 1];
-
-
-    filename = filename ? filename.substring(0, filename.lastIndexOf('.json')) : filename;
-
-    // alert('opening:' + filename);
+    }
 
     var __levelMaker = LevelMaker(filename);
 
-
     var create_selections = function () {
 
-
         var pathPref = __levelMaker.url_prefix;
-
 
         var selectionImg = document.createElement('IMG');
 
         selectionImg.src = pathPref + "selection.png";
-
 
         var hoverSelectionImg = document.createElement('IMG');
 
@@ -2758,11 +2662,6 @@
 
         __levelMaker.discluded_sprites.push(__levelMaker.selection_sprite);
 
-        //  Game.sprites.push(__levelMaker.selection_sprite);
-
-        // Game.sprites.push(__levelMaker.hover_selection_sprite);
-
-
     };
 
 
@@ -2792,17 +2691,9 @@
 
     __gameStack.ready(function (lib) {
 
-        // alert('quazar on ready');
-
         App.createDemo(lib);
 
         //log the completion of the ready function
-
-        window.setTimeout(function () {
-
-
-        }, 100);
-
 
         var centerSpriteToSprite = function (cSprite, aSprite) {
             cSprite.setSize(aSprite.size);
@@ -2840,10 +2731,6 @@
 
                 if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
                     y > item.position.y + __levelMaker.offsetTop && y < item.position.y + item.size.y + __levelMaker.offsetTop) {
-
-                    //  console.log('Sprite Selected!');
-
-                    // centerSpriteToSprite(__levelMaker.selection_sprite, item);
 
                     centerSpriteToSprite(__levelMaker.hover_selection_sprite, item);
 
@@ -2883,12 +2770,13 @@
 
 
     });
+
     /********************************
      * Game Init / ready
      *******************************/
 
     var stats = new Stats();
-    stats.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.getElementById('container').appendChild(stats.dom);
 
     function animate(time) {

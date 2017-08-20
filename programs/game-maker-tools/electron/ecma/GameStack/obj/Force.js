@@ -22,7 +22,7 @@ class GravityForce
 
         this.subjects = args.subjects || [];
         this.origin =  args.origin || {};
-        this.massObjects = args.massObjects || [];
+        this.clasticObjects = args.clasticObjects || [];
 
         this.minSpeed = args.minSpeed || new Vector3(1, 1, 1);
 
@@ -59,7 +59,7 @@ class GravityForce
 
        var origin =  this.origin || {};
 
-       var massObjects =  this.massObjects;
+       var clasticObjects =  this.clasticObjects;
 
       var  accel =  this.accel || {};
 
@@ -71,7 +71,7 @@ class GravityForce
 
            itemx.__inAir = true;
 
-            __gameStack.each(massObjects, function(iy, itemy){
+            __gameStack.each(clasticObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 

@@ -187,10 +187,9 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
                 $.each(sprites, function(ix, item){
 
-                    item.onInit(__inst.title);
+                    sprites[ix].onInit(__inst.title);
 
-                    item.init();
-
+                   // item.onInit(__inst.title);
 
                 });
 
@@ -517,7 +516,7 @@ var __rightClickInterface = [{
                 title: 'Apply features on init.',
                 img: 'img/settings_icon.png',
                 // disable: true,
-                subMenu: spriteInitializersSubMenu(Quazar.options.SpriteInitializers, get_selected_sprites)
+                subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
             }]
     },
 
@@ -592,7 +591,7 @@ $(document).ready( function(){
             title: 'Apply features on init.',
             img: 'img/settings_icon.png',
             // disable: true,
-            subMenu: spriteInitializersSubMenu(Quazar.options.SpriteInitializers, get_selected_map_object)
+            subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_map_object)
         }
         ];
 

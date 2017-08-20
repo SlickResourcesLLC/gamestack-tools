@@ -2603,7 +2603,7 @@ class GravityForce
 
         this.subjects = args.subjects || [];
         this.origin =  args.origin || {};
-        this.massObjects = args.massObjects || [];
+        this.clasticObjects = args.clasticObjects || [];
 
         this.minSpeed = args.minSpeed || new Vector3(1, 1, 1);
 
@@ -2640,7 +2640,7 @@ class GravityForce
 
        var origin =  this.origin || {};
 
-       var massObjects =  this.massObjects;
+       var clasticObjects =  this.clasticObjects;
 
       var  accel =  this.accel || {};
 
@@ -2652,7 +2652,7 @@ class GravityForce
 
            itemx.__inAir = true;
 
-            __gameStack.each(massObjects, function(iy, itemy){
+            __gameStack.each(clasticObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 
@@ -3448,20 +3448,20 @@ class Sprite {
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
-        $Q.each(this.sounds, function (ix, item) {
+        GameStack.each(this.sounds, function (ix, item) {
 
             __inst.sounds[ix] = new Sound(item);
 
         });
 
-        $Q.each(this.motions, function (ix, item) {
+        GameStack.each(this.motions, function (ix, item) {
 
             __inst.motions[ix] = new Motion(item);
 
         });
 
 
-        $Q.each(this.animations, function (ix, item) {
+        GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
 
@@ -3470,7 +3470,7 @@ class Sprite {
 
         //Apply initializers:
 
-        $Q.each(this.__initializers, function (ix, item) {
+        GameStack.each(this.__initializers, function (ix, item) {
 
             __inst.onInit(item);
 
@@ -3498,10 +3498,6 @@ class Sprite {
 
             };
 
-
-
-
-
         }
 
     }
@@ -3515,6 +3511,7 @@ class Sprite {
      **********/
 
     init() {
+
 
 
     }
@@ -3531,6 +3528,7 @@ class Sprite {
         if (typeof fun == 'string') {
 
             if (this.__initializers.indexOf(fun) < 0) {
+
                 this.__initializers.push(fun)
             }
             ;
@@ -3545,20 +3543,19 @@ class Sprite {
                 return console.error('need min 2 string keys separated by "."');
             }
 
-            var f = Quazar.options.SpriteInitializers[keys[0]][keys[1]];
+            var f = GameStack.options.SpriteInitializers[keys[0]][keys[1]];
 
             if (typeof(f) == 'function') {
-                alert('found func');
 
                 var __inst = this;
 
                 var f_init = this.init;
 
-                this.init = function (sprite) {
+                this.init = function () {
 
-                    f_init(sprite);
+                    f_init(__inst);
 
-                    f(sprite);
+                    f(__inst);
 
                 };
 
@@ -3573,12 +3570,13 @@ class Sprite {
 
 
             var f_init = this.init;
+            var __inst = this;
 
-            this.init = function (sprite) {
+            this.init = function () {
 
-                f_init(sprite);
+                f_init(__inst);
 
-                fun(sprite);
+                fun(__inst);
 
             };
 
@@ -4799,9 +4797,6 @@ let SpriteInitializersOptions = {
 
         player_rotate_x: function (sprite) {
 
-            alert('applying initializer');
-
-
             let __lib = Quazar || Quick2d;
 
             Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
@@ -4847,9 +4842,9 @@ let SpriteInitializersOptions = {
 
 };
 
-Quazar.options = Quazar.options || {};
+GameStack.options = GameStack.options || {};
 
-Quazar.options.SpriteInitializers = SpriteInitializersOptions;;
+GameStack.options.SpriteInitializers = SpriteInitializersOptions;;
 
 /**
  * Vector3({x:number,y:number,z:number,r:number})

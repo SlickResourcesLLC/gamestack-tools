@@ -283,11 +283,11 @@ button.main-play,button#sound-pane-play,button#motion-pane-play,button#animation
 
     position:fixed;
 
-    width:40px;
+    width:30px;
 
-    height:40px;
+    height:30px;
 
-    margin-left:-40px;
+    margin-left:-30px;
 
     background:#333333;
 
@@ -312,13 +312,53 @@ button.main-play,button#sound-pane-play,button#motion-pane-play,button#animation
 
 
 
-button.main-play
+button#play
 {
 
-    position:absolute; right:30px; width:40px;   height:40px;
+    position:absolute; right:20px; width:30px; top:2px;   height:30px;
+
+    border-radius:50%;
+
+    background:url('img/play_button.png'); /* Old browsers */
+
+    background-size: 100% 100%;
+
+}
+
+
+button#pause
+{
+
+    position:absolute; right:60px; width:30px; top:2px;   height:30px;
+
+    border-radius:50%;
+
+
+    background:url('img/pause_button.png'); /* Old browsers */
+
+
+    background-size: 100% 100%;
 
 
 }
+
+button#stop
+{
+
+    position:absolute; right:100px; width:30px; top:2px;   height:30px;
+
+    border-radius:50%;
+
+    background:url('img/stop_button.png'); /* Old browsers */
+
+    background-size: 100% 100%;
+
+
+}
+
+
+
+
 
 .selected-text
 {
