@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector3.html">Vector3</a></li>
+					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
 				</ul>
 			</li>
 			
@@ -74,7 +74,7 @@
         Sprite
         </h2>
         
-            <div class="class-description">Sprite({name:string, description:string, size:Vector3, position:Vector3})<ul > <li> an Object-container for multiple animations <li> supports a variety of game objects and logic</ul><a href="http://www.google.com">See Live Demos with Suggested Usage-Examples</a></div>
+            <div class="class-description">Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.</div>
         
     
 </header>
@@ -86,12 +86,1008 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Sprite"><span class="type-signature"></span>new Sprite()</h4>
+    <h4 class="name" id="Sprite"><span class="type-signature"></span>new Sprite(args)</h4>
     
     
 </dt>
 <dd>
 
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object of arguments
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>src</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the source file for the GameImage:Sprite.image :: use a string / file-path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the size of the Sprite</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the position of the Sprite</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padding</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the 'float-type' Vector of x and y padding to use when processing collision on the Sprite. A padding of new Vector(0.2, 0.2) will result in 1/5 of Sprite size for padding</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>selected_animation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Animation.html">Animation</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the selected_animation of the Sprite:: pass during creation or use Sprite.setAnimation after created</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    a Sprite object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Sprite.html">Sprite</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="accel"><span class="type-signature"></span>accel(prop, key, accel, max)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        accelerate toward a max value on any object-property:: intended for self-use
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The object to control</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the property-key for targeted property of prop argument</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>accel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of acceleration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the max value to accelerate towards</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="accelX"><span class="type-signature"></span>accelX(accel, max)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        accelerate speed on the X-Axis
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>accel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of acceleration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the maximum for speed</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="accelY"><span class="type-signature"></span>accelY(accel, max)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        accelerate speed on the Y-Axis
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>accel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of acceleration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the maximum for speed</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="animate"><span class="type-signature"></span>animate(animation)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        animate Sprite.selected_animation  by one frame
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>animation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Animation.html">Animation</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">to use, defaults to Sprite.selected_animation</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="center"><span class="type-signature"></span>center()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get the center of a Sprite
+    </div>
     
 
     
@@ -156,69 +1152,88 @@
     
             
 <div class="param-desc">
-    object of Sprite()
+    (Vector)
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+
         
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="collide_stop"><span class="type-signature"></span>collide_stop(item)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        cause a fourway collision-stop between this and another Sprite :: objects will behave clastically and resist passing through one another
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type"><a href="Sprite.html">Sprite</a></span>
 
 
 
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
             
-<hr>
-<dt>
-    <h4 class="name" id="accel"><span class="type-signature"></span>accel()</h4>
-    
-    
-</dt>
-<dd>
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Sprite to compare with</td>
+        </tr>
 
     
-    <div class="description">
-        This function accelerates the Sprite() on any or all axis, depending on arguments
-    </div>
-    
+    </tbody>
+</table>
 
-    
-
-    
-
-    
     
 
     
@@ -280,7 +1295,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="accelX"><span class="type-signature"></span>accelX()</h4>
+    <h4 class="name" id="collidesRectangular"><span class="type-signature"></span>collidesRectangular(sprite)</h4>
     
     
 </dt>
@@ -288,7 +1303,7 @@
 
     
     <div class="description">
-        This function accelerates the Sprite() on the y-axis
+        Get the true || false results of a Collision between two Sprites(), based on their position Vectors and Sizes
     </div>
     
 
@@ -298,317 +1313,55 @@
 
     
     
+        <h5>Parameters:</h5>
+        
 
-    
-<dl class="details">
-    
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
+        <th>Type</th>
 
         
-            
-<hr>
-<dt>
-    <h4 class="name" id="accelY"><span class="type-signature"></span>accelY()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        This function accelerates the Sprite() on the y-axis
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<hr>
-<dt>
-    <h4 class="name" id="animate"><span class="type-signature"></span>animate()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Simple call to animate the sprite<ul>    <li>Calls animate on the Sprite.selected_animation</li>    <li>*TODO: This function is not-yet implemented in GameStack</li></ul>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
+                <td class="name"><code>sprite</code></td>
             
-<hr>
-<dt>
-    <h4 class="name" id="collidesByPixels"><span class="type-signature"></span>collidesByPixels()</h4>
-    
-    
-</dt>
-<dd>
 
-    
-    <div class="description">
-        Get the boolean(T || F) results of a Collision between two Sprites(), based on non-transparent pixels<ul>    <li>Detects collision or overlap of any non-transparent pixels</li>    <li>*TODO: This function is not-yet implemented in GameStack</li></ul>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
+            <td class="type">
             
-<hr>
-<dt>
-    <h4 class="name" id="collidesRectangular"><span class="type-signature"></span>collidesRectangular()</h4>
-    
-    
-</dt>
-<dd>
+                
+<span class="param-type"><a href="Sprite.html">Sprite</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the alternate Sprite to process collision with</td>
+        </tr>
 
     
-    <div class="description">
-        Get the boolean(T || F) results of a Collision between two Sprites(), based on their position Vector3's and Size()<ul>    <li>A rectangular style position</li>     <li>Takes another sprite as argument</li>      <li>Returns basic true || false during runtime</li></ul>
-    </div>
-    
+    </tbody>
+</table>
 
-    
-
-    
-
-    
     
 
     
@@ -678,7 +1431,7 @@
 
     
     <div class="description">
-        This function creates the 'id' of the Sprite()<ul>    <li>Called automatically on constructor()</li></ul>
+        This function creates the 'id' of the Sprite():Called automatically on constructor()
     </div>
     
 
@@ -768,7 +1521,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="decel"><span class="type-signature"></span>decel()</h4>
+    <h4 class="name" id="decel"><span class="type-signature"></span>decel(prop, key, decel, max)</h4>
     
     
 </dt>
@@ -776,7 +1529,7 @@
 
     
     <div class="description">
-        This function decelerates the Sprite() on any or all axis, depending on arguments
+        decelerate toward a max value on any object-property:: intended for self-use
     </div>
     
 
@@ -785,6 +1538,384 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The object to control</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the property-key for targeted property of prop argument</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>decel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of deceleration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the max value to decelerate towards</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="decelX"><span class="type-signature"></span>decelX(amt)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        decelerate speed on the X-Axis, toward zero
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>amt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of deceleration, negatives ignored</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="decelY"><span class="type-signature"></span>decelY(amt)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        decelerate speed on the Y-Axis, toward zero
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>amt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment of deceleration, negatives ignored</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -854,7 +1985,7 @@
 
     
     <div class="description">
-        This function updates various speed and rotational-speed properties for the Sprite()<ul>    <li>Normally no need to use this. It is called automatically by the GameStack init()</li>    <li>*Allows properties of Sprite().speed, Sprite().rot_speed, and Sprite().accel, Sprite().rot_accel to control speed and acceleration.</li></ul>
+        This function updates various speed and rotational-speed properties for the Sprite()
     </div>
     
 
@@ -932,85 +2063,7 @@
 
     
     <div class="description">
-        This function will extend 2nd function arg with 1st function arg, and return the combined function()<ul>    <li>Applied in GameStack for extending functions when onInit(fun) is called</li></ul>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="fromFile"><span class="type-signature"></span>fromFile()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        This function restores a Sprite() from json file
+        This function extends an existing function, and is applied by Gamestack in onInit();
     </div>
     
 
@@ -1088,7 +2141,7 @@
 
     
     <div class="description">
-        This function gets the 'id' of the object()<ul>    <li>See usage links</li></ul>
+        This function gets the 'id' of the Sprite()
     </div>
     
 
@@ -1186,7 +2239,7 @@
 
     
     <div class="description">
-        This function initializes sprites when necessary. Called automatically on GameStack.add(mySprite);
+        This function initializes sprites. Call to trigger all functions previously passed to onInit().
     </div>
     
 
@@ -1256,7 +2309,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="onAnimationComplete"><span class="type-signature"></span>onAnimationComplete()</h4>
+    <h4 class="name" id="maxDimensionsXY"><span class="type-signature"></span>maxDimensionsXY(mx, my)</h4>
     
     
 </dt>
@@ -1264,7 +2317,7 @@
 
     
     <div class="description">
-        Overwrites the complete() function of the selected animation<ul>    <li>Use this function when a change must be made, but not until the current animation is complete</li></ul>
+        This function sizes the Sprite according to minimum dimensions and existing w/h ratios
     </div>
     
 
@@ -1273,6 +2326,208 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the maximum size.x for the resize</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>my</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the maximum size.y for the resize</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="onAnimationComplete"><span class="type-signature"></span>onAnimationComplete(fun)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        run a function when the Sprite.selected_animation is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the function to call when the animation is complete</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -1462,7 +2717,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="onScreen"><span class="type-signature"></span>onScreen()</h4>
+    <h4 class="name" id="onScreen"><span class="type-signature"></span>onScreen(w, h)</h4>
     
     
 </dt>
@@ -1470,7 +2725,7 @@
 
     
     <div class="description">
-        This function detects whether the Sprite() is onScreen, according to its size and position on the GameStack.canvas<ul>    <li></li></ul>
+        This function indicates if this Sprite is onScreen within the Gamestack.WIDTH && Gamestack.HEIGHT dimensions, OR any w & h passed as arguments
     </div>
     
 
@@ -1479,6 +2734,80 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>w</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional WIDTH argument, defaults to Gamestack.WIDTH</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional HEIGHT argument, defaults to Gamestack.HEIGHT</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -1540,7 +2869,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="onUpdate"><span class="type-signature"></span>onUpdate()</h4>
+    <h4 class="name" id="onUpdate"><span class="type-signature"></span>onUpdate(the)</h4>
     
     
 </dt>
@@ -1548,7 +2877,7 @@
 
     
     <div class="description">
-        This function will extend the update of a Sprite()<ul>    <li>Use this function to apply multiple update-calls for an object</li></ul>
+        Extends the update() of this sprite with a new function to be called during update()
     </div>
     
 
@@ -1557,6 +2886,56 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>the</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function to apply to the Sprite:update()</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -1610,6 +2989,345 @@
     
 
     
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="overlap_x"><span class="type-signature"></span>overlap_x(item, padding)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        determine if Sprite overlaps on X axis with another Sprite
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sprite.html">Sprite</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Sprite to compare with</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padding</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the 0-1.0 float value of padding to use on self when testing overlap</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    a true || false var
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">var</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="overlap_y"><span class="type-signature"></span>overlap_y(item, padding)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        determine if Sprite overlaps on Y axis with another Sprite
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sprite.html">Sprite</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Sprite to compare with</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padding</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the 0-1.0 float value of padding to use on self when testing overlap</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    (true || false}
+</div>
+
+
+
+
+        
 
     
 </dd>
@@ -1626,7 +3344,7 @@
 
     
     <div class="description">
-        This function is for persistence of data and behavior for the Sprite()<ul>    <li>a function may be resolved from keyString args from within the obj arg.</li>    <li>Callback is then triggered on this function</li>    <li>Used by GameStack to restore the behavioral options of Sprites from GameStack.options.SpriteInitializers</li></ul>
+        This function resolves a function nested in an object, from a string-key, and it is applied by Gamestack.js for persistence of data and Sprite() behaviors
     </div>
     
 
@@ -1696,7 +3414,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="setAnimation"><span class="type-signature"></span>setAnimation()</h4>
+    <h4 class="name" id="restoreFrom"><span class="type-signature"></span>restoreFrom()</h4>
     
     
 </dt>
@@ -1704,7 +3422,224 @@
 
     
     <div class="description">
-        This function sets the 'selected_animation' property of the Sprite()<ul>    <li></li></ul>
+        Restore a sprite from saved .json data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    (Sprite)
+</div>
+
+
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setAnimation"><span class="type-signature"></span>setAnimation(anime)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This function sets the 'selected_animation' property of the Sprite():: *all Sprites must have a 'selected_animation'
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>anime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Animation.html">Animation</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setPos"><span class="type-signature"></span>setPos()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This function sets the position of the Sprite()
     </div>
     
 
@@ -1782,7 +3717,7 @@
 
     
     <div class="description">
-        This function sets the size of the Sprite()<ul>    <li></li></ul>
+        This function sets the size of the Sprite()
     </div>
     
 
@@ -1852,7 +3787,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="shoot"><span class="type-signature"></span>shoot()</h4>
+    <h4 class="name" id="shoot"><span class="type-signature"></span>shoot(options, animation, speed, position, size, rot_offset)</h4>
     
     
 </dt>
@@ -1860,7 +3795,7 @@
 
     
     <div class="description">
-        Sprites() fires a projectile object<ul>    <li>Easy instantiator for bullets and propelled objects in GameStack</li>    <li>*TODO: This function is not-yet implemented in GameStack</li></ul>
+        fire a projectile-subSprite from the Sprite
     </div>
     
 
@@ -1869,6 +3804,176 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an object of arguments</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Animation.html">Animation</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the animation to fire from the Sprite</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>speed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the speed of the shot that is projected</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the initial position of the shot: defaults to current Sprite position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Vector size of the shot</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rot_offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the rotational offset to apply: controls direction of the shot</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -1930,7 +4035,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="subsprite"><span class="type-signature"></span>subsprite()</h4>
+    <h4 class="name" id="subsprite"><span class="type-signature"></span>subsprite(options, animation, speed, position, size, offset)</h4>
     
     
 </dt>
@@ -1938,7 +4043,7 @@
 
     
     <div class="description">
-        Creates a subsprite<ul>    <li>Use this function to anchor one sprite to another.</li></ul>
+        create a subsprite of Sprite belonging to the current Sprite
     </div>
     
 
@@ -1947,6 +4052,176 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an object of arguments</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Animation.html">Animation</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the animation to fire from the Sprite</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>speed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the speed of the shot that is projected</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the initial position of the shot: defaults to current Sprite position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Vector size of the shot</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the positional offset to apply</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -2016,7 +4291,7 @@
 
     
     <div class="description">
-        This function is the recursive update() for the Sprite()<ul>    <li>*Called automatically by the GameStack library</li></ul>
+        This function is the main update() function for the Sprite
     </div>
     
 
@@ -2136,7 +4411,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-08-19T20:51:58-04:00
+		on 2017-08-24T20:14:19-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

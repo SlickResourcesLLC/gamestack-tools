@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>Load Level and Running Sprite</title>
+    <title>Stat and Text Display</title>
 
     <script src="../assets/js/ui/Tween.js"></script>
 
@@ -12,7 +12,7 @@
     <script src="../dist/js/GameStack.js"></script>
 
 </head>
-<body>
+<body style="background-color:black;">
 
 <script>
 
@@ -20,7 +20,7 @@
 
         alert('__gameStack is running');
 
-        new GameWindow(); //Simply instantiate GameWindow
+       var gameWindow = new GameWindow(); //Simply instantiate GameWindow
 
         var bd = new BarDisplay({
             key: "health",

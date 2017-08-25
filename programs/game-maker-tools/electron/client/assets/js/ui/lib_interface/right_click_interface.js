@@ -1,10 +1,5 @@
 
 
-
-
-
-
-
 var rightClickDisplayCalls = {
 
     assertCheckedSiblingOf:function(element){ //takes li element
@@ -96,6 +91,8 @@ function getRCItemByKey(key, obj)
 
 
 
+var __contextMenuData = {};
+
 
 var getClonesSubMenu = function()
 {
@@ -126,9 +123,18 @@ var getClonesSubMenu = function()
             right:"Right &#8594;"
         };
 
+        var disp = {
+            zero_space:0,
+            eighth_size_space:0.125,
+            quarter_size_space:0.25,
+            half_size_space:0.5,
+            full_size_space:1.0,
+            double_2X_space:2.0,
+            quad_4X_space:4.0
+        };
+
         for(var x2 in dirs)
         {
-
             var subobj = {};
 
             subobj.name = "line_" + dirs[x2];
@@ -137,12 +143,63 @@ var getClonesSubMenu = function()
 
             subobj.title = "line_" + dirs[x2];
 
-            subobj.fun = function()
-            {
+            subobj.subMenu = [];
 
-                alert('TODO: make clones');
+            for(var x3 in disp)
+            {
+                var subobj2 = {};
+
+                subobj2.name = x3;
+
+                subobj2.id =  disp[x3];
+
+               subobj2.json = {disp:disp[x3], count:x, dir:x2};
+
+                subobj2.fun = function()
+                {
+
+                   var data = $(this).data();
+
+                    var sprite = get_selected_map_object()[0];
+
+                    var distX = sprite.size.x * data.disp,
+
+                        distY = sprite.size.y * data.disp;
+
+                    var count = data.count;
+
+                    var north = data.dir.indexOf('up') >= 0 || false;
+
+                    var south = data.dir.indexOf('down') >= 0 || false;
+
+                    var east = data.dir.indexOf('right') >= 0 || false;
+
+                    var west = data.dir.indexOf('left') >= 0 || false;
+
+                    __levelMaker.leftClickExtra = function () {
+
+                        var x = __levelMaker.mouse.x, y = __levelMaker.mouse.y;
+
+                        __levelMaker.placeGroup(x, y, distX, distY, count, north, south, east, west)
+
+                      if(__levelMaker.blink){  window.clearInterval(__levelMaker.blink); }
+
+                    };
+
+                    __levelMaker.blink = window.setInterval(function () {
+
+                        __levelMaker.hover_selection_sprite.active = __levelMaker.hover_selection_sprite.active ? false : true;
+
+                    }, 350);
+
+                }
+
+                subobj.subMenu.push(subobj2);
+
 
             }
+
+
 
             obj.subMenu.push(subobj);
 
@@ -156,8 +213,7 @@ var getClonesSubMenu = function()
     return subMenu;
 };
 
-
-
+var __clonesSubMenu = getClonesSubMenu();
 
 var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 {
@@ -251,6 +307,7 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
     return subMenu;
 
 };
+
 
 
 var alterMenu= function(name, callback)
@@ -539,40 +596,163 @@ var __rightClickInterface = [{
     },
 
     {
+        name: 'Place Array-Clones' ,
+        img: 'img/target-green.png',
+        title: 'place_array_clones',
+        id: 'place_array_clones',
+
+        subMenu: __clonesSubMenu
+
+    },
+
+    {
         name: 'With_Selected_Sprites...',
         img: 'image/sprite_icon.png',
         title: 'Selected_Sprite...',
-        disable:true, //reference as getRCItemByKey('With_Selected_Sprites...').disabled = value
-        subMenu: [{
-            name: 'Clone_To_New_Map_Object',
-            title: 'Clone To Map Object',
-            img: 'img/settings_icon.png',
-            fun: function () {
-                alert('Now show option select of all map object(s)')
-            }
-        },
+        disable: false,
+        subMenu: [
             {
-                name: 'Edit_As_Single_Object',
-                title: 'Edit Selected Object',
+                name: 'Delete',
+                title: 'Delete Selected Objects',
+                img: 'img/cross_icon.png',
+                fun: function () {
+
+                    var sprites = get_selected_sprites();
+
+                    if (sprites.length >= 1) {
+                        __levelMaker.removeList(get_selected_sprites());
+
+                    }
+                    else {
+                        alert('Nothing selected. Sprites must be SHIFT + left-clicked to select.');
+
+                    }
+
+                }
+            }
+
+            ,
+
+            {
+                name: 'Rotate +45 degrees',
+                title: 'Rotate Selected Objects',
                 img: 'img/settings_icon.png',
                 fun: function () {
-                    alert('TODO: edit object(s)')
+
+                    var sprites = get_selected_sprites();
+
+                    if (sprites.length >= 1) {
+                        $.each(sprites, function (ix, item) {
+
+                            item.rotation.x += 45;
+
+
+                        });
+
+                    }
+                    else {
+                        alert('Nothing selected. Sprites must be SHIFT + left-clicked to select.');
+
+                    }
+
                 }
             },
 
             {
-                name: 'Object_Initializer_Option...',
-                title: 'Apply features on init.',
+                name: 'Rotate +180 degrees',
+                title: 'Rotate Selected Objects',
                 img: 'img/settings_icon.png',
-                // disable: true,
-                subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
-            }]
-    },
+                fun: function () {
+
+                    var sprites = get_selected_sprites();
+
+                    if (sprites.length >= 1) {
+                        $.each(sprites, function (ix, item) {
+
+                            item.rotation.x += 180;
 
 
+                        });
+
+                    }
+                    else {
+                        alert('Nothing selected. Sprites must be SHIFT + left-clicked to select.');
+
+                    }
+
+                }
+            },
+
+            {
+                name: 'Flip Horizontal',
+                title: 'Flip-X Selected Objects',
+                img: 'img/settings_icon.png',
+                fun: function () {
+
+                    var sprites = get_selected_sprites();
+
+                    if (sprites.length >= 1) {
+                        $.each(sprites, function (ix, item) {
+
+                            item.flipX = item.flipX ? false : true;
 
 
-];
+                        });
+
+                    }
+                    else {
+                        alert('Nothing selected. Sprites must be SHIFT + left-clicked to select.');
+
+                    }
+
+                }
+            },
+
+            {
+                name: 'Sprites by Type',
+                img: 'img/little_star.png',
+                title: 'place_array_clones',
+                id: 'place_array_clones',
+
+                subMenu: [
+
+                    {
+                        name: 'Add Event by Type',
+                        title: 'add event',
+
+                        fun: function () {
+
+
+                            alert('This function is coming soon for level-maker 1.1');
+
+
+                        }
+                    },
+
+                    {
+                        name: 'Mass Edit by Type',
+                        title: 'add event',
+
+                        fun: function () {
+
+                            alert('This function is coming soon for level-maker 1.1');
+
+
+                        }
+                    }
+
+
+                ]
+
+
+            },
+
+
+        ]
+
+    }
+
+    ]
 
 
 $(document).ready( function(){
@@ -585,9 +765,6 @@ $(document).ready( function(){
 
 
     });
-
-
-
 
 
     //For example we are defining menu in object. You can also define it on Ul list. See on documentation.

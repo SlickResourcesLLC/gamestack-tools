@@ -6,6 +6,7 @@ body, html {
     -moz-user-select: -moz-none;
     -ms-user-select: none;
     user-select: none;
+
 }
 
 
@@ -312,10 +313,10 @@ button.main-play,button#sound-pane-play,button#motion-pane-play,button#animation
 
 
 
-button#play
+button#play,button#sound-pane-play,button#motion-pane-play
 {
 
-    position:absolute; right:20px; width:30px; top:2px;   height:30px;
+    position:absolute; right:40px; width:30px; top:2px;   height:30px;
 
     border-radius:50%;
 
@@ -329,7 +330,7 @@ button#play
 button#pause
 {
 
-    position:absolute; right:60px; width:30px; top:2px;   height:30px;
+    position:absolute; right:80px; width:30px; top:2px;   height:30px;
 
     border-radius:50%;
 
@@ -345,7 +346,7 @@ button#pause
 button#stop
 {
 
-    position:absolute; right:100px; width:30px; top:2px;   height:30px;
+    position:absolute; right:120px; width:30px; top:2px;   height:30px;
 
     border-radius:50%;
 

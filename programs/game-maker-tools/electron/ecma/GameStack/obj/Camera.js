@@ -1,7 +1,7 @@
 /**
- * Camera : has simple x, y, z, position / Vector, follows a specific sprite
+ * Camera : has simple x, y, z, position / Vector values
  *
- * *TODO : implement camera class
+ * @returns {Vector}
  */
 
 
@@ -14,6 +14,7 @@ class Camera
       this.position = new Vector3(0, 0, 0);
 
     }
+
 
 }
 

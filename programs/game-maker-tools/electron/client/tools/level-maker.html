@@ -51,6 +51,9 @@
 
     body {
         background: black;
+
+        overflow:scroll;
+
     }
 
     #container .iw-mTrigger {
@@ -145,6 +148,12 @@
 
     canvas.level-maker-canvas {
         zoom: 1.0;
+    }
+
+    div#container
+    {
+        overflow:hidden;
+
     }
 
 </style>
@@ -333,8 +342,8 @@
 
         </div>
 
-        <div id="just-ok-space">  <button id="create_object" class="ok">OK</button> </div>
-        <div id="ok-cancel-space"> <button id="create_object" class="ok">OK</button>
+        <div id="just-ok-space">  <button  class="ok">OK</button> </div>
+        <div id="ok-cancel-space"> <button id="create_object"  class="ok">OK</button>
 
         <button type="button" id="close" class="cancel">Cancel</button></div>
 
@@ -395,6 +404,31 @@
         log_all_todos: function () {
 
             console.log(jstr(this.__todos));
+
+        },
+
+        add_map_object:function(item){
+
+            $.each(App.map_objects, function(n, map_item){
+
+                if(map_item.id == item.id)
+                {
+
+                    alert("already have item");
+                    App.map_objects.splice(n, 1);
+                }
+
+            });
+
+            App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
+
+                console.log('added 1 map object');
+
+                var value = $(element).text();
+
+                __levelMaker.selectedElement = __levelMaker.get(value);
+
+            }));
 
         },
 
@@ -464,7 +498,7 @@
 
                 var len = $(this).parent().find('li').length, tvalue = "list_value_" + len;
 
-                while (__levelMaker.settings.psuedoTypes.indexOf(tvalue) >= 0) {
+                while (__levelMaker.settings.psuedoSpriteTypes.indexOf(tvalue) >= 0) {
                     tvalue += '_c';
 
                 }
@@ -510,6 +544,7 @@
 
             var __inst = Game;
 
+            __levelMaker.mapElements = [];
 
             var usingOptFile = true;
 
@@ -573,15 +608,7 @@
 
                         $.each(__levelMaker.mapElements, function (ix, item) {
 
-                            App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
-                                
-                                console.log('1');
-
-                                var value = $(element).text();
-
-                                __levelMaker.selectedElement = __levelMaker.get(value);
-
-                            }));
+                            App.add_map_object(item);
 
                         });
 
@@ -594,15 +621,7 @@
 
                     $.each(__levelMaker.mapElements, function (ix, item) {
 
-                        App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
-                            
-                            console.log('1');
-
-                            var value = $(element).text();
-
-                            __levelMaker.selectedElement = __levelMaker.get(value);
-
-                        }));
+                        App.add_map_object(item);
 
                     });
 
@@ -1015,7 +1034,6 @@
 
             lib.InputEvents.extend('leftclick', function (x, y) {
 
-
                 if (!App.movement_locked) {
 
                     __levelMaker.leftClick(x, y);
@@ -1065,7 +1083,7 @@
                     item.disable = true;
                 }
 
-                App.refreshRightClick();
+              //  App.refreshRightClick();
 
 
                 __levelMaker.mouse.down = false;
@@ -1236,6 +1254,8 @@
 
     $(document).ready(function () {
 
+        $('body').css('cursor', 'crosshair');
+
         $(document).on('click', 'button.main-play', function (evt) {
 
             $.each(Game.sprites, function (ix, item) {
@@ -1251,9 +1271,13 @@
 
         $('#new-level').click(function () {
 
+            if(confirm("Start a new level? All changes will be lost.")){
 
-            App.newLevel();
 
+                App.newLevel();
+
+
+            };
 
         });
 
@@ -1300,17 +1324,6 @@
                 //  alert('got the up-left class');
 
 
-                __levelMaker.leftClickExtra = function () {
-
-                    var x = __levelMaker.mouse.x, y = __levelMaker.mouse.y;
-
-                    __levelMaker.placeGroup(x, y, parseInt($('#dist').val()), parseInt($('#count').val()), true, false, true)
-
-                    window.clearInterval(__levelMaker.blink);
-
-                };
-
-                blink = true;
 
             }
 
@@ -1740,7 +1753,9 @@
 
                 testPlayer:"TODO",
 
-                psuedoTypes: ['player', 'enemy', 'background', 'interactive'], //The minimum psuedoTypes,
+                psuedoSpriteTypes: GameStack.systemSpriteTypes, //The minimum psuedoTypes,
+
+                psuedoAnimationTypes: GameStack.systemAnimationTypes, //The minimum psuedoTypes,
 
                 show: function () {
 
@@ -1810,6 +1825,32 @@
             },
 
 
+            removeList: function (list) {
+
+                if(!list)
+                {
+                    return 0;
+
+                }
+
+                var sprites = list;
+
+                for (var x in sprites) {
+
+                    var ix = Game.sprites.indexOf(sprites[x]);
+
+                    if(ix >= 0)
+                    {
+
+                        Game.sprites.splice(ix, 1);
+
+                    }
+
+
+                }
+            },
+
+
             arrayToSelect: function (containerId, selectId, values) {
 
                 var myDiv = document.getElementById(containerId);
@@ -1867,7 +1908,7 @@
 
                 $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
 
-                $('#map-item-space .title').text("Create Map Item Sprite");
+               // $('#map-item-space .title').text("Create Map Item Sprite");
 
                 $('#map-item-space form').show();
 
@@ -1878,7 +1919,9 @@
                  });
 
 
-                $('#create_object').click(function () {
+                $('button#create_object').click(function () {
+
+                    alert('creating object');
 
                     var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
 
@@ -1890,10 +1933,14 @@
 
                     //  alert('last file');
 
+
                     App.dialog(App.map_objects,
                         0, 120, function () {
                             console.log('dialog shown');
                         });
+
+
+                    $('#map-item-space form').hide();
 
 
                 });
@@ -1947,7 +1994,11 @@
 
                         __levelMaker.selection_sprite.position = new Vector3(sprite_object.position);
 
-                        __levelMaker.selection_sprite.size = new Vector3(sprite_object.selected_animation.selected_frame.frameSize);
+                       var fsX =  sprite_object.selected_animation.selected_frame.frameSize.x * sprite_object.size.x / sprite_object.selected_animation.selected_frame.frameSize.x;
+
+                        var fsY =  sprite_object.selected_animation.selected_frame.frameSize.y * sprite_object.size.y / sprite_object.selected_animation.selected_frame.frameSize.y;
+
+                        __levelMaker.selection_sprite.size = new Vector3(fsX, fsY, 0);
 
                         Canvas.draw(sprite_object, ctx);
 
@@ -2130,13 +2181,15 @@
                         frameSize: new Vector3(args.frameSize)
                     });
 
+                    mapElement.setSize(mapElement.__mapSize);
+
                 }
 
                 //make name equal to tag:
 
                 mapElement.tag = mapElement.name;
 
-                mapElement.setSize(mapElement.__mapSize);
+               //
 
                 //mapScale overwrites the __mapSize:
 
@@ -2161,6 +2214,16 @@
 
                 var __inst = this;
 
+                if(pushNow)
+                {
+
+                    __inst.mapElements.push(mapElement);
+
+                    return mapElement;
+
+                }
+
+
                 mapElement.image.domElement.onerror = function (e) {
 
 
@@ -2177,7 +2240,9 @@
 
                     if (!this.__error) {
 
-                        __inst.mapElements.push(mapElement);
+                        var ix = __inst.mapElements.indexOf(mapElement);
+
+                     if(ix < 0){   __inst.mapElements.push(mapElement); }
 
                         if (typeof(callback) == 'function') {
                             callback(mapElement);
@@ -2186,12 +2251,6 @@
 
                 };
 
-                if(pushNow)
-                {
-
-                    __inst.mapElements.push(mapElement);
-
-                }
 
 
                 return mapElement;
@@ -2544,32 +2603,30 @@
                 __levelMaker.moveSelected(__levelMaker.mouse.x, top);
             },
 
-            placeGroup: function (x1, y1, dist, n, north, south, east, west) {
+            placeGroup: function (x1, y1, distX, distY, n, north, south, east, west) {
 
                 //alert('dist=' + dist);
 
-                var unitX = __levelMaker.selectedElement.__mapSize.x + dist,
-                    unitY = __levelMaker.selectedElement.__mapSize.y + dist;
+                var unitX = __levelMaker.selectedElement.__mapSize.x + distX,
+                    unitY = __levelMaker.selectedElement.__mapSize.y + distY;
 
-                for (var x = 0; x < n; x++) {
-
+                for (var x = 1; x < n; x++) {
 
                     if (east) {
-                        x1 += unitX;
+                        x1 += x > 1 ? unitX : 0;
                     }
 
                     if (west) {
-                        x1 -= unitX;
+                        x1 -= x > 1 ? unitX : 0;
                     }
 
                     if (north) {
-                        y1 -= unitY;
+                        y1 -= x > 1 ? unitY : 0;
                     }
 
                     if (south) {
-                        y1 += unitY;
+                        y1 += x > 1 ? unitY : 0;
                     }
-
 
                     __levelMaker.plantMapSprite(__levelMaker.selectedElement, x1, y1);
 
@@ -2597,21 +2654,15 @@
                    });
 
                 }
+                else {
 
-             App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
-
-                    console.log('1');
-
-                    var value = $(element).text();
-
-                    __levelMaker.selectedElement = __levelMaker.get(value);
-
-                }));
+                    App.add_map_object(item);
+                }
 
 
             },
 
-            url_prefix: '../assets/builder/'
+            url_prefix: '../assets/game/image/'
         }
 
     }
@@ -2932,9 +2983,9 @@
             }
             ,
 
-            psuedoTypes: {
+            psuedoSpriteTypes: {
 
-                key: 'psuedoTypes',
+                key: 'psuedoSpriteTypes',
                 type: 'array'
 
             },

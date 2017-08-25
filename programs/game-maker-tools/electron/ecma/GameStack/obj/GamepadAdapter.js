@@ -229,18 +229,14 @@ class GamepadAdapter {
 
         for (var i = 0; i < gp.buttons.length; i++) {
 
-            if (gp.buttons[i].pressed) {
 
-               // console.log('button:' + i);
+            if (typeof(events.buttons[i]) == 'function') {
+                events.buttons[i](gp.buttons[i].pressed);
+            }
+            else if (typeof( events.buttons[i]) == 'object' && typeof(events.buttons[i].update) == 'function') {
+                events.buttons[i].update(events.buttons[i].pressed);
 
-                    if (typeof(events.buttons[i]) == 'function') {
-                        events.buttons[i](gp.buttons[i].pressed);
-                    }
-                    else if (typeof( events.buttons[i]) == 'object' && typeof(events.buttons[i].update) == 'function') {
-                        events.buttons[i].update(events.buttons[i].pressed);
-
-                    }
-
+            }
                 var clearance_1 = this.events && this.events[i], gpc, bkey = "button_" + i;
 
                 if (clearance_1) {
@@ -258,10 +254,6 @@ class GamepadAdapter {
 
 
         }
-
-
-
-    }
 
 
     on(key, gpix, callback) {

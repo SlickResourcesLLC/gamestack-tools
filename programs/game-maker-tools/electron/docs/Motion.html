@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Class: Motion</title>
+	<title>GameStack Class: Motion</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -20,7 +20,7 @@
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
 <div class="container">
 	<div class="navbar-header">
-		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<a class="navbar-brand" href="index.html">GameStack</a>
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="Force.html">Force</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityAction.html">GravityAction</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="StatEffect.html">StatEffect</a></li><li><a href="Vector3.html">Vector3</a></li>
+					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
 				</ul>
 			</li>
 			
@@ -74,7 +74,7 @@
         Motion
         </h2>
         
-            <div class="class-description">Created by The Blakes on 04-13-2017</div>
+            <div class="class-description">Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()</div>
         
     
 </header>
@@ -86,12 +86,504 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Motion"><span class="type-signature"></span>new Motion()</h4>
+    <h4 class="name" id="Motion"><span class="type-signature"></span>new Motion(args)</h4>
     
     
 </dt>
 <dd>
 
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object of arguments
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>curve</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">TWEEN.Easing.'objectGroup'.'objectMember'</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the TWEEN.Easing function to be applied (Example: TWEEN.Easing.Quadratic.InOut)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>targetRotation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the targeted rotation result, when using rotation with movement</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>distance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the target distance of position change, when moving position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the milliseconds duration of the Motion</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the milliseconds delay before the Motion occurs (on call of Motion.engage())</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    a Motion object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Motion.html">Motion</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="onComplete"><span class="type-signature"></span>onComplete(fun)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        specify a function to be called when Motion is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the function to be called when complete</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="start"><span class="type-signature"></span>start()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        start the Motion transition
+    </div>
     
 
     
@@ -156,21 +648,7 @@
     
 </dd>
 
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+        </dl>
     
 
     
@@ -218,13 +696,13 @@
 
 
 	<span class="copyright">
-	DocStrap Copyright © 2012-2013 The contributors to the JSDoc3 and DocStrap projects.
+	GameStack Copyright © 2015-2017 The contributors to the GameStack and GameStack-Tools projects.
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-08-12T16:59:54-04:00
+		on 2017-08-24T20:14:19-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

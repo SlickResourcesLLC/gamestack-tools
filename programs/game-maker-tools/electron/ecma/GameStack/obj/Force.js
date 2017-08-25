@@ -1,15 +1,17 @@
 
-/**
- * Force()
+ /**
+ * GravityForce, calling new GravityForce() is equivalent to calling new Force()
+  *
+  * Takes an object of arguments and GravityForce() object.
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {Array} args.subjects the subjects to be pulled by the GravityForce
+ * @param   {Array} args.clasticObjects any clastic object that should have collision-stop behavior with args.subjects when collision occurs
+ * @param   {Vector} args.max the speed of gravity AKA terminal velocity
+ * @param   {number} args.accel the increment to use when accelerating speed of fall
  *
- * <ul >
- *  <li> a 'physics' object
- *  <li> easily instantiate physical behaviors, applied to specific groups of objects
- * </ul>
- *
- * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
- * @returns {Force} object of Force()
- * */
+ * @returns {Motion} a Motion object
+ */
 
 class GravityForce
 {
@@ -21,10 +23,8 @@ class GravityForce
         this.description = args.description || "";
 
         this.subjects = args.subjects || [];
-        this.origin =  args.origin || {};
-        this.clasticObjects = args.clasticObjects || [];
 
-        this.minSpeed = args.minSpeed || new Vector3(1, 1, 1);
+        this.clasticObjects = args.clasticObjects || [];
 
         this.max = args.max || new Vector3(3, 3, 3);
          this.accel = args.accel || new Vector3(1.3, 1.3, 1.3);
@@ -56,8 +56,6 @@ class GravityForce
     {
 
       var  subjects = this.subjects;
-
-       var origin =  this.origin || {};
 
        var clasticObjects =  this.clasticObjects;
 

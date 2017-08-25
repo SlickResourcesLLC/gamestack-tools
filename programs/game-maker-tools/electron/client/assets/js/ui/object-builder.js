@@ -34,6 +34,8 @@ var ObjectBuilder = function(obj, allowedMembers) {
 
     this.__members = obj.__members || [];
 
+    this.options = {};
+
     this.selectObjectByName = function (name) {
 
     	for(var x = 0; x < this.__members.length; x++)
@@ -81,7 +83,7 @@ var ObjectBuilder = function(obj, allowedMembers) {
 
 			var __inst = this;
 
-            this.__multiple = true;
+            this.__multiple = this.options.multiple;
 
             this.add = function (obj) {
 
@@ -98,7 +100,9 @@ var ObjectBuilder = function(obj, allowedMembers) {
             if(!$(heading).find('span.special-text').length)
 			{
 
-                $(heading).append('<span class="special-text">(Array[])</span>');
+			    var text = this.__multiple ? "(Array[])" : "()";
+
+                $(heading).append('<span class="special-text">'+text+'</span>');
 
 			};
 
@@ -184,12 +188,11 @@ ObjectBuilder.prototype.createGui=function()
 
 };
 
-
 ObjectBuilder.prototype.listSelect = function(gui, obj, members)
 {
-	var testObject = {Select_Object:obj};
+	var testObject = {Selected_Object:obj};
 
-    var object_select = gui.add(testObject, 'Select_Object', members);
+    var object_select = gui.add(testObject, 'Selected_Object', members);
 
     var __inst = this;
 
@@ -200,7 +203,8 @@ ObjectBuilder.prototype.listSelect = function(gui, obj, members)
     	if($(item).text()==obj.name )
 		{
 
-			alert('found');
+
+
             $(item).prop('selected', true);
 		}
 
@@ -237,7 +241,59 @@ ObjectBuilder.prototype.listSelect = function(gui, obj, members)
 ObjectBuilder.prototype.renderObjectControllable = function(obj, container, options)
 {
 
+    this.options = options;
+
     var gui =  this.createGui(), __inst = this;
+
+    this.options = options;
+
+    this.testObject = {build_as_array:options.multiple || false};
+
+    var greenText = $(".controllable li .special-text")[0],
+
+        add_button = $(".tree-add-special")[0];
+
+
+    if(options.multiple)
+    {
+
+            $(greenText).text("()[]");
+
+            $(add_button).show();
+
+    }
+    else
+    {
+
+        $(greenText).text("()");
+
+        $(add_button).hide();
+
+    }
+
+    var array_check = gui.add(this.testObject, 'build_as_array');
+
+    array_check.onChange(function(value){
+
+        if(value == false)
+        {
+            alert('switch to non-array');
+
+            __inst.renderObjectControllable(obj, container, {multiple:false})
+
+
+        }
+
+        if(value == true)
+        {
+            alert('switch to array');
+
+            __inst.renderObjectControllable(obj, container, {multiple:true})
+
+        }
+
+
+    });
 
     options = options || {};
 
@@ -246,7 +302,12 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
 		this.listSelect(gui, obj, this.objectMembers());
     }
 
-    DatGui.addEachText(obj, gui);
+
+    var name = gui.add(obj, 'name');
+
+    var description = gui.add(obj, 'description');
+
+   // DatGui.addEachText(obj, gui);
 
     var folders = [];
 

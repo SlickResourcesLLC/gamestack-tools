@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+    <head>
+    	<!-- meta charec set -->
+        <meta charset="utf-8">
+
+
+
+		<!-- Modernizer Script for old Browsers -->
+        <script src="js/modernizr-2.6.2.min.js"></script>
+
+		<style>
+
+
+			input[type='text']
+			{
+				margin-left:5%;
+
+				width:90%;
+
+				font-size:110%;
+
+			}
+
+			input[type='submit']
+			{
+				margin-left:25%;
+				margin-top:4px;
+
+			}
+
+
+		</style>
+
+
+	</head>
+	
+    <body id="body">
+
+		<form method="get" id="login">
+
+			<input type="text" name="username" id="username"  placeholder="username" value="" />
+			<input type="text" name="password" id="password"  placeholder="password" value="" />
+
+			<input type="submit"  />
+
+		</form>
+
+
+		<script>
+
+			/*******************
+			 *  Fake Security Password login
+			 * 	-page is protected by fake security login.
+			 * 	-helps keep page private during design phases.
+			 * 	-password is readable right on the page
+			 * *********************/
+
+
+      function entrance() {
+
+              var f = document.getElementById('login');
+
+				  f.onsubmit = function (e) {
+
+				      alert('submit');
+
+                    var uname = document.getElementById('username');
+
+                    var password = document.getElementById('password');
+
+                    if (uname.value == 'Jordan' && password.value == 'G3nio') {
+
+                        window.location.href = 'main.html';
+
+                    }
+
+                    e.preventDefault();
+
+                    return false;
+
+                };
+
+            }
+
+
+            window.onload = function()
+			{
+
+			    entrance();
+
+			};
+
+
+
+		</script> 
+
+    </body>
+</html>

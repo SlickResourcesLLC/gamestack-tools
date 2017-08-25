@@ -1,4 +1,6 @@
 
+
+
 class Extras
 {
 
@@ -24,9 +26,7 @@ class Extras
 
     call()
     {
-
         var items = this.items;
-
         //a callable item can be one-time executed: it will have any of the following functions attached
 
         for(var x = 0; x < items.length; x++)

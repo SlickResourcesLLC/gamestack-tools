@@ -36,7 +36,7 @@
 
     <script src="../assets/js/ui/squeezetabs.js"></script>
 
-    <script src="../dist/js/GameStack.js"></script>
+    <script src="../dist/js/Gamestack.js"></script>
 
     <script src="../assets/js/ui/object-builder.js"></script><!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
 
@@ -533,7 +533,7 @@
 </div>
 <div id="info"></div>
 <div id="top-gui">
-    <button id="add_tween_stack_ctrl" class="main-play"  style=" left:50%; top:7px; margin-left:0px; "><span>&#9654;</span></button>
+    <button  id="play"  ><span>&#9654;</span></button>
 </div>
 
 <ul class="controllable selected_object"  >
@@ -636,7 +636,7 @@
 
                     Quazar.each(Game.sprites, function(ix, item){
 
-                        Game.sprites[ix] = new Sprite('', '', item);
+                        Game.sprites[ix] = new Sprite(item);
 
                         if(item.selected_animation && item.selected_animation.src)
                         {
@@ -821,10 +821,10 @@
                     var args = {type:type, description:description };
 
 
-                    args.size = new Vector3(w, h, 0);
+                    args.size = new Vector(w, h, 0);
 
 
-                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector3(fw, fh, 0), new Vector3(w, h, 0),
+                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector(fw, fh, 0), new Vector(w, h, 0),
                         args );
 
                     levelMaker.selectedSprite.img.onload = function()
@@ -1201,7 +1201,7 @@
                 y = y - ( object.position.y % levelMaker.settings.pixelSnap);
 
 
-                return {size: new Vector3(object.size.x, object.size.y, 0), position: {x: x, y: y}};
+                return {size: new Vector(object.size.x, object.size.y, 0), position: {x: x, y: y}};
 
             },
 
@@ -1211,7 +1211,7 @@
                 // console.log("Selected Element:" + JSON.stringify(mapElement));
                 var img = mapElement.img;
                 console.log("Img src:" + img.src);
-                var sprite = new Sprite('MapElement', 'A level-builder element');
+                var sprite = new Sprite({name:'MapElement', description:'A level-builder element'});
 
                 sprite.active = true;
 
@@ -1222,7 +1222,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0), new Vector3(0, 0))}));
+                sprite.setAnimation(new Animation({src:img, tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))}));
 
 
 
@@ -1256,7 +1256,13 @@
 
                 }
 
-                var sprite = new Sprite('MapElement', 'A level-builder element', JSON.parse(JSON.stringify(levelMaker.assembled_sprite)));
+               var args = JSON.parse(JSON.stringify(levelMaker.assembled_sprite));
+
+               args.name = 'MapElement';
+
+               args.description = 'A level-builder element';
+
+                var sprite = new Sprite(args);
 
                 sprite.active = true;
 
@@ -1273,7 +1279,7 @@
 
                 var fs = mapElement.frameSize;
 
-                sprite.setAnimation(new Animation({src:img,  tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0),new Vector3(0, 0))}));
+                sprite.setAnimation(new Animation({src:img,  tool:true, frameSize:fs, frameBounds:new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0),new Vector(0, 0))}));
 
                 // console.log(JSON.stringify(sprite));
 
@@ -1340,7 +1346,7 @@
 
             },
 
-            url_prefix:'../assets/builder/'
+            url_prefix:'../assets/game/image/'
         }
 
     };
@@ -1360,7 +1366,7 @@
 
     };
 
-    var pathPref = '../assets/builder/';
+    var pathPref = '../assets/game/image/';
 
     var selectionImg = document.createElement('IMG');
 
@@ -1370,7 +1376,7 @@
 
     var Game = {
 
-        url_prefix:'../assets/builder/',
+        url_prefix:'../assets/game/image/',
 
         GameWindow:{},
 
@@ -1386,7 +1392,9 @@
 
         __builderProfile:false, //the main object builder
 
-        selection_sprite:new Sprite('Selection Sprite', 'Shows selected area'),
+
+
+        selection_sprite:new Sprite({name:'Selection Sprite', description:'Shows selected area'}),
 
         fireObject:function(obj)
         {
@@ -1481,7 +1489,7 @@
 
             }
 
-            return new Vector3(w, h, 0);
+            return new Vector(w, h, 0);
 
         },
 
@@ -1539,7 +1547,7 @@
 
             console.log(jstr(Game.selected_force.max));
 
-            Game.selected_force.gravitateY();
+            Game.selected_force.update();
 
         },
 
@@ -1584,9 +1592,14 @@
                 //3. the player sprite
 
 
-                this.player = new Sprite('Samus-Like Character', 'an animated sprite', {
-                    position: new Vector3(100, 120),
-                    size: new Vector3(50, 52)
+                this.player = new Sprite({
+
+                    name:"sci-fi-gunner-sprite",
+
+                    description:"running, shooting sprite",
+
+                    position: new Vector(100, 120),
+                    size: new Vector(50, 52)
                 });
 
 
@@ -1600,8 +1613,8 @@
 
                     delay: 7,
                     tool: true,
-                    frameSize: new Vector3(50, 50, 0),
-                    frameBounds: new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(4, 0, 0))
+                    frameSize: new Vector(50, 50, 0),
+                    frameBounds: new VectorFrameBounds(new Vector(0, 0, 0), new Vector(4, 0, 0))
                 });
 
 
@@ -1614,7 +1627,7 @@
                     object_id: this.player.id,
                     name: "jump",
 
-                    distance: new Vector3(0, -200, 0),
+                    distance: new Vector(0, -200, 0),
                     curve: TWEEN.Easing.Bounce.InOut,
                     line: false,
                     dispersionAngle: 0,
@@ -1682,7 +1695,7 @@
 
             size_game();
 
-            window.onresize = function(){ size_game();  var center = Game.centerScreenPos(); Game.sprites[0].position = new Vector3(center.x, center.y - Game.sprites[0].size.y * 2); };
+            window.onresize = function(){ size_game();  var center = Game.centerScreenPos(); Game.sprites[0].position = new Vector(center.x, center.y - Game.sprites[0].size.y * 2); };
 
             Game.forceProfile = {};
 
@@ -1698,12 +1711,12 @@
 
                 accel:0.3,
 
-                max:new Vector3(0, 1.5, 0),
+                max:new Vector(0, 1.5, 0),
 
                 
                 subjects:[Game.sprites[0]],
 
-                massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
+                clasticObjects:[new Sprite({position:new Vector(-1000, center.y), size:new Vector(3000, 3000)})]
 
             });
 
@@ -1716,10 +1729,10 @@
 
                 accel:0.5,
 
-                max:new Vector3(0, 3, 0),
+                max:new Vector(0, 3, 0),
                 subjects:[Game.sprites[0]],
 
-                massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
+                clasticObjects:[new Sprite({position:new Vector(-3000, center.y), size:new Vector(3000, 3000)})]
 
             });
 
@@ -1731,10 +1744,10 @@
 
                 accel:1.0,
 
-                max:new Vector3(0, 5, 0),
+                max:new Vector(0, 5, 0),
                 subjects:[Game.sprites[0]],
 
-                massObjects:[new VectorBounds(new Vector3(-3000, center.y, -3000), new Vector3(-3000, center.y, 3000))]
+                clasticObjects:[new Sprite({position:new Vector(-3000, center.y), size:new Vector(3000, 3000)})]
 
             });
 
@@ -1761,21 +1774,21 @@
             });
 
 
-            Game.sprites[0].position = new Vector3(center.x, center.y - this.sprites[0].size.y * 2);
+            Game.sprites[0].position = new Vector(center.x, center.y - this.sprites[0].size.y * 2);
 
             this.testObjects = [];
 
             var selectionImg = document.createElement('IMG');
 
-            var pathPref = '../assets/builder/';
+            var pathPref = '../assets/game/image/';
 
             selectionImg.src =  pathPref +  "hover_selection.png";
 
-            this.selection_sprite  = new Sprite('Selection Sprite', 'Shows selected area');
+            this.selection_sprite  = new Sprite({name:'Selection Sprite',description:'Shows selected area'});
 
             var fs  = new Size(191 * 4, 192 * 4);
 
-            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src, size:new Vector3(50, 50, 0), frameSize:fs, frameBounds:new  VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))}));
+            this.selection_sprite.setAnimation(new Animation({src: selectionImg.src, size:new Vector(50, 50, 0), frameSize:fs, frameBounds:new  VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))}));
 
             this.testObjects.push(this.selection_sprite);
 
@@ -1791,7 +1804,7 @@
 
 
             //create the gui / Builder
-            this.__builderProfile = new ObjectArrayBuilder(Game.sprites[0], ['animations', 'motions', 'sounds']),
+            this.__builderProfile = new ObjectArrayBuilder(Game.sprites[0], ['animations', 'motions', 'sounds'], false),
 
             this.is_init = true;
 
@@ -2264,7 +2277,7 @@
 
             $(document).on('change', 'input' ,function (e) {
 
-                App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+               // App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
 
 
             });
@@ -2316,7 +2329,7 @@
             });
 
 
-            $(document).on('click', 'button.main-play,button#sound-pane-play,button#motion-pane-play' ,function (evt) {
+            $(document).on('click', 'button#play,button#sound-pane-play,button#motion-pane-play' ,function (evt) {
 
                Game.fireObject(App.selectedItem);
 
@@ -2393,7 +2406,7 @@
 
                var sprite = JSON.parse(result);
 
-               Game.sprites[0] = new Sprite(sprite.name, sprite.description, sprite);
+               Game.sprites[0] = new Sprite(sprite);
 
                Game.init(Game.sprites[0]);
 

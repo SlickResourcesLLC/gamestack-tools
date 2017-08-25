@@ -1,35 +1,48 @@
 
+/**
+ * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
+
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.curve the TWEEN.Easing function to be applied (Example: TWEEN.Easing.Quadratic.InOut)
+ * @param   {Vector} args.targetRotation the targeted rotation result, when using rotation with movement
+ * @param   {Vector} args.distance the target distance of position change, when moving position
+ * @param   {number} args.duration the milliseconds duration of the Motion
+ * @param   {number} args.delay the milliseconds delay before the Motion occurs (on call of Motion.engage())
+ *
+ *
+ * @returns {Motion} a Motion object
+ */
+
 class Motion {
     constructor(args) {
 
         this.getArg = $Q.getArg;
 
-        this.distance = this.getArg(args, 'distance', this.getArg(args, 'distances', false));
+        this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
 
         this.curvesList = this.curvesObject(); //Tween.Easing
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
-        this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
+        this.curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
-        this.targetRotation = this.getArg(args, 'targetRotation', 0);
+        this.targetRotation = Gamestack.getArg(args, 'targetRotation', 0);
 
-        this.name = this.getArg(args, 'name', "__");
+        this.name = Gamestack.getArg(args, 'name', "__");
 
-        this.description = this.getArg(args, 'description', false);
+        this.description = Gamestack.getArg(args, 'description', false);
 
         this.curveString = this.getCurveString(); //store a string key for the Tween.Easing || 'curve'
 
         this.setCurve(this.curveString);
 
-        this.line = this.getArg(args, 'line', false);
+        this.line = Gamestack.getArg(args, 'line', false);
 
-        this.duration = this.getArg(args, 'duration', 500);
+        this.duration = Gamestack.getArg(args, 'duration', 500);
 
-        this.delay = this.getArg(args, 'delay', 0);
-
-        this.duration = this.getArg(args, 'duration', false);
-
+        this.delay = Gamestack.getArg(args, 'delay', 0);
 
     }
 
@@ -116,6 +129,8 @@ class Motion {
         return curve;
 
     }
+
+
 
     engage() {
 
@@ -227,11 +242,29 @@ class Motion {
 
     }
 
+
+    /**
+     * start the Motion transition
+     *
+     * @function
+     * @memberof Motion
+     *
+     **********/
+
     start() {
         this.engage().fire();
 
     }
 
+
+    /**
+     * specify a function to be called when Motion is complete
+     *
+     * @function
+     * @memberof Motion
+     * @param {Function} fun the function to be called when complete
+     *
+     **********/
 
     onComplete(fun) {
         this.complete = fun;

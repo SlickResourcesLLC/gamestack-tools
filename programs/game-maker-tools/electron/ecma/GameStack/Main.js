@@ -133,6 +133,22 @@ class GameImage {
 }
 
 
+let SystemType = function(constructor, name, index)
+{
+
+    return{
+
+        constructor:constructor,
+
+        name:name,
+
+        index:index
+
+    }
+
+};
+
+
 let GameStackLibrary = function () {
 
 
@@ -148,6 +164,46 @@ let GameStackLibrary = function () {
         __sprites: [],
 
         __animations: [],
+
+
+        spriteTypes:[],
+
+        systemSpriteTypes: ['player', 'enemy', 'background', 'interactive'],
+
+        systemAnimationTypes: {
+
+            attack_0:"System.attack_0",
+
+            attack_1:"System.attack_1",
+
+            attack_2:"System.attack_2",
+
+            attack_3:"System.attack_3",
+
+            attack_4:"System.attack_4",
+
+            defend_0:"System.defend_0",
+
+            defend_1:"System.defend_1",
+
+            defend_2:"System.defend_2",
+
+            defend_3:"System.defend_3",
+
+            defend_4:"System.defend_4",
+
+            heal_0:"System.heal_0",
+
+            heal_1:"System.heal_1",
+
+            heal_2:"System.heal_2",
+
+            heal_3:"System.heal_3",
+
+            heal_4:"System.heal_4",
+
+        },
+
 
         samples: {}
         ,
@@ -276,16 +332,13 @@ let GameStackLibrary = function () {
 
         Collision: {
 
-            spriteRectanglesCollide(obj1, obj2, padding)
+            spriteRectanglesCollide(obj1, obj2)
             {
-                if(!padding)
-                {
-                    padding = 0;
-                }
 
-               var paddingX = padding * obj1.size.x,
 
-                   paddingY = padding * obj1.size.y, left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
+               var paddingX = Math.round(obj1.padding.x * obj1.size.x),
+
+                   paddingY =Math.round(obj1.padding.y * obj1.size.y), left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
 
                top = obj1.position.y + paddingY, bottom = obj1.position.y + obj1.size.y - paddingY;
 
@@ -474,9 +527,9 @@ let GameStackLibrary = function () {
 
         select: function (constructor_name, name, type /*ignoring spaces and CAPS/CASE on type match*/) {
 
+
             var objects_out = [];
 
-            var normalizedType
 
             var __inst = this;
 
@@ -514,6 +567,9 @@ let GameStackLibrary = function () {
 //TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
 
 let GameStack = new GameStackLibrary();
+
+let Gamestack = GameStack;
+
 let __gameStack = GameStack;
 
 let Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameStack
@@ -652,8 +708,7 @@ function $Q(selector) {
 
             Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
-                if(!button_mode){callback(x, y);}
-                else if(x){callback(x);};
+               callback(x, y);
 
             });
 
@@ -677,7 +732,6 @@ function $Q(selector) {
             this.each(function(ix, item1){
 
                 selectorObject.each(function(iy, item2){
-
 
                     if(typeof(item1.onUpdate) == 'function')
                     {
@@ -1427,120 +1481,6 @@ window.onload = function () {
  *    draw animations, textures to the screen
  * */
 
-
-var Canvas = {
-
-    __levelMaker:false,
-
-    draw: function (sprite, ctx) {
-
-        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
-
-            this.drawPortion(sprite, ctx);
-
-        }
-
-    },
-    drawFrameWithRotation: function (img, fx, fy, fw, fh, x, y, width, height, deg, canvasContextObj, flip) {
-
-        canvasContextObj.save();
-        deg = Math.round(deg);
-        deg = deg % 360;
-        var rad = deg * Math.PI / 180;
-        //Set the origin to the center of the image
-        canvasContextObj.translate(x, y);
-        canvasContextObj.rotate(rad);
-        //Rotate the canvas around the origin
-
-        canvasContextObj.translate(0, canvasContextObj.width);
-        if (flip) {
-
-            canvasContextObj.scale(-1, 1);
-        } else {
-
-        }
-
-        //draw the image
-        canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * (-1), height / 2 * (-1), width, height);
-        //reset the canvas
-
-        canvasContextObj.restore();
-    },
-
-
-    /*
-     * drawPortion:
-     *
-     *   expects: (sprite{selected_animation{selected_frame{frameSize, framePos } offset?, gameSize? }  })
-     *
-     *
-     * */
-
-
-    drawPortion: function (sprite, ctx) {
-
-        var frame;
-
-        if (sprite.active) {
-
-            if (sprite.selected_animation && sprite.selected_animation.selected_frame) {
-
-                frame = sprite.selected_animation.selected_frame;
-
-            }
-            else {
-
-                console.error('Sprite is missing arguments');
-
-            }
-
-            var p = sprite.position;
-
-            var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
-
-            var x = p.x, y = p.y;
-
-
-            x -= camera.position.x || 0;
-            y -= camera.position.y  || 0;
-            //optional animation : gameSize
-
-            var targetSize = sprite.size || sprite.selected_animation.size;
-
-            var realWidth = targetSize.x;
-            var realHeight = targetSize.y;
-
-            //optional animation : offset
-
-            if (sprite.selected_animation.offset) {
-                x += sprite.selected_animation.offset.x;
-
-                y += sprite.selected_animation.offset.y;
-
-            }
-
-            var rotation;
-
-            if (typeof(sprite.rotation) == 'object') {
-
-                rotation = sprite.rotation.x;
-
-
-            }
-            else {
-                rotation = sprite.rotation;
-
-            }
-
-
-            this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
-        }
-
-    }
-
-}
-
-
 GameStack.ready(function (lib) {
 
     GameStack.log('GameStack:lib :: ready');
@@ -1558,7 +1498,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
+    constructor({canvas=false, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -2169,4 +2109,18 @@ class VideoDisplay //show a video
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,1 +1,0 @@
-The developer user can select from gravity options, so that physics are easier to build

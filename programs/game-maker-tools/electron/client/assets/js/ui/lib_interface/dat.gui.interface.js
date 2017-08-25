@@ -50,7 +50,7 @@ var DatGui = {
     addSuperSelectButton(gui, object, key, list)
     {
 
-        var type = gui.add(object, 'type', __levelMaker.settings.psuedoTypes);
+        var type = gui.add(object, 'type', __levelMaker.settings.psuedoSpriteTypes);
 
         var dom = type.domElement;
 
@@ -359,7 +359,7 @@ var DatGui = {
 
         var fui = gui.addFolder(name);
 
-        if(!prop instanceof Vector3  && !prop instanceof Vector2)
+        if(!prop instanceof Vector  && !prop instanceof Vector2)
         {
             return console.error('passed non-vector');
 
@@ -393,8 +393,7 @@ var DatGui = {
         var  fui;
 
         var selectedLib = window;
-
-
+        
         var isParent = function(list)
         {
             return list.indexOf(parent.constructor) >= 0;
@@ -418,8 +417,7 @@ var DatGui = {
             var max =  DatGui.addEachNumeric(o.size, fuisize );
 
         }
-
-
+        
             if(isType(VectorFrameBounds))
         {
 
@@ -449,7 +447,7 @@ var DatGui = {
 
 
         }
-        if(isType(Vector3))
+        if(isType(Vector))
         {
 
             fui =  DatGui.main_gui.addFolder(ix + '');
@@ -762,12 +760,12 @@ var DatGui = {
 
             var description = gui.add(object, 'description');
 
-            DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoTypes);
+            DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoSpriteTypes);
 
            if(create_new) {
                object.selected_animation = new Animation({
-                   frameSize: new Vector3(object.size),
-                   frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
+                   frameSize: new Vector(object.size),
+                   frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
                });
 
            }
@@ -775,25 +773,11 @@ var DatGui = {
             var obj = object.selected_animation;
 
 
-
-            for(var x in object)
-            {
-                if(x == 'size' && object[x] instanceof Vector3)
-                {
-                    console.log('found vector');
-
-                    DatGui.addVectorFromProperty(gui, object[x], 'size', 0, 1000);
-
-                }
-
-
-            }
-
             window.setTimeout(function(){
 
                 if(create_new && (obj instanceof Animation || obj instanceof  Sound)) {
 
-                    obj.framePos = new Vector3(0, 0, 0);
+                    obj.framePos = new Vector(0, 0, 0);
 
                     var first_list = $('div#sprite-space div.main ul')[0];
 
@@ -847,26 +831,29 @@ var DatGui = {
 
                                         object.selected_animation.image.domElement.onload = function () {
 
-                                            object.position = new Vector3(0, 0, 0);
+                                            object.position = new Vector(0, 0, 0);
 
-                                            object.size = new Vector3(this.width, this.height, 0);
+                                            object.size = new Vector(this.width, this.height, 0);
 
-                                            object.selected_animation = new Animation({ image:this, frameSize: new Vector3(object.size),
-                                                frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))});
+                                            object.selected_animation = new Animation({ image:this, frameSize: new Vector(object.size),
+                                                frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))});
 
                                                 console.log('found vector');
 
                                             object.frameSize = object.selected_animation.selected_frame.frameSize;
 
-                                                DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function(){
-
-
-
-                                                    object.size = new Vector3(object.selected_animation.selected_frame.frameSize);
+                                                DatGui.addVectorFromProperty(gui, object.size, 'this.size', 0, 1000, function(){
 
                                                     __levelMaker.imagePreview(object);
 
                                                 });
+
+                                            DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function(){
+
+                                                __levelMaker.imagePreview(object);
+
+                                            });
+
 
                                             __levelMaker.imagePreview(object);
 

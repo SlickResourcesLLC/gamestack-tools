@@ -1,4 +1,137 @@
 
+/*
+ * Canvas
+ *    draw animations, textures to the screen
+ * */
+
+
+var CanvasLib = function() {
+
+    return {
+
+        __levelMaker: false,
+
+        draw: function (sprite, ctx) {
+
+            if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
+
+                this.drawPortion(sprite, ctx);
+
+            }
+
+        },
+        drawFrameWithRotation: function (img, fx, fy, fw, fh, x, y, width, height, deg, canvasContextObj, flip) {
+
+            canvasContextObj.save();
+            deg = Math.round(deg);
+            deg = deg % 360;
+            var rad = deg * Math.PI / 180;
+            //Set the origin to the center of the image
+            canvasContextObj.translate(x, y);
+            canvasContextObj.rotate(rad);
+            //Rotate the canvas around the origin
+
+            canvasContextObj.translate(0, canvasContextObj.width);
+            if (flip) {
+
+                canvasContextObj.scale(-1, 1);
+            } else {
+
+            }
+
+            //draw the image
+            canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * (-1), height / 2 * (-1), width, height);
+            //reset the canvas
+
+            canvasContextObj.restore();
+        },
+
+
+        /*
+         * drawPortion:
+         *
+         *   expects: (sprite{selected_animation{selected_frame{frameSize, framePos } offset?, gameSize? }  })
+         *
+         *
+         * */
+
+
+        drawPortion: function (sprite, ctx) {
+
+            var frame;
+
+            if (sprite.active) {
+
+                if (sprite.selected_animation && sprite.selected_animation.selected_frame) {
+
+                    frame = sprite.selected_animation.selected_frame;
+
+                }
+                else {
+
+                    console.error('Sprite is missing arguments');
+
+                }
+
+                var p = sprite.position;
+
+                var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
+
+                var x = p.x, y = p.y;
+
+
+                x -= camera.position.x || 0;
+                y -= camera.position.y || 0;
+                //optional animation : gameSize
+
+                var targetSize = sprite.size || sprite.selected_animation.size;
+
+                var realWidth = targetSize.x;
+                var realHeight = targetSize.y;
+
+                //optional animation : offset
+
+                if (sprite.selected_animation.offset) {
+                    x += sprite.selected_animation.offset.x;
+
+                    y += sprite.selected_animation.offset.y;
+
+                }
+
+                var rotation;
+
+                if (typeof(sprite.rotation) == 'object') {
+
+                    rotation = sprite.rotation.x;
+
+
+                }
+                else {
+                    rotation = sprite.rotation;
+
+                }
+
+
+                this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
+            }
+
+        }
+
+    }
+
+}
+
+
+let Canvas = CanvasLib();
+
+
+
+
+
+
+
+
+;
 /**
  * Sound
  * :Simple Sound object:: uses Jquery: audio
@@ -133,6 +266,22 @@ class GameImage {
 }
 
 
+let SystemType = function(constructor, name, index)
+{
+
+    return{
+
+        constructor:constructor,
+
+        name:name,
+
+        index:index
+
+    }
+
+};
+
+
 let GameStackLibrary = function () {
 
 
@@ -148,6 +297,46 @@ let GameStackLibrary = function () {
         __sprites: [],
 
         __animations: [],
+
+
+        spriteTypes:[],
+
+        systemSpriteTypes: ['player', 'enemy', 'background', 'interactive'],
+
+        systemAnimationTypes: {
+
+            attack_0:"System.attack_0",
+
+            attack_1:"System.attack_1",
+
+            attack_2:"System.attack_2",
+
+            attack_3:"System.attack_3",
+
+            attack_4:"System.attack_4",
+
+            defend_0:"System.defend_0",
+
+            defend_1:"System.defend_1",
+
+            defend_2:"System.defend_2",
+
+            defend_3:"System.defend_3",
+
+            defend_4:"System.defend_4",
+
+            heal_0:"System.heal_0",
+
+            heal_1:"System.heal_1",
+
+            heal_2:"System.heal_2",
+
+            heal_3:"System.heal_3",
+
+            heal_4:"System.heal_4",
+
+        },
+
 
         samples: {}
         ,
@@ -276,16 +465,13 @@ let GameStackLibrary = function () {
 
         Collision: {
 
-            spriteRectanglesCollide(obj1, obj2, padding)
+            spriteRectanglesCollide(obj1, obj2)
             {
-                if(!padding)
-                {
-                    padding = 0;
-                }
 
-               var paddingX = padding * obj1.size.x,
 
-                   paddingY = padding * obj1.size.y, left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
+               var paddingX = Math.round(obj1.padding.x * obj1.size.x),
+
+                   paddingY =Math.round(obj1.padding.y * obj1.size.y), left = obj1.position.x + paddingX, right = obj1.position.x + obj1.size.x - paddingX,
 
                top = obj1.position.y + paddingY, bottom = obj1.position.y + obj1.size.y - paddingY;
 
@@ -474,9 +660,9 @@ let GameStackLibrary = function () {
 
         select: function (constructor_name, name, type /*ignoring spaces and CAPS/CASE on type match*/) {
 
+
             var objects_out = [];
 
-            var normalizedType
 
             var __inst = this;
 
@@ -514,6 +700,9 @@ let GameStackLibrary = function () {
 //TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
 
 let GameStack = new GameStackLibrary();
+
+let Gamestack = GameStack;
+
 let __gameStack = GameStack;
 
 let Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameStack
@@ -652,8 +841,7 @@ function $Q(selector) {
 
             Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
-                if(!button_mode){callback(x, y);}
-                else if(x){callback(x);};
+               callback(x, y);
 
             });
 
@@ -677,7 +865,6 @@ function $Q(selector) {
             this.each(function(ix, item1){
 
                 selectorObject.each(function(iy, item2){
-
 
                     if(typeof(item1.onUpdate) == 'function')
                     {
@@ -1427,120 +1614,6 @@ window.onload = function () {
  *    draw animations, textures to the screen
  * */
 
-
-var Canvas = {
-
-    __levelMaker:false,
-
-    draw: function (sprite, ctx) {
-
-        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
-
-            this.drawPortion(sprite, ctx);
-
-        }
-
-    },
-    drawFrameWithRotation: function (img, fx, fy, fw, fh, x, y, width, height, deg, canvasContextObj, flip) {
-
-        canvasContextObj.save();
-        deg = Math.round(deg);
-        deg = deg % 360;
-        var rad = deg * Math.PI / 180;
-        //Set the origin to the center of the image
-        canvasContextObj.translate(x, y);
-        canvasContextObj.rotate(rad);
-        //Rotate the canvas around the origin
-
-        canvasContextObj.translate(0, canvasContextObj.width);
-        if (flip) {
-
-            canvasContextObj.scale(-1, 1);
-        } else {
-
-        }
-
-        //draw the image
-        canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * (-1), height / 2 * (-1), width, height);
-        //reset the canvas
-
-        canvasContextObj.restore();
-    },
-
-
-    /*
-     * drawPortion:
-     *
-     *   expects: (sprite{selected_animation{selected_frame{frameSize, framePos } offset?, gameSize? }  })
-     *
-     *
-     * */
-
-
-    drawPortion: function (sprite, ctx) {
-
-        var frame;
-
-        if (sprite.active) {
-
-            if (sprite.selected_animation && sprite.selected_animation.selected_frame) {
-
-                frame = sprite.selected_animation.selected_frame;
-
-            }
-            else {
-
-                console.error('Sprite is missing arguments');
-
-            }
-
-            var p = sprite.position;
-
-            var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
-
-            var x = p.x, y = p.y;
-
-
-            x -= camera.position.x || 0;
-            y -= camera.position.y  || 0;
-            //optional animation : gameSize
-
-            var targetSize = sprite.size || sprite.selected_animation.size;
-
-            var realWidth = targetSize.x;
-            var realHeight = targetSize.y;
-
-            //optional animation : offset
-
-            if (sprite.selected_animation.offset) {
-                x += sprite.selected_animation.offset.x;
-
-                y += sprite.selected_animation.offset.y;
-
-            }
-
-            var rotation;
-
-            if (typeof(sprite.rotation) == 'object') {
-
-                rotation = sprite.rotation.x;
-
-
-            }
-            else {
-                rotation = sprite.rotation;
-
-            }
-
-
-            this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
-        }
-
-    }
-
-}
-
-
 GameStack.ready(function (lib) {
 
     GameStack.log('GameStack:lib :: ready');
@@ -1558,7 +1631,7 @@ GameStack.ready(function (lib) {
 
 class GameWindow {
 
-    constructor({canvas, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
+    constructor({canvas=false, ctx, sprites, backgrounds, interactives, forces, update, camera}={}) {
 
         this.sprites = sprites instanceof Array ? sprites : [];
 
@@ -2170,12 +2243,35 @@ class VideoDisplay //show a video
     }
 }
 
-;
-/**
- * Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})
- * [See Live Demo with Usage-Example]{@link http://www.google.com}
- * @returns {Animation} object of Animation()
- * */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;/**
+ * Takes an object of arguments and returns Animation() object.
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {string} args.type optional
+ * @param   {Vector} args.size of the Animation object, has x and y properties
+ * @param   {Vector} args.frameSize the size of frames in Animation, having x and y properties
+ * @param   {VectorFrameBounds} args.frameBounds the bounds of the Animation having min, max, and termPoint properties
+ * @param   {number} args.delay optional, the seconds to delay before running animation when called by engage()
+
+ * @param   {number} args.duration how many milliseconds the animation should take to complete
+ *
+ * @returns {Animation} an Animation object
+ */
 
 class Animation {
     constructor(args) {
@@ -2184,23 +2280,57 @@ class Animation {
 
         var _anime = this;
 
-        this.name = this.getArg(args, 'name', '_blank'),
+        this.defaultArgs = {
 
-        this.description =  this.getArg(args, 'description', '_blank')
+            name:"my-animation",
 
-        this.frames = this.getArg(args, 'frames', []);
+            description:"my-description",
+
+            frames:[],
+
+            type:"none",
+
+            delay:0,
+
+            frameSize:new Vector3(44, 44, 0),
+
+            frameBounds:new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
+
+            frameOffset:new Vector3(0, 0, 0),
+
+            flipX:false,
+
+            earlyTerm:false,
+
+            hang:false,
+
+            duration:1000,
+
+            size:new Vector3(20, 20, 20)
+        };
+
+
+        for(var x in this.defaultArgs)
+        {
+            if(!args.hasOwnProperty(x))
+            {
+                args[x] = this.defaultArgs[x]
+
+            }
+
+        };
+
+        for(var x in this.args)
+        {
+           this[x] = args[x];
+
+        }
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
         this.src = this.image.domElement.src;
 
         this.domElement = this.image.domElement;
-
-        this.type = this.getArg(args, 'type', 'basic');
-
-        this.delay = this.getArg(args, 'delay', 0);
-
-        this.cix = 0;
 
         this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
@@ -2214,19 +2344,9 @@ class Animation {
 
         this.flipX = this.getArg(args, 'flipX', false);
 
-        this.priority = this.getArg(args, 'priority', 0);
-
         this.cix = 0;
 
         this.selected_frame = this.frames[0];
-
-        this.earlyTerm = this.getArg(args, 'earlyTerm', false);
-
-        this.hang =this.getArg(args, 'hang', false);
-
-        this.duration = this.getArg(args, 'duration', 1000);
-
-        this.size =  this.getArg(args, 'size', new Vector3(20, 20, 20));
 
         this.effects = [];
 
@@ -2471,10 +2591,11 @@ onComplete(fun)
     }
 
 };
+
 ;/**
- * Camera : has simple x, y, z, position / Vector, follows a specific sprite
+ * Camera : has simple x, y, z, position / Vector values
  *
- * *TODO : implement camera class
+ * @returns {Vector}
  */
 
 
@@ -2488,11 +2609,14 @@ class Camera
 
     }
 
+
 }
 
 
 
 ;
+
+
 class Extras
 {
 
@@ -2518,9 +2642,7 @@ class Extras
 
     call()
     {
-
         var items = this.items;
-
         //a callable item can be one-time executed: it will have any of the following functions attached
 
         for(var x = 0; x < items.length; x++)
@@ -2580,17 +2702,19 @@ class Extras
 
 
 ;
-/**
- * Force()
+ /**
+ * GravityForce, calling new GravityForce() is equivalent to calling new Force()
+  *
+  * Takes an object of arguments and GravityForce() object.
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {Array} args.subjects the subjects to be pulled by the GravityForce
+ * @param   {Array} args.clasticObjects any clastic object that should have collision-stop behavior with args.subjects when collision occurs
+ * @param   {Vector} args.max the speed of gravity AKA terminal velocity
+ * @param   {number} args.accel the increment to use when accelerating speed of fall
  *
- * <ul >
- *  <li> a 'physics' object
- *  <li> easily instantiate physical behaviors, applied to specific groups of objects
- * </ul>
- *
- * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
- * @returns {Force} object of Force()
- * */
+ * @returns {Motion} a Motion object
+ */
 
 class GravityForce
 {
@@ -2602,10 +2726,8 @@ class GravityForce
         this.description = args.description || "";
 
         this.subjects = args.subjects || [];
-        this.origin =  args.origin || {};
-        this.clasticObjects = args.clasticObjects || [];
 
-        this.minSpeed = args.minSpeed || new Vector3(1, 1, 1);
+        this.clasticObjects = args.clasticObjects || [];
 
         this.max = args.max || new Vector3(3, 3, 3);
          this.accel = args.accel || new Vector3(1.3, 1.3, 1.3);
@@ -2637,8 +2759,6 @@ class GravityForce
     {
 
       var  subjects = this.subjects;
-
-       var origin =  this.origin || {};
 
        var clasticObjects =  this.clasticObjects;
 
@@ -2900,18 +3020,14 @@ class GamepadAdapter {
 
         for (var i = 0; i < gp.buttons.length; i++) {
 
-            if (gp.buttons[i].pressed) {
 
-               // console.log('button:' + i);
+            if (typeof(events.buttons[i]) == 'function') {
+                events.buttons[i](gp.buttons[i].pressed);
+            }
+            else if (typeof( events.buttons[i]) == 'object' && typeof(events.buttons[i].update) == 'function') {
+                events.buttons[i].update(events.buttons[i].pressed);
 
-                    if (typeof(events.buttons[i]) == 'function') {
-                        events.buttons[i](gp.buttons[i].pressed);
-                    }
-                    else if (typeof( events.buttons[i]) == 'object' && typeof(events.buttons[i].update) == 'function') {
-                        events.buttons[i].update(events.buttons[i].pressed);
-
-                    }
-
+            }
                 var clearance_1 = this.events && this.events[i], gpc, bkey = "button_" + i;
 
                 if (clearance_1) {
@@ -2929,10 +3045,6 @@ class GamepadAdapter {
 
 
         }
-
-
-
-    }
 
 
     on(key, gpix, callback) {
@@ -3035,37 +3147,50 @@ class GravitationalRay {
 
 
 ;
+/**
+ * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
+
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.curve the TWEEN.Easing function to be applied (Example: TWEEN.Easing.Quadratic.InOut)
+ * @param   {Vector} args.targetRotation the targeted rotation result, when using rotation with movement
+ * @param   {Vector} args.distance the target distance of position change, when moving position
+ * @param   {number} args.duration the milliseconds duration of the Motion
+ * @param   {number} args.delay the milliseconds delay before the Motion occurs (on call of Motion.engage())
+ *
+ *
+ * @returns {Motion} a Motion object
+ */
+
 class Motion {
     constructor(args) {
 
         this.getArg = $Q.getArg;
 
-        this.distance = this.getArg(args, 'distance', this.getArg(args, 'distances', false));
+        this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
 
         this.curvesList = this.curvesObject(); //Tween.Easing
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
-        this.curve = this.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
+        this.curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
-        this.targetRotation = this.getArg(args, 'targetRotation', 0);
+        this.targetRotation = Gamestack.getArg(args, 'targetRotation', 0);
 
-        this.name = this.getArg(args, 'name', "__");
+        this.name = Gamestack.getArg(args, 'name', "__");
 
-        this.description = this.getArg(args, 'description', false);
+        this.description = Gamestack.getArg(args, 'description', false);
 
         this.curveString = this.getCurveString(); //store a string key for the Tween.Easing || 'curve'
 
         this.setCurve(this.curveString);
 
-        this.line = this.getArg(args, 'line', false);
+        this.line = Gamestack.getArg(args, 'line', false);
 
-        this.duration = this.getArg(args, 'duration', 500);
+        this.duration = Gamestack.getArg(args, 'duration', 500);
 
-        this.delay = this.getArg(args, 'delay', 0);
-
-        this.duration = this.getArg(args, 'duration', false);
-
+        this.delay = Gamestack.getArg(args, 'delay', 0);
 
     }
 
@@ -3152,6 +3277,8 @@ class Motion {
         return curve;
 
     }
+
+
 
     engage() {
 
@@ -3263,11 +3390,29 @@ class Motion {
 
     }
 
+
+    /**
+     * start the Motion transition
+     *
+     * @function
+     * @memberof Motion
+     *
+     **********/
+
     start() {
         this.engage().fire();
 
     }
 
+
+    /**
+     * specify a function to be called when Motion is complete
+     *
+     * @function
+     * @memberof Motion
+     * @param {Function} fun the function to be called when complete
+     *
+     **********/
 
     onComplete(fun) {
         this.complete = fun;
@@ -3377,17 +3522,26 @@ class Circle
 
 }
 
-;/**
- * Sprite({name:string, description:string, size:Vector3, position:Vector3})
+;
+/**
+ * Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.
+
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+
+ * @param   {string} args.src the source file for the GameImage:Sprite.image :: use a string / file-path
+
+ * @param   {Vector} args.size the size of the Sprite
+ * @param   {Vector} args.position the position of the Sprite
+ * @param   {Vector} args.padding the 'float-type' Vector of x and y padding to use when processing collision on the Sprite. A padding of new Vector(0.2, 0.2) will result in 1/5 of Sprite size for padding
+
+
+
+ * @param   {Animation} args.selected_animation the selected_animation of the Sprite:: pass during creation or use Sprite.setAnimation after created
  *
- * <ul >
- *  <li> an Object-container for multiple animations
- *  <li> supports a variety of game objects and logic
- * </ul>
- *
- * [See Live Demos with Suggested Usage-Examples]{@link http://www.google.com}
- * @returns {Sprite} object of Sprite()
- * */
+ * @returns {Sprite} a Sprite object
+ */
 
 class Sprite {
     constructor(args) {
@@ -3445,6 +3599,10 @@ class Sprite {
         this.rot_speed = __gameStack.getArg(args, 'rot_speed', new Vector3(0, 0, 0));
 
         this.rot_accel = __gameStack.getArg(args, 'rot_accel', new Vector3(0, 0, 0));
+
+
+        this.padding = __gameStack.getArg(args, 'padding', new Vector3(0, 0, 0));
+
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
@@ -3504,7 +3662,7 @@ class Sprite {
 
 
     /**
-     * This function initializes sprites when necessary. Called automatically on GameStack.add(mySprite);
+     * This function initializes sprites. Call to trigger all functions previously passed to onInit().
      *
      * @function
      * @memberof Sprite
@@ -3598,10 +3756,7 @@ class Sprite {
      ***************************/
 
     /**
-     * This function gets the 'id' of the object()
-     * <ul>
-     *     <li>See usage links</li>
-     * </ul>
+     * This function gets the 'id' of the Sprite()
      * @function
      * @memberof Sprite
      * @returns {string}
@@ -3610,6 +3765,8 @@ class Sprite {
     get_id() {
         return this.id;
     }
+
+
 
     to_map_object(size, framesize) {
 
@@ -3626,10 +3783,7 @@ class Sprite {
      ***************************/
 
     /**
-     * This function creates the 'id' of the Sprite()
-     * <ul>
-     *     <li>Called automatically on constructor()</li>
-     * </ul>
+     * This function creates the 'id' of the Sprite():Called automatically on constructor()
      * @function
      * @memberof Sprite
      * @returns {string}
@@ -3644,9 +3798,6 @@ class Sprite {
 
     /**
      * This function sets the size of the Sprite()
-     * <ul>
-     *     <li></li>
-     * </ul>
      * @function
      * @memberof Sprite
      **********/
@@ -3658,11 +3809,26 @@ class Sprite {
 
     }
 
+    /**
+     * This function sets the position of the Sprite()
+     * @function
+     * @memberof Sprite
+     **********/
+
     setPos(pos) {
         this.position = new Vector3(pos.x, pos.y, pos.z || 0);
 
     }
-    minDimensionsXY(mx, my)
+
+    /**
+     * This function sizes the Sprite according to minimum dimensions and existing w/h ratios
+     * @param {number} mx the maximum size.x for the resize
+     * @param {number} my the maximum size.y for the resize
+     * @function
+     * @memberof Sprite
+     **********/
+
+    maxDimensionsXY(mx, my)
     {
 
         var wth = this.size.x / this.size.y;
@@ -3688,18 +3854,7 @@ class Sprite {
 
     }
 
-    getAbsolutePosition(offset) {
 
-        if (this.position instanceof Vector3) {
-
-        }
-        else {
-            this.position = new Vector3(this.position);
-        }
-
-        return this.position.add(offset);
-
-    }
 
     /*****************************
      *  assertSpeed()
@@ -3715,19 +3870,18 @@ class Sprite {
 
     }
 
+
+
     /*****************************
      *  setAnimation(anime)
      *  -set the select_animation of this sprite
      ***************************/
 
     /**
-     * This function sets the 'selected_animation' property of the Sprite()
-     * <ul>
-     *     <li></li>
-     * </ul>
+     * This function sets the 'selected_animation' property of the Sprite():: *all Sprites must have a 'selected_animation'
      * @function
      * @memberof Sprite
-     * @params {Animation}
+     * @param {Animation}
      **********/
 
     setAnimation(anime) {
@@ -3744,38 +3898,13 @@ class Sprite {
 
     }
 
-    /*****************************
-     *  defaultAnimation(anime)
-     *  -set the default_animation of this sprite
-     *  -TODO : determine whether to implement a default animatio OR simply use setAnimation() plus selected_animation
-     ***************************/
-
-    defaultAnimation(anime) {
-
-        this.animations['default'] = anime;
-
-        Quazar.log('declared default animation');
-
-        return this;
-
-    }
-
-    /*****************************
-     * onScreen :
-     * -returns boolean
-     * -takes and requires w, h of screen
-     * -detects if object is on the screen
-     ***************************/
-
     /**
-     * This function detects whether the Sprite() is onScreen, according to its size and position on the GameStack.canvas
-     * <ul>
-     *     <li></li>
-     * </ul>
+     * This function indicates if this Sprite is onScreen within the Gamestack.WIDTH && Gamestack.HEIGHT dimensions, OR any w & h passed as arguments
      * @function
      * @memberof Sprite
+     * @param {number} w optional WIDTH argument, defaults to Gamestack.WIDTH
+     * @param {number} h optional HEIGHT argument, defaults to Gamestack.HEIGHT
      **********/
-
 
     onScreen(w, h) {
 
@@ -3802,14 +3931,9 @@ class Sprite {
      ***************************/
 
     /**
-     * This function is the recursive update() for the Sprite()
-     *
-     * <ul>
-     *     <li>*Called automatically by the GameStack library</li>
-     * </ul>
+     * This function is the main update() function for the Sprite
      * @function
      * @memberof Sprite
-     * @params {sprite}
      **********/
 
 
@@ -3824,14 +3948,8 @@ class Sprite {
 
     /**
      * This function updates various speed and rotational-speed properties for the Sprite()
-     *
-     * <ul>
-     *     <li>Normally no need to use this. It is called automatically by the GameStack init()</li>
-     *     <li>*Allows properties of Sprite().speed, Sprite().rot_speed, and Sprite().accel, Sprite().rot_accel to control speed and acceleration.</li>
-     * </ul>
      * @function
      * @memberof Sprite
-     * @params {sprite}
      **********/
 
     def_update(sprite) {
@@ -3880,16 +3998,9 @@ class Sprite {
     }
 
     /**
-     * This function is for persistence of data and behavior for the Sprite()
-     *
-     * <ul>
-     *     <li>a function may be resolved from keyString args from within the obj arg.</li>
-     *     <li>Callback is then triggered on this function</li>
-     *     <li>Used by GameStack to restore the behavioral options of Sprites from GameStack.options.SpriteInitializers</li>
-     * </ul>
+     * This function resolves a function nested in an object, from a string-key, and it is applied by Gamestack.js for persistence of data and Sprite() behaviors
      * @function
      * @memberof Sprite
-     * @params {keyString1, keyString2, obj, callback}
      **********/
 
     resolveFunctionFromDoubleKeys(keyString1, keyString2, obj, callback) {
@@ -3899,14 +4010,9 @@ class Sprite {
     }
 
     /**
-     * This function will extend 2nd function arg with 1st function arg, and return the combined function()
-     *
-     * <ul>
-     *     <li>Applied in GameStack for extending functions when onInit(fun) is called</li>
-     * </ul>
+     * This function extends an existing function, and is applied by Gamestack in onInit();
      * @function
      * @memberof Sprite
-     * @params {fun, extendedFunc}
      **********/
 
     extendFunc(fun, extendedFunc) {
@@ -3938,16 +4044,14 @@ class Sprite {
      * -overrides and maintains existing code for update(){} function
      ***************************/
 
+
     /**
-     * This function will extend the update of a Sprite()
-     *
-     * <ul>
-     *     <li>Use this function to apply multiple update-calls for an object</li>
-     * </ul>
+     * Extends the update() of this sprite with a new function to be called during update()
      * @function
      * @memberof Sprite
-     * @params {fun}
+     * @param {function} the function to apply to the Sprite:update()
      **********/
+
 
     onUpdate(fun) {
         fun = fun || function () {
@@ -3965,16 +4069,8 @@ class Sprite {
     }
 
 
-    /*****************************
-     *  collidesRectangular(sprite)
-     * -args: 1 sprite object
-     * -returns boolean of true on collision or false on no-collision
-     * -TODO : add options object with highlight=true||false,
-     * -TODO:allow stateffects, graphiceffects into the collision function
-     ***************************/
-
     /**
-     * Get the boolean(T || F) results of a Collision between two Sprites(), based on their position Vector3's and Size()
+     *
      * <ul>
      *     <li>A rectangular style position</li>
      *      <li>Takes another sprite as argument</li>
@@ -3982,38 +4078,24 @@ class Sprite {
      * </ul>
      * @function
      * @memberof Sprite
-     * @params {sprite}
+     * @param {sprite}
      **********/
 
-    collidesRectangular(sprite, padding) {
-
-        return Quazar.Collision.spriteRectanglesCollide(this, sprite, padding);
-
-    }
-
-    /*****************************
-     *  collidesByPixels(sprite)
-     *  -TODO : this function is incomplete
-     *  -process collision according to the non-transparent pixels of the sprite::
-     *  -provides a more realistic collision than basic rectangular
-     ***************************/
 
     /**
-     * Get the boolean(T || F) results of a Collision between two Sprites(), based on non-transparent pixels
-     * <ul>
-     *     <li>Detects collision or overlap of any non-transparent pixels</li>
-     *     <li>*TODO: This function is not-yet implemented in GameStack</li>
-     * </ul>
+     * Get the true || false results of a Collision between two Sprites(), based on their position Vectors and Sizes
      * @function
      * @memberof Sprite
-     * @params {sprite}
+     * @param {Sprite} sprite the alternate Sprite to process collision with
      **********/
 
-    collidesByPixels(sprite) {
 
-        return console.info("TODO: Sprite().collidesByPixels(sprite): finish this function");
+    collidesRectangular(sprite) {
+
+        return Quazar.Collision.spriteRectanglesCollide(this, sprite);
 
     }
+
 
     /*****************************
      *  shoot(sprite)
@@ -4023,16 +4105,28 @@ class Sprite {
      ***************************/
 
     /**
-     * Sprites() fires a projectile object
+     * Sprite fires a projectile object
      * <ul>
      *     <li>Easy instantiator for bullets and propelled objects in GameStack</li>
      *     <li>*TODO: This function is not-yet implemented in GameStack</li>
      * </ul>
      * @function
      * @memberof Sprite
-     * @params {options} *numerous args
+     * @param {options} *numerous args
      **********/
 
+
+    /**
+     * fire a projectile-subSprite from the Sprite
+     * @function
+     * @memberof Sprite
+     * @param {Object} options an object of arguments
+     * @param {Animation} animation the animation to fire from the Sprite
+     * @param {number} speed the speed of the shot that is projected
+     * @param {Vector} position the initial position of the shot: defaults to current Sprite position
+     * @param {Vector} size the Vector size of the shot
+     * @param {Vector} rot_offset the rotational offset to apply: controls direction of the shot
+     **********/
 
     shoot(options) {
         //character shoots an animation
@@ -4043,7 +4137,7 @@ class Sprite {
 
         let speed = options.speed || 1;
 
-        let position = options.position || new Vector3(0, 0, 0);
+        let position = options.position || new Vector3(this.position);
 
         let size = options.size || new Vector3(10, 10, 0);
 
@@ -4093,25 +4187,24 @@ class Sprite {
     }
 
 
+
     /**
-     * Creates a subsprite
-     * <ul>
-     *     <li>Use this function to anchor one sprite to another.</li>
-     * </ul>
+     * create a subsprite of Sprite belonging to the current Sprite
      * @function
      * @memberof Sprite
-     * @params {options} object
-     * @params {options.animation} Animation()
-     * @params {options.position} Position()
-     * @params {options.offset} Position()
-     * @params {options.size} Size()
+     * @param {Object} options an object of arguments
+     * @param {Animation} animation the animation to fire from the Sprite
+     * @param {number} speed the speed of the shot that is projected
+     * @param {Vector} position the initial position of the shot: defaults to current Sprite position
+     * @param {Vector} size the Vector size of the shot
+     * @param {Vector} offset the positional offset to apply
      **********/
 
     subsprite(options) {
 
         let animation = options.animation || new Animation();
 
-        let position = options.position || this.position;
+        let position = options.position || new Vector3(this.position);
 
         let offset = options.offset || new Vector3(0, 0, 0);
 
@@ -4147,15 +4240,12 @@ class Sprite {
 
     }
 
+
     /**
-     * Simple call to animate the sprite
-     * <ul>
-     *     <li>Calls animate on the Sprite.selected_animation</li>
-     *     <li>*TODO: This function is not-yet implemented in GameStack</li>
-     * </ul>
+     * animate Sprite.selected_animation  by one frame
      * @function
      * @memberof Sprite
-     * @params {animation}
+     * @param {Animation} animation to use, defaults to Sprite.selected_animation
      **********/
 
     animate(animation) {
@@ -4172,15 +4262,13 @@ class Sprite {
 
     }
 
-
     /**
-     * Overwrites the complete() function of the selected animation
-     * <ul>
-     *     <li>Use this function when a change must be made, but not until the current animation is complete</li>
-     * </ul>
+     * run a function when the Sprite.selected_animation is complete
+     *
      * @function
      * @memberof Sprite
-     * @params {fun} function
+     * @param {Function} fun the function to call when the animation is complete
+     *
      **********/
 
     onAnimationComplete(fun) {
@@ -4195,11 +4283,13 @@ class Sprite {
      ***************************/
 
     /**
-     * This function accelerates the Sprite() on the y-axis
-
+     * accelerate speed on the Y-Axis
+     *
      * @function
      * @memberof Sprite
-     * @params {accel, max}
+     * @param {number} accel the increment of acceleration
+     * @param {number} max the maximum for speed
+     *
      **********/
 
     accelY(accel, max) {
@@ -4236,13 +4326,19 @@ class Sprite {
      *  -example-use: running of sprite || left / right movement
      ***************************/
 
-    /**
-     * This function accelerates the Sprite() on the y-axis
 
+
+
+    /**
+     * accelerate speed on the X-Axis
+     *
      * @function
      * @memberof Sprite
-     * @params {accel, max}
+     * @param {number} accel the increment of acceleration
+     * @param {number} max the maximum for speed
+     *
      **********/
+
 
     accelX(accel, max) {
 
@@ -4277,12 +4373,20 @@ class Sprite {
      *  -accelerate any acceleration -key
      ***************************/
 
-    /**
-     * This function accelerates the Sprite() on any or all axis, depending on arguments
 
+    /**
+     * accelerate toward a max value on any object-property:: intended for self-use
+     *
      * @function
      * @memberof Sprite
-     * @params {prop, key, accel, max}
+     * @param {Object} prop The object to control
+     * @param {string} key the property-key for targeted property of prop argument
+     *
+     * @param {number} accel the increment of acceleration
+     *
+     * @param {number} max the max value to accelerate towards
+     *
+     *
      **********/
 
     accel(prop, key, accel, max) {
@@ -4321,13 +4425,19 @@ class Sprite {
      ***************************/
 
     /**
-     * This function decelerates the Sprite() on any or all axis, depending on arguments
-
+     * decelerate toward a max value on any object-property:: intended for self-use
+     *
      * @function
      * @memberof Sprite
-     * @params {prop, key, accel, max}
+     * @param {Object} prop The object to control
+     * @param {string} key the property-key for targeted property of prop argument
+     *
+     * @param {number} decel the increment of deceleration
+     *
+     * @param {number} max the max value to decelerate towards
+     *
+     *
      **********/
-
 
     decel(prop, key, rate) {
         if (typeof(rate) == 'object') {
@@ -4358,41 +4468,6 @@ class Sprite {
     }
 
 
-    /*****************************
-     *  decelX
-     *  -decelerate on the X axis
-     *  -args: 1 float:amt
-     ***************************/
-
-    deccelX(rate) {
-        if (typeof(rate) == 'object') {
-
-            rate = rate.rate;
-
-        }
-
-        rate = Math.abs(rate);
-
-        if (Math.abs(this.speed['x']) <= rate) {
-            this.speed['x'] = 0;
-
-        }
-
-        if (this.speed['x'] > 0) {
-            this.speed['x'] -= rate;
-
-        }
-        else if (this.speed['x'] < 0) {
-            this.speed['x'] += rate;
-
-        }
-        else {
-
-            this.speed['x'] = 0;
-
-        }
-
-    }
 
 
     /*****************************
@@ -4400,6 +4475,16 @@ class Sprite {
      *  -decelerate on the Y axis
      *  -args: 1 float:amt
      ***************************/
+
+
+    /**
+     * decelerate speed on the Y-Axis, toward zero
+     *
+     * @function
+     * @memberof Sprite
+     * @param {number} amt the increment of deceleration, negatives ignored
+     *
+     **********/
 
     decelY(amt) {
 
@@ -4426,6 +4511,16 @@ class Sprite {
      *  -args: 1 float:amt
      ***************************/
 
+
+    /**
+     * decelerate speed on the X-Axis, toward zero
+     *
+     * @function
+     * @memberof Sprite
+     * @param {number} amt the increment of deceleration, negatives ignored
+     *
+     **********/
+
     decelX(amt) {
 
         amt = Math.abs(amt);
@@ -4448,12 +4543,7 @@ class Sprite {
 
     }
 
-    /*****************************
-     *  collide_stop(item)
-     *  -both collide and stop on the object, when falling on Y axis::
-     *  -sets the special property: __falling to false on stop :: helps to control Sprite() state
-     *  -TODO : rename to fallstop || something that resembles a function strictly on Y-Axis
-     ***************************/
+
 
     shortest_stop(item, callback) {
         var diff_min_y = item.min ? item.min.y : Math.abs(item.position.y - this.position.y + this.size.y);
@@ -4480,6 +4570,17 @@ class Sprite {
 
     }
 
+
+    /**
+     * get the center of a Sprite
+     *
+     * @function
+     * @memberof Sprite
+     *
+     * @returns (Vector)
+     *
+     **********/
+
     center() {
         return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
 
@@ -4490,14 +4591,26 @@ class Sprite {
      * -with this function :: change sensitive / tricky / 4 way collision
      * *************/
 
+
+    /**
+     * determine if Sprite overlaps on X axis with another Sprite
+     *
+     * @function
+     * @memberof Sprite
+     * @param {Sprite} item the Sprite to compare with
+     * @param {number} padding the 0-1.0 float value of padding to use on self when testing overlap
+     * @returns {var} a true || false var
+     *
+     **********/
+
     overlap_x(item, padding) {
         if (!padding) {
             padding = 0;
         }
 
-        var paddingX = padding * this.size.x,
+        var paddingX = Math.round(padding * this.size.x),
 
-            paddingY = padding * this.size.y, left = this.position.x + paddingX,
+            paddingY = Math.round(padding * this.size.y), left = this.position.x + paddingX,
             right = this.position.x + this.size.x - paddingX,
 
             top = this.position.y + paddingY, bottom = this.position.y + this.size.y - paddingY;
@@ -4512,14 +4625,26 @@ class Sprite {
      * -with this function :: change sensitive / tricky / 4 way collision
      * *************/
 
+
+    /**
+     * determine if Sprite overlaps on Y axis with another Sprite
+     *
+     * @function
+     * @memberof Sprite
+     * @param {Sprite} item the Sprite to compare with
+     * @param {number} padding the 0-1.0 float value of padding to use on self when testing overlap
+     * @returns (true || false}
+     *
+     **********/
+
     overlap_y(item, padding) {
         if (!padding) {
             padding = 0;
         }
 
-        var paddingX = padding * this.size.x,
+        var paddingX = Math.round(padding * this.size.x),
 
-            paddingY = padding * this.size.y, left = this.position.x + paddingX,
+            paddingY = Math.round(padding * this.size.y), left = this.position.x + paddingX,
             right = this.position.x + this.size.x - paddingX,
 
             top = this.position.y + paddingY, bottom = this.position.y + this.size.y - paddingY;
@@ -4532,6 +4657,8 @@ class Sprite {
      * #BE CAREFUL
      * -with this function :: change sensitive / tricky / 4 way collision
      * *************/
+
+
 
     collide_stop_x(item)
     {
@@ -4546,7 +4673,7 @@ class Sprite {
 
                 var diffX = this.center().sub(item.center()).x;
 
-                var distX = Math.abs(this.size.x / 2 + item.size.x / 2);
+                var distX = Math.abs(this.size.x / 2 + item.size.x / 2 - Math.round(this.size.x * this.padding.x));
 
                 if (Math.abs(diffX) < distX) {
 
@@ -4575,11 +4702,87 @@ class Sprite {
      * -with this function :: change sensitive / tricky / 4 way collision
      * *************/
 
+
+    /**
+     * cause a fourway collision-stop between this and another Sprite :: objects will behave clastically and resist passing through one another
+     *
+     * @function
+     * @memberof Sprite
+     * @param {Sprite} item the Sprite to compare with
+     *
+     **********/
+
     collide_stop(item) {
 
-        // collide top
+        if(this.id == item.id)
+        {
+            return false;
+
+        }
+
+       // this.position = this.position.sub(this.speed);
+
+        if(this.collidesRectangular(item)) {
+
+            var diff = this.center().sub(item.center());
+
+            if(this.overlap_x(item, this.padding.x + 0.1) && Math.abs(diff.x) < Math.abs(diff.y))
+           {
+
+               var apart = false;
+
+                   var ct = 10000;
+
+                   while (!apart && ct > 0) {
+
+                       ct--;
+
+                       var diffY = this.center().sub(item.center()).y;
+
+                       var distY = Math.abs(this.size.y / 2 + item.size.y / 2- Math.round(this.size.y * this.padding.y));
+
+                       if (Math.abs(diffY) < distY) {
+
+                           this.position.y -= diffY > 0 ? -1 : 1;
+
+                       }
+
+                     else {
+
+                           if (diffY <= 0){
+                               this.__inAir = false;
+                           };
 
 
+                          return apart = true;
+
+
+                       }
+
+
+               }
+
+
+
+           }
+
+
+            if(this.overlap_y(item, this.padding.y ) && Math.abs(diff.y) < Math.abs(diff.x)) {
+
+                this.collide_stop_x(item);
+
+            }
+
+
+        }
+
+
+    }
+
+
+
+    collide_stop_top()
+    {
 
         if(this.id == item.id)
         {
@@ -4591,58 +4794,60 @@ class Sprite {
 
             var diff = this.center().sub(item.center());
 
-           if(this.overlap_x(item, 0.3) && Math.abs(diff.x) < Math.abs(diff.y))
-           {
+            if (this.overlap_x(item, 0.3) && Math.abs(diff.y) < 0) {
 
-                   var apart = false;
+                var apart = false;
 
-                   var ct = 10000;
+                var ct = 10000;
 
-                   while (!apart && ct > 0) {
+                while (!apart && ct > 0) {
 
-                       ct--;
+                    ct--;
 
-                       var diffY = this.center().sub(item.center()).y;
+                    var diffY = this.center().sub(item.center()).y;
 
-                       var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
+                    var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
 
-                       if (Math.abs(diffY) < distY) {
+                    if (Math.abs(diffY) < distY) {
 
-                           this.position.y -= diffY > 0 ? -1 : 1;
-
+                        this.position.y -= diffY > 0 ? -1 : 1;
 
 
-                       }
+                    }
 
-                     else {
+                    else {
 
-                           if (diffY < 0){
-                               this.__inAir = false;
-                           };
-
-
-                           apart = true;
+                        if (diffY < 0) {
+                            this.__inAir = false;
+                        }
+                        ;
 
 
-                       }
+                        apart = true;
 
 
-               }
+                    }
 
 
+                }
 
-           }
-          if(this.overlap_y(item, 0.3)) {
 
-               this.collide_stop_x(item);
-
-           }
+            }
 
         }
 
-
     }
 
+
+
+    /**
+     * Restore a sprite from saved .json data
+     *
+     * @function
+     * @memberof Sprite
+     *
+     * @returns (Sprite)
+     **********/
 
     restoreFrom(data) {
         data.image = new GameImage(data.src || data.image.src);
@@ -4657,16 +4862,6 @@ class Sprite {
      *  -TODO : complete this function based on code to load Sprite() from file, located in the spritemaker.html file
      *  -TODO: test this function
      ***************************/
-
-
-    /**
-     * This function restores a Sprite() from json file
-
-     * @function
-     * @memberof Sprite
-     * @params {file_path}
-     **********/
-
 
     fromFile(file_path) {
 
@@ -4695,6 +4890,85 @@ class Sprite {
 
 
 let SpriteInitializersOptions = {
+
+    Collideables:{
+        top_collideable:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+        fourside_collideable:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+
+        }
+    },
+
+    Gravities:{
+
+        very_light:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+        light:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+        medium:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+
+        strong:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+        very_strong:function(sprite)
+        {
+
+            sprite.onUpdate(function(){
+
+
+            });
+
+        },
+
+    },
+
 
     ControllerStickMotion: {
 
@@ -4842,24 +5116,26 @@ let SpriteInitializersOptions = {
 
 };
 
+
+
 GameStack.options = GameStack.options || {};
 
 GameStack.options.SpriteInitializers = SpriteInitializersOptions;;
-
 /**
- * Vector3({x:number,y:number,z:number,r:number})
- *
- * required arguments: x, y
- * optional arguments: z, r
- *
- * [See Live Demo with Usage-Example]{@link http://www.google.com}
- * @returns {Vector3} object of Vector3()
- *
- * Vector objects are treated alike in GameStack.js, with Vector() and Vector2() equivalent to Vector3()
- * Other class names synonymous with Vector() are Pos(), Size(), Position(), Rotation()
- * */
+ * Takes arguments of x, y, and (optionally) z, AND returns a Vector object
 
-class Vector3 {
+ <ul>
+ <li>Optional: use a Vector as the 'x' argument, and instantiate new distinct Vector from the argument</li>
+ </ul>
+
+ * @param   {number} x the x coordinate
+ * @param   {number} y the y coordinate
+ * @param   {number} z the z coordinate
+ * @returns {Vector} a Vector object
+ */
+
+
+class Vector {
     constructor(x, y, z, r) {
 
         if(typeof(x) == 'object' && x.x && x.y) //optionally pass vector3
@@ -4959,9 +5235,9 @@ class Vector3 {
 }
 ;
 
-let Pos = Vector3, Size = Vector3, Position = Vector3, Vector2 = Vector3, Vector = Vector3, Rotation = Vector3;
+let Vector3 = Vector, Pos = Vector, Size = Vector, Position = Vector, Vector2 = Vector, Rotation = Vector;
 
-//The above are a list of synonymous expressions for Vector3. All of these do the same thing in this library (store x,y,z values)
+//The above are a list of synonymous expressions for Vector. All of these do the same thing in this library (store x,y,z values)
 ;/**
  * Created by The Blakes on 04-13-2017
  *

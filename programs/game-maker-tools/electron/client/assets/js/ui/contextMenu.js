@@ -105,6 +105,9 @@
                             fun = selector[i].fun,
                             icon = selector[i].icon,
                             img = selector[i].img,
+
+
+
                             title = selector[i].title,
                             className = selector[i].className,
                             elm = menu.children('li').filter(function() {
@@ -489,7 +492,6 @@
                 'width': ''
             };
 
-
             //to get position from offset parent
             if (option.left != 'auto') {
                 left = iMethods.getPxSize(option.left, cWidth);
@@ -509,19 +511,15 @@
             }
             cssObj.left = left + ha + 'px';
             cssObj.top = top + va + 'px';
-
             menu.css(cssObj);
-
             //to call after open call back
             option.afterOpen.call(this, clbckData, e);
-
 
             //to add current menu class
             if (trigger.closest('.iw-contextMenu').length == 0) {
                 $('.iw-curMenu').removeClass('iw-curMenu');
                 menu.addClass('iw-curMenu');
             }
-
 
             var dataParm = {
                 trigger: trigger,
@@ -678,13 +676,19 @@
                 var menuList = $('<ul class="iw-contextMenu iw-created iw-cm-menu" id="iw-contextMenu' + randomNum + '"></ul>');
                 $.each(selector, function(index, selObj) {
                     var name = selObj.name,
+
                         fun = selObj.fun || function() {},
+
                         subMenu = selObj.subMenu,
+
                         img = selObj.img || '',
                         icon = selObj.icon || '',
                         title = selObj.title || "",
                         className = selObj.className || "",
                         disable = selObj.disable,
+
+                        json = selObj.json || false,
+
                         list = $('<li title="' + title + '" class="' + className + '">' + name + '</li>');
 
                     if (img) {
@@ -692,6 +696,13 @@
                     } else if (icon) {
                         list.prepend('<span align="absmiddle" class="' + "iw-mIcon "+icon+'" />');
                     }
+
+                    if (json) {
+                        list.data(json);
+                    } else  {
+
+                    }
+
                     //to add disable
                     if (disable) {
                         list.addClass('iw-mDisable');

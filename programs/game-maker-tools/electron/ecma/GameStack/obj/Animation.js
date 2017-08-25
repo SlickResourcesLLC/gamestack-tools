@@ -1,9 +1,18 @@
-
 /**
- * Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})
- * [See Live Demo with Usage-Example]{@link http://www.google.com}
- * @returns {Animation} object of Animation()
- * */
+ * Takes an object of arguments and returns Animation() object.
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {string} args.type optional
+ * @param   {Vector} args.size of the Animation object, has x and y properties
+ * @param   {Vector} args.frameSize the size of frames in Animation, having x and y properties
+ * @param   {VectorFrameBounds} args.frameBounds the bounds of the Animation having min, max, and termPoint properties
+ * @param   {number} args.delay optional, the seconds to delay before running animation when called by engage()
+
+ * @param   {number} args.duration how many milliseconds the animation should take to complete
+ *
+ * @returns {Animation} an Animation object
+ */
 
 class Animation {
     constructor(args) {
@@ -12,23 +21,57 @@ class Animation {
 
         var _anime = this;
 
-        this.name = this.getArg(args, 'name', '_blank'),
+        this.defaultArgs = {
 
-        this.description =  this.getArg(args, 'description', '_blank')
+            name:"my-animation",
 
-        this.frames = this.getArg(args, 'frames', []);
+            description:"my-description",
+
+            frames:[],
+
+            type:"none",
+
+            delay:0,
+
+            frameSize:new Vector3(44, 44, 0),
+
+            frameBounds:new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
+
+            frameOffset:new Vector3(0, 0, 0),
+
+            flipX:false,
+
+            earlyTerm:false,
+
+            hang:false,
+
+            duration:1000,
+
+            size:new Vector3(20, 20, 20)
+        };
+
+
+        for(var x in this.defaultArgs)
+        {
+            if(!args.hasOwnProperty(x))
+            {
+                args[x] = this.defaultArgs[x]
+
+            }
+
+        };
+
+        for(var x in this.args)
+        {
+           this[x] = args[x];
+
+        }
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
         this.src = this.image.domElement.src;
 
         this.domElement = this.image.domElement;
-
-        this.type = this.getArg(args, 'type', 'basic');
-
-        this.delay = this.getArg(args, 'delay', 0);
-
-        this.cix = 0;
 
         this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
 
@@ -42,19 +85,9 @@ class Animation {
 
         this.flipX = this.getArg(args, 'flipX', false);
 
-        this.priority = this.getArg(args, 'priority', 0);
-
         this.cix = 0;
 
         this.selected_frame = this.frames[0];
-
-        this.earlyTerm = this.getArg(args, 'earlyTerm', false);
-
-        this.hang =this.getArg(args, 'hang', false);
-
-        this.duration = this.getArg(args, 'duration', 1000);
-
-        this.size =  this.getArg(args, 'size', new Vector3(20, 20, 20));
 
         this.effects = [];
 
@@ -299,3 +332,4 @@ onComplete(fun)
     }
 
 };
+

@@ -21,7 +21,7 @@ grunt.initConfig({
         },
 
         game_lib:{
-            src: ['ecma/GameStack/Main.js', 'ecma/GameStack/Geometry.js', 'ecma/GameStack/obj/*.js', 'ecma/GameStack/obj/sub/*.js'],
+            src: ['ecma/GameStack/Canvas.js', 'ecma/GameStack/Main.js', 'ecma/GameStack/Geometry.js', 'ecma/GameStack/obj/*.js', 'ecma/GameStack/obj/sub/*.js'],
             dest: 'ecma/GameStack/concat/GameStack.js'
         },
 

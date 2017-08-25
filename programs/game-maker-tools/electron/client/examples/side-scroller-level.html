@@ -13,7 +13,6 @@
 
     <script src="../assets/js/ui/jquery.js"></script>
 
-
     <script src="../assets/js/ui/Tween.js"></script>
 
     <script src="../dist/js/GameStack.js"></script>
@@ -30,7 +29,6 @@
 
     $(document).ready(function(){
 
-        alert('jq ready');
 
     });
 
@@ -45,9 +43,8 @@
 
     var loadLevel = function(callback){
 
-        alert('loading level');
 
-        __gameWindow.loadLevelFile("../game-json/levels/big-brick-level.json", function(err, data){
+        __gameWindow.loadLevelFile("../my-game-json/levels/big_brick_level_02.json", function(err, data){
 
             var tiles = [];
 
@@ -75,7 +72,6 @@
                     }
 
                 };
-
 
                 sprite.image.domElement.onerror = function()
                 {
@@ -124,13 +120,13 @@
                 player_jump: new Animation({
                     src: "../assets/builder/characters/full/spaceman1.png",
 
-                    duration:400,
+                    duration: 400,
                     frameSize: new Vector3(130, 130, 0),
                     frameBounds: new VectorFrameBounds(new Vector3(5, 3), new Vector3(36, 3)),
 
                     /*Use the extras variable to pass any Sound() to be played when the animation runs. The sound will start playing on first frame*/
 
-                    extras:new Extras(new Sound("../assets/game/sound/jump_sound.mp3"))
+                    extras: new Extras(new Sound("../assets/game/sound/jump_sound.mp3"))
                 }),
 
                 player_fall: new Animation({
@@ -143,15 +139,25 @@
                 player_flip: new Animation({
                     src: "../assets/builder/characters/full/spaceman1.png",
 
-                    duration:700,
+                    duration: 700,
 
-                    curve:TWEEN.Easing.Quadratic.Out,
+                    curve: TWEEN.Easing.Quadratic.Out,
 
                     frameSize: new Vector3(130, 130, 0),
                     frameBounds: new VectorFrameBounds(new Vector3(7, 2), new Vector3(28, 2))
                 })
 
             }
+
+            ,
+
+            Sound: {
+
+                collect_item:new Sound('../assets/game/sound/collect_item.mp3')
+
+            }
+
+
 
         };
 
@@ -192,7 +198,6 @@
 
                 }
 
-
             }
             else
             {
@@ -222,7 +227,7 @@
 
         //Set the size{} of player
 
-        player.setSize(new Vector3(85, 85));
+        player.setSize(new Vector3(45, 45));
 
 
         //set player.type for later reference (see $Q() queries to reference multiple collections of Sprite() and rig events, etc.. )
@@ -230,6 +235,14 @@
         player.type = "player";
 
         player.position.x = 300;
+
+        player.speed_args = {
+
+          traction_ground_x:5,
+
+            traction_air_x:3.5
+
+        };
 
         player.setAnimation(GameAssets.character.player_run);
 
@@ -242,14 +255,33 @@
 
         var levelTiles = [];
 
-
         loadLevel(function(tiles){
 
-            levelTiles = tiles; //levelTiles is equal to the tiles loaded
+            var blocks = $Q('.Sprite[type=basic_block]').each(function(ix, item){
 
+                levelTiles.push(item);
+
+            });
             //start the game
 
-            start();
+
+            $.each(tiles, function(ix, item){
+
+                if(item.type !== "basic_block")
+                {
+                    console.log(item.type);
+
+                }
+
+            });
+
+            window.setTimeout(function(){
+
+
+                start();
+
+            }, 1000);
+
 
         });
 
@@ -268,46 +300,66 @@
              *
              * ************************/
 
-
             //call Q().on() for the 0th (first) button of controller, 0th (first) controller
 
             $Q().on('button_0', 0, function(x, y) {
 
                 //Control player state and movements (jump)
 
-                var targetJumpY = Math.round(player.position.y - __gameStack.HEIGHT / 2.5);
-
-                if(player.state !== 'jumping' && !player.__inAir) {
-
-                    player.__inAir = true;
-
-                    player.setState('jumping');
-
-                    GameAssets.character.player_jump.onComplete(function(anime){
-
-                      //  alert('flip complete');
-
-                        GameAssets.character.player_flip.cix =0;
-
-                        player.setState('falling');
-
-                    });
-
-               player.jump_tween =  new TWEEN.Tween(player.position).to({y: targetJumpY}, 700).easing(TWEEN.Easing.Circular.Out).onUpdate(function () {
-
-
-
-                    }).onComplete(function () {
-
-
-                    }).start();
-
-                }
-                else
+                if(x == false  && player.jump_tween && player.state == 'jumping') //cancel the jump when colliding with overhead basic_block
                 {
 
+                    player.jump_tween.stop();
+
+                   player.speed.y = -3;
+
+                    player.setState('falling');
+
+                    player.jump_tween = false;
 
                 }
+
+                if (x) {
+
+                    var targetJumpY = Math.round(player.position.y - __gameStack.HEIGHT / 2.5);
+
+                    if (player.state !== 'jumping' && !player.__inAir) {
+
+                        player.__inAir = true;
+
+                        player.setState('jumping');
+
+                        player.speed_tracker = new Vector3(0, 0, 0);
+
+                        player.pos_tracker = new Vector3(player.position);
+
+                        GameAssets.character.player_jump.onComplete(function (anime) {
+
+                            //  alert('flip complete');
+
+                            GameAssets.character.player_flip.cix = 0;
+
+                            player.setState('falling');
+
+                        });
+
+                        player.jump_tween = new TWEEN.Tween(player.position).to({y: targetJumpY}, 700).easing(TWEEN.Easing.Circular.Out).onUpdate(function () {
+
+
+                            player.speed_tracker.y = player.position.y - player.pos_tracker.y;
+
+                            player.pos_tracker.y = player.position.y;
+
+                        }).onComplete(function () {
+
+
+
+                        }).start();
+
+                    }
+
+                }
+
 
             });
 
@@ -315,19 +367,79 @@
 
             $Q('.Sprite[type=player]').on('collide', $Q('.Sprite[type=basic_block]'), function(obj1, obj2){
 
-                //1:1 , this is the callback for 1 object colliding with 1 other object (player and basic_brick)
+            //1:1 , this is the callback for 1 object colliding with 1 other object (player and basic_brick)
 
-                var overhead = obj2.position.y < obj1.position.y;
+            var overhead = obj2.position.y < obj1.position.y;
 
-                if(obj1.jump_tween && obj1.state == 'jumping' && overhead) //cancel the jump when colliding with overhead basic_block
-                {
+            if(obj1.jump_tween  && overhead) //cancel the jump when colliding with overhead basic_block
+            {
 
 
-                    obj1.jump_tween.stop();
+                obj1.jump_tween.stop();
 
-                }
+            }
+
+        });
+
+
+            var ct = 0;
+
+            $Q('.Sprite[type=basic_item]').each(function(ix, item){
+
+                ct += 1;
+
 
             });
+
+            alert(ct);
+
+
+            $Q('.Sprite[type=player]').on('collide', $Q('.Sprite[type=basic_item]'), function(obj1, obj2){
+
+
+             if(obj2.active) {
+
+                 obj2.active = false; // item collected
+
+                 GameAssets.Sound.collect_item.play();
+
+                 player.total_apples += 1;
+
+                 items.update(player.total_apples);
+
+
+             }
+
+
+
+        });
+
+
+            player.total_apples = 0;
+
+            //Show applies as an item display
+
+            var items = new ItemDisplay({
+                size: new Vector3(25, 25),
+                fontSize: "18px",
+                src: "../assets/builder/items/apple_blue.png",
+                top: 0.04,
+                left: 0.03,
+                text: "Item Count"
+            });
+
+            //Show the item display::
+
+            items.show();
+
+            //Update value of item display::
+
+            items.update(0);
+
+
+
+
+
 
             //declare player.setState for controlling player animations and state
 
@@ -346,6 +458,15 @@
                 if(this.state == 'falling')
                 {
                     this.setAnimation(GameAssets.character.player_fall);
+
+                    if(this.speed.y < 0)
+                    {
+
+                        this.decel(player.speed, 'y', 0.2);
+
+
+                    }
+
 
                     if(!this.__inAir)
                     {
@@ -379,6 +500,39 @@
              sprite.selected_animation.animate();
 
 
+                if(player.state == 'running')
+                {
+
+
+                    player.rotation.x = 0;
+
+                    player.rot_speed.x = 0;
+
+
+
+                }
+
+
+                if(!player.__inAir)
+             {
+                 player.speed.y = 0;
+
+                 player.rotation.x = 0;
+
+                 player.rot_speed.x = 0;
+
+
+
+             }
+
+
+              else if(player.state !== 'jumping' && Math.abs(player.speed.y) > 2)
+                {
+                    player.setState('falling');
+
+                }
+
+
             });
 
             //StickLeft event::
@@ -394,14 +548,13 @@
                     if(!player.__inAir && player.state !== 'jumping')
                     {
 
-
                         player.rotation.x = 0;
 
                         player.rot_speed.x = 0;
 
                         player.setState('running');
 
-                        player.speed.x = Math.round(x * 6);
+                        player.speed.x = Math.round(x * player.speed_args.traction_ground_x);
 
                     }
                     else
@@ -409,26 +562,18 @@
 
                     var targetSpeed = (x * 15);
 
-                   if(player.state == 'jumping'){
+                        if(x > 0 && player.rot_speed.x >= 0) {
 
-                       if(x > 0 && player.rot_speed.x >= 0) {
+                            player.accel(player.rot_speed, 'x', 2, (x * 15));
 
-                           player.accel(player.rot_speed, 'x', 2, (x * 15));
+                        }
 
-                       }
+                        if(x < 0 && player.rot_speed.x <= 0) {
 
-                       if(x < 0 && player.rot_speed.x <= 0) {
+                            player.accel(player.rot_speed, 'x', 2, (x * 15));
 
-                           player.accel(player.rot_speed, 'x', 2, (x * 15));
+                        }
 
-                       }
-
-                   }
-                   else
-                   {
-                      // player.accel(player.rot_speed, 'x', 2, (x * 15));
-
-                   }
 
                     }
 
@@ -452,7 +597,7 @@
                     {
                         player.flipX = player.state !== 'jumping' ? false : player.flipX;
 
-                        var lowSpeed = Math.round(x * 3);
+                        var lowSpeed = Math.round(x * player.speed_args.traction_air_x);
 
                         if(player.speed.x > lowSpeed)
                         {
@@ -460,11 +605,7 @@
                             player.accelX(0.2,  lowSpeed);
                         }
 
-
                     }
-
-
-
 
                 }
                 else{
@@ -478,22 +619,26 @@
                         player.rot_speed.x = 0;
 
 
-                        player.decel(player.speed, 'x', 0.2);
+                        player.decel(player.speed, 'x', 0.9 * player.speed_args.traction_ground_x);
 
                         player.setState('idle');
 
                     }
+
 
                 }
 
             });
 
 
+            player.padding = new Vector3(0.2, 0.1); //vector of floats for collision padding (transparent part of sprite-images need padding for collision)
+
+
             //Add a gravity to the game
 
             var gravity = lib.add(new Force({
                 name:"medium_grav",
-                accel:0.5,
+                accel:0.2,
                 max:new Vector3(0, 7.5, 0),
                 subjects:[player], //provide subjects inside an array, player is the subject of this Force, player is pulled by this force
                 clasticObjects:levelTiles //an array of collideable objects
@@ -508,7 +653,6 @@
                 //control the __gameStack Camera, with player-sprite as focus
 
                 var target = sprite.position.sub(new Vector3(__gameStack.WIDTH / 2, __gameStack.HEIGHT / 2));
-
 
                 var diff =  __gameStack.camera.position.sub(target);
 

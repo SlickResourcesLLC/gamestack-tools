@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector3.html">Vector3</a></li>
+					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
 				</ul>
 			</li>
 			
@@ -74,7 +74,7 @@
         Animation
         </h2>
         
-            <div class="class-description">Animation({name:string,description:string,frames:[],image:GameImage(),src:string,domElement:Image(),type:string})<a href="http://www.google.com">See Live Demo with Usage-Example</a></div>
+            <div class="class-description">Takes an object of arguments and returns Animation() object.</div>
         
     
 </header>
@@ -86,7 +86,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation()</h4>
+    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation(args)</h4>
     
     
 </dt>
@@ -99,6 +99,274 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object of arguments
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">of the Animation object, has x and y properties</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>frameSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the size of frames in Animation, having x and y properties</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>frameBounds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">VectorFrameBounds</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the bounds of the Animation having min, max, and termPoint properties</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional, the seconds to delay before running animation when called by engage()</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">how many milliseconds the animation should take to complete</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -156,7 +424,7 @@
     
             
 <div class="param-desc">
-    object of Animation()
+    an Animation object
 </div>
 
 
@@ -248,7 +516,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-08-19T20:51:58-04:00
+		on 2017-08-24T20:14:19-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

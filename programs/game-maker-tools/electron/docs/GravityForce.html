@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector3.html">Vector3</a></li>
+					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
 				</ul>
 			</li>
 			
@@ -74,7 +74,7 @@
         GravityForce
         </h2>
         
-            <div class="class-description">Force()<ul > <li> a 'physics' object <li> easily instantiate physical behaviors, applied to specific groups of objects</ul><a href="http://www.google.com">See Live Demos with Suggested Usage-Examples</a></div>
+            <div class="class-description">GravityForce, calling new GravityForce() is equivalent to calling new Force()Takes an object of arguments and GravityForce() object.</div>
         
     
 </header>
@@ -99,6 +99,176 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args.name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args.description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args.subjects</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the subjects to be pulled by the GravityForce</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args.clasticObjects</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">any clastic object that should have collision-stop behavior with args.subjects when collision occurs</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args.max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the speed of gravity AKA terminal velocity</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args.accel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the increment to use when accelerating speed of fall</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -156,7 +326,7 @@
     
             
 <div class="param-desc">
-    object of Force()
+    a Motion object
 </div>
 
 
@@ -167,7 +337,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Force</span>
+<span class="param-type"><a href="Motion.html">Motion</a></span>
 
 
 
@@ -248,7 +418,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-08-19T20:51:58-04:00
+		on 2017-08-24T20:14:19-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

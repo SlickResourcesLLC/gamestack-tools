@@ -1,3 +1,0 @@
-
-
-The developer user can select from collision options, so that sprites are built faster.

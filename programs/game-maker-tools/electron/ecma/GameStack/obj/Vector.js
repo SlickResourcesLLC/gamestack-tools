@@ -1,19 +1,19 @@
 
-
 /**
- * Vector3({x:number,y:number,z:number,r:number})
- *
- * required arguments: x, y
- * optional arguments: z, r
- *
- * [See Live Demo with Usage-Example]{@link http://www.google.com}
- * @returns {Vector3} object of Vector3()
- *
- * Vector objects are treated alike in GameStack.js, with Vector() and Vector2() equivalent to Vector3()
- * Other class names synonymous with Vector() are Pos(), Size(), Position(), Rotation()
- * */
+ * Takes arguments of x, y, and (optionally) z, AND returns a Vector object
 
-class Vector3 {
+ <ul>
+ <li>Optional: use a Vector as the 'x' argument, and instantiate new distinct Vector from the argument</li>
+ </ul>
+
+ * @param   {number} x the x coordinate
+ * @param   {number} y the y coordinate
+ * @param   {number} z the z coordinate
+ * @returns {Vector} a Vector object
+ */
+
+
+class Vector {
     constructor(x, y, z, r) {
 
         if(typeof(x) == 'object' && x.x && x.y) //optionally pass vector3
@@ -113,6 +113,6 @@ class Vector3 {
 }
 ;
 
-let Pos = Vector3, Size = Vector3, Position = Vector3, Vector2 = Vector3, Vector = Vector3, Rotation = Vector3;
+let Vector3 = Vector, Pos = Vector, Size = Vector, Position = Vector, Vector2 = Vector, Rotation = Vector;
 
-//The above are a list of synonymous expressions for Vector3. All of these do the same thing in this library (store x,y,z values)
+//The above are a list of synonymous expressions for Vector. All of these do the same thing in this library (store x,y,z values)
