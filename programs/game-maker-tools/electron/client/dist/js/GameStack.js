@@ -92,7 +92,7 @@ var CanvasLib = function CanvasLib() {
 
                                 //optional animation : offset
 
-                                if (sprite.selected_animation.offset) {
+                                if (sprite.selected_animation && sprite.selected_animation.hasOwnProperty('offset')) {
                                         x += sprite.selected_animation.offset.x;
 
                                         y += sprite.selected_animation.offset.y;
@@ -154,6 +154,14 @@ var Sound = function () {
         }
 
         _createClass(Sound, [{
+                key: 'volume',
+                value: function volume(val) {
+
+                        this.sound.volume = val;
+
+                        return this;
+                }
+        }, {
                 key: 'play',
                 value: function play() {
                         if (_typeof(this.sound) == 'object' && typeof this.sound.play == 'function') {
@@ -460,6 +468,7 @@ var GameStackLibrary = function GameStackLibrary() {
 
                         //call every function in the ready_callstack
 
+
                         this.each(funx, function (ix, call) {
 
                                 call(lib, gameWindow, sprites);
@@ -507,7 +516,6 @@ var GameStackLibrary = function GameStackLibrary() {
                 remove: function remove(obj) {
                         //1: if Sprite(), Add object to the existing __gameWindow
 
-
                         if (obj instanceof Sprite) {
 
                                 var ix = this.__gameWindow.sprites.indexOf(obj);
@@ -541,6 +549,16 @@ var GameStackLibrary = function GameStackLibrary() {
                         });
 
                         return objectList;
+                },
+
+                getById: function getById(id) {
+
+                        for (var x in this.all_objects) {
+
+                                if (this.all_objects[x].id == id) {
+                                        return this.all_objects[x];
+                                }
+                        }
                 },
 
                 select: function select(constructor_name, name, type /*ignoring spaces and CAPS/CASE on type match*/) {
@@ -1397,25 +1415,25 @@ var GameWindow = function () {
                         this.canvas = document.createElement('CANVAS');
 
                         document.body.append(this.canvas);
-
-                        this.canvas.style.position = 'absolute';
-
-                        this.canvas.style.width = '100%';
-
-                        this.canvas.style.height = '100%';
-
-                        this.canvas.style.background = 'black';
-
-                        var c = this.canvas;
-
-                        this.adjustSize();
                 }
+
+                this.canvas.style.position = 'absolute';
+
+                this.canvas.style.width = '100%';
+
+                this.canvas.style.height = '100%';
+
+                this.canvas.style.background = 'black';
+
+                var c = this.canvas;
 
                 this.ctx = this.canvas.getContext('2d');
 
                 __gameStack.canvas = this.canvas;
 
                 __gameStack.ctx = this.ctx;
+
+                this.adjustSize();
 
                 window.onresize = function () {
 
@@ -1438,6 +1456,7 @@ var GameWindow = function () {
         _createClass(GameWindow, [{
                 key: 'adjustSize',
                 value: function adjustSize(w, h) {
+
                         w = w || this.canvas.clientWidth;
 
                         h = h || this.canvas.clientHeight;
@@ -2348,6 +2367,18 @@ var GravityForce = function () {
                 for (var x in args) {
                         this[x] = args[x];
                 }
+
+                for (var x in this.clasticObjects) {
+                        if (!this.clasticObjects[x] instanceof Sprite) {
+                                this.clasticObjects[x] = Gamestack.getById(this.clasticObjects[x].id);
+                        }
+                }
+
+                for (var x in this.subjects) {
+                        if (!this.subjects[x] instanceof Sprite) {
+                                this.subjects[x] = Gamestack.getById(this.subjects[x].id);
+                        }
+                }
         }
 
         _createClass(GravityForce, [{
@@ -3242,9 +3273,8 @@ var Sprite = function () {
         }, {
                 key: 'setSize',
                 value: function setSize(size) {
-                        this.size = new Vector3(size.x, size.y, size.z);
 
-                        this.selected_animation.size = new Vector3(size.x, size.y, size.z);
+                        this.size = new Vector3(size.x, size.y, size.z);
                 }
 
                 /**
@@ -3268,24 +3298,28 @@ var Sprite = function () {
                  **********/
 
         }, {
-                key: 'maxDimensionsXY',
-                value: function maxDimensionsXY(mx, my) {
+                key: 'getCappedSizeXY',
+                value: function getCappedSizeXY(mx, my, currentSize) {
 
-                        var wth = this.size.x / this.size.y;
+                        var size = new Vector3(currentSize || this.size);
 
-                        var htw = this.size.y / this.size.x;
+                        var wth = size.y / size.x;
 
-                        if (this.size.x > mx) {
-                                this.size.x = mx;
+                        var htw = size.x / size.y;
 
-                                this.size.y = this.size.x * wth;
+                        if (size.x > mx) {
+                                size.x = mx;
+
+                                size.y = size.x * wth;
                         }
 
-                        if (this.size.y > my) {
-                                this.size.y = my;
+                        if (size.y > my) {
+                                size.y = my;
 
-                                this.size.x = this.size.y * htw;
+                                size.x = size.y * htw;
                         }
+
+                        return size;
                 }
 
                 /*****************************
@@ -3345,11 +3379,13 @@ var Sprite = function () {
 
                         h = h || __gameStack.HEIGHT;
 
-                        var camera = __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
+                        var camera = __gameStack.camera || __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
 
                         var p = new Vector3(this.position.x - camera.position.x, this.position.y - camera.position.y, this.position.z - camera.position.z);
 
-                        return p.x - this.size.x >= -10000 && p.x < 10000 && p.y + this.size.y >= -1000 && p.y < 10000;
+                        var onScreen = p.x > 0 - this.size.x && p.x < w + this.size.x && p.y > 0 - this.size.x && p.y < h + this.size.y ? true : false;
+
+                        return onScreen;
                 }
 
                 /*****************************
@@ -3600,7 +3636,11 @@ var Sprite = function () {
                                 shot.speed.x = Math.cos(shot.rotation.x * 3.14 / 180) * speed;
 
                                 shot.speed.y = Math.sin(shot.rotation.x * 3.14 / 180) * speed;
+
+                                return shot;
                         }
+
+                        return new Error("game was not in motion: Gamestack.isAtPlay must be true to create a shot.");
                 }
 
                 /**
@@ -3649,9 +3689,9 @@ var Sprite = function () {
 
                                 subsprite.setAnimation(animation);
 
-                                var __parent = this;
-
                                 return subsprite;
+                        } else {
+                                alert('No subsprite when not at play');
                         }
                 }
 
@@ -4231,33 +4271,85 @@ var SpriteInitializersOptions = {
 
                 fourside_collideable: function fourside_collideable(sprite) {
 
+                        for (var x in Gamestack.__gameWindow.forces) {
+                                var force = Gamestack.__gameWindow.forces[x];
+
+                                force.clasticObjects.push(sprite);
+                        }
+
                         sprite.onUpdate(function () {});
                 }
         },
 
-        Gravities: {
+        MainGravity: {
 
                 very_light: function very_light(sprite) {
+                        //Add a gravity to the game
+
+                        var gravity = Gamestack.add(new Force({
+                                name: "very_light_grav",
+                                accel: 0.05,
+                                max: new Vector3(0, 3.5, 0),
+                                subjects: [sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                                clasticObjects: [] //an empty array of collideable objects
+
+                        }));
 
                         sprite.onUpdate(function () {});
                 },
 
                 light: function light(sprite) {
 
+                        var gravity = Gamestack.add(new Force({
+                                name: "light_grav",
+                                accel: 0.1,
+                                max: new Vector3(0, 4.5, 0),
+                                subjects: [sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                                clasticObjects: [] //an empty array of collideable objects
+
+                        }));
+
                         sprite.onUpdate(function () {});
                 },
 
                 medium: function medium(sprite) {
+
+                        var gravity = Gamestack.add(new Force({
+                                name: "medium_grav",
+                                accel: 0.2,
+                                max: new Vector3(0, 7.5, 0),
+                                subjects: [sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                                clasticObjects: [] //an empty array of collideable objects
+
+                        }));
 
                         sprite.onUpdate(function () {});
                 },
 
                 strong: function strong(sprite) {
 
+                        var gravity = Gamestack.add(new Force({
+                                name: "strong_grav",
+                                accel: 0.4,
+                                max: new Vector3(0, 10.5, 0),
+                                subjects: [sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                                clasticObjects: [] //an empty array of collideable objects
+
+                        }));
+
                         sprite.onUpdate(function () {});
                 },
 
                 very_strong: function very_strong(sprite) {
+
+                        var gravity = Gamestack.add(new Force({
+                                name: "strong_grav",
+                                accel: 0.5,
+                                max: new Vector3(0, 12.5, 0),
+                                subjects: [sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                                clasticObjects: [] //an empty array of collideable objects
+
+                        }));
 
                         sprite.onUpdate(function () {});
                 }
@@ -4408,7 +4500,7 @@ var Vector = function () {
         function Vector(x, y, z, r) {
                 _classCallCheck(this, Vector);
 
-                if ((typeof x === 'undefined' ? 'undefined' : _typeof(x)) == 'object' && x.x && x.y) //optionally pass vector3
+                if ((typeof x === 'undefined' ? 'undefined' : _typeof(x)) == 'object' && x.hasOwnProperty('x') && x.hasOwnProperty('y')) //optionally pass vector3
                         {
                                 this.x = x.x;
                                 this.y = x.y;

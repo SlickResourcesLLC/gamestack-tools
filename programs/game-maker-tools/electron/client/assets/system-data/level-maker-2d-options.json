@@ -4,7 +4,7 @@
       "tag": "brick_block",
       "type":"basic_block",
       "img": {},
-      "src": "../assets/builder/bricks/square_brick.png",
+      "src": "../assets/game/image/bricks/square_brick.png",
       "frameSize": {
         "x": 85,
         "y": 85
@@ -17,7 +17,7 @@
     {
       "tag": "platform",
       "img": {},
-      "src": "../assets/builder/mushplat.png",
+      "src": "../assets/game/image/mushplat.png",
       "frameSize": {
         "x": 490,
         "y": 299
@@ -30,7 +30,7 @@
     {
       "tag": "prop",
       "img": {},
-      "src": "../assets/builder/prop.png",
+      "src": "../assets/game/image/prop.png",
       "frameSize": {
         "x": 550,
         "y": 400

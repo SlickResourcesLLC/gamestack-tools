@@ -16,7 +16,7 @@
 class Vector {
     constructor(x, y, z, r) {
 
-        if(typeof(x) == 'object' && x.x && x.y) //optionally pass vector3
+        if(typeof(x) == 'object' && x.hasOwnProperty('x') && x.hasOwnProperty('y')) //optionally pass vector3
         {
             this.x = x.x;
             this.y = x.y;

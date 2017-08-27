@@ -240,13 +240,28 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
                 var __inst = this;
 
-                $.each(sprites, function(ix, item){
+                if(sprites.length) {
 
-                    sprites[ix].onInit(__inst.title);
+                    $.each(sprites, function (ix, item) {
 
-                   // item.onInit(__inst.title);
+                        sprites[ix].onInit(__inst.title);
 
-                });
+                        if(spriteGroupGetter == get_selected_sprites) //these are active sprites
+                        {
+                            sprites[ix].init();
+
+                        }
+
+                        // item.onInit(__inst.title);
+
+                    });
+
+                }
+                else
+                {
+                    alert('Must have selected sprites: use SHIFT + left-click');
+
+                }
 
 
             }
@@ -706,6 +721,14 @@ var __rightClickInterface = [{
                     }
 
                 }
+            },
+
+            {
+                name: 'Apply Sprite_Initializer(s)...',
+                title: 'Apply features on init.',
+                img: 'img/settings_icon.png',
+                // disable: true,
+                subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
             },
 
             {

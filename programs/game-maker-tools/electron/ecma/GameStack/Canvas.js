@@ -91,7 +91,7 @@ var CanvasLib = function() {
 
                 //optional animation : offset
 
-                if (sprite.selected_animation.offset) {
+                if (sprite.selected_animation && sprite.selected_animation.hasOwnProperty('offset')) {
                     x += sprite.selected_animation.offset.x;
 
                     y += sprite.selected_animation.offset.y;

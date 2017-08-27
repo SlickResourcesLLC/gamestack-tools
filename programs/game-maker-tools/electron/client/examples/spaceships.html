@@ -14,6 +14,7 @@
 
 <script>
 
+    var player, enemy;
 
     GameStack.ready(function(lib){
 
@@ -24,7 +25,7 @@
           weapon_animations:{
 
               normal_bullet:new Animation({
-                  src:"../assets/builder/question-mark.png",
+                  src:"../assets/game/image/question-mark.png",
                   frameSize: new Vector3(44, 44, 0),
                   frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
               })
@@ -34,12 +35,11 @@
             damage_animations:{
 
                 explosion1:new Animation({
-                    src:"../assets/builder/explosions/Explosion0000.png",
-
+                    src:"../assets/game/image/end-user/explosions/Explosion0000.png",
                     frameSize: new Vector3(128, 128, 0),
-                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(5, 4))
+                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(5, 4)),
+                    extras:new Extras(new Sound('../assets/game/sound/explosion.mp3').volume(0.4))
                 })
-
             }
 
         };
@@ -47,10 +47,7 @@
         var __GameWindow = lib.add(new GameWindow({}));
 
         /**
-         *
          * @tutorial Sprites and Animations: There are two steps to creating an animated Sprite() in GameStack.js
-         *
-         *
          */
 
         /**
@@ -60,7 +57,7 @@
          *
          */
 
-        var player = lib.add(new Sprite(
+        player =new Sprite(
             {
                 name:"player",
                 description:"The player sprite",
@@ -69,7 +66,7 @@
                 stats:{health:100, magic:1000}
 
             }
-        ));
+        );
 
         /**
          * @tutorial-step
@@ -79,7 +76,7 @@
          */
 
         player.setAnimation(new Animation({
-            src:"../assets/builder/space/spaceship/spinship1.png",
+            src:"../assets/game/image/spaceship/spinship1.png",
             type:"player",
             frameSize: new Vector3(90, 90, 0),
             frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(15, 0))
@@ -90,7 +87,8 @@
 
         player.position.x = 300;
 
-        var enemy = lib.add(new Sprite(
+
+        enemy = new Sprite(
             {
                 name:"enemy",
                 description:"The enemy sprite",
@@ -98,74 +96,143 @@
                 size:new Vector3(90, 90, 0),
                 stats:{health:100, magic:1000}
             }
-        ));
+        );
 
         enemy.rotation.x = 180;
 
         enemy.setAnimation(new Animation({
-            src:"../assets/builder/space/spaceship/spinship5.png",
+            src:"../assets/game/image/spaceship/spinship5.png",
             type:"enemy",
             frameSize: new Vector3(90, 90, 0),
             frameBounds: new VectorFrameBounds(new Vector3(7, 0), new Vector3(7, 0))
         }));
+
+       // enemy.position.y = 100;
+
+       // enemy.position.x = 100;
+
+        alert(jstr(enemy.position));
+
+        player.explosion_animation = new Animation(GameAssets.damage_animations.explosion1);
+
+        enemy.explosion_animation = new Animation(GameAssets.damage_animations.explosion1);
+
+        enemy.explode = function()
+        {
+            if(!this.dead)
+            {
+
+                var explosionSize = new Vector3(100, 100, 0);
+
+                var explosion = this.subsprite({
+
+                    animation:this.explosion_animation,
+
+                    size:explosionSize,
+
+                    position:new Vector3(this.position)
+
+
+                });
+
+
+                explosion.selected_animation.engage();
+
+                explosion.selected_animation.onComplete(function(){
+
+                    explosion.active = false;
+
+                    lib.remove(explosion);
+
+                });
+
+
+                this.active = false;
+
+                this.dead = true;
+
+            }
+
+        };
+
+        //player shares same function
+
+        player.explode = enemy.explode;
+
+        lib.add(enemy);
+
+        lib.add(player);
 
         /**
          *
          * @tutorial The $Q(), GameStack.js $Q() function: We can use this to intercept controller input, collision, and obj[property] > || < value (such as sprite.health < 0)
          *
          * @tutorial-description This allows interception of game events with short calls to the $Q() query function.
+         *
          */
 
-        $Q().on('button_0', function(){
+        $Q().on('button_0', function(pressed){
 
-            var player = $Q('.Sprite[type=player]')[0];
+            if(pressed) {
 
-            if(!player.normalWeaponLocked)
-            {
+                var player = $Q('.Sprite[type=player]')[0];
 
-                for(var x = 0; x <= 4; x++) {
+                if (!player.normalWeaponLocked) {
 
-                    var bulletPosition = new Vector3(player.position.x + 41, player.position.y + 10, player.position.z).add(player.speed);
+                    for (var x = 0; x <= 4; x++) {
 
-                    player.shoot({
+                        var bulletPosition = new Vector3(player.position.x + 41, player.position.y + 10, player.position.z).add(player.speed);
 
-                        animation: GameAssets.weapon_animations.normal_bullet,
+                     var bullet = player.shoot({
 
-                        speed: 9,
+                            animation: GameAssets.weapon_animations.normal_bullet,
 
-                        position: bulletPosition,
+                            speed: 9,
 
-                        rot_offset: -40 + (20 * x) - 90
-                    });
+                            position: bulletPosition,
 
+                            rot_offset: -40 + (20 * x) - 90
+                        });
+
+
+                     bullet.onUpdate(function(sprite){
+
+                         if(sprite.collidesRectangular(enemy) && enemy.active){
+
+                            enemy.explode();
+
+                         };
+
+                     });
+
+
+                    }
+
+                    player.normalWeaponLocked = true;
+
+                    //unlock in 1/5 second
+
+                    window.setTimeout(function () {
+
+                        player.normalWeaponLocked = false;
+
+                    }, 200);
 
                 }
 
-                player.normalWeaponLocked = true;
+                var ctoffscreen = 0;
 
-                //unlock in 1/5 second
+                //Clean up offscreen bullets
 
-                window.setTimeout(function(){
+                for (var x = 0; x < lib.__gameWindow.sprites.length; x++) {
 
-                    player.normalWeaponLocked = false;
+                    if (!lib.__gameWindow.sprites[x].onScreen()) {
 
-                }, 200);
+                        ctoffscreen += 1;
 
-            }
+                        lib.remove(lib.__gameWindow.sprites[x]);
 
-            var ctoffscreen = 0;
-
-            //Clean up offscreen bullets
-
-            for(var x =0; x < lib.__gameWindow.sprites.length;x++)
-            {
-
-                if(!lib.__gameWindow.sprites[x].onScreen())
-                {
-
-                    ctoffscreen += 1;
-
-                    lib.remove(lib.__gameWindow.sprites[x]);
+                    }
 
                 }
 
@@ -219,8 +286,6 @@
 
         });
 
-
-
         /**
          * @tutorial-step Intercept the collision of two 'types' of sprite as follows
          */
@@ -234,43 +299,9 @@
 
             // alert('A collision has occurred');
 
-            if(!obj1.dead)
-            {
+          obj1.explode();
 
-                var explosionSize = new Vector3(100, 100, 0);
-
-                var explosion = obj1.subsprite({
-
-                    animation:new Animation(GameAssets.damage_animations.explosion1),
-
-                    size:explosionSize,
-
-                    position:new Vector3(obj1.position)
-
-
-                });
-
-                obj1.active = false;
-
-                explosion.onUpdate(function(sprite){
-
-                    console.log('EXP');
-
-                    explosion.animate();
-
-                    console.log('Frame len:' + sprite.selected_animation.frames.length);
-
-                    explosion.selected_animation.onComplete(function(){
-
-                        explosion.active = false;
-
-                    });
-
-                });
-
-                obj1.dead = true;
-
-            }
+            obj2.explode();
 
         });
 

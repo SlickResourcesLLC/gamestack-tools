@@ -279,9 +279,8 @@ class Sprite {
      **********/
 
     setSize(size) {
-        this.size = new Vector3(size.x, size.y, size.z);
 
-        this.selected_animation.size = new Vector3(size.x, size.y, size.z);
+        this.size = new Vector3(size.x, size.y, size.z);
 
     }
 
@@ -304,29 +303,32 @@ class Sprite {
      * @memberof Sprite
      **********/
 
-    maxDimensionsXY(mx, my)
+   getCappedSizeXY(mx, my, currentSize)
     {
 
-        var wth = this.size.x / this.size.y;
+        var size = new Vector3(currentSize || this.size);
 
-        var htw = this.size.y / this.size.x;
+        var wth = size.y /  size.x;
 
-        if(this.size.x > mx)
+        var htw = size.x /  size.y;
+
+        if( size.x > mx)
         {
-            this.size.x = mx;
+            size.x = mx;
 
-            this.size.y = this.size.x * wth;
+            size.y = size.x * wth;
 
         }
 
-        if(this.size.y > my)
+        if( size.y > my)
         {
-            this.size.y = my;
+            size.y = my;
 
-            this.size.x = this.size.y * htw;
+            size.x = size.y * htw;
 
         }
 
+        return size;
 
     }
 
@@ -388,12 +390,15 @@ class Sprite {
 
         h = h || __gameStack.HEIGHT;
 
-        var camera = __gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
+
+        var camera = __gameStack.camera ||__gameStack.__gameWindow.camera || new Vector3(0, 0, 0);
 
         var p = new Vector3(this.position.x - camera.position.x, this.position.y - camera.position.y, this.position.z - camera.position.z);
 
-        return p.x - this.size.x >= -10000 && p.x < 10000
-            && p.y + this.size.y >= -1000 && p.y < 10000;
+        var onScreen = p.x  > 0 - this.size.x && p.x < w + this.size.x
+        &&  p.y  > 0 - this.size.x && p.y < h + this.size.y ? true : false;
+
+        return onScreen;
 
     }
 
@@ -657,8 +662,11 @@ class Sprite {
 
             shot.speed.y = Math.sin((shot.rotation.x) * 3.14 / 180) * speed;
 
+            return shot;
 
         }
+
+        return new Error("game was not in motion: Gamestack.isAtPlay must be true to create a shot.");
 
     }
 
@@ -708,9 +716,12 @@ class Sprite {
 
             subsprite.setAnimation(animation);
 
-            var __parent = this;
-
             return subsprite;
+
+        }
+        else
+        {
+            alert('No subsprite when not at play');
 
         }
 
@@ -1381,6 +1392,14 @@ let SpriteInitializersOptions = {
         fourside_collideable:function(sprite)
         {
 
+            for(var x in Gamestack.__gameWindow.forces)
+            {
+                var force = Gamestack.__gameWindow.forces[x];
+
+                force.clasticObjects.push(sprite);
+
+            }
+
             sprite.onUpdate(function(){
 
 
@@ -1390,10 +1409,20 @@ let SpriteInitializersOptions = {
         }
     },
 
-    Gravities:{
+    MainGravity:{
 
         very_light:function(sprite)
         {
+            //Add a gravity to the game
+
+            var gravity = Gamestack.add(new Force({
+                name:"very_light_grav",
+                accel:0.05,
+                max:new Vector3(0, 3.5, 0),
+                subjects:[sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                clasticObjects:[] //an empty array of collideable objects
+
+            }));
 
             sprite.onUpdate(function(){
 
@@ -1405,6 +1434,16 @@ let SpriteInitializersOptions = {
         light:function(sprite)
         {
 
+            var gravity = Gamestack.add(new Force({
+                name:"light_grav",
+                accel:0.1,
+                max:new Vector3(0, 4.5, 0),
+                subjects:[sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                clasticObjects:[] //an empty array of collideable objects
+
+            }));
+
+
             sprite.onUpdate(function(){
 
 
@@ -1414,6 +1453,16 @@ let SpriteInitializersOptions = {
 
         medium:function(sprite)
         {
+
+            var gravity = Gamestack.add(new Force({
+                name:"medium_grav",
+                accel:0.2,
+                max:new Vector3(0, 7.5, 0),
+                subjects:[sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                clasticObjects:[] //an empty array of collideable objects
+
+            }));
+
 
             sprite.onUpdate(function(){
 
@@ -1426,6 +1475,15 @@ let SpriteInitializersOptions = {
         strong:function(sprite)
         {
 
+            var gravity = Gamestack.add(new Force({
+                name:"strong_grav",
+                accel:0.4,
+                max:new Vector3(0, 10.5, 0),
+                subjects:[sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                clasticObjects:[] //an empty array of collideable objects
+
+            }));
+
             sprite.onUpdate(function(){
 
 
@@ -1435,6 +1493,15 @@ let SpriteInitializersOptions = {
 
         very_strong:function(sprite)
         {
+
+            var gravity = Gamestack.add(new Force({
+                name:"strong_grav",
+                accel:0.5,
+                max:new Vector3(0, 12.5, 0),
+                subjects:[sprite], //sprite is the subject of this Force, sprite is pulled by this force
+                clasticObjects:[] //an empty array of collideable objects
+
+            }));
 
             sprite.onUpdate(function(){
 

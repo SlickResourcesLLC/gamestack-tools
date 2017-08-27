@@ -108,17 +108,28 @@
 
         var GameAssets = {
 
+            item:{
+                rocket_barrel: new Animation({
+                    src: "../assets/game/image/items/rocket-barrel.png",
+
+                    frameSize: new Vector3(165, 220, 0),
+                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
+                })
+
+            },
+
             character: {
 
+
                 player_run: new Animation({
-                    src: "../assets/builder/characters/full/spaceman1.png",
+                    src: "../assets/game/image/characters/full/spaceman1.png",
 
                     frameSize: new Vector3(130, 130, 0),
                     frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(23, 0))
                 }),
 
                 player_jump: new Animation({
-                    src: "../assets/builder/characters/full/spaceman1.png",
+                    src: "../assets/game/image/characters/full/spaceman1.png",
 
                     duration: 400,
                     frameSize: new Vector3(130, 130, 0),
@@ -130,14 +141,14 @@
                 }),
 
                 player_fall: new Animation({
-                    src: "../assets/builder/characters/full/spaceman1.png",
+                    src: "../assets/game/image/characters/full/spaceman1.png",
 
                     frameSize: new Vector3(130, 130, 0),
                     frameBounds: new VectorFrameBounds(new Vector3(36, 3), new Vector3(36, 3))
                 }),
 
                 player_flip: new Animation({
-                    src: "../assets/builder/characters/full/spaceman1.png",
+                    src: "../assets/game/image/characters/full/spaceman1.png",
 
                     duration: 700,
 
@@ -227,7 +238,7 @@
 
         //Set the size{} of player
 
-        player.setSize(new Vector3(45, 45));
+        player.setSize(new Vector3(75, 75));
 
 
         //set player.type for later reference (see $Q() queries to reference multiple collections of Sprite() and rig events, etc.. )
@@ -245,6 +256,23 @@
         };
 
         player.setAnimation(GameAssets.character.player_run);
+
+
+
+
+        //Add the player Sprite()
+
+        var rocket_barrel = lib.add(new Sprite({}));
+
+
+        rocket_barrel.setAnimation(GameAssets.item.rocket_barrel);
+
+        rocket_barrel.setPos(new Vector3(700, 200, 0));
+
+        rocket_barrel.setSize(new Vector3(85, 109, 0));
+
+
+        rocket_barrel.rot_speed.x = 4;
 
 
         /**
@@ -374,6 +402,8 @@
             if(obj1.jump_tween  && overhead) //cancel the jump when colliding with overhead basic_block
             {
 
+                obj1.speed.y = obj1.speed_tracker.y;
+
 
                 obj1.jump_tween.stop();
 
@@ -422,7 +452,7 @@
             var items = new ItemDisplay({
                 size: new Vector3(25, 25),
                 fontSize: "18px",
-                src: "../assets/builder/items/apple_blue.png",
+                src: "../assets/game/image/items/apple_blue.png",
                 top: 0.04,
                 left: 0.03,
                 text: "Item Count"

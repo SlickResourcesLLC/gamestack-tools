@@ -44,6 +44,15 @@ class Sound {
 
     }
 
+    volume(val)
+    {
+
+        this.sound.volume = val;
+
+        return this;
+
+    }
+
     play() {
         if (typeof(this.sound) == 'object' && typeof(this.sound.play) == 'function') {
 
@@ -417,6 +426,7 @@ let GameStackLibrary = function () {
 
             //call every function in the ready_callstack
 
+
             this.each(funx, function (ix, call) {
 
                 call(lib, gameWindow, sprites);
@@ -424,6 +434,7 @@ let GameStackLibrary = function () {
             });
 
             this.InputEvents.init();
+
 
         }
         ,
@@ -481,7 +492,6 @@ let GameStackLibrary = function () {
         remove: function (obj) {
             //1: if Sprite(), Add object to the existing __gameWindow
 
-
             if (obj instanceof Sprite) {
 
                 var ix = this.__gameWindow.sprites.indexOf(obj);
@@ -522,6 +532,25 @@ let GameStackLibrary = function () {
             });
 
             return objectList;
+
+        },
+
+        getById:function(id){
+
+
+            for(var x in this.all_objects)
+            {
+
+                if(this.all_objects[x].id == id)
+                {
+                    return this.all_objects[x];
+
+                }
+
+            }
+
+
+
 
         },
 
@@ -1523,24 +1552,28 @@ class GameWindow {
 
             document.body.append(this.canvas);
 
-            this.canvas.style.position = 'absolute';
 
-            this.canvas.style.width = '100%';
 
-            this.canvas.style.height = '100%';
-
-            this.canvas.style.background = 'black';
-
-            var c = this.canvas;
-
-            this.adjustSize();
         }
+
+        this.canvas.style.position = 'absolute';
+
+        this.canvas.style.width = '100%';
+
+        this.canvas.style.height = '100%';
+
+        this.canvas.style.background = 'black';
+
+        var c = this.canvas;
 
         this.ctx = this.canvas.getContext('2d');
 
         __gameStack.canvas = this.canvas;
 
         __gameStack.ctx = this.ctx;
+
+
+        this.adjustSize();
 
         window.onresize = function(){
 
@@ -1561,10 +1594,13 @@ class GameWindow {
 
        __gameStack.__gameWindow = this;
 
-    }
+}
 
     adjustSize(w, h)
     {
+
+
+
         w = w || this.canvas.clientWidth;
 
         h = h || this.canvas.clientHeight;

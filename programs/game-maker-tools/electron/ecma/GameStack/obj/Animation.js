@@ -81,6 +81,7 @@ class Animation {
 
         this.extras = this.getArg(args, 'extras', false);
 
+
       if(typeof(args) == 'object' && args.frameBounds && args.frameSize){  this.apply2DFrames(args.parent || {}) };
 
         this.flipX = this.getArg(args, 'flipX', false);

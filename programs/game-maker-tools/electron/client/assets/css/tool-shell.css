@@ -7,6 +7,8 @@ body, html {
     -ms-user-select: none;
     user-select: none;
 
+
+
 }
 
 
@@ -1421,15 +1423,28 @@ li a.delete:hover {
 
     position:absolute;
 
-
-
     top:50px;
 
     z-index:800;
 
     overflow:scroll;
 
+}
+
+button#test-button
+{
+    float:right;
+
+    color:greenyellow;
 
 }
 
+
+button#restart-button
+{
+    float:right;
+
+    color:lightseagreen;
+
+}
 

@@ -12,9 +12,6 @@ module.exports = function() {
 
        var express = require('express');
 
-
-
-
        console.log("Initializing");
 
        var bodyParser = require('body-parser');
@@ -164,6 +161,65 @@ module.exports = function() {
 
 
        });
+
+       var fs = require('fs');
+
+
+
+       function copy(oldPath, newPath) {
+           var readStream = fs.createReadStream(oldPath);
+           var writeStream = fs.createWriteStream(newPath);
+
+           readStream.on('error', callback);
+           writeStream.on('error', callback);
+
+           readStream.on('close', function () {
+               fs.unlink(oldPath, callback);
+           });
+
+           readStream.pipe(writeStream);
+       }
+
+
+       app.post('/save-image-persistent', function(req, res){
+
+           var content = req.body.content;
+
+           var filename = req.body.filename;
+
+           fs.rename('client/assets/uploads/' + filename, 'client/assets/system-image-stash/' + filename, function (err) {
+               if (err) {
+                   if (err.code === 'EXDEV') {
+                       copy(oldPath, newPath);
+
+                       res.end(JSON.stringify({relpath: relpath, content: content}));
+
+
+                   } else {
+
+                       res.end(JSON.stringify({relpath: relpath, content: content}));
+
+
+                   }
+                   return;
+               }
+               callback();
+           });
+
+
+           setTimeout(function(){
+
+
+               res.end(JSON.stringify({error:"time-out", relpath: relpath, content: content}));
+
+
+           }, 10000);
+
+
+       });
+
+
+
 
 
 

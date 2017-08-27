@@ -357,6 +357,19 @@ var DatGui = {
     addVectorFromProperty:function(gui, prop, name, min, max, callback)
     {
 
+        dat.GUI.prototype.removeFolder = function(name) {
+            var folder = this.__folders[name];
+            if (!folder) {
+                return;
+            }
+            folder.close();
+            this.__ul.removeChild(folder.domElement.parentNode);
+            delete this.__folders[name];
+            this.onResize();
+        }
+
+        gui.removeFolder(name);
+
         var fui = gui.addFolder(name);
 
         if(!prop instanceof Vector  && !prop instanceof Vector2)
@@ -365,13 +378,15 @@ var DatGui = {
 
         }
 
+        var guis = {};
+
         for(var x in prop)
         {
             if(typeof(prop[x])=='number') {
 
-                var g = fui.add(prop, x).min(min).max(max);
+                guis[x] = fui.add(prop, x).min(min).max(max);
 
-                g.onChange(function (value) {
+                guis[x].onChange(function (value) {
 
                     if (callback) {
                         callback();
@@ -829,6 +844,8 @@ var DatGui = {
 
                                         var img = object.selected_animation.image.domElement;
 
+
+
                                         object.selected_animation.image.domElement.onload = function () {
 
                                             object.position = new Vector(0, 0, 0);
@@ -838,13 +855,13 @@ var DatGui = {
                                             object.selected_animation = new Animation({ image:this, frameSize: new Vector(object.size),
                                                 frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))});
 
-                                                console.log('found vector');
 
                                             object.frameSize = object.selected_animation.selected_frame.frameSize;
 
                                                 DatGui.addVectorFromProperty(gui, object.size, 'this.size', 0, 1000, function(){
 
-                                                    __levelMaker.imagePreview(object);
+
+                                                   __levelMaker.imagePreview(object);
 
                                                 });
 

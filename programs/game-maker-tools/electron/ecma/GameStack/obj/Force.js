@@ -35,6 +35,26 @@ class GravityForce
 
         }
 
+
+        for(var x in this.clasticObjects)
+        {
+            if(!this.clasticObjects[x] instanceof Sprite)
+            {
+                this.clasticObjects[x] = Gamestack.getById(this.clasticObjects[x].id);
+            }
+
+        }
+
+
+        for(var x in this.subjects)
+        {
+            if(!this.subjects[x] instanceof Sprite)
+            {
+                this.subjects[x] = Gamestack.getById(this.subjects[x].id);
+            }
+
+        }
+
     }
 
     getArg(args, key, fallback) {
