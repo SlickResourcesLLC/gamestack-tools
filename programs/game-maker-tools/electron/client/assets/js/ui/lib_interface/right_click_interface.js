@@ -220,6 +220,28 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
     var subMenu = [];
 
+
+    var createSubMenuLevel = function(key)
+    {
+
+        //determine the img path
+        var img = key.toLowerCase().indexOf('control') >= 0 ? /*is conroller function*/ 'img/controller_icon.png' : 'img/settings_icon.png';
+
+        return {
+
+            name: key,
+
+            title: key, //must be applicable to sprite.onInit();
+
+            img: img,
+
+            subMenu:[]
+        }
+
+
+
+    };
+
     var createSubMenuObject = function(key, call)
     {
 
@@ -269,7 +291,7 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
     };
 
-    var addItem = function(key, obj)
+    var addItem = function(key, obj, subMenu)
     {
         var rcItem = createSubMenuObject(key, obj);
 
@@ -277,33 +299,37 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
     };
 
-
-
     for(var x in obj) {
 
         if (typeof obj[x] == 'function') {
 
-          addItem(x, obj[x]);
+          addItem(x, obj[x], subMenu);
 
         }
         else if (typeof obj[x] == 'object') {
+
+          var nextLevel = createSubMenuLevel(x);
+
+            subMenu.push(nextLevel);
 
             for (var y in obj[x]) {
 
                 if (typeof obj[x][y] == 'function') {
 
-
-
-                    addItem(x+"." + y, obj[x][y]);
+                    addItem(x+"." + y, obj[x][y], nextLevel.subMenu);
 
                 }
                 else if (typeof obj[x][y] == 'object') {
+
+                    var nextLevel = createSubMenuLevel(x+"." + y );
+
+                    subMenu.push(nextLevel);
 
                     for (var z in obj[x][y]) {
 
                         if (typeof obj[x][y][z] == 'function') {
 
-                            addItem(x+"." + y + '.' + z, obj[x][y][z]);
+                            addItem(x+"." + y + '.' + z, obj[x][y][z], nextLevel.subMenu);
 
                         }
 
@@ -322,7 +348,6 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
     return subMenu;
 
 };
-
 
 
 var alterMenu= function(name, callback)
@@ -673,7 +698,7 @@ var __rightClickInterface = [{
                 }
             },
 
-            {
+                      {
                 name: 'Rotate +180 degrees',
                 title: 'Rotate Selected Objects',
                 img: 'img/settings_icon.png',
@@ -699,8 +724,8 @@ var __rightClickInterface = [{
             },
 
             {
-                name: 'Flip Horizontal',
-                title: 'Flip-X Selected Objects',
+                name: 'Flip Image Horizontal',
+                title: 'Flip Image Horizontal',
                 img: 'img/settings_icon.png',
                 fun: function () {
 
@@ -724,52 +749,47 @@ var __rightClickInterface = [{
             },
 
             {
+                name: 'Persistent Rotational Speed',
+                title: 'Persistent Rotational Speed',
+                img: 'img/settings_icon.png',
+                fun: function () {
+
+                    var sprites = get_selected_sprites();
+
+                    if (sprites.length >= 1) {
+
+                        App.collectNumber(-20, 20, function(value){
+
+                            $.each(sprites, function (ix, item) {
+
+                                item.rot_speed.x = value;
+
+
+                            });
+
+
+                        });
+
+                    }
+                    else {
+                        alert('Nothing selected. Sprites must be SHIFT + left-clicked to select.');
+
+                    }
+
+
+
+
+                }
+            },
+
+
+            {
                 name: 'Apply Sprite_Initializer(s)...',
                 title: 'Apply features on init.',
                 img: 'img/settings_icon.png',
                 // disable: true,
                 subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
             },
-
-            {
-                name: 'Sprites by Type',
-                img: 'img/little_star.png',
-                title: 'place_array_clones',
-                id: 'place_array_clones',
-
-                subMenu: [
-
-                    {
-                        name: 'Add Event by Type',
-                        title: 'add event',
-
-                        fun: function () {
-
-
-                            alert('This function is coming soon for level-maker 1.1');
-
-
-                        }
-                    },
-
-                    {
-                        name: 'Mass Edit by Type',
-                        title: 'add event',
-
-                        fun: function () {
-
-                            alert('This function is coming soon for level-maker 1.1');
-
-
-                        }
-                    }
-
-
-                ]
-
-
-            },
-
 
         ]
 

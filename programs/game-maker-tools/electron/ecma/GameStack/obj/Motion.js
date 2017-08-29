@@ -323,6 +323,7 @@ class Motion {
 }
 
 
+Gamestack.Motion = Motion;
 
 
 

@@ -36,7 +36,7 @@ class Sprite {
 
         var _spr = this;
 
-        Quazar.each(args, function (ix, item) { //apply all args
+        Gamestack.each(args, function (ix, item) { //apply all args
 
             if (ix !== 'parent') {
                 _spr[ix] = item;
@@ -370,7 +370,7 @@ class Sprite {
 
         this.selected_animation = anime;
 
-        Quazar.log('declared default animation');
+        Gamestack.log('declared default animation');
 
         return this;
 
@@ -458,7 +458,7 @@ class Sprite {
 
         for (var x in this.rot_speed) {
 
-            if (this.rot_speed[x] > 0 || this.rot_speed[x] < 0) {
+            if ( this.rot_speed[x] > 0 || this.rot_speed[x] < 0) {
 
                 this.rotation[x] += this.rot_speed[x];
 
@@ -573,7 +573,7 @@ class Sprite {
 
     collidesRectangular(sprite) {
 
-        return Quazar.Collision.spriteRectanglesCollide(this, sprite);
+        return Gamestack.Collision.spriteRectanglesCollide(this, sprite);
 
     }
 
@@ -1230,7 +1230,9 @@ class Sprite {
 
                        if (Math.abs(diffY) < distY) {
 
-                           this.position.y -= diffY > 0 ? -1 : 1;
+                           this.position.y -= diffY > 0 ? -1 : diffY < 0 ? 1 : 0;
+
+                           this.position.y = Math.round(this.position.y);
 
                        }
 
@@ -1268,8 +1270,9 @@ class Sprite {
 
 
 
-    collide_stop_top()
+    collide_stop_top(item)
     {
+
 
         if(this.id == item.id)
         {
@@ -1277,51 +1280,22 @@ class Sprite {
 
         }
 
-        if(this.collidesRectangular(item)) {
 
-            var diff = this.center().sub(item.center());
+            if(this.overlap_x(item, this.padding.x + 0.1))
+            {
 
-            if (this.overlap_x(item, 0.3) && Math.abs(diff.y) < 0) {
+                console.log('OVERLAP_X');
 
-                var apart = false;
+                var paddingY = this.padding.y * this.size.y;
 
-                var ct = 10000;
+                if(this.position.y + this.size.y - paddingY <= item.position.y)
+                {
 
-                while (!apart && ct > 0) {
-
-                    ct--;
-
-                    var diffY = this.center().sub(item.center()).y;
-
-                    var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
-
-                    if (Math.abs(diffY) < distY) {
-
-                        this.position.y -= diffY > 0 ? -1 : 1;
-
-
-                    }
-
-                    else {
-
-                        if (diffY < 0) {
-                            this.__inAir = false;
-                        }
-                        ;
-
-
-                        apart = true;
-
-
-                    }
-
+                    this.groundMaxY = item.position.y - this.size.y + paddingY;
 
                 }
 
-
             }
-
-        }
 
     }
 
@@ -1376,11 +1350,24 @@ class Sprite {
  ****************/
 
 
+
+Gamestack.Sprite = Sprite;
+
 let SpriteInitializersOptions = {
 
     Collideables:{
+
         top_collideable:function(sprite)
         {
+
+            for(var x in Gamestack.__gameWindow.forces)
+            {
+                var force = Gamestack.__gameWindow.forces[x];
+
+                force.topClastics.push(sprite);
+
+            }
+
 
             sprite.onUpdate(function(){
 
@@ -1515,17 +1502,15 @@ let SpriteInitializersOptions = {
 
     ControllerStickMotion: {
 
-        __args: {},
-
         player_move_x: function (sprite) {
 
             alert('applying initializer');
 
             console.log('side_scroll_player_run:init-ing');
 
-            let __lib = Quazar || Quick2d;
+            let __lib = Gamestack || Quick2d;
 
-            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+            Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                 console.log('stick-x:' + x);
 
@@ -1569,9 +1554,9 @@ let SpriteInitializersOptions = {
 
             console.log('side_scroll_player_run:init-ing');
 
-            let __lib = Quazar || Quick2d;
+            let __lib = Gamestack || Quick2d;
 
-            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+            Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                 console.log('stick-x:' + x);
 
@@ -1614,9 +1599,9 @@ let SpriteInitializersOptions = {
 
         player_rotate_x: function (sprite) {
 
-            let __lib = Quazar || Quick2d;
+            let __lib = Gamestack || Quick2d;
 
-            Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+            Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                 console.log('stick-x:' + x);
 
@@ -1660,7 +1645,6 @@ let SpriteInitializersOptions = {
 };
 
 
+Gamestack.options = Gamestack.options || {};
 
-GameStack.options = GameStack.options || {};
-
-GameStack.options.SpriteInitializers = SpriteInitializersOptions;
+Gamestack.options.SpriteInitializers = SpriteInitializersOptions;

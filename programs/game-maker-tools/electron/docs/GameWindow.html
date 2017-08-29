@@ -33,7 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="InterfaceCallback.html">InterfaceCallback</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
+					<li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="GameImage.html">GameImage</a></li><li><a href="GamepadAdapter.html">GamepadAdapter</a></li><li><a href="GameWindow.html">GameWindow</a></li><li><a href="GravityForce.html">GravityForce</a></li><li><a href="ItemDisplay.html">ItemDisplay</a></li><li><a href="Motion.html">Motion</a></li><li><a href="Sound.html">Sound</a></li><li><a href="Sprite.html">Sprite</a></li><li><a href="Vector.html">Vector</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#Gamestack">Gamestack</a></li>
 				</ul>
 			</li>
 			
@@ -74,7 +81,7 @@
         GameWindow
         </h2>
         
-            <div class="class-description">class: GameWindow: args{canvas, ctx, sprites, backgrounds, interactives, forces, update}</div>
+            <div class="class-description">:Instantiates a GameWindow object</div>
         
     
 </header>
@@ -86,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="GameWindow"><span class="type-signature"></span>new GameWindow()</h4>
+    <h4 class="name" id="GameWindow"><span class="type-signature"></span>new GameWindow(args)</h4>
     
     
 </dt>
@@ -99,6 +106,178 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">: the object of arguments
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">: the canvas object of the window: GameWindow constructor will create one if not supplied in args</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ctx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">: the canvas context</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sprites</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">: the list of sprites, to be applied with GameWindow</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forces</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">: the list of forces, such as gravity, to be applied with GameWindow</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -152,6 +331,30 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    object of GameWindow()
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="GameWindow.html">GameWindow</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -224,7 +427,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-08-26T22:19:58-04:00
+		on 2017-08-28T19:26:44-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

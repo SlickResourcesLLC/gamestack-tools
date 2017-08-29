@@ -211,6 +211,7 @@
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
                     type="button">Level<span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
+
                 <li role="presentation"><a href="#" id="new-level">New Level</a></li>
 
                 <li role="presentation"><a href="#" id="load-level">Load Level</a></li>
@@ -357,6 +358,8 @@
 
 
 
+
+
 <div class="free-select center map-list">
 
     <ul></ul>
@@ -411,14 +414,37 @@
 
         },
 
-        add_map_object:function(item){
+
+        replace_map_object:function(item) {
+
+            $.each(App.map_objects, function (n, map_item) {
+
+                if (map_item.id == item.id) {
+
+                  var action = Option_Funx.OptionActionList(item.name, item, function (err, element) {
+
+                        console.log('added 1 map object');
+
+                        var value = $(element).text();
+
+                        __levelMaker.selectedElement = __levelMaker.get(value);
+
+                    });
+
+                    App.map_objects[n] = action;
+
+                }
+
+            });
+        },
+
+            add_map_object:function(item){
 
             $.each(App.map_objects, function(n, map_item){
 
                 if(map_item.id == item.id)
                 {
 
-                    alert("already have item");
                     App.map_objects.splice(n, 1);
                 }
 
@@ -438,7 +464,7 @@
 
         image_upload: __ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
 
-        superSelectOptions(name, options, callback)
+        superSelectOptions:function(name, options, callback)
         {
             var addListHTML = '<div class="add-list">' +
 
@@ -555,9 +581,9 @@
             if(data && data.settings)
             {
 
-                usingOptFile = false;
-
                 __inst.settings = data.settings;
+
+                __levelMaker.settings = data.settings;
 
             }
 
@@ -567,6 +593,8 @@
                 $.each(data.sprites, function(ix, item){
 
                     __inst.sprites[ix] = new Sprite().restoreFrom(item);
+
+                    __inst.sprites[ix].init();
 
                 });
 
@@ -705,11 +733,28 @@
 
         },
 
-        closeMessage(callback)
+        closeMessage:function(callback)
         {
 
             $('#message').hide();
 
+
+        },
+
+        collectNumber:function(min, max, inputValueCallback)
+        {
+
+          this.message("<input type='number' value='0' min='"+min+"'  max='"+max+"'   />");
+
+          $('button#message-ok').unbind().click(function(){
+
+              var value = $(this).parent().find("input").val();
+
+              value = parseFloat(value);
+
+              inputValueCallback(value);
+
+          });
 
         },
 
@@ -840,8 +885,6 @@
                     __levelMaker.getImageFileCallback(fitem, function (name, w, h, result) {
 
                         App.image_upload(name, result, function (relpath, content) {
-
-                            alert('name:' + relpath);
 
                             __levelMaker.selected_image_src = '..' + relpath.replace('client', '');
 
@@ -1098,25 +1141,6 @@
 
                 }
 
-                var s = __levelMaker.all_selected_sprites();
-
-                if (s.length > 0) {
-
-                    console.log('found selected sprites');
-                    var item = getRCItemByKey('With_Selected_Sprites...', __rightClickInterface);
-
-                    item.disable = false;
-                }
-                else {
-                    var item = getRCItemByKey('With_Selected_Sprites...', __rightClickInterface);
-
-                    item.disable = true;
-                }
-
-              //  App.refreshRightClick();
-
-
-
 
                 __levelMaker.mouse.down = false;
 
@@ -1179,9 +1203,9 @@
 
             var rsgui = new dat.GUI({autoPlace:false});
 
-            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
+          //  rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
 
-            $('.rotation-speed-gui').append($(rsgui.domElement));
+          //  $('.rotation-speed-gui').append($(rsgui.domElement));
 
             var agui = new dat.GUI({autoPlace: false});
 
@@ -1196,7 +1220,7 @@
 
             var OptionActionList = function (text, data, callback) {
 
-                return {text: text, data: data, callback: callback}
+                return {text: text, id:data.id, data: data, callback: callback}
 
             };
 
@@ -1241,36 +1265,62 @@
 
                 var cm_id = data.id;
 
-                $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.image.domElement.src + '"  /></li>');
+                var found = false;
 
-                var link = $('.free-select ul li a')[x];
+                if($('.free-select ul li').length)
+                {
 
-                var lparent = $(link).parent();
 
-                $(link).on('click', function () {
+                $('.free-select ul li').each( function(ix, item){
 
-                    cmCallback(false, this);
+                   if($(this).text() == cmText)
+                   {
+                       found = true;
 
-                    hide();
-
-                });
-
-                $(lparent).on('contextmenu', function (evt) {
-
-                    var textItem = $(this).find('a')[0], value = $(textItem).text();
-
-                    __levelMaker.selectedElement = __levelMaker.get(value);
-
+                   }
 
                 });
 
 
-                $(lparent).on('click', function () {
-                    cmCallback(false, $(link));
+                }
 
-                    hide();
+                if(!found) {
 
-                });
+                    $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.image.domElement.src + '"  /></li>');
+
+
+                }
+
+                    var link = $('.free-select ul li a')[x];
+
+                    var lparent = $(link).parent();
+
+                $(lparent).data('id', cm_id);
+
+                    $(link).on('click', function () {
+
+                        cmCallback(false, this);
+
+                        hide();
+
+                    });
+
+                    $(lparent).on('contextmenu', function (evt) {
+
+                        var textItem = $(this).find('a')[0], value = $(textItem).text();
+
+                        __levelMaker.selectedElement = __levelMaker.get(value);
+
+
+                    });
+
+
+                    $(lparent).on('click', function () {
+                        cmCallback(false, $(link));
+
+                        hide();
+
+                    });
 
 
             });
@@ -1293,21 +1343,9 @@
 
         $('body').css('cursor', 'crosshair');
 
-        $(document).on('click', 'button.main-play', function (evt) {
-
-
-            $.each(Game.sprites, function (ix, item) {
-
-                //rehook motion functions
-
-                Game.sprites[ix].def_update = new Sprite().def_update;
-
-            });
-
-        });
-
 
         $('#play').click(function(){
+
 
                 if(Game.TEST_MODE == false) {
 
@@ -1322,6 +1360,7 @@
                     Game.TEST_MODE = Game.TEST_MODE == true ? "STOPPED" : true;
 
                     App.left_click_locked = true;
+
 
         });
 
@@ -1536,56 +1575,7 @@
 
         });
 
-        var flipSelectedX = function () {
 
-            var s = __levelMaker.getHoverSelected();
-
-
-            if (s) {
-
-                s.flipX = s.flipX ? false : true;
-
-            }
-
-        };
-
-
-        var rotate = function () {
-
-            var s = __levelMaker.getHoverSelected();
-
-            if (s) {
-
-                s.rotation.x += 45;
-
-            }
-
-        };
-
-
-        $(document).on('keydown', function (e) {
-
-            console.log('got key of:' + event.which);
-
-
-            if (event.which == '114' || event.which == '82') {
-
-                rotate();
-            }
-
-        });
-
-
-        $(document).on('keydown', function (e) {
-
-            console.log('got key of:' + event.which);
-
-            if (event.which == '70' || event.which == '102') {
-
-                flipSelectedX();
-            }
-
-        });
 
 
         $('.squeeze, ul.nav-tabs li').squeeze(function () {
@@ -2003,13 +1993,40 @@
 
                 $('button#create_object').click(function () {
 
-                    alert('creating object');
+                    var hasLevelObjectName = function(name)
+                    {
+
+                        var found = false;
+
+                        $.each(__levelMaker.mapElements, function(ix, item){
+
+                            if(item.name == name)
+                            {
+                                found = true;
+
+                            }
+
+                        });
+
+                        return found;
+
+                    };
+
+
+                    if(hasLevelObjectName(__levelMaker.assembled_sprite.name))
+                    {
+
+                        return alert('Must have a unique name to create object.');
+
+                    }
+
 
                     var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
 
                     sprite.animate();
 
                     sprite.tag = sprite.name;
+
 
                     __levelMaker.addLevelObjectToUI(sprite);
 
@@ -2260,6 +2277,8 @@
                 if(args instanceof Sprite) {
 
                     mapElement = args;
+
+                    mapElement.__mapSize = mapElement.__mapSize || mapElement.size;
 
                 }
                 else
@@ -2608,6 +2627,8 @@
 
                 var sprite = new Sprite({name:'MapElement', description:'A level-builder element'});
 
+
+
                 sprite.active = true;
 
                 mapElement.src = img.src;
@@ -2623,7 +2644,7 @@
                 }));
 
 
-                sprite.setSize(mapElement.__mapSize);
+                sprite.setSize(mapElement.__mapSize || mapElement.size);
 
                 // console.log(JSON.stringify(sprite));
 
@@ -2643,7 +2664,8 @@
             },
 
             plantMapSprite: function (mapElement, x, y) {
-                if (!mapElement.__mapSize) {
+
+                if (!mapElement.hasOwnProperty('__mapSize')) {
                     mapElement.__mapSize = mapElement.mapSize;
 
                 }
@@ -2654,6 +2676,8 @@
                 // console.log("Selected Element:" + JSON.stringify(mapElement));
                 var img = mapElement.img || mapElement.image;
                 //  console.log("Img src:" + img.src);
+
+                __levelMaker.selectedElement.id = undefined;
 
                 var sprite = new Sprite(JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
 
@@ -2738,6 +2762,18 @@
                        if($(a).prop('id') == item.id)
                        {
                            alert('found id match');
+
+                        $.each( __levelMaker.mapElements, function(ix, mitem){
+
+                            if(mitem.id == item.id)
+                            {
+                                __levelMaker.mapElements[ix] = item;
+
+                                App.replace_map_object(item);
+
+                            }
+
+                        });
 
                            $(a).text(item.name);
 

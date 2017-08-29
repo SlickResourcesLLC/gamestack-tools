@@ -115,4 +115,8 @@ class Vector {
 
 let Vector3 = Vector, Pos = Vector, Size = Vector, Position = Vector, Vector2 = Vector, Rotation = Vector;
 
+
+Gamestack.Vector = Vector;
+
+
 //The above are a list of synonymous expressions for Vector. All of these do the same thing in this library (store x,y,z values)

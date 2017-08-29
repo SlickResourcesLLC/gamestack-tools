@@ -334,3 +334,4 @@ onComplete(fun)
 
 };
 
+Gamestack.Animation = Animation;

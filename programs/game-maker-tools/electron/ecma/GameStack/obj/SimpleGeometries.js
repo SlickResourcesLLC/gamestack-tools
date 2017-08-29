@@ -13,7 +13,13 @@ class Rectangle {
 }
 ;
 
+
+
 let VectorBounds = Rectangle;
+
+
+
+Gamestack.Rectangle = Rectangle;
 
 class VectorFrameBounds extends Rectangle {
 
@@ -29,6 +35,10 @@ class VectorFrameBounds extends Rectangle {
 }
 ;
 
+
+
+Gamestack.VectorFrameBounds = VectorFrameBounds;
+
 class Circle
 {
     constructor(args) {
@@ -42,3 +52,5 @@ class Circle
 
 }
 
+
+Gamestack.Circle = Circle;

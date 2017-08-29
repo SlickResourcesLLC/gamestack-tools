@@ -26,14 +26,10 @@ class GravityForce
 
         this.clasticObjects = args.clasticObjects || [];
 
+        this.topClastics = args.topClastics || [];
+
         this.max = args.max || new Vector3(3, 3, 3);
          this.accel = args.accel || new Vector3(1.3, 1.3, 1.3);
-
-        for(var x in args)
-        {
-            this[x] = args[x];
-
-        }
 
 
         for(var x in this.clasticObjects)
@@ -44,6 +40,17 @@ class GravityForce
             }
 
         }
+
+
+        for(var x in this.topClastics)
+        {
+            if(!this.topClastics[x] instanceof Sprite)
+            {
+                this.topClastics[x] = Gamestack.getById(this.topClastics[x].id);
+            }
+
+        }
+
 
 
         for(var x in this.subjects)
@@ -79,6 +86,8 @@ class GravityForce
 
        var clasticObjects =  this.clasticObjects;
 
+        var topClastics =  this.topClastics;
+
       var  accel =  this.accel || {};
 
         var max =  this.max || {};
@@ -89,18 +98,38 @@ class GravityForce
 
            itemx.__inAir = true;
 
+
+            if(itemx.position.y >= itemx.groundMaxY)
+            {
+
+
+                itemx.position.y = itemx.groundMaxY;
+
+            }
+
+            itemx.groundMaxY = 3000000; //some crazy number you'll never reach in-game
+
             __gameStack.each(clasticObjects, function(iy, itemy){
 
                 itemx.collide_stop(itemy);
 
+            });
+
+            __gameStack.each(topClastics, function(iy, itemy){
+
+                itemx.collide_stop_top(itemy);
 
             });
+
         });
     }
 };
 
 let Force = GravityForce;
 
+ Gamestack.Force = Force;
+
+ Gamestack.GravityForce = GravityForce;
 
 
 

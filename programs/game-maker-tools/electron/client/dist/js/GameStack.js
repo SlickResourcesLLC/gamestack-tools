@@ -1,8 +1,8 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -10,247 +10,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/*
- * Canvas
- *    draw animations, textures to the screen
- * */
-
-var CanvasLib = function CanvasLib() {
-
-        return {
-
-                __levelMaker: false,
-
-                draw: function draw(sprite, ctx) {
-
-                        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
-
-                                this.drawPortion(sprite, ctx);
-                        }
-                },
-                drawFrameWithRotation: function drawFrameWithRotation(img, fx, fy, fw, fh, x, y, width, height, deg, canvasContextObj, flip) {
-
-                        canvasContextObj.save();
-                        deg = Math.round(deg);
-                        deg = deg % 360;
-                        var rad = deg * Math.PI / 180;
-                        //Set the origin to the center of the image
-                        canvasContextObj.translate(x, y);
-                        canvasContextObj.rotate(rad);
-                        //Rotate the canvas around the origin
-
-                        canvasContextObj.translate(0, canvasContextObj.width);
-                        if (flip) {
-
-                                canvasContextObj.scale(-1, 1);
-                        } else {}
-
-                        //draw the image
-                        canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * -1, height / 2 * -1, width, height);
-                        //reset the canvas
-
-                        canvasContextObj.restore();
-                },
-
-                /*
-                 * drawPortion:
-                 *
-                 *   expects: (sprite{selected_animation{selected_frame{frameSize, framePos } offset?, gameSize? }  })
-                 *
-                 *
-                 * */
-
-                drawPortion: function drawPortion(sprite, ctx) {
-
-                        var frame;
-
-                        if (sprite.active) {
-
-                                if (sprite.selected_animation && sprite.selected_animation.selected_frame) {
-
-                                        frame = sprite.selected_animation.selected_frame;
-                                } else {
-
-                                        console.error('Sprite is missing arguments');
-                                }
-
-                                var p = sprite.position;
-
-                                var camera = __gameStack.__gameWindow.camera || { pos: { x: 0, y: 0, z: 0 } };
-
-                                var x = p.x,
-                                    y = p.y;
-
-                                x -= camera.position.x || 0;
-                                y -= camera.position.y || 0;
-                                //optional animation : gameSize
-
-                                var targetSize = sprite.size || sprite.selected_animation.size;
-
-                                var realWidth = targetSize.x;
-                                var realHeight = targetSize.y;
-
-                                //optional animation : offset
-
-                                if (sprite.selected_animation && sprite.selected_animation.hasOwnProperty('offset')) {
-                                        x += sprite.selected_animation.offset.x;
-
-                                        y += sprite.selected_animation.offset.y;
-                                }
-
-                                var rotation;
-
-                                if (_typeof(sprite.rotation) == 'object') {
-
-                                        rotation = sprite.rotation.x;
-                                } else {
-                                        rotation = sprite.rotation;
-                                }
-
-                                this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + realWidth / 2), Math.round(y + realHeight / 2), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
-                        }
-                }
-
-        };
-};
-
-var Canvas = CanvasLib();
-
-;
 /**
- * Sound
- * :Simple Sound object:: uses Jquery: audio
- * @param   {string} src : source path / name of the targeted sound-file
-
- * @returns {Sound} object of Sound()
+ * :Object, instance of GamestackLibrary() : references Gamestack classes
+ * attaches to window object || module.exports (when loading via require)
  * */
 
-var Sound = function () {
-        function Sound(src) {
-                _classCallCheck(this, Sound);
-
-                if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) == 'object') {
-
-                        for (var x in src) {
-                                this[x] = src[x];
-                        }
-
-                        this.sound = new Audio(src.src);
-
-                        this.onLoad = src.onLoad || function () {};
-                } else if (typeof src == 'string') {
-
-                        this.src = src;
-
-                        this.sound = new Audio(this.src);
-                }
-
-                this.onLoad = this.onLoad || function () {};
-
-                if (typeof this.onLoad == 'function') {
-
-                        this.onLoad(this.sound);
-                }
-        }
-
-        _createClass(Sound, [{
-                key: 'volume',
-                value: function volume(val) {
-
-                        this.sound.volume = val;
-
-                        return this;
-                }
-        }, {
-                key: 'play',
-                value: function play() {
-                        if (_typeof(this.sound) == 'object' && typeof this.sound.play == 'function') {
-
-                                this.sound.play();
-                        }
-                }
-        }]);
-
-        return Sound;
-}();
-
-/**
- * GameImage
- *
- * Simple GameImage
- * @param   {string} src : source path / name of the targeted image-file
-
- * @returns {GameImage} object of GameImage()
-
- * */
-
-var GameImage = function () {
-        function GameImage(src, onCreate) {
-                _classCallCheck(this, GameImage);
-
-                // GameStack.log('initializing image');
-
-                if (src instanceof Object) {
-
-                        //alert('getting image from image');
-
-                        this.image = document.createElement('IMG');
-
-                        this.image.src = src.src;
-
-                        this.src = src.src;
-                } else if (typeof src == 'string') {
-
-                        var ext = src.substring(src.lastIndexOf('.'), src.length);
-
-                        this.image = document.createElement('IMG');
-
-                        this.image.src = src;
-
-                        this.src = this.image.src;
-                }
-
-                if (!this.image) {
-                        this.image = { error: "Image not instantiated, set to object by default" };
-                } else {
-                        this.image.onerror = function () {
-                                this.__error = true;
-                        };
-                }
-
-                this.domElement = this.image;
-
-                this.image.onload = function () {
-
-                        if (typeof this.onCreate == 'function') {
-
-                                this.onCreate(this.image);
-                        }
-                };
-        }
-
-        _createClass(GameImage, [{
-                key: 'getImage',
-                value: function getImage() {
-                        return this.image;
-                }
-        }]);
-
-        return GameImage;
-}();
-
-var SystemType = function SystemType(constructor, name, index) {
-
-        return {
-
-                constructor: constructor,
-
-                name: name,
-
-                index: index
-
-        };
-};
+var Gamestack = Gamestack || {};
 
 var GameStackLibrary = function GameStackLibrary() {
 
@@ -589,22 +354,145 @@ var GameStackLibrary = function GameStackLibrary() {
         return lib;
 };
 
+/**
+ * :Simple Sound object:: uses Jquery: audio
+ * @param   {string} src : source path / name of the targeted sound-file
+
+ * @returns {Sound} object of Sound()
+ * */
+
+var Sound = function () {
+        function Sound(src) {
+                _classCallCheck(this, Sound);
+
+                if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) == 'object') {
+
+                        for (var x in src) {
+                                this[x] = src[x];
+                        }
+
+                        this.sound = new Audio(src.src);
+
+                        this.onLoad = src.onLoad || function () {};
+                } else if (typeof src == 'string') {
+
+                        this.src = src;
+
+                        this.sound = new Audio(this.src);
+                }
+
+                this.onLoad = this.onLoad || function () {};
+
+                if (typeof this.onLoad == 'function') {
+
+                        this.onLoad(this.sound);
+                }
+        }
+
+        _createClass(Sound, [{
+                key: 'volume',
+                value: function volume(val) {
+
+                        this.sound.volume = val;
+
+                        return this;
+                }
+        }, {
+                key: 'play',
+                value: function play() {
+                        if (_typeof(this.sound) == 'object' && typeof this.sound.play == 'function') {
+
+                                this.sound.play();
+                        }
+                }
+        }]);
+
+        return Sound;
+}();
+
+/**
+ * GameImage
+ *
+ * Simple GameImage
+ * @param   {string} src : source path / name of the targeted image-file
+
+ * @returns {GameImage} object of GameImage()
+
+ * */
+
+var GameImage = function () {
+        function GameImage(src, onCreate) {
+                _classCallCheck(this, GameImage);
+
+                // GameStack.log('initializing image');
+
+                if (src instanceof Object) {
+
+                        //alert('getting image from image');
+
+                        this.image = document.createElement('IMG');
+
+                        this.image.src = src.src;
+
+                        this.src = src.src;
+                } else if (typeof src == 'string') {
+
+                        var ext = src.substring(src.lastIndexOf('.'), src.length);
+
+                        this.image = document.createElement('IMG');
+
+                        this.image.src = src;
+
+                        this.src = this.image.src;
+                }
+
+                if (!this.image) {
+                        this.image = { error: "Image not instantiated, set to object by default" };
+                } else {
+                        this.image.onerror = function () {
+                                this.__error = true;
+                        };
+                }
+
+                this.domElement = this.image;
+
+                this.image.onload = function () {
+
+                        if (typeof this.onCreate == 'function') {
+
+                                this.onCreate(this.image);
+                        }
+                };
+        }
+
+        _createClass(GameImage, [{
+                key: 'getImage',
+                value: function getImage() {
+                        return this.image;
+                }
+        }]);
+
+        return GameImage;
+}();
+
 //GameStack: a main / game lib object::
-//TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
+//TODO: fix the following set of mixed references:: only need to refer to (1) lib-object-instance
+
 
 var GameStack = new GameStackLibrary();
-
-var Gamestack = GameStack;
-
+Gamestack = GameStack;
 var __gameStack = GameStack;
+var Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to Gamestack
+var __gameInstance = Gamestack;
 
-var Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameStack
+Gamestack.Sound = Sound;
+Gamestack.GameImage = GameImage;
 
-var Quazar = GameStack; //Exposing 'Quazar' as synonymous reference to GameStack
+if (typeof module !== 'undefined' && module.exports) {
 
-var QUAZAR = GameStack; //Exposing 'QUAZAR' as synonymous reference to GameStack
-
-var __gameInstance = GameStack;
+        //This library is being instaniated via require() aka node.js require or similar library loader
+        module.exports = Gamestack;
+} else {}
 
 /***************
  * TODO : fix the above duplicate references, which exist now for backward compatibility with previouslyh authored code
@@ -621,6 +509,8 @@ function jstr(obj) {
 
         return JSON.stringify(obj);
 };
+
+Gamestack.jstr = jstr;
 
 /**********
  * $Q : Selector Function *in development
@@ -714,7 +604,7 @@ function $Q(selector) {
 
                         var button_mode = evt_profile.evt_key.indexOf('button') >= 0;
 
-                        Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
+                        Gamestack.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
                                 callback(x, y);
                         });
@@ -1103,12 +993,16 @@ $Q.test_selector_method = function () {
         this.on('health>=0');
 };
 
+Gamestack.$Q = $Q;
+
+Gamestack.query = $Q;
+
 /********************
  * GameStack.InputEvents
  * -Various PC Input Events
  ********************/
 
-GameStack.InputEvents = { //PC input events
+Gamestack.InputEvents = { //PC input events
         mousemove: [],
         leftclick: [],
         rightclick: [],
@@ -1348,8 +1242,6 @@ GameStack.InputEvents = { //PC input events
 
 };
 
-__gameStack = QUAZAR;
-
 //Override the existing window.onload function
 
 window._preGameStack_windowLoad = window.onload;
@@ -1368,16 +1260,25 @@ window.onload = function () {
  *    draw animations, textures to the screen
  * */
 
-GameStack.ready(function (lib) {
+Gamestack.ready(function (lib) {
 
-        GameStack.log('GameStack:lib :: ready');
+        Gamestack.log('GameStack:lib :: ready');
 });
 
 /**
+ * :Instantiates a GameWindow object
+ * @param   {Object} args : the object of arguments
+ * @param   {Object} args.canvas : the canvas object of the window: GameWindow constructor will create one if not supplied in args
  *
- *  class: GameWindow:
- *  args{canvas, ctx, sprites, backgrounds, interactives, forces, update}
- */
+ * @param   {Object} args.ctx : the canvas context
+ *
+ * @param   {Array} args.sprites : the list of sprites, to be applied with GameWindow
+ *
+ * @param   {Array} args.forces : the list of forces, such as gravity, to be applied with GameWindow
+ *
+
+ * @returns {GameWindow} object of GameWindow()
+ * */
 
 var GameWindow = function () {
         function GameWindow() {
@@ -1502,14 +1403,13 @@ var GameWindow = function () {
 
                         GameStack.each(this.sprites, function (ix, item) {
 
-                                if (typeof item.update == 'function') {
-                                        item.update(item);
-                                }
-
                                 if (typeof item.def_update == 'function') {
-                                        //  console.log('def_update');
 
                                         item.def_update(item);
+                                }
+
+                                if (typeof item.update == 'function') {
+                                        item.update(item);
                                 }
                         });
 
@@ -1553,6 +1453,8 @@ var GameWindow = function () {
 }();
 
 ;
+
+Gamestack.GameWindow = GameWindow;
 
 var TextDisplay = function () {
         function TextDisplay(args) {
@@ -1692,6 +1594,7 @@ var TextDisplay = function () {
         return TextDisplay;
 }();
 
+Gamestack.TextDisplay = TextDisplay;
 /**TODO:complete the following
  *  class: ItemDisplay
  */
@@ -1791,6 +1694,8 @@ var ItemDisplay //show an item display (image with text/number to the right
         return ItemDisplay;
 }();
 
+Gamestack.ItemDisplay = ItemDisplay;
+
 var Bar = function () {
         function Bar(background, border) {
                 _classCallCheck(this, Bar);
@@ -1834,6 +1739,8 @@ var Bar = function () {
         return Bar;
 }();
 
+Gamestack.Bar = Bar;
+
 var BarFill = function () {
         function BarFill(background) {
                 _classCallCheck(this, BarFill);
@@ -1868,6 +1775,8 @@ var BarFill = function () {
 
         return BarFill;
 }();
+
+Gamestack.BarFill = BarFill;
 
 var BarDisplay //show a display bar such as health bar
 = function () {
@@ -1949,6 +1858,8 @@ var BarDisplay //show a display bar such as health bar
         return BarDisplay;
 }();
 
+Gamestack.BarDisplay = BarDisplay;
+
 var VideoDisplay //show a video
 = function () {
         function VideoDisplay(_ref2) {
@@ -1973,6 +1884,117 @@ var VideoDisplay //show a video
 
         return VideoDisplay;
 }();
+
+Gamestack.VideoDisplay = VideoDisplay;
+
+;
+/*
+ * Canvas
+ *    draw animations, textures to the screen
+ * */
+
+var CanvasLib = function CanvasLib() {
+
+        return {
+
+                __levelMaker: false,
+
+                draw: function draw(sprite, ctx) {
+
+                        if (sprite.active && (this.__levelMaker || sprite.onScreen(__gameStack.WIDTH, __gameStack.HEIGHT))) {
+
+                                this.drawPortion(sprite, ctx);
+                        }
+                },
+                drawFrameWithRotation: function drawFrameWithRotation(img, fx, fy, fw, fh, x, y, width, height, deg, canvasContextObj, flip) {
+
+                        canvasContextObj.save();
+                        deg = Math.round(deg);
+                        deg = deg % 360;
+                        var rad = deg * Math.PI / 180;
+                        //Set the origin to the center of the image
+                        canvasContextObj.translate(x, y);
+                        canvasContextObj.rotate(rad);
+                        //Rotate the canvas around the origin
+
+                        canvasContextObj.translate(0, canvasContextObj.width);
+                        if (flip) {
+
+                                canvasContextObj.scale(-1, 1);
+                        } else {}
+
+                        //draw the image
+                        canvasContextObj.drawImage(img, fx, fy, fw, fh, width / 2 * -1, height / 2 * -1, width, height);
+                        //reset the canvas
+
+                        canvasContextObj.restore();
+                },
+
+                /*
+                 * drawPortion:
+                 *
+                 *   expects: (sprite{selected_animation{selected_frame{frameSize, framePos } offset?, gameSize? }  })
+                 *
+                 *
+                 * */
+
+                drawPortion: function drawPortion(sprite, ctx) {
+
+                        var frame;
+
+                        if (sprite.active) {
+
+                                if (sprite.selected_animation && sprite.selected_animation.selected_frame) {
+
+                                        frame = sprite.selected_animation.selected_frame;
+                                } else {
+
+                                        console.error('Sprite is missing arguments');
+                                }
+
+                                var p = sprite.position;
+
+                                var camera = __gameStack.__gameWindow.camera || { pos: { x: 0, y: 0, z: 0 } };
+
+                                var x = p.x,
+                                    y = p.y;
+
+                                x -= camera.position.x || 0;
+                                y -= camera.position.y || 0;
+                                //optional animation : gameSize
+
+                                var targetSize = sprite.size || sprite.selected_animation.size;
+
+                                var realWidth = targetSize.x;
+                                var realHeight = targetSize.y;
+
+                                //optional animation : offset
+
+                                if (sprite.selected_animation && sprite.selected_animation.hasOwnProperty('offset')) {
+                                        x += sprite.selected_animation.offset.x;
+
+                                        y += sprite.selected_animation.offset.y;
+                                }
+
+                                var rotation;
+
+                                if (_typeof(sprite.rotation) == 'object') {
+
+                                        rotation = sprite.rotation.x;
+                                } else {
+                                        rotation = sprite.rotation;
+                                }
+
+                                this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + realWidth / 2), Math.round(y + realHeight / 2), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
+                        }
+                }
+
+        };
+};
+
+var Canvas = CanvasLib();
+
+Gamestack.Canvas = Canvas;
 
 ; /**
   * Takes an object of arguments and returns Animation() object.
@@ -2263,11 +2285,11 @@ var Animation = function () {
 
 ;
 
-; /**
-  * Camera : has simple x, y, z, position / Vector values
-  *
-  * @returns {Vector}
-  */
+Gamestack.Animation = Animation;; /**
+                                  * Camera : has simple x, y, z, position / Vector values
+                                  *
+                                  * @returns {Vector}
+                                  */
 
 var Camera = function Camera(args) {
         _classCallCheck(this, Camera);
@@ -2361,16 +2383,20 @@ var GravityForce = function () {
 
                 this.clasticObjects = args.clasticObjects || [];
 
+                this.topClastics = args.topClastics || [];
+
                 this.max = args.max || new Vector3(3, 3, 3);
                 this.accel = args.accel || new Vector3(1.3, 1.3, 1.3);
-
-                for (var x in args) {
-                        this[x] = args[x];
-                }
 
                 for (var x in this.clasticObjects) {
                         if (!this.clasticObjects[x] instanceof Sprite) {
                                 this.clasticObjects[x] = Gamestack.getById(this.clasticObjects[x].id);
+                        }
+                }
+
+                for (var x in this.topClastics) {
+                        if (!this.topClastics[x] instanceof Sprite) {
+                                this.topClastics[x] = Gamestack.getById(this.topClastics[x].id);
                         }
                 }
 
@@ -2400,6 +2426,8 @@ var GravityForce = function () {
 
                         var clasticObjects = this.clasticObjects;
 
+                        var topClastics = this.topClastics;
+
                         var accel = this.accel || {};
 
                         var max = this.max || {};
@@ -2410,9 +2438,21 @@ var GravityForce = function () {
 
                                 itemx.__inAir = true;
 
+                                if (itemx.position.y >= itemx.groundMaxY) {
+
+                                        itemx.position.y = itemx.groundMaxY;
+                                }
+
+                                itemx.groundMaxY = 3000000; //some crazy number you'll never reach in-game
+
                                 __gameStack.each(clasticObjects, function (iy, itemy) {
 
                                         itemx.collide_stop(itemy);
+                                });
+
+                                __gameStack.each(topClastics, function (iy, itemy) {
+
+                                        itemx.collide_stop_top(itemy);
                                 });
                         });
                 }
@@ -2424,6 +2464,10 @@ var GravityForce = function () {
 ;
 
 var Force = GravityForce;
+
+Gamestack.Force = Force;
+
+Gamestack.GravityForce = GravityForce;
 
 ;
 
@@ -2645,6 +2689,11 @@ var GamepadAdapter = function () {
 }();
 
 ;
+
+/**********
+ * NOTE: here we bind the instance, and NOT the instantiator.
+ *
+ * *********/
 
 if (!__gameInstance.GamepadAdapter) {
         __gameInstance.GamepadAdapter = new GamepadAdapter();
@@ -2980,6 +3029,8 @@ var Motion = function () {
         return Motion;
 }();
 
+Gamestack.Motion = Motion;
+
 ;
 
 var Rectangle = function Rectangle(min, max) {
@@ -2992,6 +3043,8 @@ var Rectangle = function Rectangle(min, max) {
 ;
 
 var VectorBounds = Rectangle;
+
+Gamestack.Rectangle = Rectangle;
 
 var VectorFrameBounds = function (_Rectangle) {
         _inherits(VectorFrameBounds, _Rectangle);
@@ -3011,6 +3064,8 @@ var VectorFrameBounds = function (_Rectangle) {
 
 ;
 
+Gamestack.VectorFrameBounds = VectorFrameBounds;
+
 var Circle = function Circle(args) {
         _classCallCheck(this, Circle);
 
@@ -3019,7 +3074,7 @@ var Circle = function Circle(args) {
         this.radius = this.getArgs(args, 'radius', 100);
 };
 
-;
+Gamestack.Circle = Circle;;
 /**
  * Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.
 
@@ -3058,7 +3113,7 @@ var Sprite = function () {
 
                 var _spr = this;
 
-                Quazar.each(args, function (ix, item) {
+                Gamestack.each(args, function (ix, item) {
                         //apply all args
 
                         if (ix !== 'parent') {
@@ -3358,7 +3413,7 @@ var Sprite = function () {
 
                         this.selected_animation = anime;
 
-                        Quazar.log('declared default animation');
+                        Gamestack.log('declared default animation');
 
                         return this;
                 }
@@ -3546,7 +3601,7 @@ var Sprite = function () {
                 key: 'collidesRectangular',
                 value: function collidesRectangular(sprite) {
 
-                        return Quazar.Collision.spriteRectanglesCollide(this, sprite);
+                        return Gamestack.Collision.spriteRectanglesCollide(this, sprite);
                 }
 
                 /*****************************
@@ -4151,7 +4206,9 @@ var Sprite = function () {
 
                                                 if (Math.abs(diffY) < distY) {
 
-                                                        this.position.y -= diffY > 0 ? -1 : 1;
+                                                        this.position.y -= diffY > 0 ? -1 : diffY < 0 ? 1 : 0;
+
+                                                        this.position.y = Math.round(this.position.y);
                                                 } else {
 
                                                         if (diffY <= 0) {
@@ -4171,43 +4228,21 @@ var Sprite = function () {
                 }
         }, {
                 key: 'collide_stop_top',
-                value: function collide_stop_top() {
+                value: function collide_stop_top(item) {
 
                         if (this.id == item.id) {
                                 return false;
                         }
 
-                        if (this.collidesRectangular(item)) {
+                        if (this.overlap_x(item, this.padding.x + 0.1)) {
 
-                                var diff = this.center().sub(item.center());
+                                console.log('OVERLAP_X');
 
-                                if (this.overlap_x(item, 0.3) && Math.abs(diff.y) < 0) {
+                                var paddingY = this.padding.y * this.size.y;
 
-                                        var apart = false;
+                                if (this.position.y + this.size.y - paddingY <= item.position.y) {
 
-                                        var ct = 10000;
-
-                                        while (!apart && ct > 0) {
-
-                                                ct--;
-
-                                                var diffY = this.center().sub(item.center()).y;
-
-                                                var distY = Math.abs(this.size.y / 2 + item.size.y / 2);
-
-                                                if (Math.abs(diffY) < distY) {
-
-                                                        this.position.y -= diffY > 0 ? -1 : 1;
-                                                } else {
-
-                                                        if (diffY < 0) {
-                                                                this.__inAir = false;
-                                                        }
-                                                        ;
-
-                                                        apart = true;
-                                                }
-                                        }
+                                        this.groundMaxY = item.position.y - this.size.y + paddingY;
                                 }
                         }
                 }
@@ -4261,10 +4296,19 @@ var Sprite = function () {
  *  Use these as options for Sprite Control, etc...
  ****************/
 
+Gamestack.Sprite = Sprite;
+
 var SpriteInitializersOptions = {
 
         Collideables: {
+
                 top_collideable: function top_collideable(sprite) {
+
+                        for (var x in Gamestack.__gameWindow.forces) {
+                                var force = Gamestack.__gameWindow.forces[x];
+
+                                force.topClastics.push(sprite);
+                        }
 
                         sprite.onUpdate(function () {});
                 },
@@ -4358,17 +4402,15 @@ var SpriteInitializersOptions = {
 
         ControllerStickMotion: {
 
-                __args: {},
-
                 player_move_x: function player_move_x(sprite) {
 
                         alert('applying initializer');
 
                         console.log('side_scroll_player_run:init-ing');
 
-                        var __lib = Quazar || Quick2d;
+                        var __lib = Gamestack || Quick2d;
 
-                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+                        Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                                 console.log('stick-x:' + x);
 
@@ -4405,9 +4447,9 @@ var SpriteInitializersOptions = {
 
                         console.log('side_scroll_player_run:init-ing');
 
-                        var __lib = Quazar || Quick2d;
+                        var __lib = Gamestack || Quick2d;
 
-                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+                        Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                                 console.log('stick-x:' + x);
 
@@ -4443,9 +4485,9 @@ var SpriteInitializersOptions = {
 
                 player_rotate_x: function player_rotate_x(sprite) {
 
-                        var __lib = Quazar || Quick2d;
+                        var __lib = Gamestack || Quick2d;
 
-                        Quazar.GamepadAdapter.on('stick_left', 0, function (x, y) {
+                        Gamestack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
                                 console.log('stick-x:' + x);
 
@@ -4480,9 +4522,9 @@ var SpriteInitializersOptions = {
 
 };
 
-GameStack.options = GameStack.options || {};
+Gamestack.options = Gamestack.options || {};
 
-GameStack.options.SpriteInitializers = SpriteInitializersOptions;;
+Gamestack.options.SpriteInitializers = SpriteInitializersOptions;;
 /**
  * Takes arguments of x, y, and (optionally) z, AND returns a Vector object
 
@@ -4599,11 +4641,10 @@ var Vector3 = Vector,
     Vector2 = Vector,
     Rotation = Vector;
 
+Gamestack.Vector = Vector;
+
 //The above are a list of synonymous expressions for Vector. All of these do the same thing in this library (store x,y,z values)
-; /**
-  * Created by The Blakes on 04-13-2017
-  *
-  */
+;
 
 var InterfaceCallback = function () {
         function InterfaceCallback(_ref3) {

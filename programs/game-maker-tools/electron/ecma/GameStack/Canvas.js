@@ -124,6 +124,8 @@ var CanvasLib = function() {
 
 let Canvas = CanvasLib();
 
+Gamestack.Canvas = Canvas;
+
 
 
 

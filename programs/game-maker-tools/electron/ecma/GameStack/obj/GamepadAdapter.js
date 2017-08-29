@@ -272,8 +272,10 @@ class GamepadAdapter {
 
 };
 
-
-
+/**********
+ * NOTE: here we bind the instance, and NOT the instantiator.
+ *
+ * *********/
 
 if(!__gameInstance.GamepadAdapter)
 {

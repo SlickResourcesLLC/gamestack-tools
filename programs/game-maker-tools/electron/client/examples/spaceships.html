@@ -16,9 +16,10 @@
 
     var player, enemy;
 
-    GameStack.ready(function(lib){
+        GameStack.ready(function(lib){
 
         console.info('library is ready');
+
 
         var GameAssets = {
 
@@ -82,6 +83,7 @@
             frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(15, 0))
         }));
 
+        player.selected_animation.cix = 7; //The normal-state frame for spaceship
 
         player.position.y = 300;
 
@@ -110,8 +112,6 @@
        // enemy.position.y = 100;
 
        // enemy.position.x = 100;
-
-        alert(jstr(enemy.position));
 
         player.explosion_animation = new Animation(GameAssets.damage_animations.explosion1);
 
@@ -250,6 +250,9 @@
 
             if(Math.abs(x) > 0.03) {
                 player.speed.x = x * 6;
+
+
+
             }
             else
             {
@@ -260,7 +263,8 @@
 
            if(Math.abs(y) > 0.03) {
                 player.speed.y = y * 6;
-            }
+
+           }
            else
             {
                 player.decel(player.speed, 'y', 0.2);
@@ -269,7 +273,9 @@
 
             //use the x value to set the 'tilt' frame of the sprite-sheet (see image for frames)
 
+            //SET THE PLAYER'S 'TILT-FRAME' (SEE SPRITESHEET)
             player.selected_animation.cix = Math.round(7 + (x * 2));
+
 
             if(player.selected_animation.cix < 0)
             {
@@ -282,7 +288,6 @@
             }
 
             player.selected_animation.update();
-
 
         });
 
@@ -297,7 +302,7 @@
 
         $Q('.Sprite[type=player]').on('collide[padding==0.4]', $Q('.Sprite[type=enemy]'), function(obj1, obj2){
 
-            // alert('A collision has occurred');
+            // console.log('A collision has occurred');
 
           obj1.explode();
 

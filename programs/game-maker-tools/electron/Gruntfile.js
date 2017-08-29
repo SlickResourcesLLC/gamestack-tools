@@ -21,7 +21,7 @@ grunt.initConfig({
         },
 
         game_lib:{
-            src: ['ecma/GameStack/Canvas.js', 'ecma/GameStack/Main.js', 'ecma/GameStack/Geometry.js', 'ecma/GameStack/obj/*.js', 'ecma/GameStack/obj/sub/*.js'],
+            src: [ 'ecma/GameStack/Main.js', 'ecma/GameStack/Canvas.js', 'ecma/GameStack/Geometry.js', 'ecma/GameStack/obj/*.js', 'ecma/GameStack/obj/sub/*.js'],
             dest: 'ecma/GameStack/concat/GameStack.js'
         },
 
@@ -60,7 +60,7 @@ grunt.initConfig({
 
     jsdoc : {
         dist : {
-            src: ['ecma/GameStack/concat/GameStack.js'],
+            src: ['ecma/GameStack/README.md', 'ecma/GameStack/concat/GameStack.js'],
             jsdoc: './node_modules/.bin/jsdoc',
             options: {
                 destination: 'docs',

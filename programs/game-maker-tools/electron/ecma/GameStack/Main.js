@@ -1,162 +1,13 @@
 
-/**
- * Sound
- * :Simple Sound object:: uses Jquery: audio
- * @param   {string} src : source path / name of the targeted sound-file
 
- * @returns {Sound} object of Sound()
- * */
-
-class Sound {
-
-    constructor(src) {
-
-        if (typeof(src) == 'object') {
-
-            for (var x in src) {
-                this[x] = src[x];
-
-            }
-
-            this.sound = new Audio(src.src);
-
-            this.onLoad = src.onLoad || function () {
-                };
-
-        }
-
-        else if (typeof(src) == 'string') {
-
-            this.src = src;
-
-            this.sound = new Audio(this.src);
-
-        }
-
-        this.onLoad = this.onLoad || function () {
-            };
-
-        if (typeof(this.onLoad) == 'function') {
-
-            this.onLoad(this.sound);
-
-        }
-
-    }
-
-    volume(val)
-    {
-
-        this.sound.volume = val;
-
-        return this;
-
-    }
-
-    play() {
-        if (typeof(this.sound) == 'object' && typeof(this.sound.play) == 'function') {
-
-            this.sound.play();
-
-        }
-
-
-    }
-
-}
 
 
 /**
- * GameImage
- *
- * Simple GameImage
- * @param   {string} src : source path / name of the targeted image-file
-
- * @returns {GameImage} object of GameImage()
-
+ * :Object, instance of GamestackLibrary() : references Gamestack classes
+ * attaches to window object || module.exports (when loading via require)
  * */
 
-class GameImage {
-
-    constructor(src, onCreate) {
-
-        // GameStack.log('initializing image');
-
-        if (src instanceof Object) {
-
-            //alert('getting image from image');
-
-            this.image = document.createElement('IMG');
-
-            this.image.src = src.src;
-
-            this.src = src.src;
-
-        }
-
-        else if (typeof(src) == 'string') {
-
-            let ext = src.substring(src.lastIndexOf('.'), src.length);
-
-            this.image = document.createElement('IMG');
-
-            this.image.src = src;
-
-            this.src = this.image.src;
-
-
-        }
-
-
-        if (!this.image) {
-            this.image = {error: "Image not instantiated, set to object by default"};
-
-        }
-        else {
-            this.image.onerror = function () {
-                this.__error = true;
-            };
-
-        }
-
-        this.domElement = this.image;
-
-        this.image.onload = function () {
-
-            if (typeof(this.onCreate) == 'function') {
-
-                this.onCreate(this.image);
-
-            }
-
-
-        }
-
-    }
-
-
-    getImage() {
-        return this.image;
-    }
-
-}
-
-
-let SystemType = function(constructor, name, index)
-{
-
-    return{
-
-        constructor:constructor,
-
-        name:name,
-
-        index:index
-
-    }
-
-};
-
+let Gamestack = Gamestack || {};
 
 let GameStackLibrary = function () {
 
@@ -592,22 +443,170 @@ let GameStackLibrary = function () {
 
 };
 
+
+/**
+ * :Simple Sound object:: uses Jquery: audio
+ * @param   {string} src : source path / name of the targeted sound-file
+
+ * @returns {Sound} object of Sound()
+ * */
+
+
+class Sound {
+
+    constructor(src) {
+
+        if (typeof(src) == 'object') {
+
+            for (var x in src) {
+                this[x] = src[x];
+
+            }
+
+            this.sound = new Audio(src.src);
+
+            this.onLoad = src.onLoad || function () {
+                };
+
+        }
+
+        else if (typeof(src) == 'string') {
+
+            this.src = src;
+
+            this.sound = new Audio(this.src);
+
+        }
+
+        this.onLoad = this.onLoad || function () {
+            };
+
+        if (typeof(this.onLoad) == 'function') {
+
+            this.onLoad(this.sound);
+
+        }
+
+    }
+
+    volume(val)
+    {
+
+        this.sound.volume = val;
+
+        return this;
+
+    }
+
+    play() {
+        if (typeof(this.sound) == 'object' && typeof(this.sound.play) == 'function') {
+
+            this.sound.play();
+
+        }
+
+
+    }
+
+}
+
+
+/**
+ * GameImage
+ *
+ * Simple GameImage
+ * @param   {string} src : source path / name of the targeted image-file
+
+ * @returns {GameImage} object of GameImage()
+
+ * */
+
+class GameImage {
+
+    constructor(src, onCreate) {
+
+        // GameStack.log('initializing image');
+
+        if (src instanceof Object) {
+
+            //alert('getting image from image');
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src.src;
+
+            this.src = src.src;
+
+        }
+
+        else if (typeof(src) == 'string') {
+
+            let ext = src.substring(src.lastIndexOf('.'), src.length);
+
+            this.image = document.createElement('IMG');
+
+            this.image.src = src;
+
+            this.src = this.image.src;
+
+
+        }
+
+
+        if (!this.image) {
+            this.image = {error: "Image not instantiated, set to object by default"};
+
+        }
+        else {
+            this.image.onerror = function () {
+                this.__error = true;
+            };
+
+        }
+
+        this.domElement = this.image;
+
+        this.image.onload = function () {
+
+            if (typeof(this.onCreate) == 'function') {
+
+                this.onCreate(this.image);
+
+            }
+
+
+        }
+
+    }
+
+
+    getImage() {
+        return this.image;
+    }
+
+}
+
+
 //GameStack: a main / game lib object::
-//TODO: fix the following set of mixed references:: only need to refer to (1) lib instance
-
+//TODO: fix the following set of mixed references:: only need to refer to (1) lib-object-instance
 let GameStack = new GameStackLibrary();
-
-let Gamestack = GameStack;
-
+Gamestack = GameStack;
 let __gameStack = GameStack;
+let Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to Gamestack
+let __gameInstance = Gamestack;
 
-let Quick2d = GameStack; //Exposing 'Quick2d' as synonymous reference to GameStack
+Gamestack.Sound = Sound;
+Gamestack.GameImage = GameImage;
 
-let Quazar = GameStack; //Exposing 'Quazar' as synonymous reference to GameStack
+if (typeof module !== 'undefined' && module.exports) {
 
-let QUAZAR = GameStack; //Exposing 'QUAZAR' as synonymous reference to GameStack
+    //This library is being instaniated via require() aka node.js require or similar library loader
+    module.exports = Gamestack;
 
-let __gameInstance = GameStack;
+} else {
+
+
+}
 
 /***************
  * TODO : fix the above duplicate references, which exist now for backward compatibility with previouslyh authored code
@@ -626,11 +625,14 @@ function jstr(obj) {
 
 };
 
+Gamestack.jstr = jstr;
+
 /**********
  * $Q : Selector Function *in development
  *  -allows string selection of library collections, etc...
  * Example Calls
  * **********/
+
 
 function $Q(selector) {
 
@@ -735,7 +737,7 @@ function $Q(selector) {
 
             var button_mode = evt_profile.evt_key.indexOf('button') >= 0;
 
-            Quazar.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
+            Gamestack.GamepadAdapter.on(evt_profile.evt_key, 0, function (x, y) {
 
                callback(x, y);
 
@@ -1193,12 +1195,16 @@ $Q.test_selector_method =  function () {
 };
 
 
+Gamestack.$Q = $Q;
+
+Gamestack.query = $Q;
+
 /********************
  * GameStack.InputEvents
  * -Various PC Input Events
  ********************/
 
-GameStack.InputEvents = { //PC input events
+Gamestack.InputEvents = { //PC input events
     mousemove: [],
     leftclick: [],
     rightclick: [],
@@ -1488,8 +1494,6 @@ GameStack.InputEvents = { //PC input events
 };
 
 
-__gameStack = QUAZAR;
-
 //Override the existing window.onload function
 
 window._preGameStack_windowLoad = window.onload;
@@ -1510,19 +1514,30 @@ window.onload = function () {
  *    draw animations, textures to the screen
  * */
 
-GameStack.ready(function (lib) {
+Gamestack.ready(function (lib) {
 
-    GameStack.log('GameStack:lib :: ready');
+    Gamestack.log('GameStack:lib :: ready');
 
 
 });
 
 
+
 /**
+ * :Instantiates a GameWindow object
+ * @param   {Object} args : the object of arguments
+ * @param   {Object} args.canvas : the canvas object of the window: GameWindow constructor will create one if not supplied in args
  *
- *  class: GameWindow:
- *  args{canvas, ctx, sprites, backgrounds, interactives, forces, update}
- */
+ * @param   {Object} args.ctx : the canvas context
+ *
+ * @param   {Array} args.sprites : the list of sprites, to be applied with GameWindow
+ *
+ * @param   {Array} args.forces : the list of forces, such as gravity, to be applied with GameWindow
+ *
+
+ * @returns {GameWindow} object of GameWindow()
+ * */
+
 
 
 class GameWindow {
@@ -1650,17 +1665,20 @@ class GameWindow {
 
         GameStack.each(this.sprites, function (ix, item) {
 
+            if (typeof(item.def_update) == 'function') {
+
+
+
+                item.def_update(item);
+
+            }
+
             if (typeof(item.update) == 'function') {
                 item.update(item);
 
             }
 
-            if (typeof(item.def_update) == 'function') {
-                //  console.log('def_update');
 
-                item.def_update(item);
-
-            }
 
         });
 
@@ -1715,6 +1733,8 @@ class GameWindow {
 }
 ;
 
+
+Gamestack.GameWindow = GameWindow;
 
 class TextDisplay {
 
@@ -1857,7 +1877,7 @@ class TextDisplay {
 
 }
 
-
+Gamestack.TextDisplay = TextDisplay;
 /**TODO:complete the following
  *  class: ItemDisplay
  */
@@ -1954,6 +1974,7 @@ class ItemDisplay //show an item display (image with text/number to the right
     }
 }
 
+Gamestack.ItemDisplay = ItemDisplay;
 
 class Bar
 {
@@ -2000,6 +2021,7 @@ class Bar
 
 }
 
+Gamestack.Bar = Bar;
 
 class BarFill
 {
@@ -2036,6 +2058,7 @@ class BarFill
 
 }
 
+Gamestack.BarFill = BarFill;
 
 class BarDisplay //show a display bar such as health bar
 {
@@ -2127,6 +2150,8 @@ class BarDisplay //show a display bar such as health bar
 
 }
 
+Gamestack.BarDisplay = BarDisplay;
+
 class VideoDisplay //show a video
 {
     constructor({src, size}) {
@@ -2146,7 +2171,7 @@ class VideoDisplay //show a video
     }
 }
 
-
+Gamestack.VideoDisplay = VideoDisplay;
 
 
 

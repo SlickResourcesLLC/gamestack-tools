@@ -7,7 +7,9 @@
         window.module = module;
         module = undefined;
     }</script>
-    <script src="../assets/js/ui/jquery.js"></script>
+    <script src="assets/js/ui/jquery.js"></script>
+
+    <script src="assets/js/ui/game-mini-cms.js"></script>
 
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
@@ -17,75 +19,69 @@
 
 <style>
 
-    body, html
-    {
-        background:black;
+    body, html {
+        background: black;
+
+        height:100%;
 
     }
 
-    .screen-select img
-    {
+    .screen-select img {
 
-        width:200px;
+        width: 200px;
 
-        height:auto;
-
-    }
-
-    .screen-select
-    {
-        position:relative;
-
-        padding:5px;
-
-        float:left;
-
-        width:220px;
-
-        margin-right:20px;
-
+        height: auto;
 
     }
 
-    .screen-select a:hover
-    {
+    .screen-select {
+        position: relative;
 
-        border:1px solid cornflowerblue;
+        padding: 5px;
+
+        float: left;
+
+        width: 220px;
+
+        margin-right: 20px;
 
     }
 
-    .screen-select span
-    {
+    .screen-select a:hover {
 
-        position:relative;
+        border: 1px solid cornflowerblue;
 
-        color:whitesmoke;
+    }
+
+    .screen-select span {
+
+        position: relative;
+
+        color: whitesmoke;
 
         width: 100%;
 
-        display:block;
+        display: block;
 
-        text-align:center;
+        text-align: center;
 
     }
 
     @font-face {
         font-family: round;
         src: url(font/round.ttf);
-        font-weight:400;
+        font-weight: 400;
     }
 
     @font-face {
         font-family: iceDesign;
         src: url(font/iceDesign.ttf);
-        font-weight:400;
+        font-weight: 400;
     }
 
-
-    .fillGradient
-    {
-        background-color:black;
-        background-size:100%, 100%;
+    .fillGradient {
+        background-color: black;
+        background-size: 100%, 100%;
         opacity: 0.55;
         top: 0;
         left: 0;
@@ -95,138 +91,197 @@
         z-index: -1;
 
     }
+
     p {
 
-        margin:0px;
+        margin: 0px;
         font-family: "Trebuchet MS", Helvetica, sans-serif;
-        font-weight:normal;
+        font-weight: normal;
+
+        color: whitesmoke;
     }
 
-    #linkCase
-    {
-        position:relative;
-        width:100%;
-        margin-top:20px;
+    #linkCase {
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
     }
-    #linkLeft
-    {
-        position:relative;
-        width:49%;
-        text-align:right;
-        font-size:250%;
-        float:left;
-        color:grey;
-        margin:0px;
-        padding:0px;
-        cursor:pointer;
-        font-family:round;
+
+    #linkLeft {
+        position: relative;
+        width: 49%;
+        text-align: right;
+        font-size: 250%;
+        float: left;
+        color: grey;
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
 
     }
-    #linkRight
-    {
-        position:relative;
-        width:49%;
-        text-align:left;
-        font-size:250%;
-        float:left;
-        color:grey;
 
-        margin:0px;
-        padding:0px;
-        cursor:pointer;
-        font-family:round;
-    }
-    #linkCenter
-    {
-        position:relative;
-        width:100%;
-        display:block;
-        text-align:center;
-        font-size:250%;
-        float:left;
-        color:grey;
+    #linkRight {
+        position: relative;
+        width: 49%;
+        text-align: left;
+        font-size: 250%;
+        float: left;
+        color: grey;
 
-        margin:0px;
-        padding:0px;
-        cursor:pointer;
-        font-family:round;
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
     }
-    #linkLeft:hover, #linkRight:hover, #linkCenter:hover{ color:snow;  }
-    #appTitleMain
-    {
-        width:100%;
-        margin-top:9px;
-        display:block;
-        text-align:center;
-        position:relative;
-        font-size:190%;
-        color:white;
+
+    #linkCenter {
+        position: relative;
+        width: 100%;
+        display: block;
+        text-align: center;
+        font-size: 250%;
+        float: left;
+        color: grey;
+
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
+    }
+
+    #linkLeft:hover, #linkRight:hover, #linkCenter:hover {
+        color: snow;
+    }
+
+    #appTitleMain {
+        width: 100%;
+        margin-top: 9px;
+        display: block;
+        text-align: center;
+        position: relative;
+        font-size: 190%;
+        color: white;
         text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
         -1px 1px 0 black;
     }
 
-    .appTitleDef
-    {
-        width:100%;
-        display:block;
-        text-align:center;
-        position:relative;
-        font-size:150%;
-        color:snow;
+    .appTitleDef {
+        width: 100%;
+        display: block;
+        text-align: center;
+        position: relative;
+        font-size: 150%;
+        color: snow;
 
         text-shadow: 1px 1px 0 blue, -1px -1px 0 blue, 1px -1px 0 blue,
         -1px 1px 0 blue, 3px 3px 5px aqua;
 
     }
 
+    div.screen-select {
+        display: flex;
 
-    div.screen-select
-    {
-        display:flex;
+        width: 100%;
 
-        width:100%;
+        flex-wrap: nowrap;
 
-        flex-wrap:nowrap;
-
-        justify-content:center;
+        justify-content: center;
 
     }
 
-    div.screen-select a
-    {
+    div.screen-select a {
 
-    margin:10px;
+        margin: 10px;
 
-    justify-content:center;
-
-    }
-
-    #appLogo
-    {
-        display:block;
-
-        width:30%;
-
-        height:auto;
-
-        text-align:center;
+        justify-content: center;
 
     }
 
-    video
-    {
-        width:100%;
+    #appLogo {
+        display: block;
+
+        width: 30%;
+
+        height: auto;
+
+        text-align: center;
+
+    }
+
+    video {
+        width: 100%;
 
         margin: 0 auto;
 
     }
 
-    .title
-    {
-        color:white;
-        position:block;
+    .title, .title-level2 {
+        color: white;
+        position: block;
 
-        text-align:center;
+        text-align: left;
+
+        font-size: 130%;
+
+        margin-left: 50px;
+
+    }
+
+    .title:after, .title-level2:after {
+        width: 100%;
+
+        border-bottom: 1px solid grey;
+
+    }
+
+    .push-right {
+
+        margin-left: 10%;
+
+    }
+
+    .title.left {
+        float: left;
+
+    }
+
+    button.create {
+        float: left;
+
+        background: black;
+
+        color: white;
+
+        border: 2px inset grey;
+
+        margin-left: 5px;
+
+        margin-top: 2px;
+
+    }
+
+    p.item-name {
+        width: 100%;
+
+    }
+
+    div.object-region {
+        position: relative;
+
+    }
+
+    div.game-space
+    {
+
+        position:relative;
+
+        width:100%;
+
+        height:200px;
+
+        clear:left;
+
     }
 
 
@@ -234,33 +289,78 @@
 
 <body>
 
-<div class="fillGradient"  >
+<div class="fillGradient">
 </div>
 
 <video autoplay="true" id="intro-video">
     <source src="video/intro.mp4"></source>
 </video>
 
-<img  id="appLogo"  src="img/logo.png" style="display:none;" />
-<p   class="title"  >js-framework + tools for web game development</p>
+<img id="appLogo" src="img/logo.png" style="display:none;"/>
+<p class="title">js-framework + tools for web game development</p>
 
 
-<div class="screen-select" > <a class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png" /> <span >Sprite Maker</span></a>
-<a class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png" /> <span >Level Maker</span> </a>
-    <a class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png" /> <span >Game-Resource Browser</span> </a>
+<div class="screen-select"><a class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png"/>
+    <span>Sprite Maker</span></a>
+    <a class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png"/> <span>Level Maker</span>
+    </a>
+    <a class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png"/> <span>Game-Resource Browser</span>
+    </a>
 </div>
 
-<p   class="title"   >Usage examples</p>
-<div class="screen-select" > <a class="screenlink" href="examples/side-scroller-level.html"> <img src="image/spritemaker-shot.png" /> <span >Sprite: With level, from file</span></a>
+<p class="title">Usage examples</p>
+<div class="screen-select"><a class="screenlink" href="examples/side-scroller-level.html"> <img
+        src="image/spritemaker-shot.png"/> <span>Sprite: With level, from file</span></a>
 
 </div>
 
-<script  type="text/javascript">
+<div class="game-space" style="display:none;" >
+<p class="title left">Games</p>
+<button class="create" id="new_game">+</button>
+<div class="object-space game">
+
+</div>
+
+</div>
+
+
+<script type="text/javascript">
     //TODO: check local storage and cookies for member already signed in:
     var app = {
 
-        showVideo:function(callback)
-        {
+        __gameBoxCMS:false, //For later interactions with a MINI GAME CMS
+
+        addGameObject: function (constructorName, data, callback) {
+
+            //1. instantiate the object
+
+
+            //2. get callback from server
+
+
+            //4. run the callback to display html (skipping to 4 for testing 08-28-2017)
+
+            if(app.__MiniCMS) {
+
+                app.__gameMiniCMS.request("create/" + constructorName + "?name=" + data.name, function (err, data) {
+
+                    callback(err, data);
+
+                });
+
+            }
+
+        },
+
+        removeObject: function (constructorName, objectName) {
+
+           alert('If you certainly need to remove the ' + constructorName + ": please delete its folder in:" +
+
+           app.__workingDirectory + "/" + constructorName + "/" + objectName);
+
+        },
+
+        showVideo: function (callback) {
             var elem = document.getElementById('intro-video');
 
             var loaded = false;
@@ -273,10 +373,9 @@
                 elem.webkitRequestFullscreen();
             }
 
-           elem.addEventListener('ended',function(){
+            elem.addEventListener('ended', function () {
 
-                if(callback)
-                {
+                if (callback) {
                     callback();
 
                     $('#intro-video').hide('fast');
@@ -284,14 +383,12 @@
                     $('#appLogo').show('slow');
                 }
 
-            },false);
+            }, false);
 
-            window.setTimeout(function(){
+            window.setTimeout(function () {
 
-                if(!loaded)
-                {
-                    if(callback)
-                    {
+                if (!loaded) {
+                    if (callback) {
                         callback();
                     }
 
@@ -302,36 +399,83 @@
         },
 
 
-        complete:false
+        complete: false
     }
 
 </script>
 
-<script  type="text/javascript">
+<script type="text/javascript">
 
-    window.onload = function()
-    {
+
+    window.onload = function () {
 
 
     };
 
-    $(document).ready(function(){
+    var addGameHTML = function(name, description, url)
+    {
 
-        app.showVideo(function(){
+        var gameHTML = "" +
 
-            $('#linkCenter').click(function () {
-                app.main();
+            '<p   class="title" style="clear:left; font-size:90% position:relative; top:7px; left:50px;"  >'+name+'</p>' +
+
+            '<div class="object-region" >' +
+
+            '<div class="screen-select" >' +
+
+            '<a class="screenlink" href="examples/side-scroller-level.html"> <img src="image/spritemaker-shot.png" /> <span >'+description+'</span></a>' +
+
+            '</div>' +
+
+            '</div>';
+
+
+        $('div.object-space.game').append(gameHTML);
+
+
+    };
+
+    $(document).ready(function () {
+
+        if (app.__gameBoxCMS) {
+
+            $('#new_game').click(function () {
+
+                if (confirm("Are you sure you want to instantiate a new Game?")) {
+
+                    //for now: just adding html
+
+
+                    return addGameHTML("My New Game", "An example game object");
+
+
+                    app.addGameObject("Game", {name: "myGame", description: "This is a game"}, function (err, data) {
+
+                        alert('Creating Game');
+
+
+
+                    });
+
+                }
+
             });
 
-        });
+
+            app.showVideo(function () {
+
+                $('#linkCenter').click(function () {
+                    app.main();
+                });
+
+            });
 
 
-
+        }
 
     });
 
-    var main = function ()
-    {
+    var main = function () {
         //login code: just get the page from site
         window.location.href = '/main.html';
     }
