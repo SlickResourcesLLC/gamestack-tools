@@ -184,7 +184,6 @@ var DatGui = {
     {
         //test TweenStack builder
 
-
         var _inst = this;
 
         var tweenCreate = function(obj, tween)
@@ -197,21 +196,15 @@ var DatGui = {
 
             });
 
-
             var gui = _inst.main_gui.addFolder('TweenStack_' + ct);
-
 
           //  alert('creating gui for :' + jstr(tween));
 
            _inst.TweenSelect(Game.player, ['position, rotation', 'pos', 'rot', 'size'], tween, gui);
 
-
-
         };
 
-
         tweenCreate(obj, tween);
-
 
         $('img.main-add').unbind().click(function (evt) {
 
@@ -398,6 +391,36 @@ var DatGui = {
             }
 
         }
+
+    },
+
+    addCurveSelect(obj, gui)
+    {
+
+        var testMotion = new Motion();
+
+        var c = gui.add(obj, 'curve', testMotion.curvesList);
+
+        c.onFinishChange(function(value){
+
+            var parts = value.split('_');
+
+            obj.curve = TWEEN.Easing[parts[0]][parts[1]];
+
+
+            var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
+
+            var canvas =  testMotion.getGraphCanvas( value.replace('_', '.'),                   obj.curve, canvasDom[0]);
+
+            if(!canvasDom.length) {
+
+                $($(gui.domElement).children('ul')[0]).append(canvas);
+
+            }
+
+        });
+
+        c.setValue('Quadratic_InOut');
 
     },
 
@@ -761,6 +784,95 @@ var DatGui = {
     {
 
       return new dat.GUI({autoPlace:false});
+
+    },
+
+    updateableAnimationObjectToGui:function(obj, gui, effects)
+    {
+        var first_gui = $('div.main ul')[0];
+
+
+        var fname;
+
+        if (obj.image.domElement.src) {
+
+            fname = obj.image.domElement.src.length > 270 ? obj.image.domElement.src.substring(0, 270) : obj.image.domElement.src;
+
+            var value =  'Select File: <br/> ' +  fname;
+
+            $(obj.file_input).text(value);
+
+        }
+
+        if (obj instanceof Animation) {
+
+            if (!obj.file_input && !$(first_gui).find('input[type="file"]').length) { //add file input
+
+                var id = DatGui.create_id();
+
+                $(first_gui).prepend("<img style='display:none;'/><input type='file' name='" + id + "' id='" + id + "'  class='dat_gui_file'/>" +
+                    "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + fname + "</label>" +
+                    "<canvas id='image-test-canvas'></canvas>");
+
+                obj.file_input = $('#' + id)[0];
+
+                $(obj.file_input).change(function (evt) {
+
+                    var input = evt.target;
+
+                    __ServerSideImage.getRawImageFile(this, function (image) {
+
+                        if (obj instanceof Animation) {
+
+                            var filename = $(input).val().split('\\').pop();
+
+
+                            DatGui.image_upload(filename, image, function (relpath, content) {
+
+                                relpath = relpath.replace('client/', '../');
+
+                                $(input).parent().find('.file_special').html("Select File: <br/> " + relpath);
+
+                                // alert('uploaded image:' + filename + ":using relative path:" + relpath);
+
+                                $('file_special' + id).text(relpath);
+
+                                obj.src = relpath;
+
+                                obj.image = new GameImage(relpath);
+
+                                obj.image.domElement.onload = function () {
+
+                                    obj.frameSize = new Vector( obj.image.domElement.width,  obj.image.domElement.height, 0);
+
+                                    obj.animate();
+
+                                   __ServerSideImage.animationPreview(obj, effects);
+                                };
+                            });
+                        }
+
+                    });
+
+                    //DatGui.get(obj);
+
+                    evt.preventDefault();
+
+                    return false;
+
+
+                });
+
+            }
+
+
+
+
+
+        }
+
+
+
 
     },
 

@@ -75,13 +75,13 @@ var CanvasLib = function() {
 
                 var p = sprite.position;
 
-                var camera = __gameStack.__gameWindow.camera || {pos: {x: 0, y: 0, z: 0}};
+                var camera = __gameStack.__gameWindow.camera || {x: 0, y: 0, z: 0};
 
                 var x = p.x, y = p.y;
 
 
-                x -= camera.position.x || 0;
-                y -= camera.position.y || 0;
+                x -= camera.x || 0;
+                y -= camera.y || 0;
                 //optional animation : gameSize
 
                 var targetSize = sprite.size || sprite.selected_animation.size;
@@ -111,8 +111,20 @@ var CanvasLib = function() {
 
                 }
 
+                var frame = sprite.selected_animation.selected_frame;
 
-                this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
+                if(frame && frame.image && frame.image.data)
+                {
+                    ctx.putImageData(frame.image.data, x, y);
+
+                }
+                else
+                {
+
+                    this.drawFrameWithRotation(sprite.selected_animation.image.domElement, frame.framePos.x, frame.framePos.y, frame.frameSize.x, frame.frameSize.y, Math.round(x + (realWidth / 2)), Math.round(y + (realHeight / 2)), realWidth, realHeight, rotation % 360, ctx, sprite.flipX);
+
+                }
+
             }
 
         }

@@ -16,7 +16,7 @@
  */
 
 class Motion {
-    constructor(args) {
+    constructor(args={}) {
 
         this.getArg = $Q.getArg;
 
@@ -275,16 +275,21 @@ class Motion {
 
     getGraphCanvas( t, f, c) {
 
-        var canvas = document.createElement('canvas');
+        var canvas = c || document.createElement('canvas');
+
+        canvas.style.position = "relative";
 
         canvas.id = 'curve-display';
+
+        canvas.setAttribute('class', 'motion-curve');
 
         canvas.width = 180;
         canvas.height = 100;
 
+        canvas.style.background = "black";
 
         var context = canvas.getContext('2d');
-        context.fillStyle = "rgb(250,250,250)";
+        context.fillStyle = "rgb(0,0,0)";
         context.fillRect(0, 0, 180, 100);
 
         context.lineWidth = 0.5;

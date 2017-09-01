@@ -7,7 +7,7 @@
  * @param   {Vector} args.size of the Animation object, has x and y properties
  * @param   {Vector} args.frameSize the size of frames in Animation, having x and y properties
  * @param   {VectorFrameBounds} args.frameBounds the bounds of the Animation having min, max, and termPoint properties
- * @param   {number} args.delay optional, the seconds to delay before running animation when called by engage()
+ * @param   {number} args.delay optional, the seconds to delay before running animation when started by the start() function
 
  * @param   {number} args.duration how many milliseconds the animation should take to complete
  *
@@ -191,6 +191,7 @@ class Animation {
 
 
     }
+
 
     reset()
 {

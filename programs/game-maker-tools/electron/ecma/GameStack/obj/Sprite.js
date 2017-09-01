@@ -26,6 +26,12 @@ class Sprite {
             args = {};
         }
 
+        if(args instanceof Animation)
+        {
+
+            args = {selected_animation:args, size:new Vector(args.frameSize)};
+        }
+
         this.active = true; //active sprites are visible
 
         this.name = args.name || "__";
@@ -331,6 +337,7 @@ class Sprite {
         return size;
 
     }
+
 
 
 

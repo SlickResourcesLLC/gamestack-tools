@@ -39,8 +39,6 @@
 
     <script src="../assets/js/ui/lib_interface/right_click_interface.js"></script>
 
-    <script src="../assets/js/ui/lib_interface/hot_key_interface.js"></script>
-
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
 
@@ -52,9 +50,18 @@
     body {
         background: black;
 
-        overflow:scroll;
+        position:absolute;
+
+        width:100%;
+        height:100%;
 
     }
+
+canvas
+{
+    height:180px;
+
+}
 
     #container .iw-mTrigger {
         background: transparent;
@@ -80,6 +87,12 @@
         top: 50px;
 
         overflow: visible;
+
+    }
+
+    canvas#image-test-canvas
+    {
+        max-height:180px;
 
     }
 
@@ -156,6 +169,7 @@
 
     }
 
+
 </style>
 
 <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
@@ -167,6 +181,8 @@
 <script src="../assets/js/ui/squeezetabs.js"></script>
 
 <style>
+
+
 
     .dg .c input[type=text] {
 
@@ -185,12 +201,29 @@
 
         background: none;
 
+        color:white;
+
     }
 
     .dg div.slider {
         width: 55%;
     }
 
+
+    div#overlay
+    {
+        position:fixed;
+
+        z-index:9997;
+
+        width:100%;
+
+    }
+
+    .dg.main .folder
+    {
+
+    }
 
 </style>
 
@@ -202,6 +235,7 @@
 
 <input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
 
+
 <div id="ctrl-space-top">
     <nav class="top-menu">
 
@@ -212,7 +246,7 @@
                     type="button">Effect<span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
 
-                <li role="presentation"><a href="#" id="new-level">New Effect</a></li>
+                <li role="presentation"><a href="#" id="new-effect">New Effect</a></li>
 
                 <li role="presentation"><a href="#" class="alt" id="download"><span>Save to JSON-File</span><img
                         src="img/save.png" alt="save data"></a></li>
@@ -228,6 +262,16 @@
 </div>
 
 <style>
+
+    .dg.main
+    {
+        position:relative;
+
+        right:50%;
+
+        margin-right:-125px;
+
+    }
 
     .console {
         position: fixed;
@@ -266,6 +310,8 @@
 
 </style>
 
+
+
 <div id="container">
 
     <canvas id="myCanvas" class="level-maker-canvas">
@@ -273,13 +319,17 @@
 
 </div>
 
+
+
 <div id="dat-gui-container">
 
 </div>
 
 <div id="overlay">
     <div id="message"> <span></span> </div>
+
 </div>
+
 
 <script>
 
@@ -423,6 +473,18 @@
 
         },
 
+        confirmableForm:function(v)
+        {
+
+            $('#message span').html(v + "<div class='button-space'><button class='ok' id='message-ok' onclick='App.closeMessage();'>OK</button><button class='cancel' id='message-ok' onclick='App.closeMessage();'>Cancel</button></div>");
+
+
+
+            $('#message').show();
+
+        },
+
+
         message:function(v)
         {
 
@@ -461,6 +523,24 @@
 
         },
 
+        showEffectForm:function()
+        {
+           this.confirmableForm("<div class='gui-space'></div>");
+
+           this.effect_sequence = new EffectSequence({animation:new Animation(), duration:3000});
+
+
+           var __inst = this;
+
+            this.effect_sequence.guiCallback(false, function(){
+
+                $('.gui-space').html(__inst.effect_sequence.gui.domElement);
+
+
+
+            });
+
+        },
 
         saveLevel: function (name) {
 
@@ -525,18 +605,15 @@
 
     };
 
-
-    var Option_Funx = App.option_funx_assembler();
-    
-    /************
-     * dialog()
-     * -show a group of basic options in 'list view'
-     ************/
-
     $(document).ready(function () {
 
         $('body').css('cursor', 'crosshair');
 
+        $('#new-effect').click(function(){
+
+            App.showEffectForm();
+
+        });
 
         $('#play').click(function(){
 
@@ -586,10 +663,6 @@
 
         update: function () {
 
-            this.WIDTH = __levelMaker.settings.levelSizeX;
-
-            this.HEIGHT = __levelMaker.settings.levelSizeY;
-
             if (!this.is_init) {
                 return 0;
 
@@ -636,45 +709,18 @@
 
         init: function (callback) {
 
-            App.create_level(false, function () {
+            var canvas = $('canvas#myCanvas')[0];
 
-                if (typeof(callback) == 'function') {
-                    callback();
+            this.GameWindow = new GameWindow({canvas:canvas});
 
-                }
+            this.ctx = this.GameWindow.ctx;
 
-
-            });
 
             $('#download').click(function () {
 
-                var sprites = Game.sprites;
 
-                var remove = function (list, my_item) {
+                alert('Download click');
 
-                    $.each(list, function (ix, item) {
-
-                        if (item == my_item) {
-                            //   alert('removing sprite');
-
-                            list.splice(ix, 1);
-
-                        }
-
-                    });
-
-                };
-
-                $.each(sprites, function (ix, item) {
-
-                    if (item == __levelMaker.selection_sprite || item == __levelMaker.hover_selection_sprite) {
-                        //  alert('removing sprite');
-
-                        Game.sprites = Game.sprites.splice(ix, 1);
-
-                    }
-
-                });
 
                 //$(this).prop('download', __levelMaker.settings.name + '.json');
 
@@ -784,6 +830,11 @@
     __gameStack.ready(function (lib) {
 
         alert('Gamestack ready');
+
+
+        Game.init();
+
+        animate();
 
 
     });

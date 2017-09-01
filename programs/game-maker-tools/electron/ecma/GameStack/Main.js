@@ -454,7 +454,7 @@ let GameStackLibrary = function () {
 
 class Sound {
 
-    constructor(src) {
+    constructor(src, data) {
 
         if (typeof(src) == 'object') {
 
@@ -477,6 +477,17 @@ class Sound {
             this.sound = new Audio(this.src);
 
         }
+
+        if(typeof(data) == 'object')
+        {
+            for(var x in data)
+            {
+              if(x !== 'volume' && x !== 'play'){  this[x] = data[x]; }
+
+            }
+
+        }
+
 
         this.onLoad = this.onLoad || function () {
             };
@@ -510,6 +521,70 @@ class Sound {
 
 }
 
+
+class SoundList{
+
+    constructor(list)
+    {
+
+       this.cix = 1;
+
+       this.sounds = [];
+
+        if(list instanceof Array)
+        {
+            for(var x in list)
+            {
+                if(list[x].src)
+                {
+                    this.sounds.push(new Sound(list[x].src, list[x]));
+
+                }
+                else if(typeof(list[x]) == 'string')
+                {
+                    this.sounds.push(new Sound(list[x]));
+
+                }
+
+            }
+
+        }
+
+
+
+    }
+
+    add(src, name)
+    {
+        if(typeof(src) == 'object' && src.src)
+        {
+            this.sounds.push(new Sound(src.src, src));
+
+        }
+        else if(typeof(src) == 'string')
+        {
+            var data = {};
+
+            if(name)
+            {
+                data.name = name;
+            }
+
+            this.sounds.push(new Sound(list[x], data));
+
+        }
+
+    }
+
+    playNext()
+    {
+        this.sounds[this.cix % this.sounds.length].play();
+
+        this.cix += 1;
+
+    }
+
+}
 
 /**
  * GameImage

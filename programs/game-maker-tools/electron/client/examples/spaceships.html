@@ -20,8 +20,14 @@
 
         console.info('library is ready');
 
-
         var GameAssets = {
+
+            sounds:{
+
+              shot:
+                  new Sound("../assets/game/sound/shot.mp3")
+
+            },
 
           weapon_animations:{
 
@@ -117,6 +123,49 @@
 
         enemy.explosion_animation = new Animation(GameAssets.damage_animations.explosion1);
 
+
+        enemy.timer =0;
+
+        enemy.fly = function()
+        {
+
+            if(this.position.y < 50)
+            {
+
+                this.position.y += 1;
+
+
+            }
+            else
+            {
+                this.timer++;
+
+                if(this.position.x < Math.round(Gamestack.WIDTH / 2))
+                {
+
+                    this.accelX(0.2, 8);
+
+
+                }
+                else
+                {
+
+
+                    this.accelX(0.2, -8);
+
+
+                }
+
+            }
+
+        };
+
+        enemy.onUpdate(function(){
+
+            enemy.fly();
+
+        });
+
         enemy.explode = function()
         {
             if(!this.dead)
@@ -171,6 +220,20 @@
          *
          */
 
+
+            /**
+             *
+             * Use a SoundList to run the same sound on every shot, soundlist contains 4 instances of same sound. Reduces conflicts of attempting to play a sound that has not completed last play
+             *
+             */
+
+        player.sounds = {
+
+            shots:new SoundList(["../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3", "../assets/game/sound/shot.mp3"])
+
+        };
+
+
         $Q().on('button_0', function(pressed){
 
             if(pressed) {
@@ -194,7 +257,6 @@
                             rot_offset: -40 + (20 * x) - 90
                         });
 
-
                      bullet.onUpdate(function(sprite){
 
                          if(sprite.collidesRectangular(enemy) && enemy.active){
@@ -205,10 +267,13 @@
 
                      });
 
-
                     }
 
                     player.normalWeaponLocked = true;
+
+
+                    player.sounds.shots.playNext();
+
 
                     //unlock in 1/5 second
 
@@ -304,9 +369,9 @@
 
             // console.log('A collision has occurred');
 
-          obj1.explode();
+         if(!obj2.dead){ obj1.explode(); }
 
-            obj2.explode();
+            if(!obj1.dead){ obj2.explode(); }
 
         });
 
