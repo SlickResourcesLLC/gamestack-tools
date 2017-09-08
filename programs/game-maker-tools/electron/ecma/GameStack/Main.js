@@ -7,7 +7,7 @@
  * attaches to window object || module.exports (when loading via require)
  * */
 
-let Gamestack = Gamestack || {};
+let Gamestack = {};
 
 let GameStackLibrary = function () {
 
@@ -1694,6 +1694,10 @@ class GameWindow {
         w = w || this.canvas.clientWidth;
 
         h = h || this.canvas.clientHeight;
+
+        $('#gs-container').width(w);
+
+        $('#gs-container').height(h);
 
         __gameStack.WIDTH = w;
 

@@ -63,7 +63,7 @@ canvas
 
 }
 
-    #container .iw-mTrigger {
+    #gs-container .iw-mTrigger {
         background: transparent;
         margin-top: 50px;
 
@@ -141,7 +141,7 @@ canvas
 
     }
 
-    #dat-gui-container {
+    #dat-gui-gs-container {
         position: fixed;
 
         z-index: 9997;
@@ -163,7 +163,7 @@ canvas
         zoom: 1.0;
     }
 
-    div#container
+    div#gs-container
     {
         overflow:hidden;
 
@@ -312,7 +312,7 @@ canvas
 
 
 
-<div id="container">
+<div id="gs-container">
 
     <canvas id="myCanvas" class="level-maker-canvas">
     </canvas>
@@ -321,7 +321,7 @@ canvas
 
 
 
-<div id="dat-gui-container">
+<div id="dat-gui-gs-container">
 
 </div>
 
@@ -806,7 +806,7 @@ canvas
 
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById('container').appendChild(stats.dom);
+    document.getElementById('gs-container').appendChild(stats.dom);
 
     function animate(time) {
 

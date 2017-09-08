@@ -56,7 +56,7 @@
 
     }
 
-    #container .iw-mTrigger {
+    #gs-container .iw-mTrigger {
         background: transparent;
         margin-top: 50px;
 
@@ -128,7 +128,7 @@
 
     }
 
-    #dat-gui-container {
+    #dat-gui-gs-container {
         position: fixed;
 
         z-index: 9997;
@@ -150,7 +150,7 @@
         zoom: 1.0;
     }
 
-    div#container
+    div#gs-container
     {
         overflow:hidden;
 
@@ -164,7 +164,6 @@
 
 <script src="../assets/js/ui/dat.gui.js"></script>
 
-<script src="../assets/js/ui/squeezetabs.js"></script>
 
 <style>
 
@@ -278,7 +277,7 @@
 
 </style>
 
-<div id="container">
+<div id="gs-container">
 
     <canvas id="myCanvas" class="level-maker-canvas">
     </canvas>
@@ -368,7 +367,7 @@
 
 </div>
 
-<div id="dat-gui-container">
+<div id="dat-gui-gs-container">
 
 </div>
 
@@ -389,30 +388,6 @@
         TESTGAME:true,
 
         DEVMODE: false,
-
-        recent_files: [],
-
-        dir: {
-
-            level: "../assets/my-levels/",
-            sprite: "../assets/my-sprites/",
-            motion: "../assets/my-motions/"
-
-        },
-
-        __todos: [],
-
-        TODO: function (t) {
-
-            this.__todos.push(t);
-
-        },
-
-        log_all_todos: function () {
-
-            console.log(jstr(this.__todos));
-
-        },
 
 
         replace_map_object:function(item) {
@@ -773,13 +748,6 @@
             var name = $('#message-file-name').val();
 
             App.saveLevel(name);
-
-        },
-
-        onBeforeLevelSave:function(cb)
-        {
-
-
 
         },
 
@@ -1146,7 +1114,7 @@
 
             });
 
-            var container = $('#container')[0];
+            var container = $('#gs-container')[0];
 
             container.oncontextmenu = function (e) {
 
@@ -1334,10 +1302,6 @@
 
     var Option_Funx = App.option_funx_assembler();
     
-    /************
-     * dialog()
-     * -show a group of basic options in 'list view'
-     ************/
 
     $(document).ready(function () {
 
@@ -1957,8 +1921,8 @@
 
                 }
 
-                $('.level-maker-canvas,#container').width(data.levelSizeX);
-                $('.level-maker-canvas,#container').height(data.levelSizeY);
+                $('.level-maker-canvas,#gs-container').width(data.levelSizeX);
+                $('.level-maker-canvas,#gs-container').height(data.levelSizeY);
 
                 Game.canvas.width = data.levelSizeX;
 
@@ -2959,7 +2923,7 @@
 
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById('container').appendChild(stats.dom);
+    document.getElementById('gs-container').appendChild(stats.dom);
 
     function animate(time) {
 
@@ -3020,7 +2984,7 @@
 
             var dissallowed = ['LI', 'UL', 'A', 'SPAN', 'IMG', 'BUTTON', 'INPUT', 'RADIO', 'LABEL'];
 
-            if ($(evt.target).attr('id') !== 'container') {
+            if ($(evt.target).attr('id') !== 'gs-container') {
 
                 if (!$(evt.target).find('form').length) {
 

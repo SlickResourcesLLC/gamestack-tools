@@ -36,14 +36,14 @@ var DatGui = {
     saveable:function(save_callback, remove_callback)
     {
 
-        var guiHTML = $('#dat-gui-container div.dg.main li'),
+        var guiHTML = $('#dat-gui-gs-container div.dg.main li'),
         last = $(guiHTML).last();
 
         $('<button id="save_current_object">Save</button><button id="cancel_current_object">Cancel</button>').insertAfter(last);
 
         $('#save_current_object').click(function(){  save_callback(); });
 
-        $('#cancel_current_object').click(function(){ $('#dat-gui-container div.dg.main.member').last().remove(); remove_callback();  });
+        $('#cancel_current_object').click(function(){ $('#dat-gui-gs-container div.dg.main.member').last().remove(); remove_callback();  });
 
     },
 
@@ -656,7 +656,7 @@ var DatGui = {
                 {
 
 
-                    var first_list = $('#dat-gui-container div.main ul')[0];
+                    var first_list = $('#dat-gui-gs-container div.main ul')[0];
 
                     if(!$(first_list).find('input[type="file"]').length)
                     {
@@ -1048,13 +1048,13 @@ var DatGui = {
 
          this.selectedObject = object;
 
-         $('#dat-gui-container .dg.main').remove();
+         $('#dat-gui-gs-container .dg.main').remove();
 
          this.main_gui = gui || new dat.GUI({autoPlace:false});
 
-        $('#dat-gui-container').append($(this.main_gui.domElement));
+        $('#dat-gui-gs-container').append($(this.main_gui.domElement));
 
-        $('#dat-gui-container').css('top', 0);
+        $('#dat-gui-gs-container').css('top', 0);
 
          //TODO: build the container to display images, etc..
 
