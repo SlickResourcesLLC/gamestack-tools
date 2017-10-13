@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effect Generator</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
+
+    <link rel="stylesheet" href="../assets/js/ui/contextMenu.css">
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
+
+    <script src="../assets/js/ui/serverside-image.js"></script>
+
+    <script src="../assets/js/ui/Tween.js"></script>
+
+    <script src="../assets/js/ui/Stats.js"></script>
+
+    <script src="../dist/js/GameStack.js"></script>
+
+    <script src="../assets/js/ui/dat.gui.js"></script>
+
+    <script src="../assets/js/ui/dat.gui.interface.js"></script>
+
+    <script src="../assets/js/ui/jquery.js"></script>
+
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../assets/js/ui/contextMenu.js"></script>
+
+
+    <script src="../assets/js/ui/jquery.hotkeys.js"></script>
+
+    <script src="../assets/js/ui/right_click_interface.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+
+</head>
+
+<style>
+
+    body {
+        background: black;
+
+        position:absolute;
+
+        width:100%;
+        height:100%;
+
+    }
+
+canvas
+{
+    height:180px;
+
+}
+
+    #gs-container .iw-mTrigger {
+        background: transparent;
+        margin-top: 50px;
+
+    }
+
+    .gui-space input[type='file'] {
+        display: none;
+
+    }
+
+    #top-gui {
+
+        position: fixed;
+
+        width: 100%;
+
+        height: 0px;
+
+        z-index: 9991;
+
+        top: 50px;
+
+        overflow: visible;
+
+    }
+
+    canvas#image-test-canvas
+    {
+        max-height:180px;
+
+    }
+
+    #forceSelect {
+        position: absolute;
+
+        z-index: 9999;
+
+        left: 0;
+
+        top: 0;
+
+        margin: 0;
+
+        background: #4c4c4c; /* Old browsers */
+        background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0);
+        color: white;
+
+    }
+
+    #forceSelect option {
+
+        background: black; /* Old browsers */
+
+        color: white;
+
+    }
+
+    button.main-play {
+        position: absolute;
+
+        right: 0px;
+
+        top: 0px;
+
+        height: 30px;
+
+        width: 30px;
+
+        background-image: url(img/play.png);
+        background-position: center center;
+        background-size: 100% auto;
+
+    }
+
+    #dat-gui-gs-container {
+        position: fixed;
+
+        z-index: 9997;
+
+        top: 50px;
+
+        right: 0px;
+
+    }
+
+    div.slider {
+        position: absolute;
+
+        right: 0px;
+
+    }
+
+    canvas.level-maker-canvas {
+        zoom: 1.0;
+    }
+
+    div#gs-container
+    {
+        overflow:hidden;
+
+    }
+
+
+</style>
+
+<link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
+
+<link rel="stylesheet" href="../assets/css/tool-shell.css">
+
+<script src="../assets/js/ui/dat.gui.js"></script>
+
+<script src="../assets/js/ui/squeezetabs.js"></script>
+
+<style>
+
+    .dg .c input[type=text] {
+
+        position: relative;
+
+        border-left: 1px solid silver;
+        width: 100%;
+
+        padding: 0px;
+
+        padding-left: 2px;
+
+        padding-right: 2px;
+
+        margin: 0px;
+
+        background: none;
+
+        color:white;
+
+    }
+
+    .dg div.slider {
+        width: 55%;
+    }
+
+
+    div#overlay
+    {
+        position:fixed;
+
+        z-index:9997;
+
+        width:100%;
+
+    }
+
+    .dg.main .folder
+    {
+
+    }
+
+</style>
+
+<body>
+
+<script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+<input type="file" name="level-file-input" id="level-file-input"/>
+
+<input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
+
+
+<div id="ctrl-space-top">
+    <nav class="top-menu">
+
+        <img id="logo" src="img/logo-effects-inc.png"/>
+
+        <div class="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                    type="button">Effect<span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+
+                <li role="presentation"><a href="#" id="new-effect">New Effect</a></li>
+
+                <li role="presentation"><a href="#" class="alt" id="download"><span>Save to JSON-File</span><img
+                        src="img/save.png" alt="save data"></a></li>
+
+                <li role="presentation"><a href="#" class="alt" id="png-generator"><span>Generate PNGs</span><img
+                        src="img/save.png" alt="save data"></a></li>
+
+            </ul>
+        </div>
+
+    </nav>
+
+</div>
+
+<style>
+
+    .dg.main
+    {
+        position:relative;
+
+        right:50%;
+
+        margin-right:-125px;
+
+    }
+
+    .console {
+        position: fixed;
+
+        width: 50%;
+
+        top: 75px;
+
+        z-index: 9999;
+
+    }
+
+    .section-title {
+
+        width: 100%;
+
+        font-size: 115%;
+
+        color: cornflowerblue;
+
+        text-decoration: underline;
+
+    }
+
+    .console-keys span {
+
+        color: darkorange;
+
+        border-left: 1px solid blue;
+        border-right: 2px solid blue;
+
+        padding: 2px;
+
+    }
+
+
+</style>
+
+
+
+<div id="gs-container">
+
+    <canvas id="myCanvas" class="level-maker-canvas">
+    </canvas>
+
+</div>
+
+
+
+<div id="dat-gui-gs-container">
+
+</div>
+
+<div id="overlay">
+    <div id="message"> <span></span> </div>
+
+</div>
+
+
+<script>
+
+    Canvas.__levelMaker = true;
+
+    //App{}: a collection of UI functionality
+
+    var App = {
+
+        DEVMODE: false,
+
+
+        superSelectOptions:function(name, options, callback)
+        {
+            var addListHTML = '<div class="add-list">' +
+
+                '<label>'+name+'</label>' +
+
+                '<button type="button" class="add-list add">+</button>' +
+
+                '<ul class="add-list"> </ul>' +
+                '</div>';
+
+            App.message(addListHTML);
+
+            var setForAddition = function () {
+
+                $('div#message').find('input.list').each(function (ix, item) {
+
+                    $(item).on('change', function (evt) {
+
+                        options[ix] = $(item).val();
+
+
+                    });
+
+                });
+
+            };
+
+            var setForDeletion = function () {
+
+                $('div#message').find('button.list-delete').each(function (ix, item) {
+
+                    $(item).on('click', function (evt) {
+
+                        var value = $(this).parent().find('input').val();
+
+                        if(value == ""){ value = $(this).parent().find('input').prop('placeholder');}
+
+                        var li = options[ix];
+
+                        var alist = options;
+
+                        for (var x in alist) {
+
+                            if (alist[x] == value) {
+                                options.splice(x, 1);
+
+                            }
+
+                        }
+
+                        $(this).parent().remove();
+
+
+                    });
+
+                });
+
+            };
+
+            $('div.add-list button.add').unbind().on('click', function (evt) {
+
+                var len = $(this).parent().find('li').length, tvalue = "list_value_" + len;
+
+                while (__levelMaker.settings.psuedoSpriteTypes.indexOf(tvalue) >= 0) {
+                    tvalue += '_c';
+
+                }
+
+                $(this).parent().find('ul').append('<li> <input type="text" class="list" placeholder="' + tvalue + '" /> <button type="button" class="list-delete">X</button></li>');
+
+                setForDeletion();
+
+                setForAddition();
+
+                evt.preventDefault();
+
+                return false;
+
+            });
+
+            $.each(options, function(ix, item){
+
+                $('div#message ul').append('<li> <input type="text" class="list" placeholder="' + item + '" /> <button type="button" class="list-delete">X</button> </li>');
+
+            });
+
+
+            setForAddition();
+
+            setForDeletion();
+
+            $('button#message-ok').click(function(){
+
+               if(callback)
+               {
+                   callback();
+
+               }
+
+            });
+
+        },
+
+        closeMessage:function(callback)
+        {
+
+            $('#message').hide();
+
+
+        },
+
+        collectNumber:function(min, max, inputValueCallback)
+        {
+
+          this.message("<input type='number' value='0' min='"+min+"'  max='"+max+"'   />");
+
+          $('button#message-ok').unbind().click(function(){
+
+              var value = $(this).parent().find("input").val();
+
+              value = parseFloat(value);
+
+              inputValueCallback(value);
+
+          });
+
+        },
+
+        confirmableForm:function(v)
+        {
+
+            $('#message span').html(v + "<div class='button-space'><button class='ok' id='message-ok' onclick='App.closeMessage();'>OK</button><button class='cancel' id='message-ok' onclick='App.closeMessage();'>Cancel</button></div>");
+
+
+
+            $('#message').show();
+
+        },
+
+
+        message:function(v)
+        {
+
+            $('#message span').html(v + "<br/><button class='ok' id='message-ok' onclick='App.closeMessage();'>OK</button>");
+
+            $('#message').show();
+
+        },
+
+        applyLevelSave:function()
+        {
+
+            var name = $('#message-file-name').val();
+
+            App.saveLevel(name);
+
+        },
+
+        onBeforeLevelSave:function(cb)
+        {
+
+
+
+        },
+
+        beginLevelSave:function()
+        {
+
+            $('#message span').html( "Enter File Name" +
+
+                 "<br/><input id='message-file-name' type='text' value='"+__levelMaker.settings.name+"' class='message-file'  />" +
+
+                "<br/><button class='ok' onclick='App.applyLevelSave();'>OK</button><button class='cancel' onclick='App.closeMessage();'>Cancel</button>");
+
+            $('#message').show();
+
+        },
+
+        showEffectForm:function()
+        {
+           this.confirmableForm("<div class='gui-space'></div>");
+
+           this.effect_sequence = new EffectSequence({animation:new Animation(), duration:3000});
+
+
+           var __inst = this;
+
+            this.effect_sequence.guiCallback(false, function(){
+
+                $('.gui-space').html(__inst.effect_sequence.gui.domElement);
+
+
+
+            });
+
+        },
+
+        saveLevel: function (name) {
+
+            if(name == "")
+            {
+                alert('Applying default level name:' + __levelMaker.settings.name);
+                name = false;
+            }
+
+            __levelMaker.settings.name = name || __levelMaker.settings.name;
+
+            if(!__levelMaker.settings.name.endsWith('.json'))
+            {
+                __levelMaker.settings.name += ".json";
+            }
+
+            //onBeforeSave :: take every image reference from the 'uploads' catch, save the image to a permanent folder in
+
+            //assets/game/image/
+
+            var data = __levelMaker.MapData(Game.sprites, __levelMaker.settings, Game.GameWindow.forces);
+
+            data = jstr(data);
+
+            App.triggerDownload(__levelMaker.settings.name, data, function(data){
+
+                data = JSON.parse(data);
+
+                if(data.path)
+                {
+
+                    App.message('file saved to:' + '<a target="_blank" href="file:///'+data.path + '" >'+data.path+'</a>');
+
+                }
+
+            });
+
+        },
+
+        newLevel: function () {
+
+
+            window.location.reload();
+
+        },
+
+        triggerDownload: function (filename, content, callback) {
+
+            $.post("http://localhost:3137/save", {filename: filename, content: content})
+                .done(function (data) {
+
+                    if (typeof(callback) == 'function') {
+
+                        callback(data);
+
+                    }
+
+                    //  alert( "Data Saved: " + data );
+                });
+
+        }
+
+    };
+
+    $(document).ready(function () {
+
+        $('body').css('cursor', 'crosshair');
+
+        $('#new-effect').click(function(){
+
+            App.showEffectForm();
+
+        });
+
+        $('#play').click(function(){
+
+            alert('Test the animations');
+
+        });
+
+
+        App.reset_animation = function()
+        {
+
+            alert('reset the anime');
+
+        };
+
+
+        $('#stop').click(function(){
+
+            App.restart();
+
+        });
+
+    });
+
+
+
+    var Game = {
+
+        TEST_MODE:false,
+
+        WIDTH: 0,
+
+        HEIGHT: 0,
+
+        GameWindow: {},
+
+        canvas: {},
+
+        ctx: {},
+
+        sprites: [],
+
+        forces:[],
+
+        is_init: false,
+
+
+        update: function () {
+
+            if (!this.is_init) {
+                return 0;
+
+            }
+
+            if(this.TEST_MODE == true) {
+
+                this.GameWindow.update();
+
+            }
+
+        },
+
+
+        render: function () {
+
+            if (!this.is_init) {
+                return 0;
+
+            }
+
+
+            this.GameWindow.draw();
+
+            var __inst = this;
+
+
+            Canvas.draw(__levelMaker.hover_selection_sprite, this.GameWindow.ctx);
+
+            $.each(this.sprites, function (ix, item) {
+
+                if (item.selected) {
+                    __levelMaker.selection_sprite.setSize(item.size);
+                    __levelMaker.selection_sprite.setPos(item.position);
+
+                    Canvas.draw(__levelMaker.selection_sprite, __inst.GameWindow.ctx);
+
+                }
+
+            });
+
+
+        },
+
+        init: function (callback) {
+
+            var canvas = $('canvas#myCanvas')[0];
+
+            this.GameWindow = new GameWindow({canvas:canvas});
+
+            this.ctx = this.GameWindow.ctx;
+
+
+            $('#download').click(function () {
+
+
+                alert('Download click');
+
+
+                //$(this).prop('download', __levelMaker.settings.name + '.json');
+
+               // $(this).prop('target', '_blank');
+
+                function roughSizeOfObject(object) {
+
+                    var objectList = [];
+                    var stack = [object];
+                    var bytes = 0;
+
+                    while (stack.length) {
+                        var value = stack.pop();
+
+                        if (typeof value === 'boolean') {
+                            bytes += 4;
+                        }
+                        else if (typeof value === 'string') {
+                            bytes += value.length * 2;
+                        }
+                        else if (typeof value === 'number') {
+                            bytes += 8;
+                        }
+                        else if
+                        (
+                            typeof value === 'object'
+                            && objectList.indexOf(value) === -1
+                        ) {
+                            objectList.push(value);
+
+                            for (var i in value) {
+                                stack.push(value[i]);
+                            }
+                        }
+                    }
+                    return bytes;
+                };
+
+                App.beginLevelSave(function(bool){
+
+                    console.log('Level Saved:' + bool);
+
+                });
+
+
+
+            });
+
+            $('form').submit(function (evt) {
+
+
+                evt.preventDefault();
+
+                return false;
+
+            });
+
+        }
+
+    };
+
+
+
+    jQuery.expr.filters.offscreen = function (el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            (rect.x + rect.width) < 0
+            || (rect.y + rect.height) < 0
+            || (rect.x > window.innerWidth || rect.y > window.innerHeight)
+        );
+    };
+
+
+    __gameStack.ready(function (lib) {
+
+
+
+    });
+
+    /********************************
+     * Game Init / ready
+     *******************************/
+
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.getElementById('gs-container').appendChild(stats.dom);
+
+    function animate(time) {
+
+        stats.begin();
+
+        requestAnimationFrame(animate);
+
+        TWEEN.update(time);
+
+        Game.update();
+
+        Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+
+        Game.render();
+
+        stats.end();
+
+    };
+
+
+    __gameStack.ready(function (lib) {
+
+        alert('Gamestack ready');
+
+
+        Game.init();
+
+        animate();
+
+
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

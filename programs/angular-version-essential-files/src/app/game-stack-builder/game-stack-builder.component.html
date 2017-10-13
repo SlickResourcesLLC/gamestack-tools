@@ -1,0 +1,240 @@
+<style>
+
+
+  body
+  {
+    background-color:black;
+
+    background:black;
+  }
+
+  .dg .c input[type=text] {
+
+    position: relative;
+
+    border-left: 1px solid silver;
+    width: 100%;
+
+    padding: 0px;
+
+    padding-left: 2px;
+
+    padding-right: 2px;
+
+    margin: 0px;
+
+    background: none;
+
+  }
+
+  .dg div.slider {
+    width: 55%;
+  }
+
+  button.browser-open
+  {
+
+    background:none;
+
+    font-size:170%;
+
+    color:darkorange;
+
+    float:left;
+
+    margin-top:5px;
+
+
+    margin-left:-8px;
+
+    padding-bottom:3px;
+
+    height:40px;
+
+  }
+
+
+
+
+
+</style>
+
+<body>
+
+<input type="file" name="level-file-input" id="level-file-input"/>
+
+<input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
+
+<div id="ctrl-space-top">
+  <nav class="top-menu">
+
+    <button class="browser-open glyphicon glyphicon-th-list"></button>  <img id="logo" src="assets/css/img/logo-level.png"/>
+
+    <div class="dropdown">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+              type="button">Level<span class="caret"></span></button>
+      <ul class="dropdown-menu" role="menu">
+
+        <li role="presentation"><a href="#" id="new-level">New Level</a>  </li>
+
+        <li role="presentation"><a href="#" id="load-level">Load Level</a> </li>
+
+        <li role="presentation"><a href="#" id="load-map-objects">Quick Load Map Images</a></li>
+
+        <li role="presentation"><a href="#" class="alt" id="download"><span>Save to File</span><img
+          src="assets/css/img/save.png" alt="save data"></a></li>
+
+        <li role="presentation"><a id="map_settings_show" class="alt" href='#'
+                                   onclick="__levelMaker.settings.show();">Level-Settings<img
+          src="assets/css/img/settings_icon.png" alt="settings image"></a></li>
+
+      </ul>
+    </div>
+
+    <button type="button" id="my-objects" class="button-top"><span>Choose-Object</span></button>
+    <button id="create_map_object" class="button-add">+</button>
+
+    <button type="button" id="play" ></button>
+    <button type="button" id="stop" ></button>
+
+
+  </nav>
+
+</div>
+
+<style>
+
+  .console {
+    position: fixed;
+
+    width: 50%;
+
+    top: 75px;
+
+    z-index: 9999;
+
+  }
+
+  .section-title {
+
+    width: 100%;
+
+    font-size: 115%;
+
+    color: cornflowerblue;
+
+    text-decoration: underline;
+
+  }
+
+  .console-keys span {
+
+    color: darkorange;
+
+    border-left: 1px solid blue;
+    border-right: 2px solid blue;
+
+    padding: 2px;
+
+  }
+
+
+</style>
+
+<div id="gs-container">
+
+  <canvas id="myCanvas" class="level-maker-canvas">
+  </canvas>
+
+</div>
+
+<form id="auto_place_form" method="GET">
+  <ul>
+
+    <li><label>Number-Objects-1</label><input type="range" id="count" min="1" max="300" value="1"/></li>
+
+    <li><label>Spacing-Per-Object-0</label><input type="range" id="dist" min="0" max="300" value="0"/></li>
+
+    <li><label class="up multi-place switch-label">Up &#8593;</label></li>
+    <li><label class="up-left multi-place switch-label">Diag-Up-Left &#8598;</label></li>
+    <li><label class="left multi-place switch-label"> Left &#8592;</label></li>
+    <li><label class="down-left multi-place switch-label">Diag-Down-Left &#8600;</label></li>
+    <li><label class="down multi-place switch-label">Down &#8595;</label></li>
+    <li><label class="down-right multi-place switch-label">Diag-Down-Right &#8601;</label></li>
+    <li><label class="right multi-place switch-label">Right &#8594;</label></li>
+    <li><label class="up-right multi-place switch-label">Diag-Up-Right &#8599;</label></li>
+
+    <br/>
+  </ul>
+  <button id="auto_place" class="ok">PKL</button>
+  <button type="button" id="cancel_dispersion" class="cancel" onclick="$(this).parent().hide();">Cancel</button>
+</form>
+
+<div id="settings-space">
+
+  <form id="settings" method="GET">
+
+    <h3>Level Settings</h3>
+
+    <div id="level-settings-gui"></div>
+
+    <input type="hidden" value="image_data" id="image_data" name="image_data"/>
+
+    <button type="button" id="apply_map_settings" class="center_ok" onclick="$(this).parent().hide();">OK</button>
+
+  </form>
+
+</div>
+
+<div id="map-item-space">
+
+  <form id="object-maker" method="GET">
+
+    <h3 id="title">Create Level-Map Sprite</h3>
+
+    <div id="sprite-space" class="sprite-space gui-space"></div>
+
+    <input type="hidden" value="image_data" id="image_data" name="image_data"/>
+
+    <label class="major">Persistent Rotation</label>
+
+    <label class="minor">Rotational Speed</label>
+
+    <div class="rotation-speed-gui" id="rotation-speed-gui">
+
+    </div>
+
+    <label class="minor">Rotational Accel</label>
+
+    <div class="rotation-accel-gui" id="rotation-accel-gui">
+
+    </div>
+
+    <div id="just-ok-space">  <button  class="ok">OK</button> </div>
+    <div id="ok-cancel-space"> <button id="create_object"  class="ok">OK</button>
+
+      <button type="button" id="close" class="cancel">Cancel</button></div>
+
+  </form>
+
+</div>
+
+
+
+
+
+<div class="free-select center map-list">
+
+  <ul></ul>
+
+  <button class="save-map-options">Save Options<img src="assets/css/img/save.png" alt="save data"></button>
+
+</div>
+
+<div id="dat-gui-gs-container">
+
+</div>
+
+<div id="overlay">
+  <div id="message"> <span></span> </div>
+</div>
