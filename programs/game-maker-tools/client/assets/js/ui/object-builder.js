@@ -113,8 +113,6 @@ var ObjectBuilder = function(obj, allowedMembers) {
 
                 $(heading).append(add_button_html);
 
-                alert($('#main_plus').length);
-
                 $('#main_plus').click(function(){
 
                 	//Add a new Sprite():
@@ -133,26 +131,28 @@ var ObjectBuilder = function(obj, allowedMembers) {
 
             }
 
-			//set events next
+
 
 
         }
         else {//single object ?
 
-            alert('You passed single object: using this to instantiate object()');
+          //  alert('You passed single object: using this to instantiate object()');
 
             this.__members[0] = obj;
 
         }
 
+        //set events next
 
-        alert('rendering');
 
         this.renderObjectControllable(this.__members[ix], $('.selected_object')[0], {multiple:this.__multiple});
+
 
         return  this;
 
     };
+
 
 
     this.refresh(obj);
@@ -189,6 +189,12 @@ ObjectBuilder.prototype.createGui=function()
 
 };
 
+ObjectBuilder.prototype.refreshLists = function()
+{
+
+
+};
+
 ObjectBuilder.prototype.listSelect = function(gui, obj, members)
 {
 	var testObject = {Selected_Object:obj};
@@ -214,7 +220,7 @@ ObjectBuilder.prototype.listSelect = function(gui, obj, members)
 
     object_select.onChange(function(value)
     {
-    	var n = $(this.domElement).find('option:selected').text();
+    	var n = $(this.domElement).find('option:selected');
 
     	var ct =-1;
 
@@ -222,7 +228,7 @@ ObjectBuilder.prototype.listSelect = function(gui, obj, members)
 
     		ct += 1;
 
-    		if(item.name == n)
+    		if(item.name == ix)
 			{
 
                 alert('ix:' + ix);
@@ -248,53 +254,16 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
 
     this.options = options;
 
-    this.testObject = {build_as_array:options.multiple || false};
-
     var greenText = $(".controllable li .special-text")[0],
 
         add_button = $(".tree-add-special")[0];
 
 
-    if(options.multiple)
-    {
-
-            $(greenText).text("()[]");
-
-            $(add_button).show();
-
-    }
-    else
-    {
 
         $(greenText).text("()");
 
         $(add_button).hide();
 
-    }
-
-    var array_check = gui.add(this.testObject, 'build_as_array');
-
-    array_check.onChange(function(value){
-
-        if(value == false)
-        {
-            alert('switch to non-array');
-
-            __inst.renderObjectControllable(obj, container, {multiple:false})
-
-
-        }
-
-        if(value == true)
-        {
-            alert('switch to array');
-
-            __inst.renderObjectControllable(obj, container, {multiple:true})
-
-        }
-
-
-    });
 
     options = options || {};
 
@@ -302,11 +271,6 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
 	{
 		this.listSelect(gui, obj, this.objectMembers());
     }
-
-
-    var name = gui.add(obj, 'name');
-
-    var description = gui.add(obj, 'description');
 
    // DatGui.addEachText(obj, gui);
 
@@ -320,6 +284,7 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
             var html = "";
 
             var f = gui.addFolder(ix);
+
 
             folders.push(f);
 

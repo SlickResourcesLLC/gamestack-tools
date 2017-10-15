@@ -40,7 +40,7 @@ class Vector {
             v = {x:v, y:v, z:v};
         };
 
-        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
+        return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
 
     }
 
@@ -51,7 +51,7 @@ class Vector {
             v = {x:v, y:v, z:v};
         };
 
-        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
+        return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
 
     }
 
@@ -62,7 +62,7 @@ class Vector {
             v = {x:v, y:v, z:v};
         };
 
-        return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
+        return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
 
     }
     div(v)
@@ -72,22 +72,22 @@ class Vector {
             v = {x:v, y:v, z:v};
         };
 
-        return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z);
+        return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
     }
 
     round()
     {
-        return new Vector3(Math.round(this.x), Math.round(this.y), Math.round(this.z));
+        return new Vector(Math.round(this.x), Math.round(this.y), Math.round(this.z));
 
     }
     floor()
     {
-        return new Vector3(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
+        return new Vector(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
 
     }
     ceil()
     {
-        return new Vector3(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z));
+        return new Vector(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z));
 
     }
 

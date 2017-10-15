@@ -1,38 +1,41 @@
 
 /**
- * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
+ * Takes an object of arguments and returns Projectile() object. Projectile fires a shot from the parent sprite, with specified offset, rotation, motion_curve, line_curve
 
  * @param   {Object} args object of arguments
  * @param   {string} args.name optional
  * @param   {string} args.description optional
- * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.curve the TWEEN.Easing function to be applied (Example: TWEEN.Easing.Quadratic.InOut)
- * @param   {Vector} args.targetRotation the targeted rotation result, when using rotation with movement
- * @param   {Vector} args.distance the target distance of position change, when moving position
- * @param   {number} args.duration the milliseconds duration of the Motion
- * @param   {number} args.delay the milliseconds delay before the Motion occurs (on call of Motion.engage())
+ * @param   {string} args.distance the distance before dissappearance
+ * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.motion_curve the TWEEN.Easing function to be applied for motion/speed (Example: TWEEN.Easing.Quadratic.InOut)
  *
+ *  * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.line_curve the TWEEN.Easing function to be applied for line (Example: TWEEN.Easing.Quadratic.InOut)
  *
- * @returns {Motion} a Motion object
+ * @returns {Projectile} a Projectile object
  */
 
-class Motion {
+
+
+class Projectile {
+
     constructor(args={}) {
 
         this.getArg = $Q.getArg;
 
-        this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
+        for(var x in args)
+        {
+            this[x] = args[x];
 
-        this.curvesList = this.curvesObject(); //Tween.Easing
+        }
+
+        this.line = Gamestack.getArg(args, 'line', new Line());
+
+        this.animation = Gamestack.getArg(args, 'animation', new Animation());
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
         this.motion_curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
-        this.line_curve = Gamestack.getArg(args, 'line_curve', TWEEN.Easing.Linear.None);
-
         this.rotation = Gamestack.getArg(args, 'rotation', 0);
-
-        this.targetRotation = Gamestack.getArg(args, 'targetRotation', 0);
 
         this.name = Gamestack.getArg(args, 'name', "__");
 
@@ -40,18 +43,20 @@ class Motion {
 
         this.motionCurveString = this.getMotionCurveString(); //store a string key for the Tween.Easing || 'curve'
 
-        this.lineCurveString = this.getLineCurveString(); //store a string key for the Tween.Easing || 'curve'
-
         this.setMotionCurve(this.motionCurveString);
-
-        this.setLineCurve(this.lineCurveString);
 
         this.duration = Gamestack.getArg(args, 'duration', 500);
 
         this.delay = Gamestack.getArg(args, 'delay', 0);
 
-    }
+        this.target = new Vector2();
 
+        this.position = Gamestack.getArg(args, 'position', new Vector);
+
+
+        this.highlighted = false;
+
+    }
 
     curvesObject() {
 
@@ -61,7 +66,7 @@ class Motion {
 
             GameStack.each(easing, function (iy, easeType) {
 
-                if (['in', 'out', 'inout'].indexOf(iy.toLowerCase()) >= 0) {
+                if (['in', 'out', 'inout','none'].indexOf(iy.toLowerCase()) >= 0) {
 
                     c.push(ix + "_" + iy);
 
@@ -100,62 +105,6 @@ class Motion {
 
     }
 
-    getLineCurveString() {
-
-        var __inst = this;
-
-        var c;
-
-        $.each(TWEEN.Easing, function (ix, easing) {
-
-            $.each(TWEEN.Easing[ix], function (iy, easeType) {
-
-
-                if (__inst.line_curve == TWEEN.Easing[ix][iy]) {
-
-                    c = ix + "_" + iy;
-
-                }
-
-            });
-
-        });
-
-        return c;
-
-    }
-
-    setLineCurve(c) {
-
-        var cps = c.split('_');
-
-        var s1 = cps[0], s2 = cps[1];
-
-        var curve = TWEEN.Easing.Quadratic.InOut;
-
-        $.each(TWEEN.Easing, function (ix, easing) {
-
-            $.each(TWEEN.Easing[ix], function (iy, easeType) {
-
-
-                if (ix == s1 && iy == s2) {
-
-                    // alert('setting curve');
-
-                    curve = TWEEN.Easing[ix][iy];
-
-                }
-
-            });
-
-        });
-
-        this.line_curve = curve;
-
-
-        return curve;
-
-    }
 
     setMotionCurve(c) {
 
@@ -189,77 +138,42 @@ class Motion {
 
     }
 
-    engage() {
+    Distance(d)
+    {
+        this.target.y = d;
 
-        var tweens = [];
-
-        //construct a tween::
-
-        var __inst = this;
+    }
 
 
-        var objects = {};
 
-        $.each(Game.sprites, function (ix, item) {
+    fire() {
 
-            if (item.id == __inst.parent_id) {
+        //reference list of sprites
 
-                objects[ix] = item;
-
-            }
-        });
-
-
-        var target = {
-
-            x: __inst.distance.x + objects[0].position.x,
-            y: __inst.distance.y + objects[0].position.y,
-            z: __inst.distance.z + objects[0].position.z
-
-        };
-
-        if (__inst.targetRotation > 0 || __inst.targetRotation < 0) {
-
-
-            var targetR = __inst.targetRotation + objects[0].rotation.x;
-
-            //we have a target
-            tweens[0] = new TWEEN.Tween(objects[0].rotation)
-                .easing(__inst.curve || TWEEN.Easing.Elastic.InOut)
-
-                .to({x: targetR}, __inst.duration)
-                .onUpdate(function () {
-                    //console.log(objects[0].position.x,objects[0].position.y);
-
-
-                })
-                .onComplete(function () {
-                    //console.log(objects[0].position.x, objects[0].position.y);
-                    if (__inst.complete) {
-
-                        __inst.complete();
-
-                    }
-
-
-                });
-
-
-        }
+        //create and start() the tween, with point-vectors
 
         //we have a target
-        tweens.push(new TWEEN.Tween(objects[0].position)
-            .easing(__inst.curve || TWEEN.Easing.Elastic.InOut)
 
-            .to(target, __inst.duration)
+
+        this.tween = new TWEEN.Tween(this.position)
+
+            .easing()
+
+            .to({x:this.target.x})
+
             .onUpdate(function () {
                 //console.log(objects[0].position.x,objects[0].position.y);
 
+                alert('tween updating');
+
+                this.position.y =0;
+
+                __inst.Update();
 
             })
+
             .onComplete(function () {
                 //console.log(objects[0].position.x, objects[0].position.y);
-
                 if (__inst.complete) {
 
                     __inst.complete();
@@ -267,35 +181,9 @@ class Motion {
                 }
 
 
-            }));
+            });
 
 
-        __inst.delay = !isNaN(__inst.delay) && __inst.delay > 0 ? __inst.delay : 0;
-
-
-        return {
-
-            tweens: tweens,
-
-            delay: __inst.delay,
-
-            fire: function () {
-
-                var __tweenObject = this;
-
-                window.setTimeout(function () {
-
-                    for (var x = 0; x < __tweenObject.tweens.length; x++) {
-
-                        __tweenObject.tweens[x].start();
-
-                    }
-
-                }, this.delay);
-
-            }
-
-        }
 
     }
 
@@ -308,7 +196,7 @@ class Motion {
      **********/
 
     start() {
-        this.engage().fire();
+        this.fire();
 
     }
 

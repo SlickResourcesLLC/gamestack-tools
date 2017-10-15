@@ -220,6 +220,60 @@ module.exports = function() {
 
 
 
+       app.post('/save-object', function (req, res) {
+
+           console.log('received post request:/save-object');
+
+           var data = req.body.data;
+
+           console.log(JSON.stringify(data));
+
+           console.log(data);
+
+           var data_test = {};
+
+           if (data && data.type && data.name && data.object) {
+
+               console.log('had params');
+
+               try {
+
+                   data.name = data.name.replace('.json', '');
+
+                   var path = __dirname +
+
+                       '/client/assets/json/' + data.type + '/' + data.name + '.json';
+
+                   fs.writeFile(path, data.object, function (err) {
+                       if (err) return console.log(err);
+                       console.log('File:' + path + ' was saved');
+
+                       res.end('done');
+
+                   });
+
+               }
+
+               catch(e)
+               {
+
+                   console.log(e);
+
+
+
+                   res.end('failed');
+
+               }
+
+           }
+           else
+           {
+
+               res.end('failed params');
+
+           }
+
+       });
 
 
 

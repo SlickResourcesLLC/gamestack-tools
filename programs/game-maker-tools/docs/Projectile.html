@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>GameStack Class: GameWindow</title>
+	<title>GameStack Class: Projectile</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: GameWindow</h1>
+	<h1 class="page-title">Class: Projectile</h1>
 <section>
 
 <header>
     
         <h2>
-        GameWindow
+        Projectile
         </h2>
         
-            <div class="class-description">:Instantiates a GameWindow object</div>
+            <div class="class-description">Takes an object of arguments and returns Projectile() object. Projectile fires a shot from the parent sprite, with specified offset, rotation, motion_curve, line_curve</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="GameWindow"><span class="type-signature"></span>new GameWindow(args)</h4>
+    <h4 class="name" id="Projectile"><span class="type-signature"></span>new Projectile(args)</h4>
     
     
 </dt>
@@ -149,7 +149,7 @@
 
             
 
-            <td class="description last">: the object of arguments
+            <td class="description last">object of arguments
                 <h6 class="method-params-label method-subparams-label">Properties</h6>
                 
 
@@ -175,13 +175,13 @@
 
         <tr>
             
-                <td class="name"><code>canvas</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
 
@@ -192,20 +192,20 @@
 
             
 
-            <td class="description last">: the canvas object of the window: GameWindow constructor will create one if not supplied in args</td>
+            <td class="description last">optional</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>ctx</code></td>
+                <td class="name"><code>description</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
 
@@ -216,20 +216,20 @@
 
             
 
-            <td class="description last">: the canvas context</td>
+            <td class="description last">optional</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>sprites</code></td>
+                <td class="name"><code>distance</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">string</span>
 
 
 
@@ -240,20 +240,20 @@
 
             
 
-            <td class="description last">: the list of sprites, to be applied with GameWindow</td>
+            <td class="description last">the distance before dissappearance</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>forces</code></td>
+                <td class="name"><code>motion_curve</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">TWEEN.Easing.'objectGroup'.'objectMember'</span>
 
 
 
@@ -264,7 +264,7 @@
 
             
 
-            <td class="description last">: the list of forces, such as gravity, to be applied with GameWindow</td>
+            <td class="description last">the TWEEN.Easing function to be applied for motion/speed (Example: TWEEN.Easing.Quadratic.InOut) * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.line_curve the TWEEN.Easing function to be applied for line (Example: TWEEN.Easing.Quadratic.InOut)</td>
         </tr>
 
     
@@ -335,7 +335,7 @@
     
             
 <div class="param-desc">
-    object of GameWindow()
+    a Projectile object
 </div>
 
 
@@ -346,7 +346,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="GameWindow.html">GameWindow</a></span>
+<span class="param-type"><a href="Projectile.html">Projectile</a></span>
 
 
 

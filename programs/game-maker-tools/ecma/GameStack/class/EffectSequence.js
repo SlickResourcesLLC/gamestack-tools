@@ -231,26 +231,19 @@ class EffectSequence
 
           });
 
-
-
-            DatGui.addCurveSelect(__inst, __inst.gui);
-
+            DatGui.addMotionCurveSelect(__inst, __inst.gui);
 
         }
 
         setValues(this.gui);
 
-
         DatGui.updateableAnimationObjectToGui( __inst.gui, __inst);
 
         window.setTimeout(function(){
 
-
             callback(__inst.gui);
 
         }, 200);
-
-
 
         return this.gui;
 

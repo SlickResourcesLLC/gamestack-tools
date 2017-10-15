@@ -224,7 +224,9 @@
     }
 
     .title, .title-level2 {
+
         color: white;
+
         position: block;
 
         text-align: left;
@@ -233,15 +235,11 @@
 
         margin-left: 50px;
 
-        background: #959595; /* Old browsers */
-        background: -moz-linear-gradient(top, #959595 0%, #0d0d0d 46%, #010101 50%, #0a0a0a 53%, #4e4e4e 76%, #383838 87%, #1b1b1b 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#959595', endColorstr='#1b1b1b',GradientType=0 ); /* IE6-9 */
+        background-image: url("image/black_surface.png");
 
-        border-top:1px solid lightgrey;
+        background-size: 50% auto;
 
-        border-bottom:2px solid lightgrey;
+        background-position:25% 25%;
 
     }
 
@@ -383,6 +381,21 @@
 
     }
 
+
+    .object-container
+    {
+        position:relative;
+
+        color:white;
+
+        width:100%;
+
+        min-height:70px;
+
+        background:transparent;
+
+    }
+
 </style>
 
 <body>
@@ -505,7 +518,8 @@
 
 </div>
 
-<div class="game-space" style="display:none;" >
+<div class="game-space object-container"  >
+
 <p class="title left">Games</p>
 <button class="create" id="new_game">+</button>
 <div class="object-space game">
@@ -513,6 +527,60 @@
 </div>
 
 </div>
+
+
+
+<div class="sprite-space object-container"  >
+    <p class="title left">Sprites</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space game">
+
+    </div>
+
+</div>
+
+
+
+<div class="motion-space object-container"  >
+    <p class="title left">Motions</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space motion">
+
+    </div>
+
+</div>
+
+
+<div class="animation-space object-container"  >
+    <p class="title left">Animations</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space animation">
+
+    </div>
+
+</div>
+
+
+<div class="projectile-space object-container"  >
+    <p class="title left">Projectiles</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space projectile">
+
+    </div>
+
+</div>
+
+
+<div class="particle-space object-container" >
+    <p class="title left">Particles</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space particle">
+
+    </div>
+
+</div>
+
+
 
 
 <script type="text/javascript">
@@ -589,14 +657,12 @@
 
         },
 
-
         complete: false
     }
 
 </script>
 
 <script type="text/javascript">
-
 
     window.onload = function () {
 
@@ -636,9 +702,7 @@
 
                     //for now: just adding html
 
-
                     return addGameHTML("My New Game", "An example game object");
-
 
                     app.addGameObject("Game", {name: "myGame", description: "This is a game"}, function (err, data) {
 

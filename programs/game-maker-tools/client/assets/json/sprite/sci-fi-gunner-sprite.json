@@ -1,0 +1,822 @@
+{
+  "active": true,
+  "name": "sci-fi-gunner-sprite",
+  "description": "running, shooting sprite",
+  "__initializers": [],
+  "position": {
+    "x": 241,
+    "y": 199.5
+  },
+  "size": {
+    "x": 50,
+    "y": 52
+  },
+  "type": "basic",
+  "animations": [
+    {
+      "defaultArgs": {
+        "name": "my-animation",
+        "description": "my-description",
+        "frames": [],
+        "type": "none",
+        "delay": 0,
+        "frameSize": {
+          "x": 44,
+          "y": 44,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "flipX": false,
+        "earlyTerm": false,
+        "hang": false,
+        "duration": 1000,
+        "size": {
+          "x": 20,
+          "y": 20,
+          "z": 20
+        }
+      },
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {},
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "extras": false,
+      "frames": [
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 50,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 100,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 150,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 200,
+            "y": 0
+          }
+        }
+      ],
+      "flipX": false,
+      "cix": 0.7921679999937769,
+      "selected_frame": {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      "effects": [],
+      "timer": 0,
+      "__gameLogic": false,
+      "name": "my-animation",
+      "description": "my-description",
+      "type": "none",
+      "delay": 0,
+      "earlyTerm": false,
+      "hang": false,
+      "duration": 1000,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      },
+      "tween": {},
+      "isComplete": true
+    }
+  ],
+  "motions": [
+    {
+      "distance": {
+        "x": 0,
+        "y": -200,
+        "z": 0
+      },
+      "curvesList": [
+        "Linear_None",
+        "Quadratic_In",
+        "Quadratic_Out",
+        "Quadratic_InOut",
+        "Cubic_In",
+        "Cubic_Out",
+        "Cubic_InOut",
+        "Quartic_In",
+        "Quartic_Out",
+        "Quartic_InOut",
+        "Quintic_In",
+        "Quintic_Out",
+        "Quintic_InOut",
+        "Sinusoidal_In",
+        "Sinusoidal_Out",
+        "Sinusoidal_InOut",
+        "Exponential_In",
+        "Exponential_Out",
+        "Exponential_InOut",
+        "Circular_In",
+        "Circular_Out",
+        "Circular_InOut",
+        "Elastic_In",
+        "Elastic_Out",
+        "Elastic_InOut",
+        "Back_In",
+        "Back_Out",
+        "Back_InOut",
+        "Bounce_In",
+        "Bounce_Out",
+        "Bounce_InOut"
+      ],
+      "parent_id": "ca6cb742-457e-480e-964d-7d612afb2ff2",
+      "rotation": 0,
+      "targetRotation": 0,
+      "name": "jump",
+      "description": "the jump movmement.",
+      "motionCurveString": "Bounce_InOut",
+      "lineCurveString": "Linear_None",
+      "duration": 400,
+      "delay": 0
+    }
+  ],
+  "id": "ca6cb742-457e-480e-964d-7d612afb2ff2",
+  "sounds": [
+    {
+      "src": "../assets/sound/shot.mp3",
+      "sound": {},
+      "name": "shot-sound"
+    }
+  ],
+  "image": {
+    "image": {
+      "error": "Image not instantiated, set to object by default"
+    },
+    "domElement": {
+      "error": "Image not instantiated, set to object by default"
+    }
+  },
+  "collision_bounds": {
+    "min": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "max": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "selected_animation": {
+    "defaultArgs": {
+      "name": "my-animation",
+      "description": "my-description",
+      "frames": [],
+      "type": "none",
+      "delay": 0,
+      "frameSize": {
+        "x": 44,
+        "y": 44,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "flipX": false,
+      "earlyTerm": false,
+      "hang": false,
+      "duration": 1000,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      }
+    },
+    "image": {
+      "image": {},
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {}
+    },
+    "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+    "domElement": {},
+    "frameSize": {
+      "x": 50,
+      "y": 50,
+      "z": 0
+    },
+    "frameBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      },
+      "termPoint": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "frameOffset": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "extras": false,
+    "frames": [
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 100,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 150,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 200,
+          "y": 0
+        }
+      }
+    ],
+    "flipX": false,
+    "cix": 0.7921679999937769,
+    "selected_frame": {
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "framePos": {
+        "x": 50,
+        "y": 0
+      }
+    },
+    "effects": [],
+    "timer": 0,
+    "__gameLogic": false,
+    "name": "my-animation",
+    "description": "my-description",
+    "type": "none",
+    "delay": 0,
+    "earlyTerm": false,
+    "hang": false,
+    "duration": 1000,
+    "size": {
+      "x": 20,
+      "y": 20,
+      "z": 20
+    },
+    "tween": {},
+    "isComplete": true
+  },
+  "speed": {
+    "x": 0,
+    "y": 1.5,
+    "z": 0
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "rot_speed": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "rot_accel": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "padding": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "jump_anime": {
+    "defaultArgs": {
+      "name": "my-animation",
+      "description": "my-description",
+      "frames": [],
+      "type": "none",
+      "delay": 0,
+      "frameSize": {
+        "x": 44,
+        "y": 44,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "flipX": false,
+      "earlyTerm": false,
+      "hang": false,
+      "duration": 1000,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      }
+    },
+    "image": {
+      "image": {},
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {}
+    },
+    "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+    "domElement": {},
+    "frameSize": {
+      "x": 50,
+      "y": 50,
+      "z": 0
+    },
+    "frameBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      },
+      "termPoint": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "frameOffset": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "extras": false,
+    "frames": [
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 100,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 150,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 200,
+          "y": 0
+        }
+      }
+    ],
+    "flipX": false,
+    "cix": 0.7921679999937769,
+    "selected_frame": {
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "framePos": {
+        "x": 50,
+        "y": 0
+      }
+    },
+    "effects": [],
+    "timer": 0,
+    "__gameLogic": false,
+    "name": "my-animation",
+    "description": "my-description",
+    "type": "none",
+    "delay": 0,
+    "earlyTerm": false,
+    "hang": false,
+    "duration": 1000,
+    "size": {
+      "x": 20,
+      "y": 20,
+      "z": 20
+    },
+    "tween": {},
+    "isComplete": true
+  },
+  "jumpmotion": {
+    "distance": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+    },
+    "curvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut",
+      "Sinusoidal_In",
+      "Sinusoidal_Out",
+      "Sinusoidal_InOut",
+      "Exponential_In",
+      "Exponential_Out",
+      "Exponential_InOut",
+      "Circular_In",
+      "Circular_Out",
+      "Circular_InOut",
+      "Elastic_In",
+      "Elastic_Out",
+      "Elastic_InOut",
+      "Back_In",
+      "Back_Out",
+      "Back_InOut",
+      "Bounce_In",
+      "Bounce_Out",
+      "Bounce_InOut"
+    ],
+    "parent_id": "ca6cb742-457e-480e-964d-7d612afb2ff2",
+    "rotation": 0,
+    "targetRotation": 0,
+    "name": "jump",
+    "description": "the jump movmement.",
+    "motionCurveString": "Bounce_InOut",
+    "lineCurveString": "Linear_None",
+    "duration": 400,
+    "delay": 0
+  },
+  "selected_motion": {
+    "distance": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+    },
+    "curvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut",
+      "Sinusoidal_In",
+      "Sinusoidal_Out",
+      "Sinusoidal_InOut",
+      "Exponential_In",
+      "Exponential_Out",
+      "Exponential_InOut",
+      "Circular_In",
+      "Circular_Out",
+      "Circular_InOut",
+      "Elastic_In",
+      "Elastic_Out",
+      "Elastic_InOut",
+      "Back_In",
+      "Back_Out",
+      "Back_InOut",
+      "Bounce_In",
+      "Bounce_Out",
+      "Bounce_InOut"
+    ],
+    "parent_id": "ca6cb742-457e-480e-964d-7d612afb2ff2",
+    "rotation": 0,
+    "targetRotation": 0,
+    "name": "jump",
+    "description": "the jump movmement.",
+    "motionCurveString": "Bounce_InOut",
+    "lineCurveString": "Linear_None",
+    "duration": 400,
+    "delay": 0
+  },
+  "selected_sound": {
+    "src": "../assets/sound/shot.mp3",
+    "sound": {},
+    "name": "shot-sound"
+  },
+  "__inAir": false,
+  "groundMaxY": 3000000
+}

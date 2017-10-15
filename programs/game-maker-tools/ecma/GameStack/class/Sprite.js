@@ -38,6 +38,8 @@ class Sprite {
 
         this.description = args.description || "__";
 
+        this.gravity = "medium";
+
         this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
         var _spr = this;
@@ -55,6 +57,8 @@ class Sprite {
         this.animations = __gameStack.getArg(args, 'animations', []);
 
         this.motions = __gameStack.getArg(args, 'motions', []);
+
+        this.projectiles = __gameStack.getArg(args, 'projectiles', []);
 
         let __inst = this;
 

@@ -1,12 +1,10 @@
 
-
 /*
  DatGui
     -implements dat.gui
     -live update of objects/properties
 
 * */
-
 
 var DatGui = {
 
@@ -290,8 +288,6 @@ var DatGui = {
 
         });
 
-
-
     },
 
     Display:function(name, object)
@@ -307,7 +303,6 @@ var DatGui = {
 
     addEachText:function(obj, fui)
     {
-
         var discludedKeys = ['src', 'curveString'];
 
         this.each(obj, function(ix, o){
@@ -394,57 +389,56 @@ var DatGui = {
 
     },
 
-    addMotionCurveSelect(obj, gui)
+    arrayToObject:function(list)
+    {
+        var obj = {};
+
+        for(var x in list)
+        {
+
+            obj[list[x].name] = list[x];
+
+        }
+
+        return obj;
+    },
+
+    mainSpriteAnimationSelect(parent, obj)
     {
 
-        var testMotion = new Motion();
+        var animations = DatGui.arrayToObject(Game.sprites[0].animations);
 
-        var c = gui.add(obj, 'motion_curve', testMotion.curvesList);
-
-        c.onFinishChange(function(value){
-
-            var parts = value.split('_');
-
-            obj.curve = TWEEN.Easing[parts[0]][parts[1]];
-
-            var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
-
-            var canvas =  testMotion.getGraphCanvas( value.replace('_', '.'),                   obj.curve, canvasDom[0]);
-
-            if(!canvasDom.length) {
-
-                $($(gui.domElement).children('ul')[0]).append(canvas);
-
-            }
-
-        });
-
-        c.setValue('Quadratic_InOut');
+        DatGui.main_gui.add(obj, 'animation', animations);
 
     },
 
-
-    addLineCurveSelect(obj, gui)
+    addCurveSelect(obj, gui, key, ix)
     {
+
+        if(!ix)
+        {
+            ix = 0;
+
+        }
+
+        key = key || 'curve';
 
         var testMotion = new Motion();
 
-        var c = gui.add(obj, 'line_curve', testMotion.curvesList);
+        var c = gui.add(obj, key, obj.curvesList);
 
         c.onFinishChange(function(value){
 
             var parts = value.split('_');
 
-            obj.curve = TWEEN.Easing[parts[0]][parts[1]];
+            obj[key] = TWEEN.Easing[parts[0]][parts[1]];
 
-            var canvasDom = $(gui.domElement).parent().find('canvas.line-curve');
+            var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
 
-            var canvas =  testMotion.getGraphCanvas( value.replace('_', '.'),                   obj.curve, canvasDom[0]);
+            var canvas =  testMotion.getGraphCanvas( value.replace('_', '.'),                       obj[key], canvasDom[ix]);
 
-            if(!canvasDom.length) {
-
+            if(!canvasDom.length || canvasDom.length < (ix + 1)) {
                 $($(gui.domElement).children('ul')[0]).append(canvas);
-
             }
 
         });
@@ -520,65 +514,57 @@ var DatGui = {
             DatGui.addEachNumeric(o, fui );
 
         }
-        if(isType(Motion))
+
+        if(isType(Projectile))
         {
 
+            var fui =  DatGui.main_gui.addFolder('Info');
+
+            var name = fui.add(obj, 'name');
+
+            name.onChange(function(v)
+            {
+
+
+                Game.refreshBuilder();
+
+            });
+
+            DatGui.mainSpriteAnimationSelect(parent, obj);
+
+        }
+
+        if(isType(Motion))
+        {
             //add main text values
 
            var fui =  DatGui.main_gui.addFolder('Info');
 
-            DatGui.addEachText(obj, fui );
+          var name = fui.add(obj, 'name');
+
+          name.onChange(function(v)
+          {
+
+
+              Game.refreshBuilder();
+
+          });
+
+            var desc = fui.add(obj, 'description');
 
             var t = DatGui.main_gui.add(obj, 'targetRotation', -720, 720 );
 
             //todo = add folder for min
 
-            var fui_motion_curve =  DatGui.main_gui.addFolder('motion_curve');
+            DatGui.addCurveSelect(obj, DatGui.main_gui, 'motion_curve', 0, function(v){
 
-            var cm = fui_motion_curve.add(obj, 'motion_curve', obj.curvesList );
-
-            cm.onChange(function(value){
-
-                obj.setMotionCurve(value);
-
-                var parts = value.split('_');
-
-                var canvas =  obj.getGraphCanvas( value.replace('_', '.'), TWEEN.Easing[parts[0]][parts[1]] );
-
-                $(cm.domElement).children('canvas').remove();
-
-                $(cm.domElement).append(canvas);
 
             });
 
-            var fui_line_curve =  DatGui.main_gui.addFolder('line_curve');
+            DatGui.addCurveSelect(obj, DatGui.main_gui, 'line_curve', 1, function(v){
 
-            var cl = fui_line_curve.add(obj, 'line_curve', obj.curvesList );
-
-            cl.onChange(function(value){
-
-                obj.setLineCurve(value);
-
-                var parts = value.split('_');
-
-                var canvas =  obj.getGraphCanvas( value.replace('_', '.'), TWEEN.Easing[parts[0]][parts[1]] );
-
-                $(cl.domElement).children('canvas').remove();
-
-                $(cl.domElement).append(canvas);
 
             });
-
-            cm.setValue('Quadratic_InOut');
-
-            cl.setValue('Linear_None');
-
-            window.setTimeout(function(){
-
-                $('.c select').val(obj.getMotionCurveString());
-
-
-            }, 100);
 
 
             var t = DatGui.main_gui.add(obj, 'duration', -5000, 5000 );
@@ -592,7 +578,6 @@ var DatGui = {
 
         if(isType(Force))
         {
-
 
             this.main_gui.add(parent, 'selected_force', Game.forces );
 
@@ -615,14 +600,21 @@ var DatGui = {
 
             var fui =  DatGui.main_gui.addFolder('Info');
 
-            DatGui.addEachText(obj, fui );
+            var name = fui.add(obj, 'name');
+
+            name.onChange(function(v)
+            {
+
+                Game.refreshBuilder();
+
+            });
 
         }
 
         if(isType(Animation))
         {
 
-            this.main_gui.add(parent, 'duration').step(1.0);
+            this.main_gui.add(obj, 'duration').step(1.0);
 
         }
 
@@ -640,7 +632,6 @@ var DatGui = {
 
                 $('#selected_object_src').click(function(){
 
-
                   //  alert('dat.gui.interface :: clicked ...object_src');
 
                     App.GTUI.fileOptions('image', function(src){
@@ -657,13 +648,7 @@ var DatGui = {
 
                 });
 
-                fui.onChange(function () {
 
-
-
-                    //parent.reset();
-
-                });
             }
 
         }
@@ -683,7 +668,7 @@ var DatGui = {
 
                 var _inst = this;
 
-              complete =   _inst.typeHandlerSpriteMaker(ix, obj, obj);
+              complete =   _inst.typeHandlerSpriteMaker(ix, obj, parent);
 
 
                 this.each(obj, function(ix, o){
@@ -696,7 +681,7 @@ var DatGui = {
                 });
 
 
-                if(obj instanceof Animation || obj instanceof  Sound)
+                if(obj instanceof Animation || obj instanceof  Sound )
                 {
 
                    var first_list = $('#dat-gui-gs-container div.main ul')[0];
@@ -725,7 +710,7 @@ var DatGui = {
 
                         var file =  levelMaker.getRawImageFile(this, function(imagesrc){
 
-                            if(obj instanceof Animation) {
+                            if(obj instanceof Animation || obj instanceof Projectile) {
 
                                 var filename = $(input).val().split('\\').pop();
 
@@ -733,9 +718,7 @@ var DatGui = {
 
                                     relpath = relpath.replace('client/', '../');
 
-
                                     alert('uploaded image:' + filename + ":using relative path:" + relpath);
-
 
                                     $('file_special'+id).text(relpath);
 
@@ -953,7 +936,6 @@ var DatGui = {
            }
 
             var obj = object.selected_animation;
-
 
             window.setTimeout(function(){
 

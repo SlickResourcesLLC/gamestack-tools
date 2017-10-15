@@ -4503,7 +4503,9 @@ Gamestack.Canvas = Canvas;
   */
 
 var Animation = function () {
-        function Animation(args) {
+        function Animation() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
                 _classCallCheck(this, Animation);
 
                 args = args || {};
@@ -4625,13 +4627,13 @@ var Animation = function () {
 
                         for (var y = this.frameBounds.min.y; y <= this.frameBounds.max.y; y++) {
 
-                                for (var _x3 = this.frameBounds.min.x; _x3 <= this.frameBounds.max.x; _x3++) {
+                                for (var _x4 = this.frameBounds.min.x; _x4 <= this.frameBounds.max.x; _x4++) {
 
-                                        var framePos = { x: _x3 * this.frameSize.x + this.frameOffset.x, y: y * this.frameSize.y + this.frameOffset.y };
+                                        var framePos = { x: _x4 * this.frameSize.x + this.frameOffset.x, y: y * this.frameSize.y + this.frameOffset.y };
 
                                         this.frames.push({ image: this.image, frameSize: this.frameSize, framePos: framePos });
 
-                                        if (_x3 >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y) {
+                                        if (_x4 >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y) {
 
                                                 quitLoop = true;
 
@@ -4969,7 +4971,7 @@ var EffectSequence = function () {
                                         __inst.loopBack = value;
                                 });
 
-                                DatGui.addCurveSelect(__inst, __inst.gui);
+                                DatGui.addMotionCurveSelect(__inst, __inst.gui);
                         }
 
                         setValues(this.gui);
@@ -5725,7 +5727,7 @@ var Motion = function () {
 
                                 GameStack.each(easing, function (iy, easeType) {
 
-                                        if (['in', 'out', 'inout'].indexOf(iy.toLowerCase()) >= 0) {
+                                        if (['in', 'out', 'inout', 'none'].indexOf(iy.toLowerCase()) >= 0) {
 
                                                 c.push(ix + "_" + iy);
                                         }
@@ -5865,7 +5867,7 @@ var Motion = function () {
                                 var targetR = __inst.targetRotation + objects[0].rotation.x;
 
                                 //we have a target
-                                tweens[0] = new TWEEN.Tween(objects[0].rotation).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to({ x: targetR }, __inst.duration).onUpdate(function () {
+                                tweens[0] = new TWEEN.Tween(objects[0].rotation).easing(__inst.curve || __inst.motion_curve).to({ x: targetR }, __inst.duration).onUpdate(function () {
                                         //console.log(objects[0].position.x,objects[0].position.y);
 
 
@@ -5879,7 +5881,7 @@ var Motion = function () {
                         }
 
                         //we have a target
-                        tweens.push(new TWEEN.Tween(objects[0].position).easing(__inst.curve || TWEEN.Easing.Elastic.InOut).to(target, __inst.duration).onUpdate(function () {
+                        tweens.push(new TWEEN.Tween(objects[0].position).easing(__inst.motion_curve).to(target, __inst.duration).onUpdate(function () {
                                 //console.log(objects[0].position.x,objects[0].position.y);
 
 
@@ -6000,9 +6002,299 @@ var Motion = function () {
 
                         return canvas;
                 }
+        }, {
+                key: 'getTweenPoints',
+                value: function getTweenPoints(size, line, callback) {
+
+                        var curve = line.curve,
+                            duration = line.duration;
+
+                        if (curve == TWEEN.Easing.Quadratic.InOut) {
+                                alert('quad curve');
+                        }
+
+                        var canvas = document.createElement('canvas');
+
+                        canvas.style.position = "relative";
+
+                        canvas.id = 'curve-display-xxx';
+
+                        canvas.setAttribute('class', 'motion-curve');
+
+                        canvas.width = size.x;
+                        canvas.height = size.y;
+
+                        var points = [];
+
+                        var position = new Vector(line.position);
+                        var position_old = new Vector(this.position);
+
+                        var target = new Vector(position).add(size);
+
+                        new TWEEN.Tween(position).to({ x: target.x }, 2000).easing(TWEEN.Easing.Linear.None).start();
+                        new TWEEN.Tween(position).to({ y: target.y }, 2000).easing(curve).onUpdate(function () {
+
+                                points.push(new Vector2(position.x, position.y));
+
+                                position_old.x = position.x;
+                                position_old.y = position.y;
+                        }).onComplete(function () {
+                                callback;
+                        }).start();
+
+                        return points;
+                }
         }]);
 
         return Motion;
+}();
+
+Gamestack.Motion = Motion;
+
+;
+/**
+ * Takes an object of arguments and returns Projectile() object. Projectile fires a shot from the parent sprite, with specified offset, rotation, motion_curve, line_curve
+
+ * @param   {Object} args object of arguments
+ * @param   {string} args.name optional
+ * @param   {string} args.description optional
+ * @param   {string} args.distance the distance before dissappearance
+ * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.motion_curve the TWEEN.Easing function to be applied for motion/speed (Example: TWEEN.Easing.Quadratic.InOut)
+ *
+ *  * @param   {TWEEN.Easing.'objectGroup'.'objectMember'} args.line_curve the TWEEN.Easing function to be applied for line (Example: TWEEN.Easing.Quadratic.InOut)
+ *
+ * @returns {Projectile} a Projectile object
+ */
+
+var Projectile = function () {
+        function Projectile() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+                _classCallCheck(this, Projectile);
+
+                this.getArg = $Q.getArg;
+
+                for (var x in args) {
+                        this[x] = args[x];
+                }
+
+                this.line = Gamestack.getArg(args, 'line', new Line());
+
+                this.animation = Gamestack.getArg(args, 'animation', new Animation());
+
+                this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
+
+                this.motion_curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
+
+                this.rotation = Gamestack.getArg(args, 'rotation', 0);
+
+                this.name = Gamestack.getArg(args, 'name', "__");
+
+                this.description = Gamestack.getArg(args, 'description', false);
+
+                this.motionCurveString = this.getMotionCurveString(); //store a string key for the Tween.Easing || 'curve'
+
+                this.setMotionCurve(this.motionCurveString);
+
+                this.duration = Gamestack.getArg(args, 'duration', 500);
+
+                this.delay = Gamestack.getArg(args, 'delay', 0);
+
+                this.target = new Vector2();
+
+                this.position = Gamestack.getArg(args, 'position', new Vector());
+
+                this.highlighted = false;
+        }
+
+        _createClass(Projectile, [{
+                key: 'curvesObject',
+                value: function curvesObject() {
+
+                        var c = [];
+
+                        GameStack.each(TWEEN.Easing, function (ix, easing) {
+
+                                GameStack.each(easing, function (iy, easeType) {
+
+                                        if (['in', 'out', 'inout', 'none'].indexOf(iy.toLowerCase()) >= 0) {
+
+                                                c.push(ix + "_" + iy);
+                                        }
+                                });
+                        });
+
+                        return c;
+                }
+        }, {
+                key: 'getMotionCurveString',
+                value: function getMotionCurveString() {
+
+                        var __inst = this;
+
+                        var c;
+
+                        $.each(TWEEN.Easing, function (ix, easing) {
+
+                                $.each(TWEEN.Easing[ix], function (iy, easeType) {
+
+                                        if (__inst.motion_curve == TWEEN.Easing[ix][iy]) {
+
+                                                c = ix + "_" + iy;
+                                        }
+                                });
+                        });
+
+                        return c;
+                }
+        }, {
+                key: 'setMotionCurve',
+                value: function setMotionCurve(c) {
+
+                        var cps = c.split('_');
+
+                        var s1 = cps[0],
+                            s2 = cps[1];
+
+                        var curve = TWEEN.Easing.Quadratic.InOut;
+
+                        $.each(TWEEN.Easing, function (ix, easing) {
+
+                                $.each(TWEEN.Easing[ix], function (iy, easeType) {
+
+                                        if (ix == s1 && iy == s2) {
+
+                                                // alert('setting curve');
+
+                                                curve = TWEEN.Easing[ix][iy];
+                                        }
+                                });
+                        });
+
+                        this.motion_curve = curve;
+
+                        return curve;
+                }
+        }, {
+                key: 'Distance',
+                value: function Distance(d) {
+                        this.target.y = d;
+                }
+        }, {
+                key: 'fire',
+                value: function fire() {
+
+                        //reference list of sprites
+
+                        //create and start() the tween, with point-vectors
+
+                        //we have a target
+
+
+                        this.tween = new TWEEN.Tween(this.position).easing().to({ x: this.target.x }).onUpdate(function () {
+                                //console.log(objects[0].position.x,objects[0].position.y);
+
+                                alert('tween updating');
+
+                                this.position.y = 0;
+
+                                __inst.Update();
+                        }).onComplete(function () {
+                                //console.log(objects[0].position.x, objects[0].position.y);
+                                if (__inst.complete) {
+
+                                        __inst.complete();
+                                }
+                        });
+                }
+
+                /**
+                 * start the Motion transition
+                 *
+                 * @function
+                 * @memberof Motion
+                 *
+                 **********/
+
+        }, {
+                key: 'start',
+                value: function start() {
+                        this.fire();
+                }
+
+                /**
+                 * specify a function to be called when Motion is complete
+                 *
+                 * @function
+                 * @memberof Motion
+                 * @param {Function} fun the function to be called when complete
+                 *
+                 **********/
+
+        }, {
+                key: 'onComplete',
+                value: function onComplete(fun) {
+                        this.complete = fun;
+                }
+
+                // obj.getGraphCanvas( $(c.domElement), value.replace('_', '.'), TWEEN.Easing[parts[0]][parts[1]] );
+
+        }, {
+                key: 'getGraphCanvas',
+                value: function getGraphCanvas(t, f, c) {
+
+                        var canvas = c || document.createElement('canvas');
+
+                        canvas.style.position = "relative";
+
+                        canvas.id = 'curve-display';
+
+                        canvas.setAttribute('class', 'motion-curve');
+
+                        canvas.width = 180;
+                        canvas.height = 100;
+
+                        canvas.style.background = "black";
+
+                        var context = canvas.getContext('2d');
+                        context.fillStyle = "rgb(0,0,0)";
+                        context.fillRect(0, 0, 180, 100);
+
+                        context.lineWidth = 0.5;
+                        context.strokeStyle = "rgb(230,230,230)";
+
+                        context.beginPath();
+                        context.moveTo(0, 20);
+                        context.lineTo(180, 20);
+                        context.moveTo(0, 80);
+                        context.lineTo(180, 80);
+                        context.closePath();
+                        context.stroke();
+
+                        context.lineWidth = 2;
+                        context.strokeStyle = "rgb(255,127,127)";
+
+                        var position = { x: 5, y: 80 };
+                        var position_old = { x: 5, y: 80 };
+
+                        new TWEEN.Tween(position).to({ x: 175 }, 2000).easing(TWEEN.Easing.Linear.None).start();
+                        new TWEEN.Tween(position).to({ y: 20 }, 2000).easing(f).onUpdate(function () {
+
+                                context.beginPath();
+                                context.moveTo(position_old.x, position_old.y);
+                                context.lineTo(position.x, position.y);
+                                context.closePath();
+                                context.stroke();
+
+                                position_old.x = position.x;
+                                position_old.y = position.y;
+                        }).start();
+
+                        return canvas;
+                }
+        }]);
+
+        return Projectile;
 }();
 
 Gamestack.Motion = Motion;
@@ -6042,13 +6334,91 @@ var VectorFrameBounds = function (_Rectangle) {
 
 Gamestack.VectorFrameBounds = VectorFrameBounds;
 
-var Circle = function Circle(args) {
+var Circle //empty circle class
+= function Circle() {
         _classCallCheck(this, Circle);
-
-        this.position = this.getArg(args, 'position', new Vector3(0, 0, 0));
-
-        this.radius = this.getArgs(args, 'radius', 100);
 };
+
+var Elipse = function Elipse() {
+        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _classCallCheck(this, Elipse);
+
+        this.width = args.width || 100;
+
+        this.height = args.height || 100;
+};
+
+var Line = function () {
+        function Line() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+                _classCallCheck(this, Line);
+
+                this.curve = args.curve || TWEEN.Easing.Quadratic.InOut;
+
+                this.duration = args.duration || 1000;
+
+                this.points = [];
+
+                this.position = new Vector();
+
+                this.size = new Vector();
+        }
+
+        _createClass(Line, [{
+                key: 'Pos',
+                value: function Pos(p) {
+
+                        this.position = p;
+                        return this;
+                }
+        }, {
+                key: 'Curve',
+                value: function Curve(c) {
+                        this.curve = c;
+                        return this;
+                }
+        }, {
+                key: 'Duration',
+                value: function Duration(d) {
+                        this.duration = d;
+
+                        return this;
+                }
+        }, {
+                key: 'fill',
+                value: function fill(size) {
+
+                        var __inst = this;
+
+                        this.size = size;
+
+                        this.points = new Motion().getTweenPoints(size, this, function () {});
+
+                        return this;
+                }
+        }, {
+                key: 'Highlight',
+                value: function Highlight(origin, ctx) {
+                        ctx = ctx || Gamestack.ctx;
+
+                        for (var x in this.points) {
+
+                                if (x % 4 == 0) {
+
+                                        Gamestack.point_highlighter.position = new Vector2(origin.add(this.points[x]));
+
+                                        Canvas.draw(Gamestack.point_highlighter, ctx);
+                                }
+                        }
+
+                        return this;
+                }
+        }]);
+
+        return Line;
+}();
 
 Gamestack.Circle = Circle;;
 /**
@@ -6090,6 +6460,8 @@ var Sprite = function () {
 
                 this.description = args.description || "__";
 
+                this.gravity = "medium";
+
                 this.__initializers = __gameStack.getArg(args, '__initializers', []);
 
                 var _spr = this;
@@ -6107,6 +6479,8 @@ var Sprite = function () {
                 this.animations = __gameStack.getArg(args, 'animations', []);
 
                 this.motions = __gameStack.getArg(args, 'motions', []);
+
+                this.projectiles = __gameStack.getArg(args, 'projectiles', []);
 
                 var __inst = this;
 
@@ -7545,7 +7919,7 @@ var Vector = function () {
                                 v = { x: v, y: v, z: v };
                         };
 
-                        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
+                        return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
                 }
         }, {
                 key: 'add',
@@ -7554,7 +7928,7 @@ var Vector = function () {
                                 v = { x: v, y: v, z: v };
                         };
 
-                        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
+                        return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
                 }
         }, {
                 key: 'mult',
@@ -7563,7 +7937,7 @@ var Vector = function () {
                                 v = { x: v, y: v, z: v };
                         };
 
-                        return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
+                        return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
                 }
         }, {
                 key: 'div',
@@ -7572,22 +7946,22 @@ var Vector = function () {
                                 v = { x: v, y: v, z: v };
                         };
 
-                        return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z);
+                        return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
                 }
         }, {
                 key: 'round',
                 value: function round() {
-                        return new Vector3(Math.round(this.x), Math.round(this.y), Math.round(this.z));
+                        return new Vector(Math.round(this.x), Math.round(this.y), Math.round(this.z));
                 }
         }, {
                 key: 'floor',
                 value: function floor() {
-                        return new Vector3(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
+                        return new Vector(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
                 }
         }, {
                 key: 'ceil',
                 value: function ceil() {
-                        return new Vector3(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z));
+                        return new Vector(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z));
                 }
         }, {
                 key: 'diff',

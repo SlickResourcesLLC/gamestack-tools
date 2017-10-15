@@ -15,7 +15,7 @@
  */
 
 class Animation {
-    constructor(args) {
+    constructor(args = {}) {
 
         args = args || {};
 
@@ -80,7 +80,6 @@ class Animation {
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
         this.extras = this.getArg(args, 'extras', false);
-
 
       if(typeof(args) == 'object' && args.frameBounds && args.frameSize){  this.apply2DFrames(args.parent || {}) };
 

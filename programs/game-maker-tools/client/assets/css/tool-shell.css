@@ -353,13 +353,15 @@ button.main-play,button#sound-pane-play,button#motion-pane-play,button#animation
 button#play,button#sound-pane-play,button#motion-pane-play
 {
 
-    position:absolute; right:40px; width:30px; top:2px;   height:30px;
+    position:absolute; right:40px; width:43px; top:10px;   height:40px;
 
     border-radius:50%;
 
-    background:url('img/play_button.png'); /* Old browsers */
+    background:url('img/play.png'); /* Old browsers */
 
     background-size: 100% 100%;
+
+    border:none;
 
 }
 
@@ -479,6 +481,7 @@ li.selected-heading, span.tree-open
     position:relative;
 
     min-width:100%;
+
 
 }
 
@@ -792,7 +795,7 @@ nav.top-menu  .button-top {
 
     height:40px;
 
-    font-size:14px;
+    font-size: 1.0em;
 
     vertical-align: middle;
 
@@ -807,7 +810,7 @@ button#settings
 
     vertical-align: middle;
     text-align: center;
-    font-size: 16px;
+    font-size: 1.0em;
 
     cursor: pointer;
 
@@ -886,9 +889,9 @@ div.dropdown button
 
     text-shadow:none;
 
-    font-size:14px;
-
     border:1px outset grey;
+
+    font-size: 1.0em;
 
 }
 
@@ -963,6 +966,7 @@ nav.top-menu .button-top span {
     display: inline-block;
     position: relative;
     transition: 0.5s;
+    font-size: 1.0em;
 }
 
 nav.top-menu .button-top span:after {
