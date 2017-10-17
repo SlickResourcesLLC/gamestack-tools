@@ -22,8 +22,15 @@ class Vector {
             this.y = x.y;
             this.z = x.z || 0;
 
+            if(this.z == null)
+            {
+                this.z = 0;
+            }
+
             return this;
         }
+
+        if(z == null){z = 0;}
 
         this.x = x;
         this.y = y;
@@ -91,6 +98,12 @@ class Vector {
 
     }
 
+    equals(v)
+    {
+
+        return this.x == v.x && this.y == v.y && this.z == v.z;
+    }
+
     diff()
     {
         //TODO:this function
@@ -107,6 +120,11 @@ class Vector {
     is_between(v1, v2)
     {
        //TODO : overlap vectors return boolean
+
+        return this.x >= v1.x && this.x <= v2.x &&
+            this.y >= v1.y && this.y <= v2.y &&
+            this.z >= v1.z && this.z <= v2.z;
+
 
     }
 

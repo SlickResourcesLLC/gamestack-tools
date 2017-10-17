@@ -170,11 +170,8 @@ var DatGui = {
 
     },
 
-
-
     isNumeric(item)
     {
-
         return typeof item == 'number' && !isNaN(item);
     },
 
@@ -412,7 +409,32 @@ var DatGui = {
 
     },
 
-    addCurveSelect(obj, gui, key, ix)
+    addOffsetSelect(obj, gui, key, min, max, callback)
+    {
+
+        callback = callback || function(){};
+
+        var fui = gui.addFolder(key),
+
+        x = fui.add(obj, 'x', min, max),
+            y = fui.add(obj, 'y', min, max);
+
+        x.onChange(function(){
+
+            callback();
+
+        });
+
+        y.onChange(function(){
+
+            callback();
+
+        });
+
+
+    },
+
+    addCurveSelect(obj, gui, key, ix, callback)
     {
 
         if(!ix)
@@ -425,7 +447,7 @@ var DatGui = {
 
         var testMotion = new Motion();
 
-        var c = gui.add(obj, key, obj.curvesList);
+        var c = gui.add(obj, key, testMotion.curvesList);
 
         c.onFinishChange(function(value){
 
@@ -441,11 +463,14 @@ var DatGui = {
                 $($(gui.domElement).children('ul')[0]).append(canvas);
             }
 
+            callback();
+
         });
 
         c.setValue('Linear_None');
 
     },
+
 
 
     typeHandlerSpriteMaker:function(ix, obj, parent)
@@ -532,7 +557,24 @@ var DatGui = {
 
             DatGui.mainSpriteAnimationSelect(parent, obj);
 
+            var r = DatGui.main_gui.add(obj.line, 'rotation', 0, 360 ).step(0.1);
+
+            r.onChange(function(){
+
+                obj.line.fill(obj.line.size, obj.line.minPointDist);
+
+            });
+
+            //todo = add folder for min
+
+            DatGui.addCurveSelect(obj.line, DatGui.main_gui, 'curve', 0, function(){
+
+                obj.line.fill(obj.line.size, obj.line.minPointDist);
+
+            });
+
         }
+
 
         if(isType(Motion))
         {
@@ -556,15 +598,9 @@ var DatGui = {
 
             //todo = add folder for min
 
-            DatGui.addCurveSelect(obj, DatGui.main_gui, 'motion_curve', 0, function(v){
+            DatGui.addCurveSelect(obj, DatGui.main_gui, 'motion_curve', 0);
 
-
-            });
-
-            DatGui.addCurveSelect(obj, DatGui.main_gui, 'line_curve', 1, function(v){
-
-
-            });
+            DatGui.addCurveSelect(obj, DatGui.main_gui, 'line_curve', 1);
 
 
             var t = DatGui.main_gui.add(obj, 'duration', -5000, 5000 );
@@ -659,8 +695,6 @@ var DatGui = {
         {
             //anything numeric:
 
-            alert('adding object');
-
             if(typeof(obj) == 'object')
             {
 
@@ -669,7 +703,6 @@ var DatGui = {
                 var _inst = this;
 
               complete =   _inst.typeHandlerSpriteMaker(ix, obj, parent);
-
 
                 this.each(obj, function(ix, o){
 
@@ -816,7 +849,6 @@ var DatGui = {
 
     updateableAnimationObjectToGui:function(gui, effects)
     {
-
 
         var first_gui = $('div.main ul')[0];
 

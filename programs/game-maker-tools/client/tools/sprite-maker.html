@@ -1328,6 +1328,8 @@
 
         fireObject: function (obj) {
 
+            var mainObject = Game.sprites[0];
+
             App.selectedItem = obj;
 
             var is_func = function (obj, f) {
@@ -1342,7 +1344,7 @@
             ;
 
             if (is_func(obj, 'fire')) {
-                App.selectedItem.fire();
+                App.selectedItem.fire(mainObject.position); //fire from position
 
             }
             ;
@@ -1479,6 +1481,8 @@
 
         init: function (sprite) {
 
+            Gamestack.camera = new Camera();
+
             $('#gs-container').append("<canvas id='main-screen'></canvas>");
 
             // 1. demonstrate that the threejs canvas can be intercepted at runtime
@@ -1505,6 +1509,7 @@
                     description: "running, shooting sprite",
 
                     position: new Vector(100, 120),
+
                     size: new Vector(50, 52)
                 });
 
@@ -1563,23 +1568,28 @@
 
             this.player.selected_sound.play();
 
-            Game.test_line = new Line().Pos(this.player.position)
+            Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
                 .Curve(TWEEN.Easing.Quadratic.InOut)
-                .Duration(2000)
-                .fill(new Size(300, 300));
+                .Duration(2000);
 
 
-            var bullet = new Projectile({line:Game.test_line});
+               // Game.test_line.fill(new Size(200, 200));
+
+
+            var bullet = new Projectile({line:Game.test_line, size:new Vector(200, 200, 0)});
 
             bullet.name = "bullet";
+
+
+            bullet.setAnimation(Gamestack.point_highlighter.animations[0]);
+
+            bullet.setMotionCurve(TWEEN.Easing.Linear.None);
 
             this.player.projectiles.push(bullet);
 
             this.player.selected_projectile = new Projectile(bullet);
 
-
             this.player.update = function (sprite) {
-
 
                 // this.rotation.x += 0.5;
 
@@ -1867,28 +1877,39 @@
 
             if (obj instanceof Projectile) {
 
-                alert('Projectile');
+                //alert('Projectile');
 
                 Game.sprites[0].selected_projectile = obj;
 
                 obj = Game.sprites[0].selected_projectile;
 
-                obj.line.position = new Vector(0, 0);
+                obj.line.size = new Vector(200, 100);
+                obj.line.position = new Vector(0, 0, 0);
 
-                obj.line.fill(obj.line.size);
+                obj.line.fill(obj.line.size, 2);
+
 
                 Game.sprites[0].onUpdate(function() {
 
                     if (obj.line && obj.line.Highlight) {
 
+                        var origin = new Vector(Game.sprites[0].position);
 
+                        origin.x += Game.sprites[0].size.x / 3;
 
-                        obj.line.Highlight(Game.sprites[0].position);
+                        origin.y += Game.sprites[0].size.y / 3;
+
+                        obj.line.Highlight(origin);
 
                     }
 
 
                 });
+
+
+                // alert(jstr(Game.sprites[0].position));
+
+               // alert(jstr(Game.sprites[0].center()));
 
 
             }
@@ -1924,8 +1945,14 @@
                 '</div>');
 
 
-            if (obj.constructor.name == 'Animation') {
+            if (obj.constructor.name == 'Animation' ) {
                 this.animationPaneDisplay(obj);
+
+            }
+
+
+            if (obj.constructor.name == 'Projectile') {
+                this.projectilePaneDisplay(obj);
 
             }
 
@@ -1939,7 +1966,6 @@
             return this.selectedItem;
 
         },
-
 
         animationPaneDisplay: function (obj) {
 
@@ -1977,6 +2003,40 @@
             }, 50);
 
         },
+
+        projectilePaneDisplay: function (obj) {
+
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
+
+            var mainCanvas = document.getElementById('main-screen');
+
+
+            var update = function () {
+
+                canvas.width = $(canvas).width();
+                canvas.height = $(canvas).height();
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.drawImage(mainCanvas, 0, 0, canvas.width, canvas.height);
+
+            };
+
+            if (Game.animationPaneUpdate) {
+
+                window.clearInterval(Game.animationPaneUpdate);
+
+            }
+
+            Game.animationPaneUpdate = window.setInterval(function () {
+
+                update();
+
+            }, 50);
+
+        },
+
+
 
         selectedItemCanvasInit: function (obj) {
 
@@ -2292,6 +2352,14 @@
                     sprop = selectedObject[index];
 
                 App.selectItem(sprop);
+
+
+                evt.preventDefault();
+
+                evt.preventBubble();
+
+                return false;
+
                 // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
 
 

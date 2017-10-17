@@ -64,15 +64,21 @@ class Line
     constructor(args = {})
     {
 
-        this.curve = args.curve || TWEEN.Easing.Quadratic.InOut;
+        this.curve = args.curve || TWEEN.Easing.Linear.None;
 
-        this.duration = args.duration || 1000;
+        this.motion_curve = args.motion_curve || TWEEN.Easing.Linear.None;
+
+        this.duration = args.duration || 500;
 
         this.points = [];
 
         this.position = new Vector();
 
+        this.minPointDist = 5;
+
         this.size = new Vector();
+
+        this.rotation = args.rotation || 0;
 
     }
 
@@ -80,6 +86,12 @@ class Line
     {
 
         this.position = p;
+        return this;
+    }
+
+    PointDisp(num)
+    {
+        this.minPointDist = num;
         return this;
     }
 
@@ -96,37 +108,59 @@ class Line
         return this;
     }
 
-    fill( size)
+    fill(size, minPointDist)
     {
 
-        var __inst = this;
+        if(!size || !minPointDist) //***PREVENT DOUBLE RUN
+        {
+            return 0;
+        }
 
         this.size = size;
 
-      this.points = new Motion().getTweenPoints(size, this, function(){
+        this.minPointDist = minPointDist;
 
+        this.points = new Motion().getTweenPoints(size, this);
 
+    }
 
-      });
+    transpose(origin)
+    {
 
-        return this;
+        var t_points = [];
+
+        for(var x = 0; x < this.points.length; x++) {
+
+            t_points.push(this.points[x].add(origin));
+
+        }
+
+        return t_points;
 
     }
 
     Highlight(origin, ctx)
     {
+
         ctx = ctx || Gamestack.ctx;
 
         for(var x in this.points)
         {
 
-           if(x % 4 == 0) {
+            var point = origin.add(this.points[x]).sub(Gamestack.point_highlighter.size.mult(0.5));
 
-               Gamestack.point_highlighter.position = new Vector2(origin.add(this.points[x]));
+            var dist = point.sub(Gamestack.point_highlighter.position);
+
+            var d = Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
+
+            if(d >= 10)
+            {
+                Gamestack.point_highlighter.position = new Vector2(origin.add(this.points[x]).sub(Gamestack.point_highlighter.size.mult(0.5)));
+            }
+
 
                Canvas.draw(Gamestack.point_highlighter, ctx);
-
-           }
 
         }
 
@@ -136,5 +170,25 @@ class Line
 
 }
 
+
+
+var GeoMath = {
+
+        rotatePointsXY:function(x,y,angle) {
+
+            var theta = angle*Math.PI/180;
+
+            var point = {};
+            point.x = x * Math.cos(theta) - y * Math.sin(theta);
+            point.y = x * Math.sin(theta) + y * Math.cos(theta);
+
+            point.z = 0;
+
+            return point
+        }
+
+}
+
+Gamestack.GeoMath = GeoMath;
 
 Gamestack.Circle = Circle;

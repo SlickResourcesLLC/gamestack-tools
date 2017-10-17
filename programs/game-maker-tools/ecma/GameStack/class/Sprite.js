@@ -1080,7 +1080,9 @@ class Sprite {
      **********/
 
     center() {
-        return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+
+
+        return new Vector(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2, 0);
 
     }
 

@@ -381,45 +381,63 @@ class Motion {
         return canvas;
     }
 
-    getTweenPoints(size, line, callback) {
+    getTweenPoints(size, line) {
+
+        //must have line.minPointDist
 
         var curve = line.curve,
         duration = line.duration;
 
-        if(curve == TWEEN.Easing.Quadratic.InOut)
-        {
-            alert('quad curve');
-
-        }
-
-        var canvas =  document.createElement('canvas');
-
-        canvas.style.position = "relative";
-
-        canvas.id = 'curve-display-xxx';
-
-        canvas.setAttribute('class', 'motion-curve');
-
-        canvas.width = size.x;
-        canvas.height = size.y;
-
-
         var points = [];
 
         var position = new Vector(line.position);
-        var position_old = new Vector(this.position);
 
         var target = new Vector(position).add(size);
 
-        new TWEEN.Tween(position).to({x:target.x}, 2000).easing(TWEEN.Easing.Linear.None).start();
-        new TWEEN.Tween(position).to({y:target.y}, 2000).easing(curve).onUpdate(function () {
+        var dist = new Vector(0, 0, 0);
 
-            points.push(new Vector2(position.x, position.y));
+        var ptrack;
 
-            position_old.x = position.x;
-            position_old.y = position.y;
+        new TWEEN.Tween(position).to({x:target.x}, line.duration).easing(TWEEN.Easing.Linear.None).start();
+        new TWEEN.Tween(position).to({y:target.y}, line.duration).easing(curve).onUpdate(function () {
 
-        }).onComplete(function(){ callback; }).start();
+            var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, line.rotation));
+
+
+          if(ptrack){
+
+              dist = ptrack.sub(p);
+
+              var d = Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
+              if(d >= line.minPointDist)
+              {
+
+                  points.push(p);
+
+                  ptrack = new Vector(p);
+              }
+
+          }
+
+          else{
+              ptrack = p;
+
+              points.push(p);
+          };
+
+
+
+        }).onComplete(function(){
+
+           // alert(line.minPointDist);
+
+        }).start();
+
+
+
+
+
 
         return points;
     }

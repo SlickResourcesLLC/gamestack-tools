@@ -6604,45 +6604,63 @@ class Motion {
         return canvas;
     }
 
-    getTweenPoints(size, line, callback) {
+    getTweenPoints(size, line) {
+
+        //must have line.minPointDist
 
         var curve = line.curve,
         duration = line.duration;
 
-        if(curve == TWEEN.Easing.Quadratic.InOut)
-        {
-            alert('quad curve');
-
-        }
-
-        var canvas =  document.createElement('canvas');
-
-        canvas.style.position = "relative";
-
-        canvas.id = 'curve-display-xxx';
-
-        canvas.setAttribute('class', 'motion-curve');
-
-        canvas.width = size.x;
-        canvas.height = size.y;
-
-
         var points = [];
 
         var position = new Vector(line.position);
-        var position_old = new Vector(this.position);
 
         var target = new Vector(position).add(size);
 
-        new TWEEN.Tween(position).to({x:target.x}, 2000).easing(TWEEN.Easing.Linear.None).start();
-        new TWEEN.Tween(position).to({y:target.y}, 2000).easing(curve).onUpdate(function () {
+        var dist = new Vector(0, 0, 0);
 
-            points.push(new Vector2(position.x, position.y));
+        var ptrack;
 
-            position_old.x = position.x;
-            position_old.y = position.y;
+        new TWEEN.Tween(position).to({x:target.x}, line.duration).easing(TWEEN.Easing.Linear.None).start();
+        new TWEEN.Tween(position).to({y:target.y}, line.duration).easing(curve).onUpdate(function () {
 
-        }).onComplete(function(){ callback; }).start();
+            var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, line.rotation));
+
+
+          if(ptrack){
+
+              dist = ptrack.sub(p);
+
+              var d = Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
+              if(d >= line.minPointDist)
+              {
+
+                  points.push(p);
+
+                  ptrack = new Vector(p);
+              }
+
+          }
+
+          else{
+              ptrack = p;
+
+              points.push(p);
+          };
+
+
+
+        }).onComplete(function(){
+
+           // alert(line.minPointDist);
+
+        }).start();
+
+
+
+
+
 
         return points;
     }
@@ -6673,8 +6691,6 @@ Gamestack.Motion = Motion;
  * @returns {Projectile} a Projectile object
  */
 
-
-
 class Projectile {
 
     constructor(args={}) {
@@ -6693,170 +6709,23 @@ class Projectile {
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
-        this.motion_curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
-
-        this.rotation = Gamestack.getArg(args, 'rotation', 0);
-
         this.name = Gamestack.getArg(args, 'name', "__");
 
+        this.size = Gamestack.getArg(args, 'size', new Vector());
+
         this.description = Gamestack.getArg(args, 'description', false);
-
-        this.motionCurveString = this.getMotionCurveString(); //store a string key for the Tween.Easing || 'curve'
-
-        this.setMotionCurve(this.motionCurveString);
 
         this.duration = Gamestack.getArg(args, 'duration', 500);
 
         this.delay = Gamestack.getArg(args, 'delay', 0);
 
-        this.target = new Vector2();
+        this.position = Gamestack.getArg(args, 'position', new Vector(0, 0, 0));
 
-        this.position = Gamestack.getArg(args, 'position', new Vector);
-
+        this.motion_curve = Gamestack.getArg(args, 'motion_curve', TWEEN.Easing.Linear.None);
 
         this.highlighted = false;
 
-    }
-
-    curvesObject() {
-
-        var c = [];
-
-        GameStack.each(TWEEN.Easing, function (ix, easing) {
-
-            GameStack.each(easing, function (iy, easeType) {
-
-                if (['in', 'out', 'inout','none'].indexOf(iy.toLowerCase()) >= 0) {
-
-                    c.push(ix + "_" + iy);
-
-                }
-
-            });
-
-        });
-
-        return c;
-
-    }
-
-    getMotionCurveString() {
-
-        var __inst = this;
-
-        var c;
-
-        $.each(TWEEN.Easing, function (ix, easing) {
-
-            $.each(TWEEN.Easing[ix], function (iy, easeType) {
-
-
-                if (__inst.motion_curve == TWEEN.Easing[ix][iy]) {
-
-                    c = ix + "_" + iy;
-
-                }
-
-            });
-
-        });
-
-        return c;
-
-    }
-
-
-    setMotionCurve(c) {
-
-        var cps = c.split('_');
-
-        var s1 = cps[0], s2 = cps[1];
-
-        var curve = TWEEN.Easing.Quadratic.InOut;
-
-        $.each(TWEEN.Easing, function (ix, easing) {
-
-            $.each(TWEEN.Easing[ix], function (iy, easeType) {
-
-
-                if (ix == s1 && iy == s2) {
-
-                    // alert('setting curve');
-
-                    curve = TWEEN.Easing[ix][iy];
-
-                }
-
-            });
-
-        });
-
-        this.motion_curve = curve;
-
-
-        return curve;
-
-    }
-
-    Distance(d)
-    {
-        this.target.y = d;
-
-    }
-
-
-
-    fire() {
-
-        //reference list of sprites
-
-        //create and start() the tween, with point-vectors
-
-        //we have a target
-
-
-        this.tween = new TWEEN.Tween(this.position)
-
-            .easing()
-
-            .to({x:this.target.x})
-
-            .onUpdate(function () {
-                //console.log(objects[0].position.x,objects[0].position.y);
-
-                alert('tween updating');
-
-                this.position.y =0;
-
-                __inst.Update();
-
-            })
-
-            .onComplete(function () {
-                //console.log(objects[0].position.x, objects[0].position.y);
-                if (__inst.complete) {
-
-                    __inst.complete();
-
-                }
-
-
-            });
-
-
-
-    }
-
-    /**
-     * start the Motion transition
-     *
-     * @function
-     * @memberof Motion
-     *
-     **********/
-
-    start() {
-        this.fire();
+        this.speed_mode = args.speed_mode || "fixed" || ""
 
     }
 
@@ -6874,64 +6743,75 @@ class Projectile {
 
     }
 
-    // obj.getGraphCanvas( $(c.domElement), value.replace('_', '.'), TWEEN.Easing[parts[0]][parts[1]] );
 
-    getGraphCanvas( t, f, c) {
+    onCollide(fun) {
+        this.collide = fun;
 
-        var canvas = c || document.createElement('canvas');
-
-        canvas.style.position = "relative";
-
-        canvas.id = 'curve-display';
-
-        canvas.setAttribute('class', 'motion-curve');
-
-        canvas.width = 180;
-        canvas.height = 100;
-
-        canvas.style.background = "black";
-
-        var context = canvas.getContext('2d');
-        context.fillStyle = "rgb(0,0,0)";
-        context.fillRect(0, 0, 180, 100);
-
-        context.lineWidth = 0.5;
-        context.strokeStyle = "rgb(230,230,230)";
-
-        context.beginPath();
-        context.moveTo(0, 20);
-        context.lineTo(180, 20);
-        context.moveTo(0, 80);
-        context.lineTo(180, 80);
-        context.closePath();
-        context.stroke();
-
-        context.lineWidth = 2;
-        context.strokeStyle = "rgb(255,127,127)";
-
-        var position = {x: 5, y: 80};
-        var position_old = {x: 5, y: 80};
-
-        new TWEEN.Tween(position).to({x: 175}, 2000).easing(TWEEN.Easing.Linear.None).start();
-        new TWEEN.Tween(position).to({y: 20}, 2000).easing(f).onUpdate(function () {
-
-            context.beginPath();
-            context.moveTo(position_old.x, position_old.y);
-            context.lineTo(position.x, position.y);
-            context.closePath();
-            context.stroke();
-
-            position_old.x = position.x;
-            position_old.y = position.y;
-
-        }).start();
-
-        return canvas;
     }
+
+
+    setAnimation(anime) {
+
+        this.animation = anime;
+
+        return this;
+
+    }
+
+    setMotionCurve(c) {
+
+        this.motion_curve = c;
+
+        return this;
+
+    }
+
+
+    fire(origin)
+    {
+
+        var sprite = new Sprite({image:this.animation.image});
+
+        sprite.setAnimation(this.animation);
+
+        sprite.setSize(this.size);
+
+        sprite.position = new Vector(0, 0, 0);
+
+        var __inst = this;
+
+        var lp = __inst.line.transpose(origin);
+
+        sprite.position = new Vector(lp[0].sub(sprite.size.div(2)));
+
+        this.sprite = sprite;
+
+        sprite.onUpdate(function(sprite)
+        {
+
+            for(var x = 0; x <  lp.length; x++)
+            {
+
+                if(sprite.center().equals(lp[x]) && x < lp.length - 1)
+                {
+
+                    sprite.position = new Vector(lp[x+1].sub(sprite.size.div(2)));;
+
+                    break;
+                }
+
+            }
+
+        });
+
+        Gamestack.add(sprite);
+
+    }
+
 }
 
 
-Gamestack.Motion = Motion;
+Gamestack.Projectile = Projectile;
 
 
 
@@ -7005,15 +6885,21 @@ class Line
     constructor(args = {})
     {
 
-        this.curve = args.curve || TWEEN.Easing.Quadratic.InOut;
+        this.curve = args.curve || TWEEN.Easing.Linear.None;
 
-        this.duration = args.duration || 1000;
+        this.motion_curve = args.motion_curve || TWEEN.Easing.Linear.None;
+
+        this.duration = args.duration || 500;
 
         this.points = [];
 
         this.position = new Vector();
 
+        this.minPointDist = 5;
+
         this.size = new Vector();
+
+        this.rotation = args.rotation || 0;
 
     }
 
@@ -7021,6 +6907,12 @@ class Line
     {
 
         this.position = p;
+        return this;
+    }
+
+    PointDisp(num)
+    {
+        this.minPointDist = num;
         return this;
     }
 
@@ -7037,37 +6929,59 @@ class Line
         return this;
     }
 
-    fill( size)
+    fill(size, minPointDist)
     {
 
-        var __inst = this;
+        if(!size || !minPointDist) //***PREVENT DOUBLE RUN
+        {
+            return 0;
+        }
 
         this.size = size;
 
-      this.points = new Motion().getTweenPoints(size, this, function(){
+        this.minPointDist = minPointDist;
 
+        this.points = new Motion().getTweenPoints(size, this);
 
+    }
 
-      });
+    transpose(origin)
+    {
 
-        return this;
+        var t_points = [];
+
+        for(var x = 0; x < this.points.length; x++) {
+
+            t_points.push(this.points[x].add(origin));
+
+        }
+
+        return t_points;
 
     }
 
     Highlight(origin, ctx)
     {
+
         ctx = ctx || Gamestack.ctx;
 
         for(var x in this.points)
         {
 
-           if(x % 4 == 0) {
+            var point = origin.add(this.points[x]).sub(Gamestack.point_highlighter.size.mult(0.5));
 
-               Gamestack.point_highlighter.position = new Vector2(origin.add(this.points[x]));
+            var dist = point.sub(Gamestack.point_highlighter.position);
+
+            var d = Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
+
+            if(d >= 10)
+            {
+                Gamestack.point_highlighter.position = new Vector2(origin.add(this.points[x]).sub(Gamestack.point_highlighter.size.mult(0.5)));
+            }
+
 
                Canvas.draw(Gamestack.point_highlighter, ctx);
-
-           }
 
         }
 
@@ -7077,6 +6991,26 @@ class Line
 
 }
 
+
+
+var GeoMath = {
+
+        rotatePointsXY:function(x,y,angle) {
+
+            var theta = angle*Math.PI/180;
+
+            var point = {};
+            point.x = x * Math.cos(theta) - y * Math.sin(theta);
+            point.y = x * Math.sin(theta) + y * Math.cos(theta);
+
+            point.z = 0;
+
+            return point
+        }
+
+}
+
+Gamestack.GeoMath = GeoMath;
 
 Gamestack.Circle = Circle;;
 /**
@@ -8160,7 +8094,9 @@ class Sprite {
      **********/
 
     center() {
-        return new Vector3(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+
+
+        return new Vector(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2, 0);
 
     }
 
@@ -8762,8 +8698,15 @@ class Vector {
             this.y = x.y;
             this.z = x.z || 0;
 
+            if(this.z == null)
+            {
+                this.z = 0;
+            }
+
             return this;
         }
+
+        if(z == null){z = 0;}
 
         this.x = x;
         this.y = y;
@@ -8831,6 +8774,12 @@ class Vector {
 
     }
 
+    equals(v)
+    {
+
+        return this.x == v.x && this.y == v.y && this.z == v.z;
+    }
+
     diff()
     {
         //TODO:this function
@@ -8847,6 +8796,11 @@ class Vector {
     is_between(v1, v2)
     {
        //TODO : overlap vectors return boolean
+
+        return this.x >= v1.x && this.x <= v2.x &&
+            this.y >= v1.y && this.y <= v2.y &&
+            this.z >= v1.z && this.z <= v2.z;
+
 
     }
 
