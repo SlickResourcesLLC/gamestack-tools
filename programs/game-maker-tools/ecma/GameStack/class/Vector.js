@@ -104,6 +104,15 @@ class Vector {
         return this.x == v.x && this.y == v.y && this.z == v.z;
     }
 
+    trig_distance_xy(v)
+    {
+
+        var dist = this.sub(v);
+
+        return  Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
+    }
+
     diff()
     {
         //TODO:this function

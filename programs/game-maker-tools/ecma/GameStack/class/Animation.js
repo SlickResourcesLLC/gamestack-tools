@@ -41,10 +41,6 @@ class Animation {
 
             flipX:false,
 
-            earlyTerm:false,
-
-            hang:false,
-
             duration:1000,
 
             size:new Vector3(20, 20, 20)
@@ -89,13 +85,12 @@ class Animation {
 
         this.selected_frame = this.frames[0];
 
-        this.effects = [];
-
         this.timer = 0;
 
-        this.__gameLogic = false;
+        this.duration = args.duration || 2000;
 
-        this.setType = function(){  };
+        this.seesaw_mode = args.seesaw_mode || false;
+
 
     }
 
@@ -172,6 +167,19 @@ class Animation {
                 frameSize: this.frameSize,
                 framePos: {x: this.frameBounds.min.x, y: this.frameBounds.min.y}
             } : this.frames[0];
+
+
+        if(this.seesaw_mode)
+        {
+            console.log('ANIMATION: applying seesaw');
+
+            var frames_reversed = this.frames.slice().reverse();
+
+            this.frames.pop();
+
+            this.frames = this.frames.concat(frames_reversed);
+
+        }
 
        // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
 
@@ -297,20 +305,6 @@ onComplete(fun)
 
         if(this.delay == 0 || this.timer % this.delay == 0) {
 
-            if(this.hang)
-            {
-                this.cix = this.cix + 1;
-
-                if(this.cix > this.frames.length - 1)
-                {
-                    this.cix =  this.frames.length - 1;
-
-                }
-
-            }
-            else
-            {
-
                 if(this.cix == 0 && this.extras)
                 {
                     this.extras.call(); //fire any extras attached
@@ -324,9 +318,8 @@ onComplete(fun)
                 }
 
                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
-            }
 
-            this.update();
+                this.update();
 
         }
 

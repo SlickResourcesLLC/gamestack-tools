@@ -1,47 +1,48 @@
-
 /*
  DatGui
-    -implements dat.gui
-    -live update of objects/properties
+ -implements dat.gui
+ -live update of objects/properties
 
-* */
+ * */
 
 var DatGui = {
 
-    gui:false,
+    gui: false,
 
-    latest_folder:false,
+    latest_folder: false,
 
-    options:{},
+    options: {},
 
-    getArg:function(args, key, fallback)
-    {
+    getArg: function (args, key, fallback) {
         return args[key] || fallback;
-        
+
     },
 
-    image_upload:__ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
+    image_upload: __ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
 
-    expandables:[],
+    expandables: [],
 
-    createObjectSelect:function(gui, obj, key, optionsObject)
-    {
+    createObjectSelect: function (gui, obj, key, optionsObject) {
 
         return gui.add(obj, key, optionsObject);
 
     },
 
-    saveable:function(save_callback, remove_callback)
-    {
+    saveable: function (save_callback, remove_callback) {
 
         var guiHTML = $('#dat-gui-gs-container div.dg.main li'),
-        last = $(guiHTML).last();
+            last = $(guiHTML).last();
 
         $('<button id="save_current_object">Save</button><button id="cancel_current_object">Cancel</button>').insertAfter(last);
 
-        $('#save_current_object').click(function(){  save_callback(); });
+        $('#save_current_object').click(function () {
+            save_callback();
+        });
 
-        $('#cancel_current_object').click(function(){ $('#dat-gui-gs-container div.dg.main.member').last().remove(); remove_callback();  });
+        $('#cancel_current_object').click(function () {
+            $('#dat-gui-gs-container div.dg.main.member').last().remove();
+            remove_callback();
+        });
 
     },
 
@@ -52,26 +53,25 @@ var DatGui = {
 
         var dom = type.domElement;
 
-        if(dom) {
+        if (dom) {
 
-           var button = $(dom).parent().find('#edit-button');
+            var button = $(dom).parent().find('#edit-button');
 
-           if($(button).length)
-           {
-            $(button).remove()
+            if ($(button).length) {
+                $(button).remove()
 
-           }
+            }
 
             $(dom).parent().find('.c').append('<button id="edit-button" class="edit-button"></button>');
 
-            $(dom).parent().find('.c #edit-button').click(function(){
+            $(dom).parent().find('.c #edit-button').click(function () {
 
                 App.superSelectOptions("Update Available Types", list, function () {
 
-                  var el = $(dom).find('select');
-                  $(el).html('');
+                    var el = $(dom).find('select');
+                    $(el).html('');
 
-                    $.each(list, function(key,value) {
+                    $.each(list, function (key, value) {
                         $(el).append($("<option></option>")
                             .attr("value", value).text(value));
                     });
@@ -84,8 +84,7 @@ var DatGui = {
 
     },
 
-    expandOnArray:function(parent, key, cl, save_callback)
-    {
+    expandOnArray: function (parent, key, cl, save_callback) {
         //make parent property expandable
 
         //modify the GUI to contain a button, allowing a line of added objects for the array
@@ -96,13 +95,11 @@ var DatGui = {
         this.latest_folder = this.main_gui.addFolder(key);
 
         var obj = {
-            add_animation:
-            function(){
+            add_animation: function () {
 
-               // alert('hello');
+                // alert('hello');
 
-                if(cl == Animation)
-                {
+                if (cl == Animation) {
                     parent[key].push(new Animation());
 
 
@@ -113,16 +110,15 @@ var DatGui = {
 
                     DatGui.expand(parent[key][len], name);
 
-                    __instance.saveable( function(){
+                    __instance.saveable(function () {
 
-                      //  alert('SAVE CODE GO HERE');
+                        //  alert('SAVE CODE GO HERE');
 
-                        $('span').each(function(ix, item){
+                        $('span').each(function (ix, item) {
 
-                            if($(this).text() == 'add_animation')
-                            {
+                            if ($(this).text() == 'add_animation') {
 
-                                $(this).parent().append('<button class="sprite_prop">'+name+'</button>');
+                                $(this).parent().append('<button class="sprite_prop">' + name + '</button>');
 
                             }
 
@@ -135,18 +131,15 @@ var DatGui = {
             }
         };
 
-       this.latest_folder.add(obj,'add_animation');
+        this.latest_folder.add(obj, 'add_animation');
 
     },
 
-    each:function(list, callback, flaggedKeys, flaggedTypes)
-    {
+    each: function (list, callback, flaggedKeys, flaggedTypes) {
 
-        if(list instanceof Array)
-        {
+        if (list instanceof Array) {
 
-            for(var x = 0; x < list.length; x++)
-            {
+            for (var x = 0; x < list.length; x++) {
 
                 callback(x, list[x]);
 
@@ -154,15 +147,13 @@ var DatGui = {
 
         }
 
-        else if(typeof(list) == 'object')
-        {
+        else if (typeof(list) == 'object') {
 
-            for(var x in list)
-            {
+            for (var x in list) {
 
-                    console.log('PROCESSING OBJECT');
+                console.log('PROCESSING OBJECT');
 
-                    callback(x, list[x]);
+                callback(x, list[x]);
 
             }
 
@@ -181,11 +172,10 @@ var DatGui = {
 
         var _inst = this;
 
-        var tweenCreate = function(obj, tween)
-        {
+        var tweenCreate = function (obj, tween) {
             var ct = 0;
 
-            Quazar.each(_inst.main_gui.__folders, function(ix, item){
+            Quazar.each(_inst.main_gui.__folders, function (ix, item) {
 
                 ct += 1;
 
@@ -193,9 +183,9 @@ var DatGui = {
 
             var gui = _inst.main_gui.addFolder('TweenStack_' + ct);
 
-          //  alert('creating gui for :' + jstr(tween));
+            //  alert('creating gui for :' + jstr(tween));
 
-           _inst.TweenSelect(Game.player, ['position, rotation', 'pos', 'rot', 'size'], tween, gui);
+            _inst.TweenSelect(Game.player, ['position, rotation', 'pos', 'rot', 'size'], tween, gui);
 
         };
 
@@ -203,26 +193,25 @@ var DatGui = {
 
         $('img.main-add').unbind().click(function (evt) {
 
-          //  alert('expanding tween');
+            //  alert('expanding tween');
 
-           tweenCreate(obj, {});
+            tweenCreate(obj, {});
 
         });
 
     },
 
-    guiCheckables:function(obj, keys)
-    {
+    guiCheckables: function (obj, keys) {
         //show every key member belonging to the passed obj
 
         var rels = [];
 
-        Quazar.each(keys, function(kix, key){
+        Quazar.each(keys, function (kix, key) {
 
 
-            Quazar.each(obj[kix]|| {}, function(ix, item){
+            Quazar.each(obj[kix] || {}, function (ix, item) {
 
-                if(ix.indexOf('__') == -1) //The string __ is a flag for special members, treated differently
+                if (ix.indexOf('__') == -1) //The string __ is a flag for special members, treated differently
                 {
 
                     rels.push(item);
@@ -240,21 +229,19 @@ var DatGui = {
 
 
     /*addTwoLevelsGuiByKey
-    *
-    * returns --psuedo dat.gui().folder()
-    *
-    * */
+     *
+     * returns --psuedo dat.gui().folder()
+     *
+     * */
 
 
-    fuis:{},
+    fuis: {},
 
-    addSrc:function(key, obj, parent, fui)
-    {
+    addSrc: function (key, obj, parent, fui) {
 
-        if(key == 'src')
-        {
+        if (key == 'src') {
 
-            fui.add(parent, key, ['source1.mp3', 'source1.mp3','source1.mp3', 'source1.mp3']);
+            fui.add(parent, key, ['source1.mp3', 'source1.mp3', 'source1.mp3', 'source1.mp3']);
 
         }
 
@@ -262,8 +249,7 @@ var DatGui = {
 
     onValidFunc(obj, key, call)
     {
-        if(typeof(obj) == 'function')
-        {
+        if (typeof(obj) == 'function') {
             call();
 
         }
@@ -271,15 +257,23 @@ var DatGui = {
 
     },
 
-    addEachNumeric:function(obj, fui)
-    {
+    addEachNumeric: function (obj, fui, callback) {
 
-        $.each(obj, function(ix, o){
+        $.each(obj, function (ix, o) {
 
-            if ( DatGui.isNumeric(obj[ix])) {
+            if (DatGui.isNumeric(obj[ix])) {
 
 
-             var g =  fui.add(obj, ix, -1000, 1000).step(1.0);
+                var g = fui.add(obj, ix, -1000, 1000).step(1.0);
+
+                if (callback) {
+                    g.onChange(function (v) {
+
+                        callback(v);
+
+                    });
+
+                }
 
             }
 
@@ -287,10 +281,9 @@ var DatGui = {
 
     },
 
-    Display:function(name, object)
-    {
+    Display: function (name, object) {
 
-        this.each(this.__settings, function(ix, item){
+        this.each(this.__settings, function (ix, item) {
 
             item.show(name, object);
 
@@ -298,13 +291,12 @@ var DatGui = {
 
     },
 
-    addEachText:function(obj, fui)
-    {
+    addEachText: function (obj, fui) {
         var discludedKeys = ['src', 'curveString'];
 
-        this.each(obj, function(ix, o){
+        this.each(obj, function (ix, o) {
 
-            if (discludedKeys.indexOf(ix) == -1 && typeof(obj[ix])=='string') {
+            if (discludedKeys.indexOf(ix) == -1 && typeof(obj[ix]) == 'string') {
 
                 fui.add(obj, ix, obj[ix]);
 
@@ -314,8 +306,7 @@ var DatGui = {
 
     },
 
-    fillSelectedObject:function(object)
-    {
+    fillSelectedObject: function (object) {
 
     },
 
@@ -327,22 +318,19 @@ var DatGui = {
         var obj = object.constructor();
 
 
-
     },
 
-    create_id:function()
-    {
-        var S4 = function() {
-            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    create_id: function () {
+        var S4 = function () {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
         };
-        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 
     },
 
-    addVectorFromProperty:function(gui, prop, name, min, max, callback)
-    {
+    addVectorFromProperty: function (gui, prop, name, min, max, callback) {
 
-        dat.GUI.prototype.removeFolder = function(name) {
+        dat.GUI.prototype.removeFolder = function (name) {
             var folder = this.__folders[name];
             if (!folder) {
                 return;
@@ -357,24 +345,22 @@ var DatGui = {
 
         var fui = gui.addFolder(name);
 
-        if(!prop instanceof Vector  && !prop instanceof Vector2)
-        {
+        if (!prop instanceof Vector && !prop instanceof Vector2) {
             return console.error('passed non-vector');
 
         }
 
         var guis = {};
 
-        for(var x in prop)
-        {
-            if(typeof(prop[x])=='number') {
+        for (var x in prop) {
+            if (typeof(prop[x]) == 'number') {
 
                 guis[x] = fui.add(prop, x).min(min).max(max);
 
                 guis[x].onChange(function (value) {
 
                     if (callback) {
-                        callback();
+                        callback(value);
 
                     }
 
@@ -386,12 +372,10 @@ var DatGui = {
 
     },
 
-    arrayToObject:function(list)
-    {
+    arrayToObject: function (list) {
         var obj = {};
 
-        for(var x in list)
-        {
+        for (var x in list) {
 
             obj[list[x].name] = list[x];
 
@@ -412,20 +396,21 @@ var DatGui = {
     addOffsetSelect(obj, gui, key, min, max, callback)
     {
 
-        callback = callback || function(){};
+        callback = callback || function () {
+            };
 
         var fui = gui.addFolder(key),
 
-        x = fui.add(obj, 'x', min, max),
+            x = fui.add(obj, 'x', min, max),
             y = fui.add(obj, 'y', min, max);
 
-        x.onChange(function(){
+        x.onChange(function () {
 
             callback();
 
         });
 
-        y.onChange(function(){
+        y.onChange(function () {
 
             callback();
 
@@ -434,11 +419,63 @@ var DatGui = {
 
     },
 
+    addLineCurveSelect(obj, gui, key, ix, callback)
+    {
+
+        if (!ix) {
+            ix = 0;
+
+        }
+
+        key = key || 'curve';
+
+        var testMotion = new Motion();
+
+var curves = testMotion.curvesList;
+
+var line_curves = [];
+
+for(var x= 0; x < curves.length; x++)
+{
+
+    if(['cubic', 'quadratic', 'quartic', 'quintic'].indexOf(x.toLowerCase()) >= 0) {
+
+        line_curves.push(curves[x]);
+
+    }
+
+}
+
+            var c = gui.add(obj, key, line_curves);
+
+        c.onFinishChange(function (value) {
+
+            var parts = value.split('_');
+
+            obj[key] = TWEEN.Easing[parts[0]][parts[1]];
+
+            var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
+
+            var canvas = testMotion.getGraphCanvas(value.replace('_', '.'), obj[key], canvasDom[ix]);
+
+            if (!canvasDom.length || canvasDom.length < (ix + 1)) {
+                $($(gui.domElement).children('ul')[0]).append(canvas);
+            }
+
+            callback();
+
+        });
+
+        c.setValue('Linear_None');
+
+
+
+        },
+
     addCurveSelect(obj, gui, key, ix, callback)
     {
 
-        if(!ix)
-        {
+        if (!ix) {
             ix = 0;
 
         }
@@ -449,7 +486,7 @@ var DatGui = {
 
         var c = gui.add(obj, key, testMotion.curvesList);
 
-        c.onFinishChange(function(value){
+        c.onFinishChange(function (value) {
 
             var parts = value.split('_');
 
@@ -457,9 +494,9 @@ var DatGui = {
 
             var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
 
-            var canvas =  testMotion.getGraphCanvas( value.replace('_', '.'),                       obj[key], canvasDom[ix]);
+            var canvas = testMotion.getGraphCanvas(value.replace('_', '.'), obj[key], canvasDom[ix]);
 
-            if(!canvasDom.length || canvasDom.length < (ix + 1)) {
+            if (!canvasDom.length || canvasDom.length < (ix + 1)) {
                 $($(gui.domElement).children('ul')[0]).append(canvas);
             }
 
@@ -472,83 +509,102 @@ var DatGui = {
     },
 
 
+    typeHandlerSpriteMaker: function (ix, obj, parent) {
+        var o = obj, type = typeof(obj) == 'object' ? obj.constructor : false;
 
-    typeHandlerSpriteMaker:function(ix, obj, parent)
-    {
-        var o = obj,  type = typeof(obj) == 'object' ?  obj.constructor : false;
-
-        var  fui;
+        var fui;
 
         var selectedLib = window;
-        
-        var isParent = function(list)
-        {
+
+        var projectile = projectile || false;
+
+        var isParent = function (list) {
             return list.indexOf(parent.constructor) >= 0;
 
         };
 
-        var isType = function(type)
-        {
+        var isType = function (type) {
 
-            return  typeof type == 'function' && obj instanceof type;
+            return typeof type == 'function' && obj instanceof type;
 
         };
 
 
-        if(isType(Sprite)) {
+        if (isType(Sprite)) {
+
+            alert('sprite');
 
             console.log('detected sprite');
 
-            var  fuisize =  DatGui.main_gui.addFolder('size');
+            var fuisize = DatGui.main_gui.addFolder('size');
 
-            var max =  DatGui.addEachNumeric(o.size, fuisize );
+            var max = DatGui.addEachNumeric(o.size, fuisize);
 
         }
-        
-            if(isType(VectorFrameBounds))
-        {
 
-            fui =  DatGui.main_gui.addFolder(ix + '');
+        if (isType(VectorFrameBounds)) {
+
+            fui = DatGui.main_gui.addFolder(ix + '');
 
             //todo = add folder for min
 
-            var  fuimin =  fui.addFolder('min');
+            var fuimin = fui.addFolder('min');
 
-           var min =   DatGui.addEachNumeric(o.min, fuimin );
+            var min = DatGui.addEachNumeric(o.min, fuimin, function (v) {
 
-
-            var  fuimax =  fui.addFolder('max');
-
-
-            var max =  DatGui.addEachNumeric(o.max, fuimax );
+                parent.resetFrames();
 
 
-            var  fuiterm =  fui.addFolder('termPoint');
+            });
 
 
-            var term =  DatGui.addEachNumeric(o.termPoint, fuiterm );
+            var fuimax = fui.addFolder('max');
+
+
+            var max = DatGui.addEachNumeric(o.max, fuimax, function (v) {
+
+                parent.resetFrames();
+
+
+            });
+
+
+            var fuiterm = fui.addFolder('termPoint');
+
+
+            var term = DatGui.addEachNumeric(o.termPoint, fuiterm, function (v) {
+
+                parent.resetFrames();
+
+
+            });
 
             //todo = add folder for max
 
+            if(isParent([Animation]))
+            {
+
+                var seesaw = this.main_gui.add(parent, 'seesaw_mode');
+
+                seesaw.onChange(function(v){
+
+                    parent.resetFrames();
+
+                });
+
+            }
+
         }
-        if(isType(Vector))
-        {
 
-            fui =  DatGui.main_gui.addFolder(ix + '');
 
-            DatGui.addEachNumeric(o, fui );
+        if (isType(Projectile)) {
+            projectile = true;
 
-        }
-
-        if(isType(Projectile))
-        {
-
-            var fui =  DatGui.main_gui.addFolder('Info');
+            var fui = DatGui.main_gui.addFolder('Info');
 
             var name = fui.add(obj, 'name');
 
-            name.onChange(function(v)
-            {
+            name.onChange(function (v) {
 
 
                 Game.refreshBuilder();
@@ -557,89 +613,148 @@ var DatGui = {
 
             DatGui.mainSpriteAnimationSelect(parent, obj);
 
-            var r = DatGui.main_gui.add(obj.line, 'rotation', 0, 360 ).step(0.1);
+            var r = DatGui.main_gui.add(obj.line, 'rotation', -360, 360).step(0.1);
 
-            r.onChange(function(){
+            r.onChange(function () {
 
-                obj.line.fill(obj.line.size, obj.line.minPointDist);
+                obj.line.fill(obj.line.size, obj.line.pointDist);
 
             });
 
             //todo = add folder for min
 
-            DatGui.addCurveSelect(obj.line, DatGui.main_gui, 'curve', 0, function(){
+            DatGui.addLineCurveSelect(obj.line, DatGui.main_gui, 'curve', 0, function () {
 
-                obj.line.fill(obj.line.size, obj.line.minPointDist);
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+            });
+
+
+            var sui = DatGui.main_gui.addFolder('size');
+
+
+            var x = sui.add(obj.line.size, 'x');
+
+            var y = sui.add(obj.line.size, 'y');
+
+
+            x.onChange(function (v) {
+
+                //fill the line over again with new size
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+
+            });
+
+            y.onChange(function (v) {
+
+                //fill the line over again with new size
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+
+            });
+
+
+            var pui = DatGui.main_gui.addFolder('position');
+
+
+            var px = pui.add(obj.line.position, 'x');
+
+            var py = pui.add(obj.line.position, 'y');
+
+
+            px.onChange(function (v) {
+
+                //fill the line over again with new size
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+
+            });
+
+            py.onChange(function (v) {
+
+                //fill the line over again with new size
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+
+            });
+
+
+        }
+
+        if (isType(Vector) && ['frameSize'].indexOf(ix) >= 0) {
+
+
+            fui = DatGui.main_gui.addFolder(ix + '');
+
+            DatGui.addEachNumeric(o, fui, function (v) {
+
+                parent.resetFrames();
+
 
             });
 
         }
 
 
-        if(isType(Motion))
-        {
+        if (isType(Motion)) {
             //add main text values
 
-           var fui =  DatGui.main_gui.addFolder('Info');
+            var fui = DatGui.main_gui.addFolder('Info');
 
-          var name = fui.add(obj, 'name');
+            var name = fui.add(obj, 'name');
 
-          name.onChange(function(v)
-          {
+            name.onChange(function (v) {
 
 
-              Game.refreshBuilder();
+                Game.refreshBuilder();
 
-          });
+            });
 
             var desc = fui.add(obj, 'description');
 
-            var t = DatGui.main_gui.add(obj, 'targetRotation', -720, 720 );
+            var t = DatGui.main_gui.add(obj, 'targetRotation', -720, 720);
 
             //todo = add folder for min
 
             DatGui.addCurveSelect(obj, DatGui.main_gui, 'motion_curve', 0);
 
-            DatGui.addCurveSelect(obj, DatGui.main_gui, 'line_curve', 1);
+            DatGui.addLineCurveSelect(obj, DatGui.main_gui, 'line_curve', 1);
 
 
-            var t = DatGui.main_gui.add(obj, 'duration', -5000, 5000 );
+            var t = DatGui.main_gui.add(obj, 'duration', -5000, 5000);
 
-            var  fuidist =  DatGui.main_gui.addFolder('distance');
+            var fuidist = DatGui.main_gui.addFolder('distance');
 
-            var d =  DatGui.addEachNumeric(o.distance, fuidist );
-
-        }
-
-
-        if(isType(Force))
-        {
-
-            this.main_gui.add(parent, 'selected_force', Game.forces );
+            var d = DatGui.addEachNumeric(o.distance, fuidist);
 
         }
 
 
-        if(isType(Sprite) || isType(TextDisplay))
-        {
+        if (isType(Force)) {
+
+            this.main_gui.add(parent, 'selected_force', Game.forces);
+
+        }
+
+
+        if (isType(Sprite) || isType(TextDisplay)) {
 
             //add main text values
 
-             fui =  DatGui.main_gui.addFolder('Info');
+            fui = DatGui.main_gui.addFolder('Info');
 
-            DatGui.addEachText(obj, fui );
+            DatGui.addEachText(obj, fui);
 
         }
 
-        if(isType(Animation) || isType(Sound))
-        {
+        if (isType(Animation) || isType(Sound)) {
 
-            var fui =  DatGui.main_gui.addFolder('Info');
+            var fui = DatGui.main_gui.addFolder('Info');
 
             var name = fui.add(obj, 'name');
 
-            name.onChange(function(v)
-            {
+            name.onChange(function (v) {
 
                 Game.refreshBuilder();
 
@@ -647,15 +762,21 @@ var DatGui = {
 
         }
 
-        if(isType(Animation))
-        {
+        if (isType(Animation) && obj.hasOwnProperty('duration')) {
 
-            this.main_gui.add(obj, 'duration').step(1.0);
+           var d = this.main_gui.add(obj, 'duration').step(1.0);
+
+           d.onChange(function(v){
+
+               obj.resetFrames();
+
+
+           });
 
         }
 
 
-        if(fui && parent) {
+        if (fui && parent) {
 
             fui.onChange = function (f) {
                 var i, j;
@@ -666,11 +787,11 @@ var DatGui = {
 
             if (isParent([Animation])) {
 
-                $('#selected_object_src').click(function(){
+                $('#selected_object_src').click(function () {
 
-                  //  alert('dat.gui.interface :: clicked ...object_src');
+                    //  alert('dat.gui.interface :: clicked ...object_src');
 
-                    App.GTUI.fileOptions('image', function(src){
+                    App.GTUI.fileOptions('image', function (src) {
 
                         parent.src = src;
 
@@ -678,7 +799,7 @@ var DatGui = {
 
                         parent.reset();
 
-                      //  alert('File Selected');
+                        //  alert('File Selected');
 
                     });
 
@@ -691,143 +812,165 @@ var DatGui = {
 
     },
 
-        spriteMakerGuiByKeys:function(ix, obj)
-        {
-            //anything numeric:
+    gameControllerGUI()
+    {
 
-            if(typeof(obj) == 'object')
-            {
+        var allEventsOptions = {
 
-                var complete;
+            button_a:['one', 'two', 'three'],
+            button_b:['one', 'two', 'three']
 
-                var _inst = this;
+        }
 
-              complete =   _inst.typeHandlerSpriteMaker(ix, obj, parent);
+        var allEvents = {
 
-                this.each(obj, function(ix, o){
+            button_a:'one',
+            button_b:'two'
 
-                  //#typeHandler
+        }
 
-              if(!complete){ complete = _inst.typeHandlerSpriteMaker(ix, o, obj)};
+        var gui = new dat.GUI({autoPlace:false});
+
+       var a = gui.add(allEvents, 'button_a', allEventsOptions.button_a);
+
+       var b = gui.add(allEvents, 'button_b', allEventsOptions.button_b);
+
+        return gui;
+
+    },
+
+    spriteMakerGuiByKeys: function (ix, obj) {
+        //anything numeric:
+
+        if (typeof(obj) == 'object') {
+
+            var complete;
+
+            var _inst = this;
+
+            complete = _inst.typeHandlerSpriteMaker(ix, obj, parent);
+
+            this.each(obj, function (ix, o) {
+
+                //#typeHandler
+
+                if (!complete) {
+                    complete = _inst.typeHandlerSpriteMaker(ix, o, obj)
+                }
+                ;
+
+
+            });
+
+
+            if (obj instanceof Animation || obj instanceof Sound) {
+
+                var first_list = $('#dat-gui-gs-container div.main ul')[0];
+
+                if (!$(first_list).find('input[type="file"]').length) {
+
+                    var id = this.create_id();
+
+                    var fname;
+
+                    if (obj.src.length > 270) {
+
+                        fname = obj.src.substring(0, 270);
+                    }
+
+                    $(first_list).prepend("<input type='file' id='" + id + "'  class='dat_gui_file'/>" +
+                        "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + (fname || obj.src) + "</label>");
+
+                }
+
+                $('#' + id).on('change', function (evt) {
+
+                    var input = evt.target;
+
+                    var file = levelMaker.getRawImageFile(this, function (imagesrc) {
+
+                        if (obj instanceof Animation) {
+
+                            var filename = $(input).val().split('\\').pop();
+
+                            DatGui.image_upload(filename, imagesrc, function (relpath, content) {
+
+                                relpath = relpath.replace('client/', '../');
+
+                                alert('uploaded image:' + filename + ":using relative path:" + relpath);
+
+                                $('file_special' + id).text(relpath);
+
+                                obj.src = relpath;
+
+                                obj.image = new GameImage(relpath);
+
+                                obj.image.domElement.onload = function () {
+
+                                    obj = new Animation(obj);
+
+                                    Game.sprites[0].selected_animation = obj;
+
+
+                                };
+
+
+                            });
+
+                        }
+
+                        else if (obj instanceof Sound) {
+
+                            obj.sound = new Audio(imagesrc);
+
+                            obj = new Sound(obj);
+
+                            Game.sprites[0].selected_sound = obj;
+
+                        }
+
+                    });
+
+                    DatGui.get(obj);
+
+                    evt.preventDefault();
+
+                    return false;
 
 
                 });
 
 
-                if(obj instanceof Animation || obj instanceof  Sound )
-                {
-
-                   var first_list = $('#dat-gui-gs-container div.main ul')[0];
-
-                    if(!$(first_list).find('input[type="file"]').length)
-                    {
-
-                        var id = this.create_id();
-
-                        var fname;
-
-                        if(obj.src.length > 270)
-                        {
-
-                            fname = obj.src.substring(0, 270);
-                        }
-
-                        $(first_list).prepend( "<input type='file' id='"+id+"'  class='dat_gui_file'/>"  +
-                            "<label class='file_special' id='file_special"+id+"' for='"+id+"'>Select File: <br/> "+ (fname || obj.src) +"</label>");
-
-                    }
-
-                    $('#' + id).on('change', function(evt){
-
-                        var input = evt.target;
-
-                        var file =  levelMaker.getRawImageFile(this, function(imagesrc){
-
-                            if(obj instanceof Animation || obj instanceof Projectile) {
-
-                                var filename = $(input).val().split('\\').pop();
-
-                                DatGui.image_upload(filename, imagesrc, function(relpath, content){
-
-                                    relpath = relpath.replace('client/', '../');
-
-                                    alert('uploaded image:' + filename + ":using relative path:" + relpath);
-
-                                    $('file_special'+id).text(relpath);
-
-                                    obj.src = relpath;
-
-                                    obj.image = new GameImage(relpath);
-
-                                    obj.image.domElement.onload = function()
-                                    {
-
-                                        obj = new Animation(obj);
-
-                                        Game.sprites[0].selected_animation = obj;
-
-
-                                    };
-
-
-                                });
-
-                            }
-
-                            else if(obj instanceof Sound) {
-
-                                obj.sound = new Audio(imagesrc);
-
-                                obj = new Sound(obj);
-
-                                Game.sprites[0].selected_sound = obj;
-
-                            }
-
-                        });
-
-                        DatGui.get(obj);
-
-                        evt.preventDefault();
-
-                        return false;
-
-
-                    });
-
-
-                }
-
             }
 
-            return  this.main_gui;
+        }
 
-        },
+        return this.main_gui;
 
-     count:0,
-
-    fui:false,
-
-    isInTypeList:function(object, typelist)
-    {
-        var isType = false;
-
-        this.each(typelist, function(ix, type){
-
-            isType = typeof(object) == 'object' &&  object instanceof type ? true : isType;
-            
-        });
-      
-      return isType;
-        
     },
 
-    guis:[],
+    count: 0,
 
-    expand:function(object, name, callback)
-    {
+    fui: false,
 
-       // alert('hello');
+    isInTypeList: function (object, typelist) {
+        var isType = false;
+
+        this.each(typelist, function (ix, type) {
+
+            isType = typeof(object) == 'object' && object instanceof type ? true : isType;
+
+        });
+
+        return isType;
+
+    },
+
+    guis: [],
+
+    expand: function (object, name, callback) {
+
+        // alert('hello');
 
         this.guis.push(this.main_gui);
 
@@ -838,17 +981,14 @@ var DatGui = {
 
     },
 
-    gui:function()
-    {
+    gui: function () {
 
-      return new dat.GUI({autoPlace:false});
+        return new dat.GUI({autoPlace: false});
 
     },
 
 
-
-    updateableAnimationObjectToGui:function(gui, effects)
-    {
+    updateableAnimationObjectToGui: function (gui, effects) {
 
         var first_gui = $('div.main ul')[0];
 
@@ -860,7 +1000,7 @@ var DatGui = {
 
             fname = effects.animation.image.domElement.src.length > 270 ? effects.animation.image.domElement.src.substring(0, 270) : effects.animation.image.domElement.src;
 
-            var value =  'Select File: <br/> ' +  fname;
+            var value = 'Select File: <br/> ' + fname;
 
             $(effects.animation.file_input).text(value);
 
@@ -879,7 +1019,6 @@ var DatGui = {
                 effects.animation.file_input = $('#' + id)[0];
 
             }
-
 
 
         }
@@ -905,7 +1044,7 @@ var DatGui = {
 
                         $('file_special' + id).text(relpath);
 
-                       // effects.animation = new Animation({src:relpath});
+                        // effects.animation = new Animation({src:relpath});
 
                         effects.animation.src = relpath;
 
@@ -915,7 +1054,7 @@ var DatGui = {
 
                         effects.animation.image.domElement.onload = function () {
 
-                            effects.animation.frameSize = new Vector( effects.animation.image.domElement.width,  effects.animation.image.domElement.height, 0);
+                            effects.animation.frameSize = new Vector(effects.animation.image.domElement.width, effects.animation.image.domElement.height, 0);
 
                             effects.animation.animate();
 
@@ -937,21 +1076,13 @@ var DatGui = {
         });
 
 
-
-
-
-
-
-
-
     },
 
-    getLevelObjectGui:function(object, create_new){ //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
+    getLevelObjectGui: function (object, create_new) { //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
 
-        var gui = new dat.GUI({autoPlace:false});
+        var gui = new dat.GUI({autoPlace: false});
 
-        if(object instanceof Sprite)
-        {
+        if (object instanceof Sprite) {
 
             var name = gui.add(object, 'name');
 
@@ -959,19 +1090,19 @@ var DatGui = {
 
             DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoSpriteTypes);
 
-           if(create_new) {
-               object.selected_animation = new Animation({
-                   frameSize: new Vector(object.size),
-                   frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
-               });
+            if (create_new) {
+                object.selected_animation = new Animation({
+                    frameSize: new Vector(object.size),
+                    frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
+                });
 
-           }
+            }
 
             var obj = object.selected_animation;
 
-            window.setTimeout(function(){
+            window.setTimeout(function () {
 
-                if(create_new && (obj instanceof Animation || obj instanceof  Sound)) {
+                if (create_new && (obj instanceof Animation || obj instanceof Sound)) {
 
                     obj.framePos = new Vector(0, 0, 0);
 
@@ -985,13 +1116,13 @@ var DatGui = {
 
                         if (obj.image.domElement.src) {
 
-                            fname =  obj.image.domElement.src.length > 270 ? obj.image.domElement.src.substring(0, 270):obj.image.domElement.src;
+                            fname = obj.image.domElement.src.length > 270 ? obj.image.domElement.src.substring(0, 270) : obj.image.domElement.src;
                         }
 
 
                         $(first_list).prepend("<img style='display:none;'/><input type='file' name='" + id + "' id='" + id + "'  class='dat_gui_file'/>" +
                             "<label class='file_special' id='file_special" + id + "' for='" + id + "'>Select File: <br/> " + fname + "</label>" +
-                        "<canvas id='image-test-canvas'></canvas>");
+                            "<canvas id='image-test-canvas'></canvas>");
 
                         $('#' + id).change(function (evt) {
 
@@ -1004,14 +1135,13 @@ var DatGui = {
                                     var filename = $(input).val().split('\\').pop();
 
 
-
                                     DatGui.image_upload(filename, image, function (relpath, content) {
 
                                         relpath = relpath.replace('client/', '../');
 
                                         $(input).parent().find('.file_special').html("Select File: <br/> " + relpath);
 
-                                       // alert('uploaded image:' + filename + ":using relative path:" + relpath);
+                                        // alert('uploaded image:' + filename + ":using relative path:" + relpath);
 
                                         $('file_special' + id).text(relpath);
 
@@ -1026,29 +1156,34 @@ var DatGui = {
                                         var img = object.selected_animation.image.domElement;
 
 
-
                                         object.selected_animation.image.domElement.onload = function () {
 
                                             object.position = new Vector(0, 0, 0);
 
                                             object.size = new Vector(this.width, this.height, 0);
 
-                                            object.selected_animation = new Animation({ image:this, frameSize: new Vector(object.size),
-                                                frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))});
+                                            object.selected_animation = new Animation({
+                                                image: this, frameSize: new Vector(object.size),
+                                                frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
+                                            });
 
 
                                             object.frameSize = object.selected_animation.selected_frame.frameSize;
 
-                                                DatGui.addVectorFromProperty(gui, object.size, 'this.size', 0, 1000, function(){
 
+                                            DatGui.addVectorFromProperty(gui, object.size, 'this.size', 0, 1000, function () {
 
-                                                   __levelMaker.imagePreview(object);
+                                                alert('getting object');
 
-                                                });
+                                                DatGui.get(object);
 
-                                            DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function(){
+                                            });
 
-                                                __levelMaker.imagePreview(object);
+                                            DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function () {
+
+                                                alert('getting object');
+
+                                                DatGui.get(object);
 
                                             });
 
@@ -1082,8 +1217,7 @@ var DatGui = {
 
                     }
 
-                    else
-                    {
+                    else {
                         alert('already had file input');
                     }
 
@@ -1093,17 +1227,14 @@ var DatGui = {
             }, 250);
 
 
-
         }
 
-        else if(mode.toLowerCase() == 'sprite' && object instanceof Sprite)
-        {
+        else if (mode.toLowerCase() == 'sprite' && object instanceof Sprite) {
             console.log('TODO: level edit for actual Sprite()');
 
         }
 
-        else if (mode.toLowerCase() == 'list' && object instanceof Array && object.length && object[0] instanceof Sprite)
-        {
+        else if (mode.toLowerCase() == 'list' && object instanceof Array && object.length && object[0] instanceof Sprite) {
 
             console.log('TODO: present gui to edit all selected sprite objects at once');
 
@@ -1115,17 +1246,17 @@ var DatGui = {
 
     get: function (object, name, gui, cont) {
 
-         this.selectedObject = object;
+        this.selectedObject = object;
 
-         $('#dat-gui-gs-container .dg.main').remove();
+        $('#dat-gui-gs-container .dg.main').remove();
 
-         this.main_gui = gui || new dat.GUI({autoPlace:false});
+        this.main_gui = gui || new dat.GUI({autoPlace: false});
 
         $('#dat-gui-gs-container').append($(this.main_gui.domElement));
 
         $('#dat-gui-gs-container').css('top', 0);
 
-         //TODO: build the container to display images, etc..
+        //TODO: build the container to display images, etc..
 
         /*************************
          *
@@ -1138,11 +1269,11 @@ var DatGui = {
 
          * *****************************/
 
-       // alert('calling');
+        // alert('calling');
 
         return this.spriteMakerGuiByKeys(name, object);
 
-       // return this.Display(object);
+        // return this.Display(object);
 
     }
 

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>GameStack Class: Animation</title>
+	<title>GameStack Class: Line</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Animation</h1>
+	<h1 class="page-title">Class: Line</h1>
 <section>
 
 <header>
     
         <h2>
-        Animation
+        Line
         </h2>
         
-            <div class="class-description">Takes an object of arguments and returns Animation() object.</div>
+            <div class="class-description">Takes several args and returns Line object. Intended for curved-line / trajectory of Projectile Object.</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation(args)</h4>
+    <h4 class="name" id="Line"><span class="type-signature"></span>new Line(args)</h4>
     
     
 </dt>
@@ -175,13 +175,13 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>curve</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Easing</span>
 
 
 
@@ -192,151 +192,7 @@
 
             
 
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>description</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Vector.html">Vector</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">of the Animation object, has x and y properties</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>frameSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Vector.html">Vector</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the size of frames in Animation, having x and y properties</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>frameBounds</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="VectorFrameBounds.html">VectorFrameBounds</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the bounds of the Animation having min, max, and termPoint properties</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional, the seconds to delay before running animation when started by the start() function</td>
+            <td class="description last">the curve applied to line see TWEEN.Easing , limited options for immediate line-drawing</td>
         </tr>
 
     
@@ -360,7 +216,127 @@
 
             
 
-            <td class="description last">how many milliseconds the animation should take to complete</td>
+            <td class="description last">the millisecond duration of Line</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the position vector</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pointDist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numeric point-distance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Vector.html">Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the size vector</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rotation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numeric rotation of -360 - 360</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>growth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the numeric growth-While a min and max Vector(x,y) will describe the grid of Animation frames, the termPoint will indicate the last frame to show on the grid (Animations may stop early on the 'grid')</td>
         </tr>
 
     
@@ -431,7 +407,7 @@
     
             
 <div class="param-desc">
-    an Animation object
+    a VectorFrameBounds object
 </div>
 
 
@@ -442,7 +418,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Animation.html">Animation</a></span>
+<span class="param-type"><a href="VectorFrameBounds.html">VectorFrameBounds</a></span>
 
 
 

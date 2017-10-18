@@ -4780,10 +4780,6 @@ class Animation {
 
             flipX:false,
 
-            earlyTerm:false,
-
-            hang:false,
-
             duration:1000,
 
             size:new Vector3(20, 20, 20)
@@ -4828,13 +4824,12 @@ class Animation {
 
         this.selected_frame = this.frames[0];
 
-        this.effects = [];
-
         this.timer = 0;
 
-        this.__gameLogic = false;
+        this.duration = args.duration || 2000;
 
-        this.setType = function(){  };
+        this.seesaw_mode = args.seesaw_mode || false;
+
 
     }
 
@@ -4911,6 +4906,19 @@ class Animation {
                 frameSize: this.frameSize,
                 framePos: {x: this.frameBounds.min.x, y: this.frameBounds.min.y}
             } : this.frames[0];
+
+
+        if(this.seesaw_mode)
+        {
+            console.log('ANIMATION: applying seesaw');
+
+            var frames_reversed = this.frames.slice().reverse();
+
+            this.frames.pop();
+
+            this.frames = this.frames.concat(frames_reversed);
+
+        }
 
        // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
 
@@ -5036,20 +5044,6 @@ onComplete(fun)
 
         if(this.delay == 0 || this.timer % this.delay == 0) {
 
-            if(this.hang)
-            {
-                this.cix = this.cix + 1;
-
-                if(this.cix > this.frames.length - 1)
-                {
-                    this.cix =  this.frames.length - 1;
-
-                }
-
-            }
-            else
-            {
-
                 if(this.cix == 0 && this.extras)
                 {
                     this.extras.call(); //fire any extras attached
@@ -5063,9 +5057,8 @@ onComplete(fun)
                 }
 
                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
-            }
 
-            this.update();
+                this.update();
 
         }
 
@@ -5094,6 +5087,8 @@ class Camera
 }
 
 
+
+;
 
 ;/*
  * Canvas
@@ -6043,7 +6038,6 @@ class GamepadAdapter {
 
     }
 
-
     process_axes(gp, events)
     {
 
@@ -6055,12 +6049,12 @@ class GamepadAdapter {
         }
 
 
-        for (var i = 0; i < gp.axes.length; i += 2) {
+
+            for (var i = 0; i < gp.axes.length; i += 2) {
+
             var axis1 = gp.axes[i], axia2 = gp.axes[i + 1];
 
             var ix = (Math.ceil(i / 2) + 1), x = gp.axes[i], y = gp.axes[i + 1];
-
-
 
             if(ix == 1 && events.stick_left)
             {
@@ -6135,6 +6129,33 @@ class GamepadAdapter {
 
 
 };
+
+/**
+ * ControllerSetting()
+ * :takes arguments of button(string) || stick(string), plus event(function),
+ *
+ * @returns {ControllerSetting
+ * }
+ */
+
+
+class ControllerSetting
+{
+    constructor(args)
+    {
+
+        this.button = args.button || false;
+
+        this.stick = args.stick || false;
+
+        this.event = args.event || false;
+
+    }
+
+}
+
+var Controller_Settings = [];
+
 
 /**********
  * NOTE: here we bind the instance, and NOT the instantiator.
@@ -6617,14 +6638,26 @@ class Motion {
 
         var target = new Vector(position).add(size);
 
+        var start = new Vector(position);
+
         var dist = new Vector(0, 0, 0);
 
         var ptrack;
 
-        new TWEEN.Tween(position).to({x:target.x}, line.duration).easing(TWEEN.Easing.Linear.None).start();
-        new TWEEN.Tween(position).to({y:target.y}, line.duration).easing(curve).onUpdate(function () {
 
-            var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, line.rotation));
+       var  easeInOutQuad =  function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t };
+
+
+        return points;
+
+       var t1 =  new TWEEN.Tween(position).to({x:target.x}, 2000).easing(TWEEN.Easing.Linear.None).start();
+
+       if(t2)
+       {
+           t2.stop();
+       }
+
+      var t2 =  new TWEEN.Tween(position).to({y:target.y}, 2000).easing(curve).onUpdate(function () {
 
 
           if(ptrack){
@@ -6649,18 +6682,47 @@ class Motion {
               points.push(p);
           };
 
+        }).onComplete(function() {
+
+            // alert(line.minPointDist);
+
+            line.first_segment = points.slice();
+
+            var extendLinePoints = function (segment, points, ix)
+            {
+
+            var next_points = segment.slice();
+
+            var last_point = points[points.length - 1];
+
+            for (var x = 0; x < next_points.length; x++) {
+
+                var sr = new Vector(Gamestack.GeoMath.rotatePointsXY(line.size.x * ix, line.size.y * ix, line.rotation));
+
+                var p = next_points[x].add(sr);
+
+                if(points.indexOf(p) <= -1) {
+
+                    points.push(p);
 
 
-        }).onComplete(function(){
+                }
 
-           // alert(line.minPointDist);
+            }
+        };
+
+        for(var x = 0; x <= line.curve_iterations; x++)
+        {
+            if(x > 1) {
+
+                extendLinePoints(line.first_segment, line.points, x - 1);
+
+            }
+
+        }
+
 
         }).start();
-
-
-
-
-
 
         return points;
     }
@@ -6725,7 +6787,7 @@ class Projectile {
 
         this.highlighted = false;
 
-        this.speed_mode = args.speed_mode || "fixed" || ""
+        this.sprites = [];
 
     }
 
@@ -6743,12 +6805,10 @@ class Projectile {
 
     }
 
-
     onCollide(fun) {
         this.collide = fun;
 
     }
-
 
     setAnimation(anime) {
 
@@ -6763,6 +6823,15 @@ class Projectile {
         this.motion_curve = c;
 
         return this;
+
+    }
+
+    kill_one()
+    {
+
+        var spr = this.sprites[this.sprites.length - 1];
+
+        Gamestack.remove(spr);
 
     }
 
@@ -6784,8 +6853,6 @@ class Projectile {
 
         sprite.position = new Vector(lp[0].sub(sprite.size.div(2)));
 
-        this.sprite = sprite;
-
         sprite.onUpdate(function(sprite)
         {
 
@@ -6795,9 +6862,15 @@ class Projectile {
                 if(sprite.center().equals(lp[x]) && x < lp.length - 1)
                 {
 
-                    sprite.position = new Vector(lp[x+1].sub(sprite.size.div(2)));;
+                    sprite.position = new Vector(lp[x+1].sub(sprite.size.div(2)));
 
                     break;
+                }
+
+                if(x==lp.length - 1)
+                {
+                    Gamestack.remove(sprite);
+
                 }
 
             }
@@ -6805,6 +6878,8 @@ class Projectile {
         });
 
         Gamestack.add(sprite);
+
+        this.sprites.push(sprite);
 
     }
 
@@ -6821,6 +6896,15 @@ Gamestack.Projectile = Projectile;
 
 ;
 
+/**
+ * Takes the min and max vectors of rectangular shape and returns Rectangle Object.
+ * @param   {Object} args object of arguments
+ * @param   {Vector} args.min the minimum vector point (x,y)
+ * @param   {Vector} args.max the maximum vector point (x,y)
+ *
+ * @returns {Rectangle} a Rectangle object
+ */
+
 class Rectangle {
 
     constructor(min, max) {
@@ -6835,12 +6919,25 @@ class Rectangle {
 ;
 
 
-
 let VectorBounds = Rectangle;
 
 
 
 Gamestack.Rectangle = Rectangle;
+
+
+
+/**
+ * Takes the min and max vectors plus termPoint ('termination-point'), returns VectorFrameBounds
+ *  *use this to define the bounds of an Animation object.
+ * @param   {Object} args object of arguments
+ * @param   {Vector} args.min the minimum vector point (x,y)
+ * @param   {Vector} args.max the maximum vector point (x,y)
+ * @param   {Vector} args.termPoint the termPoint vector point (x,y)
+ * -While a min and max Vector(x,y) will describe the grid of Animation frames, the termPoint will indicate the last frame to show on the grid (Animations may stop early on the 'grid')
+ * @returns {VectorFrameBounds} a VectorFrameBounds object
+ */
+
 
 class VectorFrameBounds extends Rectangle {
 
@@ -6861,11 +6958,12 @@ class VectorFrameBounds extends Rectangle {
 Gamestack.VectorFrameBounds = VectorFrameBounds;
 
 
-class Circle //empty circle class
-{
 
+/**
+ * Stores an Elipse of width and height (incomplete)
+ * @returns {Elipse} an Elipse object
+ */
 
-}
 
 class Elipse
 {
@@ -6880,6 +6978,58 @@ class Elipse
 
 }
 
+var Curves = { //ALL HAVE INPUT AND OUTPUT OF: 0-1.0
+    // no easing, no acceleration
+    linearNone: function (t) { return t },
+    // accelerating from zero velocity
+    easeInQuadratic: function (t) { return t*t },
+    // decelerating to zero velocity
+    easeOutQuadratic: function (t) { return t*(2-t) },
+    // acceleration until halfway, then deceleration
+    easeInOutQuadratic: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+    // accelerating from zero velocity
+    easeInCubic: function (t) { return t*t*t },
+    // decelerating to zero velocity
+    easeOutCubic: function (t) { return (--t)*t*t+1 },
+    // acceleration until halfway, then deceleration
+    easeInOutCubic: function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+    // accelerating from zero velocity
+    easeInQuartic: function (t) { return t*t*t*t },
+    // decelerating to zero velocity
+    easeOutQuartic: function (t) { return 1-(--t)*t*t*t },
+    // acceleration until halfway, then deceleration
+    easeInOutQuartic: function (t) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+    // accelerating from zero velocity
+    easeInQuintic: function (t) { return t*t*t*t*t },
+    // decelerating to zero velocity
+    easeOutQuintic: function (t) { return 1+(--t)*t*t*t*t },
+    // acceleration until halfway, then deceleration
+    easeInOutQuintic: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
+}
+
+
+Gamestack.Curves = Curves;
+
+
+/**
+ * Takes several args and returns Line object. Intended for curved-line / trajectory of Projectile Object.
+ * @param   {Object} args object of arguments
+ * @param   {Easing} args.curve the curve applied to line see TWEEN.Easing , limited options for immediate line-drawing
+ * @param   {number} args.duration the millisecond duration of Line
+ * @param   {Vector} args.position the position vector
+ *
+ * @param   {number} args.pointDist the numeric point-distance
+ *
+ * @param   {Vector} args.size the size vector
+ *
+ * @param   {number} args.rotation the numeric rotation of -360 - 360
+ *
+ * @param   {number} args.growth the numeric growth
+ *
+ * -While a min and max Vector(x,y) will describe the grid of Animation frames, the termPoint will indicate the last frame to show on the grid (Animations may stop early on the 'grid')
+ * @returns {VectorFrameBounds} a VectorFrameBounds object
+ */
+
 class Line
 {
     constructor(args = {})
@@ -6889,17 +7039,36 @@ class Line
 
         this.motion_curve = args.motion_curve || TWEEN.Easing.Linear.None;
 
-        this.duration = args.duration || 500;
-
         this.points = [];
 
-        this.position = new Vector();
+        this.position = args.position ||  new Vector();
 
-        this.minPointDist = 5;
+        this.offset = args.offset || new Vector();
 
-        this.size = new Vector();
+        this.pointDist = 5;
+
+        this.size = args.size || new Vector();
 
         this.rotation = args.rotation || 0;
+
+        this.iterations = 1;
+
+        this.growth = args.growth || 1.2;
+
+    }
+
+    Iterations(n)
+    {
+
+       this.iterations = n;
+       return this;
+    }
+
+    Growth(n)
+    {
+        this.growth = n;
+
+        return this;
 
     }
 
@@ -6929,20 +7098,107 @@ class Line
         return this;
     }
 
-    fill(size, minPointDist)
+    get_curve_from_keys(xkey, ykey)
     {
 
-        if(!size || !minPointDist) //***PREVENT DOUBLE RUN
+            for (var x in Curves) {
+                if (x.toLowerCase().indexOf(xkey) >= 0 && x.toLowerCase().indexOf(ykey) >= 0) {
+                    // alert('found curve at:' + x)
+
+                    return Curves[x];
+
+                }
+
+            }
+
+
+    }
+
+    get_curve(c)
+    {
+
+        for(var x in TWEEN.Easing)
+    {
+
+        for(var y in TWEEN.Easing[x])
         {
+
+           if( TWEEN.Easing[x][y] == c)
+           {
+
+              // alert('found curve at:' + x + ':' + y);
+
+               return this.get_curve_from_keys(x.toLowerCase(), y.toLowerCase());
+
+           }
+
+
+        }
+
+    }
+
+    }
+
+    fill(size, pointDist)
+    {
+
+       console.log(jstr([size, pointDist]));
+
+        if(!size || !pointDist) //***PREVENT DOUBLE RUN
+        {
+
             return 0;
         }
 
         this.size = size;
 
-        this.minPointDist = minPointDist;
+        this.pointDist = pointDist;
 
-        this.points = new Motion().getTweenPoints(size, this);
+        var __inst = this;
 
+        this.points = [];
+
+        var current_point = new Vector(this.position), yTrack = 0;
+
+        for(var x= 0; x <= this.iterations; x++) {
+
+            var position = new Vector(current_point),
+
+                target = new Vector(position.add(size)),
+
+                start = new Vector(position),
+
+                curveMethod = this.get_curve(this.curve),
+
+                ptrack = new Vector(start);
+
+            for (position.x = position.x; position.x < target.x; position.x += 1) {
+
+                var dist = position.sub(start);
+
+                var pct = dist.x / size.x;
+
+                console.log(pct);
+
+                position.y = Math.round(curveMethod(pct) * size.y + (yTrack));
+
+                if (ptrack.trig_distance_xy(position) >= this.pointDist) {
+
+                    var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, this.rotation));
+
+                    this.points.push(p);
+
+                    current_point = new Vector(position);
+
+                }
+            }
+
+            yTrack += size.y;
+
+            size = size.mult(this.growth);
+
+
+        }
     }
 
     transpose(origin)
@@ -6953,6 +7209,34 @@ class Line
         for(var x = 0; x < this.points.length; x++) {
 
             t_points.push(this.points[x].add(origin));
+
+        }
+
+        return t_points;
+
+    }
+
+    add_segment(next_segment, offset)
+    {
+        for(var x = 0; x < next_segment.length; x++) {
+
+            next_segment[x] = new Vector(next_segment[x]).add(offset);
+
+            this.points.push(next_segment[x]);
+
+        }
+
+    }
+
+
+    get_flipped_segment(points)
+    {
+
+        var t_points = points.slice(), t_len = t_points.length;
+
+        for(var x = 0; x < points.length; x++) {
+
+            t_points[t_len - x].x = points[x].x
 
         }
 
@@ -6992,7 +7276,6 @@ class Line
 }
 
 
-
 var GeoMath = {
 
         rotatePointsXY:function(x,y,angle) {
@@ -7011,8 +7294,7 @@ var GeoMath = {
 }
 
 Gamestack.GeoMath = GeoMath;
-
-Gamestack.Circle = Circle;;
+;
 /**
  * Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.
 
@@ -8778,6 +9060,15 @@ class Vector {
     {
 
         return this.x == v.x && this.y == v.y && this.z == v.z;
+    }
+
+    trig_distance_xy(v)
+    {
+
+        var dist = this.sub(v);
+
+        return  Math.sqrt( dist.x * dist.x + dist.y * dist.y );
+
     }
 
     diff()

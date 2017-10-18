@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>GameStack Class: Animation</title>
+	<title>GameStack Class: VectorFrameBounds</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Animation</h1>
+	<h1 class="page-title">Class: VectorFrameBounds</h1>
 <section>
 
 <header>
     
         <h2>
-        Animation
+        VectorFrameBounds
         </h2>
         
-            <div class="class-description">Takes an object of arguments and returns Animation() object.</div>
+            <div class="class-description">Takes the min and max vectors plus termPoint ('termination-point'), returns VectorFrameBounds *use this to define the bounds of an Animation object.</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation(args)</h4>
+    <h4 class="name" id="VectorFrameBounds"><span class="type-signature"></span>new VectorFrameBounds(args)</h4>
     
     
 </dt>
@@ -175,79 +175,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>description</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
+                <td class="name"><code>min</code></td>
             
 
             <td class="type">
@@ -264,14 +192,14 @@
 
             
 
-            <td class="description last">of the Animation object, has x and y properties</td>
+            <td class="description last">the minimum vector point (x,y)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>frameSize</code></td>
+                <td class="name"><code>max</code></td>
             
 
             <td class="type">
@@ -288,20 +216,20 @@
 
             
 
-            <td class="description last">the size of frames in Animation, having x and y properties</td>
+            <td class="description last">the maximum vector point (x,y)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>frameBounds</code></td>
+                <td class="name"><code>termPoint</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="VectorFrameBounds.html">VectorFrameBounds</a></span>
+<span class="param-type"><a href="Vector.html">Vector</a></span>
 
 
 
@@ -312,55 +240,7 @@
 
             
 
-            <td class="description last">the bounds of the Animation having min, max, and termPoint properties</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional, the seconds to delay before running animation when started by the start() function</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>duration</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">how many milliseconds the animation should take to complete</td>
+            <td class="description last">the termPoint vector point (x,y)-While a min and max Vector(x,y) will describe the grid of Animation frames, the termPoint will indicate the last frame to show on the grid (Animations may stop early on the 'grid')</td>
         </tr>
 
     
@@ -431,7 +311,7 @@
     
             
 <div class="param-desc">
-    an Animation object
+    a VectorFrameBounds object
 </div>
 
 
@@ -442,7 +322,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Animation.html">Animation</a></span>
+<span class="param-type"><a href="VectorFrameBounds.html">VectorFrameBounds</a></span>
 
 
 
@@ -523,7 +403,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a>
 	
-		on 2017-10-18T17:20:15-04:00
+		on 2017-10-18T17:20:16-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

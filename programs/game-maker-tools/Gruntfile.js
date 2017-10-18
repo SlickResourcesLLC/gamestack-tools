@@ -81,5 +81,7 @@ grunt.initConfig({
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('docs', ['jsdoc']);
 
+    grunt.registerTask('all', ['concat', 'babel', 'jsdoc']);
+
 
 };

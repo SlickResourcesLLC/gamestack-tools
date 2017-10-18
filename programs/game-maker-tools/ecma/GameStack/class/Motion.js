@@ -394,14 +394,26 @@ class Motion {
 
         var target = new Vector(position).add(size);
 
+        var start = new Vector(position);
+
         var dist = new Vector(0, 0, 0);
 
         var ptrack;
 
-        new TWEEN.Tween(position).to({x:target.x}, line.duration).easing(TWEEN.Easing.Linear.None).start();
-        new TWEEN.Tween(position).to({y:target.y}, line.duration).easing(curve).onUpdate(function () {
 
-            var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, line.rotation));
+       var  easeInOutQuad =  function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t };
+
+
+        return points;
+
+       var t1 =  new TWEEN.Tween(position).to({x:target.x}, 2000).easing(TWEEN.Easing.Linear.None).start();
+
+       if(t2)
+       {
+           t2.stop();
+       }
+
+      var t2 =  new TWEEN.Tween(position).to({y:target.y}, 2000).easing(curve).onUpdate(function () {
 
 
           if(ptrack){
@@ -426,18 +438,47 @@ class Motion {
               points.push(p);
           };
 
+        }).onComplete(function() {
+
+            // alert(line.minPointDist);
+
+            line.first_segment = points.slice();
+
+            var extendLinePoints = function (segment, points, ix)
+            {
+
+            var next_points = segment.slice();
+
+            var last_point = points[points.length - 1];
+
+            for (var x = 0; x < next_points.length; x++) {
+
+                var sr = new Vector(Gamestack.GeoMath.rotatePointsXY(line.size.x * ix, line.size.y * ix, line.rotation));
+
+                var p = next_points[x].add(sr);
+
+                if(points.indexOf(p) <= -1) {
+
+                    points.push(p);
 
 
-        }).onComplete(function(){
+                }
 
-           // alert(line.minPointDist);
+            }
+        };
+
+        for(var x = 0; x <= line.curve_iterations; x++)
+        {
+            if(x > 1) {
+
+                extendLinePoints(line.first_segment, line.points, x - 1);
+
+            }
+
+        }
+
 
         }).start();
-
-
-
-
-
 
         return points;
     }

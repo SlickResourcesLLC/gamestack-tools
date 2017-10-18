@@ -1521,7 +1521,7 @@
                     size: new Vector2(100, 100),
 
                     frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 4)),
-
+                    duration:2000,
                     delay: 7,
                     tool: true,
                     frameSize: new Vector(50, 50, 0),
@@ -1570,18 +1570,18 @@
 
             Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
                 .Curve(TWEEN.Easing.Quadratic.InOut)
-                .Duration(2000);
+                .Duration(2000)
+                .Iterations(3).Growth(1.8);
 
 
                // Game.test_line.fill(new Size(200, 200));
 
 
-            var bullet = new Projectile({line:Game.test_line, size:new Vector(200, 200, 0)});
+            var bullet = new Projectile({line:Game.test_line, size:new Vector(10, 10, 0)});
 
             bullet.name = "bullet";
 
-
-            bullet.setAnimation(Gamestack.point_highlighter.animations[0]);
+            bullet.setAnimation(Gamestack.test_bullet.animations[0]);
 
             bullet.setMotionCurve(TWEEN.Easing.Linear.None);
 
@@ -1883,11 +1883,10 @@
 
                 obj = Game.sprites[0].selected_projectile;
 
-                obj.line.size = new Vector(200, 100);
+                obj.line.size = new Vector(200, 200);
                 obj.line.position = new Vector(0, 0, 0);
 
-                obj.line.fill(obj.line.size, 2);
-
+                obj.line.fill(obj.line.size, obj.line.minPointDist);
 
                 Game.sprites[0].onUpdate(function() {
 
@@ -1971,21 +1970,34 @@
 
             var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
 
+            var main_canvas_padding = new Vector(10, 10);
+
+            var main_position = {
+
+                xpos:0, ypos:0
+
+            };
+
             var update = function () {
 
+                var t1 =  new TWEEN.Tween(main_position).to({xpos:obj.selected_frame.framePos.y * -1, ypos:(obj.selected_frame.framePos.x) * -1}, 50).easing(TWEEN.Easing.Quadratic.Out).onComplete(function(){
 
-                canvas.width = $(canvas).width();
-                canvas.height = $(canvas).height();
+                    canvas.width = $(canvas).width();
+                    canvas.height = $(canvas).height();
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                var ypos = obj.selected_frame.framePos.y * -1;
+                    ypos = obj.selected_frame.framePos.y * -1 + main_canvas_padding.y;
 
-                var xpos = 0;
+                    xpos = (obj.selected_frame.framePos.x) * -1 + main_canvas_padding.x;
 
-                ctx.drawImage(obj.image.domElement, xpos, ypos, obj.image.domElement.width, obj.image.domElement.height);
+                    ctx.drawImage(obj.image.domElement, xpos, ypos, obj.image.domElement.width, obj.image.domElement.height);
 
-                ctx.drawImage(Game.selection_sprite.selected_animation.image.domElement, obj.selected_frame.framePos.x, 0, obj.selected_frame.frameSize.x, obj.selected_frame.frameSize.y);
+                    ctx.drawImage(Game.selection_sprite.selected_animation.image.domElement, main_canvas_padding.x, main_canvas_padding.y, obj.selected_frame.frameSize.x, obj.selected_frame.frameSize.y);
+
+
+                }).start();
+
 
 
             };
@@ -2433,6 +2445,44 @@
 
 
 
+
+        Gamestack.test_bullet  = new Sprite({
+
+            name: "test_bullet",
+
+            description: "test_bullet for Projectile class",
+
+            position: new Vector(0, 0),
+            size: new Vector(10, 10)
+        });
+
+
+        Gamestack.test_bullet.main_anime = new Animation({
+            name: "anime_one",
+            src: "../tools/image/test-bullet.png",
+
+            size: new Vector2(10, 10),
+
+            frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
+
+            delay: 0,
+            tool: true,
+            frameSize: new Vector(50, 50, 0)
+        });
+
+
+
+        Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
+
+
+
+        Gamestack.test_bullet.setAnimation(Gamestack.test_bullet.main_anime);
+
+
+
+
+
+
         //  alert('hi');
 
         $.fn.animateRotate = function (startAngle, angle, duration, easing, complete) {
@@ -2504,12 +2554,25 @@
 
         });
 
+        $('.squeeze').on('click', function(evt){
+
+            if($(evt.target).text() == '-')
+            {
+
+                App.selectItem(App.selectedItem);
+
+            }
+
+        });
+
 
         $('.squeeze, ul.nav-tabs li').squeeze(function () {
 
             App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
 
         });
+
+
 
         $(document).on('keydown', function (e) {
 

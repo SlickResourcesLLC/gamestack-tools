@@ -47,7 +47,7 @@ class Projectile {
 
         this.highlighted = false;
 
-        this.speed_mode = args.speed_mode || "fixed" || ""
+        this.sprites = [];
 
     }
 
@@ -65,12 +65,10 @@ class Projectile {
 
     }
 
-
     onCollide(fun) {
         this.collide = fun;
 
     }
-
 
     setAnimation(anime) {
 
@@ -85,6 +83,15 @@ class Projectile {
         this.motion_curve = c;
 
         return this;
+
+    }
+
+    kill_one()
+    {
+
+        var spr = this.sprites[this.sprites.length - 1];
+
+        Gamestack.remove(spr);
 
     }
 
@@ -106,8 +113,6 @@ class Projectile {
 
         sprite.position = new Vector(lp[0].sub(sprite.size.div(2)));
 
-        this.sprite = sprite;
-
         sprite.onUpdate(function(sprite)
         {
 
@@ -117,9 +122,15 @@ class Projectile {
                 if(sprite.center().equals(lp[x]) && x < lp.length - 1)
                 {
 
-                    sprite.position = new Vector(lp[x+1].sub(sprite.size.div(2)));;
+                    sprite.position = new Vector(lp[x+1].sub(sprite.size.div(2)));
 
                     break;
+                }
+
+                if(x==lp.length - 1)
+                {
+                    Gamestack.remove(sprite);
+
                 }
 
             }
@@ -127,6 +138,8 @@ class Projectile {
         });
 
         Gamestack.add(sprite);
+
+        this.sprites.push(sprite);
 
     }
 

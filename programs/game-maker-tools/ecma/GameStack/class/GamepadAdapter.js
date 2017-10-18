@@ -179,7 +179,6 @@ class GamepadAdapter {
 
     }
 
-
     process_axes(gp, events)
     {
 
@@ -191,12 +190,12 @@ class GamepadAdapter {
         }
 
 
-        for (var i = 0; i < gp.axes.length; i += 2) {
+
+            for (var i = 0; i < gp.axes.length; i += 2) {
+
             var axis1 = gp.axes[i], axia2 = gp.axes[i + 1];
 
             var ix = (Math.ceil(i / 2) + 1), x = gp.axes[i], y = gp.axes[i + 1];
-
-
 
             if(ix == 1 && events.stick_left)
             {
@@ -271,6 +270,33 @@ class GamepadAdapter {
 
 
 };
+
+/**
+ * ControllerSetting()
+ * :takes arguments of button(string) || stick(string), plus event(function),
+ *
+ * @returns {ControllerSetting
+ * }
+ */
+
+
+class ControllerSetting
+{
+    constructor(args)
+    {
+
+        this.button = args.button || false;
+
+        this.stick = args.stick || false;
+
+        this.event = args.event || false;
+
+    }
+
+}
+
+var Controller_Settings = [];
+
 
 /**********
  * NOTE: here we bind the instance, and NOT the instantiator.
