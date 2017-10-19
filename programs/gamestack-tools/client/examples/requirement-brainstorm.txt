@@ -1,0 +1,9 @@
+
+
+Examples / Requirements / Ideas
+
+1. sidescroller-example :: created 08-16-2017, shows level-loading, default-character, collectible items
+
+2. spaceship-example :: created '' '' , incomplete, needs level-loading, collectible items
+
+3.

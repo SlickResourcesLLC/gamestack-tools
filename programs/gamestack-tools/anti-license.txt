@@ -1,0 +1,20 @@
+Copyright (c) 2015-17 Jordan Blake & Contributors. All rights reserved.
+
+The source-code in this project-folder are property of Jordan E. Blake, copyright 2015 - 2017
+
+Permission is hereby denied for any person to copy, modify, publish, sell, or distribute these files
+
+in any format, whether for commercial use or not.
+
+The contained source code is a work-in-progress and will be published on the web sometime in 2017.
+
+(copied from MIT license)
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.

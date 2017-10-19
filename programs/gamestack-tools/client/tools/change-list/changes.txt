@@ -1,0 +1,8 @@
+
+
+
+1. animation-pane-update starts when the detail panel is opened, avoid the mashed-looking image on canvas
+
+2. combo-view : combine existing animations, motions, sounds
+
+3. don't take backspace for delete
