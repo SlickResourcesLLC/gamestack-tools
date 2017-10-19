@@ -1,31 +1,70 @@
-# Welcome to the repository for Game-Maker-2d || Galaxy-2d-Game-Tools
+## GameStack.js ##
+------------------
 
-**Project Objective: To create an javascript library for support of 2d-games, with ui-tools and easy,
-persistent, game-building functionality. Tools will be commercially licensed, js-2d-game-library
- will be open-source.
+#### A powerful solution for 2d game development with javascript ####
+--------------------------------------------------------------------
 
-Built With:
+<img style="position:relative; left:20%; width:60%; height:auto;  " src="assets/image/gamestack-banner.png" />
 
--EcmaScript 2015
--node and modules
--JQuery
--Dat.GUI
--HTML5 / Canvas
--Electron Platform for node-programs >>> PC-Programs (Windows and Linux)
+##### Welcome to the repository #####
 
-## Development
+* Gamestack is the fast, easy-to-use library for simple javascript game development. This library makes it easy to both create and manipulate game-objects. The goal of our project is to bring speed and ease to the overral process of 2d-game-development.
 
-Directions for getting started with tools:
+#### Gamestack.js includes solutions for ####
 
-Node CMD : npm start (from the electron directory / program opens in browser)
+<ul>
 
-Directions for ECMASCRIPT :
+<li>Sprites, Animations, Sounds</li>
 
-Node CMD : grunt (builds and distributed the 2d-library into client/dist)
+<li>Controller Input</li>
 
-concatenated js is built strictly from these directories:
+<li>Movements and Projectiles.</li>
 
- -ecma (for main objects / high level)
- -ecma / obj (for library objects),
- -and ecma / obj / sub (for any sub-module depending highly on objects from the parent folder):
+<li>2D-Level-Building</li>
+
+<li>Incremented Image-Filter Effects</li>
+
+</ul>
+
+### Javascript-Dependencies ###
+
+<ul>
+<li>TWEEN.js: for fluid animations, necessary for Gamestack.Motion() object</li>
+<li>JSManipulate</li>
+<li>Other JS libraries</li>
+</ul>
+
+####Various open-source javascript dependencies --bundled with each download of the Gamestack.js project ####
+
+### Examples ###
+
+<a href="index.html">Gamestack.js Examples</a>
+
+### Licensed Tools ###
+
+<a href="../client/main.html">Gamestack.js Tools</a>
+
+#### Use our combined tools for accelerated game development. Build levels, sprites, and behaviors on Windows || Linux. Purchase a license for commercial-game development ####
+
+### Documentation ###
+
+<a href="index.html">Gamestack.js Documentation Page</a>
+
+### Video Links ###
+
+<a href="index.html">Tutorial Video 1 -TODO</a>
+<a href="index.html">Tutorial Video 2 -TODO</a>
+
+## Github ##
+
+<a href="index.html">Github Link</a>
+
+### Contributions ###
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9ZQEJM7T2XLW)
+
+#### Please Donate $10 or more, and get a free commercial license for our game-dev-tools ####
+
+#### Thank you for your involvement and interest in Gamestack.js ####
+
 
