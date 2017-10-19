@@ -1,0 +1,13 @@
+''=pseudo-speak
+
+-About json file storage (this folder):
+
+When 'GameMaker' is running, it will refer to a list of memory resources in this folder.
+
+Each resource will appear on the object lists of client/main.html (default start page)
+
+'GameMaker' keeps enough info for each object to 'open' the object into the editor
+
+*Editor can then modify and 'save' the file as a standard 'GameResource'
+
+--Comparable to a lightweight-cms for 2D-game objects

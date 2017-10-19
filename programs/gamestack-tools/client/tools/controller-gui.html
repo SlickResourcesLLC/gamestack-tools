@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Game Controller Gui</title>
+
+        <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
+
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }</script>
+
+        <script src="../assets/js/ui/serverside-image.js"></script>
+
+        <script src="../assets/js/ui/dat.gui.js"></script>
+
+        <script src="../assets/js/ui/Tween.js"></script>
+
+        <script src="../assets/js/ui/dat.gui.interface.js"></script>
+
+        <script src="../assets/js/ui/jquery-3.2.1.min.js"></script>
+
+
+        <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+        <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+        <script src="../assets/js/ui/contextMenu.js"></script>
+
+
+        <script src="../assets/js/ui/squeezetabs.js"></script>
+
+        <script src="../dist/js/Gamestack.js"></script>
+
+        <script src="../assets/js/ui/object-builder.js"></script>
+        <!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
+
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+
+        <link rel="stylesheet" href="../assets/css/tool-shell.css">
+
+    </head>
+
+
+    <style>
+
+
+        img.xbox-controller
+        {
+            position:absolute;
+
+            top:90px;
+
+            left:20px;
+
+            z-index:9997;
+
+            width:200px;
+
+            height:auto;
+
+
+        }
+
+        div.game-controller-gui
+        {
+
+            position:absolute;
+
+            top:290px;
+
+            left:100px;
+
+            z-index:9998;
+
+            width:300px;
+
+
+        }
+
+    </style>
+
+    <body>
+
+    <input type="file" name="level-file-input" id="level-file-input" />
+
+    <div id="ctrl-space-top" >
+
+
+    </div>
+
+        <div id="container" >
+
+
+            <div  class="free-select center" >
+
+            <ul></ul>
+
+                <button class="save-map-options"  >Save Options<img src="img/save.png" alt="save data" ></button>
+
+            </div>
+
+            <canvas id="myCanvas" class="level-maker-canvas">
+            </canvas>
+
+            <img class="xbox-controller" src="img/controller-big.png" />
+
+            <div class="game-controller-gui" ></div>
+
+        </div>
+
+    <script>
+
+        //App{}: a collection of UI functionality
+
+        var ControllerGui = {
+
+            show()
+            {
+              var gui = DatGui.gameControllerGUI();
+
+              $('.game-controller-gui').append($(gui.domElement));
+
+
+            },
+
+
+        };
+
+        Gamestack.ready(function(){
+
+            window.setTimeout(function(){
+
+
+                ControllerGui.show();
+
+            }, 1000);
+
+
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>

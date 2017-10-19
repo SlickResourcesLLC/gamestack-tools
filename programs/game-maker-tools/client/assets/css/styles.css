@@ -1,0 +1,11 @@
+
+
+@font-face {
+    font-family:droid-sans;
+    src: url(fonts/DroidSans-Regular.ttf);
+}
+
+
+p,h1,h2,h3,h4,h5,h6,h7,h8,li,button,a,span {
+    font-family: "droid-sans";
+}

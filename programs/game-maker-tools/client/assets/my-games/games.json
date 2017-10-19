@@ -1,0 +1,20 @@
+{
+  "games": {
+    "game1": {
+
+      "name":"game1",
+
+      "urls":{
+
+        "levels":"game1/levels/*",
+
+        "images":"game1/images/*",
+
+        "texture3ds":"game1/texture3ds/*"
+
+      }
+
+    }
+  }
+
+}

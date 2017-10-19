@@ -1,0 +1,44 @@
+{
+  "elements": [
+    {
+      "tag": "brick_block",
+      "type":"basic_block",
+      "img": {},
+      "src": "../assets/game/image/bricks/square_brick.png",
+      "frameSize": {
+        "x": 85,
+        "y": 85
+      },
+      "mapSize": {
+        "x": 40,
+        "y": 40
+      }
+    },
+    {
+      "tag": "platform",
+      "img": {},
+      "src": "../assets/game/image/mushplat.png",
+      "frameSize": {
+        "x": 490,
+        "y": 299
+      },
+      "mapSize": {
+        "x": 123,
+        "y": 75
+      }
+    },
+    {
+      "tag": "prop",
+      "img": {},
+      "src": "../assets/game/image/prop.png",
+      "frameSize": {
+        "x": 550,
+        "y": 400
+      },
+      "mapSize": {
+        "x": 138,
+        "y": 100
+      }
+    }
+  ]
+}

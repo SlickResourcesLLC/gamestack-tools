@@ -1,0 +1,149 @@
+
+a.special-tab-link
+{
+    background:black;
+
+
+}
+
+button.squeeze
+{
+
+    height:40px;
+
+    width:40px;
+
+    float:right;
+
+    margin:2px;
+
+    margin-top:7px;
+
+    font-size:170%;
+
+}
+
+.close-open
+{
+
+    height:40px;
+
+    width:40px;
+
+    float:right;
+
+    margin:2px;
+
+    font-size:170%;
+
+}
+
+
+
+li.fill-width
+{
+
+    position:absolute;
+
+    z-index:-1;
+
+    width:100%;
+
+    background: #373f4b; /* Old browsers */
+    background: -moz-linear-gradient(top, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #373f4b 0%, #2c3034 36%, #0e1214 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#373f4b', endColorstr='#0e1214', GradientType=0);
+
+
+}
+
+
+.nav-tabs.bottom
+{
+    position:fixed;
+
+    width:100%;
+
+    bottom:0px;
+
+    height:70%;
+
+    z-index:9998;
+
+
+}
+
+
+.tab-content.bottom
+{
+    position:fixed;
+
+    z-index:9999;
+
+    top:30%;
+
+    width:100%;
+
+    left:1px;
+
+    margin-top:50px;
+
+    min-height:60%;
+
+    color:gold;
+
+}
+
+.tab-pane canvas
+{
+    position:absolute;
+
+    top:5px;
+
+    width:50%;
+
+    height:90%;
+
+    right:15px;
+
+    top:5%;
+
+    color:gold;
+
+}
+
+
+#overlay
+{
+    position:absolute;
+
+    bottom:0px;
+
+    width:100%;
+
+    height:100%;
+
+}
+
+.tab-pane ul
+{
+
+    position:absolute;
+
+    color:steelblue;
+
+    float:left;
+
+}
+
+.tab-pane li:hover, .tab-pane li.selected
+{
+    background:#333333;
+
+    color:white;
+
+    border-bottom:1px solid midnightblue;
+
+}
+

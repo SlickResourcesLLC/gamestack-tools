@@ -1,0 +1,2611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sprite-Maker</title>
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+
+    <link rel="stylesheet" href="../assets/css/Navigation-with-Search1.css">
+
+
+    <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
+
+
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
+
+
+    <script src="../assets/js/ui/serverside-image.js"></script>
+
+    <script src="../assets/js/ui/dat.gui.js"></script>
+
+    <script src="../assets/js/ui/Tween.js"></script>
+
+    <script src="../assets/js/ui/dat.gui.interface.js"></script>
+
+    <script src="../assets/js/ui/jquery-3.2.1.min.js"></script>
+
+
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+
+
+    <script src="../assets/js/ui/contextMenu.js"></script>
+
+
+    <script src="../assets/js/ui/squeezetabs.js"></script>
+
+    <script src="../dist/js/Gamestack.js"></script>
+
+    <script src="../assets/js/ui/object-builder.js"></script>
+    <!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+    <link rel="stylesheet" href="../assets/css/tool-shell.css">
+
+    <link rel="stylesheet" href="../assets/js/ui/contextMenu.css">
+
+    <style>
+        body, html {
+            color: #888888;
+
+            font-size: 13px;
+            background-color: #000;
+
+            position: absolute;
+
+            width: 100%;
+
+            height: 100%;
+        }
+
+        div.slider {
+            position: absolute;
+
+            right: 0px;
+
+            height: 100%;
+
+        }
+
+
+      nav.top-menu a#download span
+        {
+            margin-top:2px;
+
+        }
+
+    </style>
+
+    <style>
+
+        canvas {
+
+            position: relative;
+
+            background: black;
+
+            width: 100%;
+
+            height: 100%;
+
+            border: none;
+
+            top: 0px;
+
+        }
+
+        li:hover {
+            cursor: pointer;
+
+        }
+
+        .dg .c input[type=text] {
+            border-left: 1px solid silver;
+            width: 100%;
+
+            padding: 0px;
+
+            padding-left: 3px;
+
+            margin: 0px;
+
+            background: none;
+
+        }
+
+        form.selected_object_edit {
+            position: absolute;
+
+            width: 243px;
+
+            right: 0px;
+
+            margin-top: 50px;
+
+            min-height: 80px;
+
+            border: 2px inset grey;
+
+            margin-right: 15px;
+
+        }
+
+        form.selected_object_edit label {
+            padding: 5px;
+
+        }
+
+        form.selected_object_edit input {
+
+            padding: 5px;
+
+        }
+
+        .dat_gui_file {
+            display: none;
+
+            visibility: hidden;
+
+        }
+
+        #gs-container {
+            position: relative;
+
+            width: 100%;
+
+            height: 100%;
+
+            overflow: hidden;
+
+        }
+
+        button.test {
+
+            color: forestgreen;
+
+        }
+
+        .dg.main {
+
+            position: relative;
+
+            left: 0px;
+
+        }
+
+        .selected_object {
+
+            left: 200px;
+
+        }
+
+        .options {
+
+            left: 420px;
+
+        }
+
+        span.tree-open {
+
+            display: inline-block;
+
+            text-align: center;
+
+            margin-left: 10px;
+
+            border: none;
+
+            color: gold;
+
+            margin-top: 0px;
+
+        }
+
+        img.ctrl {
+
+            width: 18px;
+
+            height: 18px;
+
+            background-color: black;
+
+            border: 1px solid grey;
+
+            margin: -3px;
+
+        }
+
+        img.top-right {
+
+            background-color: grey;
+
+            border: 1px solid grey;
+
+            margin: -3px;
+
+        }
+
+        img.top-left {
+
+            background-color: grey;
+
+            border: 1px solid grey;
+
+            margin: -3px;
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+        }
+
+        ul .controllable-image {
+
+            width: 100%;
+
+            height: auto;
+
+            padding: 5px;
+
+        }
+
+        ul input[type="checkbox"] {
+
+            clear: both;
+
+            position: relative;
+
+            float: right;
+
+        }
+
+        li.array_member {
+
+            text-align: left;
+
+        }
+
+        ul > li > ul {
+
+        }
+
+        ul > li {
+
+            list-style-type: none;
+
+            display: block;
+
+            padding: 3px;
+
+            padding-right: 25px;
+
+        }
+
+        ul ul {
+
+            padding-left: 10px;
+
+        }
+
+        #ctrl-space-top {
+            z-index: 9999;
+
+        }
+
+        #dat-gui-gs-container {
+            position: absolute;
+
+            z-index: 9998;
+
+            left: 0px;
+
+            top: 0px;
+
+            overflow: scroll;
+
+            background: transparent;
+
+            bottom: 0px;
+
+        }
+
+        span#floating-hint {
+            position: fixed;
+
+            z-index: 999;
+
+            top: 0px;
+
+            padding: 4px;
+
+            border-radius: 5px;
+
+            border: 1px inset lightblue;
+
+            color: #2a6496;
+
+            background: silver;
+
+            left: 650px;
+
+        }
+
+        .bottom-ctrl {
+
+            position: absolute;
+
+            top: 0px;
+
+            right: 40px;
+
+        }
+
+        #forceSelect {
+            position: relative;
+
+            z-index: 9999;
+
+            background: #4c4c4c; /* Old browsers */
+            background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0);
+            color: white;
+
+        }
+
+        #forceSelect option {
+            background: black; /* Old browsers */
+
+            color: white;
+        }
+
+        #top-gui {
+            position: fixed;
+
+            width: 100%;
+
+            height: 30px;
+
+            z-index: 9997;
+
+            top: 50px;
+            padding-left: 15px;
+            padding-right: 15px;
+
+        }
+
+        #mainContainer {
+
+            position: absolute;
+
+            top: 40px;
+
+            left: 5px;
+
+            right: 5px;
+
+            bottom: 50px;
+
+            overflow-y: scroll;
+
+        }
+
+    </style>
+
+
+
+    <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+
+</head>
+<body>
+
+<!--This is a TODO: list. Items todo are as follows
+
+1. rig and maintain the App.Detail_View_Special_Settings{}, pertaining to the bottom sliding panel of this app.
+
+    -detail views must switch focus to the appropriate sprite-property as needed: pressing  'Animation' switches to the nearest animation, etc...
+
+2. maintain html and the css across this web page
+
+3.
+
+-->
+
+<input type="file" name="sprite-file-input" id="sprite-file-input"/>
+
+<div id="overlay">
+
+    <ul class="nav nav-tabs bottom">
+
+        <li class="fill-width"></li>
+
+        <li><a class="special-tab-link" href="#tab-1" role="tab" data-toggle="tab" id="presets-view">Selected
+            Property</a></li>
+
+        <button class="squeeze">-</button>
+
+    </ul>
+
+    <div class="tab-content object-tabs bottom inside">
+
+        <div id="selected-tab"></div>
+
+        <div id="dat-gui-gs-container">
+
+        </div>
+
+    </div>
+
+
+    <div id="settings-space">
+
+        <form class="dock-form self-close">
+
+            <h3>Sprite-Maker Settings</h3>
+
+            <div id="special-settings-gui"></div>
+
+            <button id="apply_sprite_settings" class="ok">Apply</button>
+
+            <button id="cancel_map_settings" class="cancel">Cancel</button>
+
+        </form>
+
+    </div>
+
+
+</div>
+
+<div id="ctrl-space-top">
+    <nav class="top-menu">
+
+        <img id="logo" src="img/logo-sprite.png"/>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">
+                Sprite<span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a href="#" id="new-sprite">New</a></li>
+
+                <li role="presentation"><a href="#" id="load-sprite">Load</a></li>
+
+            </ul>
+        </div>
+
+        <div style="margin-top:13px;">
+            <a id="download" class="button-top" name="level" href="#"><span>Save to File</span><img src="img/save.png"
+                                                                                                    alt="save data"></a>
+
+            <button style="border-radius:0px; height:35px; float:right; margin-top:-7px;" id="settings" onclick="App.showSettings();">Test-Settings
+            </button>
+
+        </div>
+
+    </nav>
+</div>
+
+<div id="mainContainer">
+    <div id="gs-container">
+    </div>
+    <div id="info"></div>
+    <div id="top-gui">
+        <button id="play"></button>
+    </div>
+
+    <ul class="controllable selected_object">
+        <span id="*" class="tree-open open">&#9881;</span>
+        <li class="building-heading"> Sprite</li>
+    </ul>
+
+
+</div>
+
+<script>
+
+    /*************************************
+     *
+     * SpriteMaker.html, functional list:
+     *  -everything we need to happen on for this page
+     *
+     *      -Buildable Sprite with dat.GUI():
+     *          1. We can select and edit simple properties of the sprite
+     *          2. Detail views will show any complex class Object() that is selected
+     *          3. We can save the sprite as .json
+     *          4. Retrieving the Sprite from .json file
+     *
+     *
+     *      -Other functionality
+     *          1. Browse and Load Sprite from all sprites available in the app (TODO)
+     *
+     *
+     *
+     *      -Psuedo-Code:
+     *          *The ideal way that js would complete the above tasks:
+     *
+     * ********************************/
+
+
+    /*************************************
+     *
+     * Object Controller:
+     *
+     *      -What does it do?:
+     *          1. Creates GUI for a complex class object
+     *
+     * ********************************/
+
+
+    //LevelMaker? -an old
+
+    function LevelMaker(filename, settings) {
+
+        return {
+
+            topScroll: 0,
+
+            selected_image_src: {},
+
+            discluded_sprites: [],
+
+            assembled_sprite: {},
+
+            lastPlantedCountRecordArray: [],
+
+            pixelSnap: 10,
+
+            settings: settings || {
+
+                name: filename || "myLevel",
+
+                description: "the default level for our game",
+
+                pixelSnap: 10,
+
+                levelSizeX: 5000,
+
+                levelSizeY: 5000,
+
+                levelSizeZ: 0,
+
+                game_scale: 2.0
+
+            },
+
+
+            restoreInstance: function (sprites, settings, callback) {
+
+                if (typeof(settings) == "object") {
+                    levelMaker.settings = settings;
+
+                }
+
+                if (sprites instanceof Array) {
+
+                    // alert('sprite []');
+
+                    Game.sprites = sprites;
+
+                    Gamestack.each(Game.sprites, function (ix, item) {
+
+                        Game.sprites[ix] = new Sprite(item);
+
+                        if (item.selected_animation && item.selected_animation.src) {
+
+                            Game.sprites[ix].selected_animation = new Animation(item.selected_animation);
+
+
+                        }
+
+                    });
+
+                }
+
+                callback();
+
+            },
+
+            objectMemberToArray: function (object, key) {
+
+                var list = [];
+
+                for (var x in object) {
+
+                    list.push(object[key]);
+
+                }
+
+                return list;
+
+            },
+
+            removeLast: function () {
+
+                var number = levelMaker.lastPlantedCountRecordArray[levelMaker.lastPlantedCountRecordArray.length - 1];
+
+                for (var x = 0; x < number; x++) {
+
+                    Game.sprites.pop();
+
+                }
+            },
+
+            arrayToSelect: function (containerId, selectId, values) {
+
+                var myDiv = document.getElementById(containerId);
+
+                //Create array of options to be added
+                var array = values;
+
+                //Create and append select list
+                var selectList = document.createElement("select");
+                selectList.id = selectId;
+                myDiv.appendChild(selectList);
+
+                //Create and append the options
+                for (var i = 0; i < array.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = array[i];
+                    option.text = array[i];
+                    selectList.appendChild(option);
+                }
+
+            }
+
+            ,
+
+            htmlSettings: function () {
+                var obj = levelMaker.settings;
+
+                $('#map_name').val(obj.name);
+                $('#map_description').val(obj.description);
+                $('#map_type').val(obj.type);
+
+
+                $('#map_snap_size').val(obj.pixelSnap + 'px');
+
+                $('#map_level_size_x').val(obj.levelSizeX);
+                $('#map_level_size_y').val(obj.levelSizeX);
+
+                $('#map_game_scale').val(obj.game_scale);
+
+            },
+
+            applySettings: function (data) {
+
+                if (typeof(data) == 'string') {
+                    data = JSON.parse(data).settings;
+
+                }
+                ;
+
+
+                if (!data) {
+
+                    data = {};
+
+                    data.name = $('#map_name').val();
+
+                    data.description = $('#map_description').val();
+
+                    data.type = $('#map_type').val();
+                    ;
+
+                    data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
+
+                    data.levelSizeX = parseInt($('#map_level_size_x').val());
+
+                    data.levelSizeY = parseInt($('#map_level_size_y').val());
+
+
+                }
+
+                levelMaker.settings = data;
+
+                $('.level-maker-canvas').width(data.levelSizeX);
+                $('.level-maker-canvas').height(data.levelSizeY);
+
+
+                Game.canvas.width = data.levelSizeX;
+
+                Game.canvas.height = data.levelSizeY;
+
+
+                $('#map-item-space form').hide('slow');
+
+            },
+
+            showObjectDialog: function () {
+
+                $('#map-item-space form').show();
+
+
+            },
+
+            objectMakerFormEvents: function () {
+
+                levelMaker.assembled_sprite = new Sprite();
+
+                App.setMotionVectorGui();
+
+                $('#create_object').click(function () {
+
+                    var fx = parseFloat($('#frameX').val()),
+
+                        fy = parseFloat($('#frameY').val()),
+
+                        w = parseFloat($('#width').val()),
+
+                        h = parseFloat($('#height').val()),
+
+                        fw = parseFloat($('#framewidth').val()),
+
+                        fh = parseFloat($('#frameheight').val());
+
+
+                    var name = $('#name').val(),
+
+                        type = $('#type').val(),
+
+                        description = $('#description').val(),
+
+                        id = $('#id').val(),
+
+                        image_data = $('#image_data').val();
+
+                    //alert('Creating Map Object');
+
+                    levelMaker.selected_image_src = image_data;
+
+                    console.log('Making objects in create event');
+
+                    var args = {type: type, description: description};
+
+
+                    args.size = new Vector(w, h, 0);
+
+
+                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector(fw, fh, 0), new Vector(w, h, 0),
+                        args);
+
+                    levelMaker.selectedSprite.img.onload = function () {
+
+                        levelMaker.addLevelObjectToUI(levelMaker.selectedSprite);
+
+                    }
+
+                    $('#map-item-space form').hide();
+
+                });
+
+
+                $("#object-maker input").change(function (evt) {
+
+                    var fx = parseFloat($('#frameX').val()),
+
+                        fy = parseFloat($('#frameY').val()),
+
+                        w = parseFloat($('#width').val()),
+
+                        h = parseFloat($('#height').val()),
+
+                        fw = parseFloat($('#framewidth').val()),
+
+                        fh = parseFloat($('#frameheight').val());
+
+
+                    levelMaker.sizeImage(fx, fy, w, h, fw, fh);
+
+
+                });
+
+            },
+
+            sizeImage: function (frameX, frameY, mapWidth, mapHeight, frameWidth, frameHeight) {
+
+                var canvas = document.getElementById('testCanvas');
+
+                var ctx = canvas.getContext('2d');
+
+                var image = $(canvas).parent().find('img')[0];
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                var x = 0, y = 0;
+
+
+                var width = mapWidth, height = mapHeight;
+
+                var portion = mapWidth / mapHeight;
+
+                mapHeight = canvas.height;
+
+                mapWidth = mapHeight * portion;
+
+                x = (canvas.width / 2) - mapWidth / 2;
+
+                y = (canvas.height / 2) - mapHeight / 2;
+
+                $('#frameX').val(frameX);
+
+                $('#frameY').val(frameY);
+
+                $('#width').val(width);
+
+                $('#height').val(height);
+
+                $('#framewidth').val(frameWidth);
+
+                $('#frameheight').val(frameHeight);
+
+                ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight, x, y, mapWidth, mapHeight);
+
+            },
+
+            getRawImageFile: function (input, callback) {
+
+                // var preview =  $(input).parent().find('img')[0];
+                var file = input.files[0];
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function () {
+                    //   preview.src = reader.result;
+
+                    //   levelMaker.selected_image_src = preview.src;
+
+                    //   $('#image_data').val(reader.result);
+
+                    if (typeof(callback) == 'function') {
+                        callback(reader.result);
+
+                    }
+
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+
+            },
+
+            MapData: function (map, settings) {
+
+                return {map: map, settings: settings};
+            },
+
+
+            selection_sprite: {},
+            mouse: {
+                x: 0, y: 0,
+
+                down: false
+
+            },
+            getDocHeight: function () {
+                var D = document;
+                return Math.max(
+                    D.body.scrollHeight, D.documentElement.scrollHeight,
+                    D.body.offsetHeight, D.documentElement.offsetHeight,
+                    D.body.clientHeight, D.documentElement.clientHeight
+                )
+            },
+            scrollAdjust: function () {
+                var winheight = window.innerHeight || (document.documentElement || document.body).clientHeight
+                var docheight = levelMaker.getDocHeight();
+                var scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
+                var trackLength = docheight - winheight
+                var pctScrolled = Math.floor(scrollTop / trackLength * 100) // gets percentage scrolled (ie: 80 or NaN if tracklength == 0)
+                console.log(pctScrolled + '% scrolled');
+
+
+                levelMaker.topScroll = Game.canvas.height * (pctScrolled / 100);
+
+                return Game.canvas.height * (pctScrolled / 100);
+
+            },
+            mapElements: [],
+            get: function (tag) {
+                if (!tag) {
+                    return this.mapElements[0];
+
+                }
+
+                for (var x = 0; x < this.mapElements.length; x++) {
+
+                    if (this.mapElements[x].tag.toLowerCase() === tag.toLowerCase()) {
+
+                        return this.mapElements[x];
+                    }
+
+                }
+
+            },
+            MapElement: function (tag, imgPath, frameSize, mapSize, extras) {
+                var img = document.createElement('IMG');
+                img.src = imgPath;
+
+                // alert("El image:" + JSON.stringify(img.src));
+
+                var element = {
+                    tag: tag, img: img, src: imgPath, frameSize: frameSize, mapSize: mapSize
+
+                };
+
+                for (var x in extras) {
+                    element[x] = JSON.parse(JSON.stringify(extras[x]));
+
+                }
+                ;
+
+
+                this.mapElements.push(element);
+
+
+                return element;
+
+            },
+            selectedSprite: false,
+            selectedTag: "",
+            selectedElement: {},
+            levelObjects: [],
+            deselectAll: function () {
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    item.selected = false;
+
+                    item.hover_selected = false;
+
+                });
+            },
+            getSelected: function () {
+
+                var getSpr = false;
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    if (item.hover_selected || item.selected) {
+
+                        getSpr = item;
+
+                    }
+
+                });
+
+
+                return getSpr;
+
+            },
+
+            centerPos: function (sprite, x, y) {
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+
+            },
+
+            moveSelected: function (x, y) {
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    if (item.selected) {
+
+                        var x1 = x - (x % levelMaker.settings.pixelSnap),
+                            y1 = y - (y % levelMaker.settings.pixelSnap);
+
+
+                        levelMaker.centerPos(item, x1, y1);
+
+                    }
+
+                });
+            },
+
+            leftClickExtra: function () {
+
+
+            },
+
+            leftClick: function (x, y) {
+
+                //  alert('left click');
+
+                if (typeof(this.leftClickExtra) == 'function') {
+                    this.leftClickExtra();
+
+                    this.leftClickExtra = false;
+
+                    return false;
+
+                }
+                ;
+
+                var notSelection = function (obj) {
+                    return obj !== levelMaker.hover_selection_sprite &&
+
+                        obj !== levelMaker.selection_sprite;
+
+                };
+
+
+                var selection = false;
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+
+                    if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top) {
+
+                        item.selected = true;
+                        selection = true;
+                    }
+
+                });
+
+                if (!selection) {
+
+                    levelMaker.plantMapSprite(levelMaker.selectedElement, x - (x % levelMaker.settings.pixelSnap), y - (y % levelMaker.settings.pixelSnap))
+
+                    levelMaker.lastPlantedCountRecordArray.push(1);
+                }
+
+            },
+            hoverSelect: function (x, y) {
+
+                var selection = false, basic_selection = false;
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    if (item.selected) {
+                        basic_selection = true;
+
+                    }
+
+                });
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    if (x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top) {
+
+                        //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
+                        //   selection = true;
+                    }
+
+                });
+
+
+                if (!selection && !(levelMaker.mouse.down)) {
+                    levelMaker.deselectAll()
+                }
+                ;
+
+
+            },
+            rightClick: function (x, y) {
+
+                alert('rc');
+
+                Gamestack.each(Game.sprites, function (ix, item) {
+
+                    if (x > item.position.x && x < item.position.x + item.size.x &&
+                        y > item.position.y && y < item.position.y + item.size.y) {
+
+                        var ix = Game.sprites.indexOf(item);
+                        Game.sprites.splice(ix, 1);
+                    }
+
+
+                });
+            },
+
+            simpleMapObject: function (object, x, y) {
+
+                var x = Math.floor(x - object.size.x / 2);
+                var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
+
+                x = x - ( object.position.x % levelMaker.settings.pixelSnap);
+
+                y = y - ( object.position.y % levelMaker.settings.pixelSnap);
+
+
+                return {size: new Vector(object.size.x, object.size.y, 0), position: {x: x, y: y}};
+
+            },
+
+            createMapSprite: function (mapElement, x, y) {
+
+                // console.log("Selected Element:" + JSON.stringify(mapElement));
+                var img = mapElement.img;
+                console.log("Img src:" + img.src);
+                var sprite = new Sprite({name: 'MapElement', description: 'A level-builder element'});
+
+                sprite.active = true;
+
+                sprite.size = mapElement.mapSize;
+
+                mapElement.src = img.src;
+
+
+                var fs = mapElement.frameSize;
+
+                sprite.setAnimation(new Animation({
+                    src: img,
+                    tool: true,
+                    frameSize: fs,
+                    frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
+                }));
+
+
+                // console.log(JSON.stringify(sprite));
+
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+                this.selectedSprite = sprite;
+
+                return sprite;
+
+            },
+
+            plantMapSprite: function (mapElement, x, y) {
+
+                // console.log("Selected Element:" + JSON.stringify(mapElement));
+                var img = mapElement.img;
+                //  console.log("Img src:" + img.src);
+
+
+                if (levelMaker.assembled_sprite.speed) {
+
+                    alert(JSON.stringify(levelMaker.assembled_sprite.speed));
+
+                }
+
+                var args = JSON.parse(JSON.stringify(levelMaker.assembled_sprite));
+
+                args.name = 'MapElement';
+
+                args.description = 'A level-builder element';
+
+                var sprite = new Sprite(args);
+
+                sprite.active = true;
+
+                sprite.size = mapElement.mapSize;
+
+
+                if (sprite.speed) {
+
+                    alert("sprite-speed:" + JSON.stringify(sprite.speed));
+
+                }
+
+
+                var fs = mapElement.frameSize;
+
+                sprite.setAnimation(new Animation({
+                    src: img,
+                    tool: true,
+                    frameSize: fs,
+                    frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
+                }));
+
+                // console.log(JSON.stringify(sprite));
+
+                sprite.position.x = Math.floor(x - sprite.size.x / 2);
+                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
+
+                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
+
+                this.selectedSprite = sprite;
+
+                //  sprite.def_update = function(){}; //turn off the motion, we are just mapping
+
+
+                Game.sprites.push(sprite);
+
+
+            },
+            simulateVerticalMouseMove: function (top) {
+
+
+                levelMaker.moveSelected(levelMaker.mouse.x, top);
+            },
+
+            placeGroup: function (x1, y1, dist, n, north, south, east, west) {
+
+                for (var x = 0; x < n; x++) {
+
+                    var x2 = 0, y2 = 0;
+
+                    if (east) {
+                        x2 = x * levelMaker.selectedElement.mapSize.x * -1;
+                    }
+
+                    if (west) {
+                        x2 = x * levelMaker.selectedElement.mapSize.x
+                    }
+
+                    if (north) {
+                        y2 = x * levelMaker.selectedElement.mapSize.y * -1
+                    }
+
+                    if (south) {
+                        y2 = x * levelMaker.selectedElement.mapSize.y;
+                    }
+
+                    levelMaker.plantMapSprite(levelMaker.selectedElement, x1 + x2, y1 + y2);
+
+                    levelMaker.lastPlantedCountRecordArray.push(n - 1);
+
+                }
+
+            },
+
+
+            addLevelObjectToUI: function (item) {
+
+                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
+                    console.log('1');
+
+                    var value = $(element).text();
+
+                    // alert('click on:' + value);
+
+                    levelMaker.selectedElement = levelMaker.get(value);
+
+                }));
+
+            },
+
+            url_prefix: '../assets/game/image/'
+        }
+
+    };
+
+
+    var jstr = function (obj) {
+
+        return JSON.stringify(obj, null, 2);
+
+    };
+
+
+    var jsonclone = function (obj) {
+
+        return JSON.parse(JSON.stringify(obj));
+
+    };
+
+    var pathPref = '../assets/game/image/';
+
+    var selectionImg = document.createElement('IMG');
+
+    selectionImg.src = pathPref + "selection.png";
+
+
+    var Game = {
+
+        url_prefix: '../assets/game/image/',
+
+        GameWindow: {},
+
+        canvas: {},
+
+        ctx: {},
+
+        collective_physics: {},
+
+        sprites: [],
+
+        is_init: false,
+
+        __builderProfile: false, //the main object builder
+
+
+        selection_sprite: new Sprite({name: 'Selection Sprite', description: 'Shows selected area'}),
+
+        fireObject: function (obj) {
+
+            var mainObject = Game.sprites[0];
+
+            App.selectedItem = obj;
+
+            var is_func = function (obj, f) {
+                return typeof(obj) == 'object' && typeof obj[f] == 'function';
+
+            };
+
+            if (is_func(obj, 'start')) {
+                App.selectedItem.start();
+
+            }
+            ;
+
+            if (is_func(obj, 'fire')) {
+                App.selectedItem.fire(mainObject.position); //fire from position
+
+            }
+            ;
+
+            if (is_func(obj, 'engage')) {
+                App.selectedItem.engage();
+
+            }
+            ;
+
+            if (is_func(obj, 'play')) {
+                App.selectedItem.play();
+
+            }
+            ;
+
+        },
+
+        fitSizeVector: function (w, h, max_w, max_h) {
+            var ptnw, ptnh;
+
+            if (w > max_w) {
+                while (w > max_w) {
+                    ptnw = w / h;
+
+                    w--;
+
+                    h = w * ptnw;
+
+                }
+
+                while (h > max_h) {
+                    ptnh = h / w;
+
+                    h--;
+
+                    w = h * ptnh;
+
+                }
+
+
+            }
+
+            else if (h > max_h) {
+
+                while (h > max_h) {
+                    ptnh = h / w;
+
+                    h--;
+
+                    w = h * ptnh;
+
+                }
+
+                while (w > max_w) {
+                    ptnw = w / h;
+
+                    w--;
+
+                    h = w * ptnw;
+
+                }
+
+
+            }
+
+            return new Vector(w, h, 0);
+
+        },
+
+        centerScreenPos: function () {
+            return {x: Game.WIDTH / 2, y: Game.HEIGHT / 2};
+
+        },
+
+        centerPos: function (sprite) {
+
+            sprite.position.x = Game.WIDTH / 2 - sprite.size.x / 2;
+            sprite.position.y = Game.HEIGHT / 2 - sprite.size.y / 2;
+
+        },
+
+        size: function (width, height) {
+
+            if (typeof(width) == 'string') {
+
+                //   alert('str r');
+
+                width = parseFloat(width);
+
+            }
+
+            if (typeof(height) == 'string') {
+
+                //  alert('str r');
+
+                height = parseFloat(height);
+
+            }
+
+
+            this.WIDTH = width;
+
+            this.HEIGHT = height;
+
+
+            this.canvas.width = width;
+
+            this.canvas.height = height;
+
+
+        },
+
+        update: function () {
+
+            console.log(jstr(Game.selected_force.max));
+
+            Game.selected_force.update();
+
+        },
+
+        render: function () {
+
+            this.update();
+
+            //  console.log('render');
+
+            this.GameWindow.update();
+
+            this.GameWindow.draw();
+
+
+        },
+
+        init: function (sprite) {
+
+            Gamestack.camera = new Camera();
+
+            $('#gs-container').append("<canvas id='main-screen'></canvas>");
+
+            // 1. demonstrate that the threejs canvas can be intercepted at runtime
+
+            this.canvas = document.getElementById('main-screen');
+
+            this.ctx = this.canvas.getContext('2d');
+
+            if (sprite) {
+                //   alert('hello');
+
+                this.player = sprite;
+
+            }
+            else {
+
+                //3. the player sprite
+
+
+                this.player = new Sprite({
+
+                    name: "sci-fi-gunner-sprite",
+
+                    description: "running, shooting sprite",
+
+                    position: new Vector(100, 120),
+
+                    size: new Vector(50, 52)
+                });
+
+
+                this.player.jump_anime = new Animation({
+                    name: "anime_one",
+                    src: "../tools/image/samus2.png",
+
+                    size: new Vector2(100, 100),
+
+                    frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 4)),
+                    duration:2000,
+                    delay: 7,
+                    tool: true,
+                    frameSize: new Vector(50, 50, 0),
+                    frameBounds: new VectorFrameBounds(new Vector(0, 0, 0), new Vector(4, 0, 0))
+                });
+
+
+                this.player.jumpmotion = new Motion({
+
+                    name: "jump",
+
+                    description: "the jump movmement.",
+
+                    object_id: this.player.id,
+                    name: "jump",
+
+                    distance: new Vector(0, -200, 0),
+                    curve: TWEEN.Easing.Bounce.InOut,
+                    line: false,
+                    dispersionAngle: 0,
+                    duration: 400,
+                    delay: 0,
+                    delayPerMember: 0
+                });
+
+                this.player.selected_motion = new Motion(this.player.jumpmotion);
+
+                this.player.animations.push(this.player.jump_anime);
+
+                this.player.motions.push(this.player.jumpmotion);
+
+            }
+
+            this.player.selected_animation = new Animation(this.player.jump_anime);
+
+            var shot = new Sound('../assets/sound/shot.mp3');
+
+            shot.name = "shot-sound";
+
+            this.player.sounds.push(shot);
+
+            this.player.selected_sound = new Sound(shot);
+
+
+            this.player.selected_sound.play();
+
+            Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
+                .Curve(TWEEN.Easing.Quadratic.InOut)
+                .Duration(2000)
+                .Iterations(3).Growth(1.8);
+
+
+               // Game.test_line.fill(new Size(200, 200));
+
+
+            var bullet = new Projectile({line:Game.test_line, size:new Vector(10, 10, 0)});
+
+            bullet.name = "bullet";
+
+            bullet.setAnimation(Gamestack.test_bullet.animations[0]);
+
+            bullet.setMotionCurve(TWEEN.Easing.Linear.None);
+
+            this.player.projectiles.push(bullet);
+
+            this.player.selected_projectile = new Projectile(bullet);
+
+            this.player.update = function (sprite) {
+
+                // this.rotation.x += 0.5;
+
+                sprite.selected_animation.continuous();
+
+
+            };
+
+
+
+            this.player.active = true;
+
+            this.sprites[0] = this.player;
+
+            var size_game = function () {
+
+                var w = $('body').width() - 50, h = 500;
+
+                $(Game.canvas).width(w);
+
+                $(Game.canvas).height(h);
+
+
+                Game.canvas.width = w;
+
+                Game.canvas.height = h;
+
+                Game.WIDTH = w;
+
+                Game.HEIGHT = h;
+
+            };
+
+            size_game();
+
+           var r =  function () {
+
+                size_game();
+                var center = Game.centerScreenPos();
+                Game.sprites[0].position = new Vector(center.x * 1.2, center.y - Game.sprites[0].size.y * 2);
+            };
+
+            $(window).resize(function(){
+
+
+                r();
+
+            });
+
+            Game.forceProfile = {};
+
+            Game.forceProfile.forces = [];
+
+            var center = this.centerScreenPos();
+
+            var wgrav = new Force({
+
+                name: "low_grav",
+
+                accel: 0.3,
+
+                max: new Vector(0, 1.5, 0),
+
+
+                subjects: [Game.sprites[0]],
+
+                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
+
+            });
+
+            Game.forceProfile.forces.push(wgrav);
+
+            var mgrav = new Force({
+
+                name: "medium_grav",
+
+                accel: 0.75,
+
+                max: new Vector(0, 5, 0),
+                subjects: [Game.sprites[0]],
+
+                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
+
+            });
+
+            Game.forceProfile.forces.push(mgrav);
+
+            var sgrav = new Force({
+
+                name: "high_grav",
+
+                accel: 1.0,
+
+                max: new Vector(0, 5, 0),
+                subjects: [Game.sprites[0]],
+
+                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
+
+            });
+
+            Game.forceProfile.forces.push(sgrav);
+
+
+            Game.selected_force = new Force(mgrav);
+
+            $('#forceSelect').change(function (evt) {
+
+                var ix = evt.target.selectedIndex;
+
+                Game.selected_force = new Force(Game.forceProfile.forces[ix]);
+
+            });
+
+
+            this.GameWindow = new GameWindow({
+                canvas: this.canvas,
+                ctx: this.ctx,
+                sprites: this.sprites,
+                forces: this.forces
+            }, function () {
+
+                console.log('Game Update passed');
+
+            });
+
+
+            Game.sprites[0].position = new Vector(center.x, center.y - this.sprites[0].size.y * 2);
+
+            this.testObjects = [];
+
+            var selectionImg = document.createElement('IMG');
+
+            var pathPref = '../assets/game/image/';
+
+            selectionImg.src = pathPref + "hover_selection.png";
+
+            this.selection_sprite = new Sprite({name: 'Selection Sprite', description: 'Shows selected area'});
+
+            var fs = new Size(191 * 4, 192 * 4);
+
+            this.selection_sprite.setAnimation(new Animation({
+                src: selectionImg.src,
+                size: new Vector(50, 50, 0),
+                frameSize: fs,
+                frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
+            }));
+
+            this.testObjects.push(this.selection_sprite);
+
+            Game.sprites.push(this.selection_sprite);
+
+            //select the first animation
+
+            window.setTimeout(function () {
+
+                App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
+
+            }, 1000);
+
+            var __inst = this;
+
+            //create the gui / Builder
+            this.__builderProfile = new ObjectArrayBuilder(Game.sprites[0], ['animations', 'motions', 'projectiles', 'sounds'], false),
+
+                this.is_init = true;
+
+
+            this.refreshBuilder = function () {
+
+                $('.controllable div').html('');
+
+                //create the gui / Builder
+                __inst.__builderProfile.refresh(Game.sprites[0]);
+
+
+            };
+
+        }
+
+    };
+
+    var levelMaker = LevelMaker(false);
+
+
+    /******************
+     *
+     * App:
+     *
+     *   renderObjectControllable:()
+     *          @devplans / todo : 1st make the functionality work, then incorporate runtime settings for controllable
+     *
+     * **********************/
+
+
+    var App = {
+
+        locked: false,
+
+        object_gui_to_container: function (object, container) //create special object gui, append to container
+        {
+            var gui = DatGui.get(object);
+
+            gui.add(object, 'item1');
+
+            $(container).html();
+
+            $(container).append($(gui.domElement));
+
+        },
+
+
+        showSettings: function () {
+
+            App.object_gui_to_container({item1: "value", item2: "value"}, $('#special-settings-gui'));
+
+            $('#settings-space form').show();
+
+        },
+
+        selfClosablesInit: function () {
+
+            $('form.self-close').submit(function () {
+
+                $(this).hide('fast');
+
+                return false;
+
+            });
+
+        },
+
+        listToObjectByNames: function (list) {
+            var obj = {};
+
+            for (var x in list) {
+
+                obj[list[x].name] = list[x];
+
+            }
+
+            return obj;
+
+        },
+
+        Detail_View_Special_Settings: {
+
+            Animation: {
+
+                grid_display: true,
+
+                apply: function (dguiContainer) {
+
+                    dguiContainer.add(Game.sprites[0], 'selected_animation', App.listToObjectByNames(Game.sprites[0].animations));
+
+                    var addButton = dguiContainer.add(this, 'grid_display', true);
+
+
+                }
+
+            }
+
+        },
+
+        selectItem: function (obj) {
+
+            if (obj instanceof Animation) {
+
+                // alert(JSON.stringify(obj));
+
+                var str = JSON.stringify(obj);
+
+                Game.sprites[0].selected_animation = obj;
+
+                obj = Game.sprites[0].selected_animation;
+
+            }
+
+            if (obj instanceof Motion) {
+
+                Game.sprites[0].selected_motion = obj;
+
+                obj = Game.sprites[0].selected_motion;
+
+            }
+
+            if (obj instanceof Projectile) {
+
+                //alert('Projectile');
+
+                Game.sprites[0].selected_projectile = obj;
+
+                obj = Game.sprites[0].selected_projectile;
+
+                obj.line.size = new Vector(200, 200);
+                obj.line.position = new Vector(0, 0, 0);
+
+                obj.line.fill(obj.line.size, obj.line.minPointDist);
+
+                Game.sprites[0].onUpdate(function() {
+
+                    if (obj.line && obj.line.Highlight) {
+
+                        var origin = new Vector(Game.sprites[0].position);
+
+                        origin.x += Game.sprites[0].size.x / 3;
+
+                        origin.y += Game.sprites[0].size.y / 3;
+
+                        obj.line.Highlight(origin);
+
+                    }
+
+
+                });
+
+
+                // alert(jstr(Game.sprites[0].position));
+
+               // alert(jstr(Game.sprites[0].center()));
+
+
+            }
+
+
+            if (obj instanceof Sound) {
+
+                Game.sprites[0].selected_sound = obj;
+
+                obj = Game.sprites[0].selected_sound;
+
+            }
+
+            if (obj instanceof Force) {
+
+                var str = JSON.stringify(obj);
+
+                Game.selected_force = new Force(JSON.parse(str));
+
+                obj = Game.selected_force;
+
+            }
+            ;
+
+            this.selectedItem = obj;
+
+            //load the selectedItem into html tab
+
+            $('#selected-tab').html('<div class="tab-pane fade in selected-object-tab-pane" role="tabpanel" id="tab-1">' +
+
+                '<canvas id="selected-object-canvas" ></canvas>' +
+
+                '</div>');
+
+
+            if (obj.constructor.name == 'Animation' ) {
+                this.animationPaneDisplay(obj);
+
+            }
+
+
+            if (obj.constructor.name == 'Projectile') {
+                this.projectilePaneDisplay(obj);
+
+            }
+
+            if (obj.constructor.name == 'Motion') {
+                this.selectedItemCanvasInit(obj);
+
+            }
+
+            DatGui.get(this.selectedItem);
+
+            return this.selectedItem;
+
+        },
+
+        animationPaneDisplay: function (obj) {
+
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
+
+            var main_canvas_padding = new Vector(10, 10);
+
+            var main_position = {
+
+                xpos:0, ypos:0
+
+            };
+
+            var update = function () {
+
+                var t1 =  new TWEEN.Tween(main_position).to({xpos:obj.selected_frame.framePos.y * -1, ypos:(obj.selected_frame.framePos.x) * -1}, 50).easing(TWEEN.Easing.Quadratic.Out).onComplete(function(){
+
+                    canvas.width = $(canvas).width();
+                    canvas.height = $(canvas).height();
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ypos = obj.selected_frame.framePos.y * -1 + main_canvas_padding.y;
+
+                    xpos = (obj.selected_frame.framePos.x) * -1 + main_canvas_padding.x;
+
+                    ctx.drawImage(obj.image.domElement, xpos, ypos, obj.image.domElement.width, obj.image.domElement.height);
+
+                    ctx.drawImage(Game.selection_sprite.selected_animation.image.domElement, main_canvas_padding.x, main_canvas_padding.y, obj.selected_frame.frameSize.x, obj.selected_frame.frameSize.y);
+
+
+                }).start();
+
+
+
+            };
+
+            if (Game.animationPaneUpdate) {
+
+                window.clearInterval(Game.animationPaneUpdate);
+
+            }
+
+            Game.animationPaneUpdate = window.setInterval(function () {
+
+                update();
+
+            }, 50);
+
+        },
+
+        projectilePaneDisplay: function (obj) {
+
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
+
+            var mainCanvas = document.getElementById('main-screen');
+
+
+            var update = function () {
+
+                canvas.width = $(canvas).width();
+                canvas.height = $(canvas).height();
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.drawImage(mainCanvas, 0, 0, canvas.width, canvas.height);
+
+            };
+
+            if (Game.animationPaneUpdate) {
+
+                window.clearInterval(Game.animationPaneUpdate);
+
+            }
+
+            Game.animationPaneUpdate = window.setInterval(function () {
+
+                update();
+
+            }, 50);
+
+        },
+
+
+
+        selectedItemCanvasInit: function (obj) {
+
+            var canvas = $('.tab-pane canvas#selected-object-canvas')[0], ctx = canvas.getContext('2d');
+
+            var update = function () {
+
+                canvas.width = $(canvas).width();
+                canvas.height = $(canvas).height();
+
+
+                //grab the context from your destination canvas
+                var destCtx = canvas.getContext('2d');
+
+                var sc = Game.GameWindow.canvas;
+
+                //call its drawImage() function passing it the source canvas directly
+                destCtx.drawImage(sc, canvas.width / 2 - sc.width / 2, canvas.height / 2 - sc.height / 2);
+
+            };
+
+            if (Game.selectedItemCanvasUpdate) {
+
+                window.clearInterval(Game.selectedItemCanvasUpdate);
+
+            }
+            ;
+
+            Game.selectedItemCanvasUpdate = window.setInterval(function () {
+
+                update();
+
+            }, 50);
+
+        },
+
+        createNewSprite: function () {
+
+            window.location.reload();
+
+        },
+
+        removeObjectListMember: function (parent, listname, obj) {
+
+            $.each(parent[listname], function (ix, item) {
+
+                if (item === obj) {
+                    parent[listname].splice(parent[listname].indexOf(item), 1);
+
+                    var member = $('.' + listname + '_member')[ix];
+
+                    $(member).remove();
+
+                }
+
+
+            });
+
+        },
+
+        download: function (input, contentObject) {
+
+            var filename = contentObject.name + 'json';
+
+            alert('saving + downloading:' + contentObject.name);
+
+            $.post("http://localhost:3137/save-object", {data:{type: contentObject.constructor.name
+
+                .toLowerCase(), object: jstr(contentObject), name:contentObject.name}})
+
+                .done(function (data) {
+
+                    alert('post complete');
+
+                    $(input).prop('download', filename);
+
+                    $(input).prop('target', '_blank');
+
+                    $(input).prop('href', "data:text/json," + jstr(contentObject));
+
+                    $(input).prop('name', contentObject.name + '.json');
+
+                    $.fileDownload($(input).prop('href'), {
+                        preparingMessageHtml: "We are preparing your report, please wait...",
+                        failMessageHtml: "There was a problem generating your report, please try again."
+                    });
+
+
+                    if (typeof(callback) == 'function') {
+
+                        callback(data);
+
+                    }
+
+                    //  alert( "Data Saved: " + data );
+                });
+
+
+        },
+
+        getRawFile: function (input, callback) {
+
+            var filename = $(input).val().split('\\').pop();
+
+            if (filename.toLowerCase().indexOf('.json') >= 0) {
+
+                var file = input.files[0];
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function () {
+
+                    callback(reader.result)
+
+                }, false);
+
+                if (file) {
+                    reader.readAsText(file);
+                }
+
+            }
+        },
+
+        onType: function (obj, type, callback) {
+
+            if (obj instanceof type) {
+
+                callback();
+
+            }
+
+        },
+
+
+        lock_events: function () {
+            this.locked = true;
+
+            var _a = this;
+
+            window.setTimeout(function () {
+
+                _a.locked = false;
+
+            }, 100);
+
+        },
+
+        hint: function (element, hintText) {
+
+            var hint = $('#floating-hint');
+
+            var enter = function (evt) {
+
+                    $(hint).css('left', evt.clientX + 150);
+
+                    $(hint).css('top', evt.clientY - 15);
+
+                    $(hint).text(hintText);
+
+                    $(hint).show('fast');
+
+                },
+                out = function () {
+
+                    $(hint).hide('fast');
+                };
+
+
+            $(element).hover(enter, out);
+
+        },
+
+        getArg: function (args, key, fallback) {
+            return args[key] || fallback;
+
+        },
+
+        applyControl: function (args) {
+
+            console.log('Found item');
+
+            var parent = this.getArg(args, 'parent', false),
+
+                id = this.getArg(args, 'id', false),
+
+                folders = this.getArg(args, 'folders', []),
+
+                html = this.getArg(args, 'html', false),
+
+                callback = this.getArg(args, 'callback', false),
+
+                clName = $(parent).attr('class'),
+                list = this.getArg(args, 'list', false);
+
+
+            if (parent, id, html, callback) {
+
+                $(html).insertBefore(parent);
+
+                var clName = $(parent).attr('class');
+
+
+                $('#' + id).unbind().click(function () {
+
+                    callback(list, clName, folders);
+
+                });
+
+
+                this.hint($('#' + id)[0], 'Add ' + clName + ' to GTUI');
+
+
+            }
+
+
+        },
+
+        objectListToUL: function (keyname, list, iconHtmls) {
+
+            var html = "<ul>";
+
+            if (!iconHtmls instanceof Array) {
+                iconHtmls = [];
+
+            }
+
+            $.each(list, function (ix, item) {
+
+                var icons = [];
+
+                icons = icons.concat(iconHtmls);
+
+                if ((ix + '').indexOf('__') == -1) {
+
+                    var name = item.name || ix;
+
+                    $.each(icons, function (ix, str) {
+                        icons[ix] = str.replace('*', name)
+                    });
+
+                    var k = keyname,
+
+                        ulCl = '.' + k.toLowerCase() + '-' + 'tab-pane';
+
+                    //   alert(ulCl);
+
+                    if (!$("#pane-list-" + keyname + ix).length) {
+
+                        $(ulCl).find('ul').append('<li id="pane-list-' + keyname + ix + '">' + name + icons.join(' ') + '</li>');
+
+                    }
+
+                    html += "<li class='" + keyname + "_member'>" + name + icons.join(' ') + "</li>";
+
+                }
+
+            });
+
+            return html + "</ul>";
+
+        },
+
+        init: function () {
+
+            //request files from the server:
+
+            this.__selectedObject = Game.sprites[0];
+
+            $(document).on('change', 'input', function (e) {
+
+                // App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+
+
+            });
+
+
+            $(document).on('click', 'li', function (e) {
+                e.stopPropagation();
+
+                var items = this.getElementsByTagName("ul");
+
+                if (items.length >= 1 && items[0].style.display == "block")
+                    $(this).find("ul").slideUp();
+                else {
+
+                    $(this).children(":first").slideDown();
+
+
+                }
+
+            });
+
+            $(document).on('click', 'img.tree-edit', function (evt) {
+
+                $('img.tree-edit').hide();
+
+                $(evt.target).show('fast');
+
+                $(evt.target).css('visibility', 'visible');
+
+                var prt = $(evt.target).parent(), parentObjectName = $(prt).prop('class');
+
+                parentObjectName = parentObjectName.replace('_member', '');
+
+                //  alert(parentObjectName);
+
+                var index = $(prt).index();
+
+                //  alert('Got click on edit button for::' + parentObjectName + ': member number::' + index);
+
+                var selectedObject = Game.sprites[0][parentObjectName],
+
+
+                    sprop = selectedObject[index];
+
+                App.selectItem(sprop);
+
+
+                evt.preventDefault();
+
+                evt.preventBubble();
+
+                return false;
+
+                // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
+
+
+            });
+
+
+            $(document).on('click', 'button#play,button#sound-pane-play,' +
+                'button#motion-pane-play', function (evt) {
+
+                Game.fireObject(App.selectedItem);
+
+                evt.preventDefault();
+
+                return false;
+
+            });
+
+
+        }
+
+    }
+
+
+    function animate(time) {
+
+        TWEEN.update(time);
+
+        requestAnimationFrame(animate);
+
+        Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+
+        Game.render();
+
+
+    }
+
+
+    Gamestack.ready(function (lib) {
+
+
+        //TODO: add to Gamestack
+
+
+        Gamestack.point_highlighter  = new Sprite({
+
+                name: "gs_point_highlighter",
+
+                description: "highlight points on a line",
+
+                position: new Vector(0, 0),
+                size: new Vector(4, 4)
+            });
+
+
+        Gamestack.point_highlighter.main_anime = new Animation({
+            name: "anime_one",
+            src: "../tools/image/point_highlighter.png",
+
+            size: new Vector2(4, 4),
+
+            frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
+
+            delay: 0,
+            tool: true,
+            frameSize: new Vector(50, 50, 0)
+        });
+
+
+
+        Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
+
+
+
+
+        Gamestack.test_bullet  = new Sprite({
+
+            name: "test_bullet",
+
+            description: "test_bullet for Projectile class",
+
+            position: new Vector(0, 0),
+            size: new Vector(10, 10)
+        });
+
+
+        Gamestack.test_bullet.main_anime = new Animation({
+            name: "anime_one",
+            src: "../tools/image/test-bullet.png",
+
+            size: new Vector2(10, 10),
+
+            frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
+
+            delay: 0,
+            tool: true,
+            frameSize: new Vector(50, 50, 0)
+        });
+
+
+
+        Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
+
+
+
+        Gamestack.test_bullet.setAnimation(Gamestack.test_bullet.main_anime);
+
+
+
+
+
+
+        //  alert('hi');
+
+        $.fn.animateRotate = function (startAngle, angle, duration, easing, complete) {
+            var args = $.speed(duration, easing, complete);
+            var step = args.step;
+            return this.each(function (i, e) {
+                args.complete = $.proxy(args.complete, e);
+                args.step = function (now) {
+                    $.style(e, 'transform', 'rotate(' + now + 'deg)');
+                    if (step) return step.apply(e, arguments);
+                };
+
+                $({deg: startAngle}).animate({deg: angle}, args);
+            });
+        };
+
+
+        Game.init();
+
+        App.init();
+
+
+        //Test the line class
+
+
+
+
+
+        animate();
+
+
+
+        $('#new-sprite').click(function () {
+
+            App.createNewSprite();
+
+
+        });
+
+        $('#sprite-file-input').change(function () {
+
+            App.getRawFile(this, function (result) {
+
+                var sprite = JSON.parse(result);
+
+                Game.sprites[0] = new Sprite(sprite);
+
+                Game.init(Game.sprites[0]);
+
+                App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+
+            });
+
+        });
+
+        $('#load-sprite').click(function () {
+
+            $('#sprite-file-input').click();
+
+        });
+
+
+        $('#download').click(function () {
+
+
+            App.download(this, Game.sprites[0]);
+
+            return false; //this is critical to stop the click event which will trigger a normal file download!
+
+        });
+
+        $('.squeeze').on('click', function(evt){
+
+            if($(evt.target).text() == '-')
+            {
+
+                App.selectItem(App.selectedItem);
+
+            }
+
+        });
+
+
+        $('.squeeze, ul.nav-tabs li').squeeze(function () {
+
+            App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
+
+        });
+
+
+
+        $(document).on('keydown', function (e) {
+
+            var key = e.keyCode || e.charCode;
+            if (key == 46 && App.selectedItem) {
+
+                var type = App.selectedItem.constructor.name;
+
+                if (confirm('Do you want to delete the selected object:' + type + ":" + App.selectedItem.name || "__blankName")) {
+
+                    var clString = type.toLowerCase() + 's';
+
+
+                    App.removeObjectListMember(Game.sprites[0], clString, App.selectedItem);
+
+                    App.selectedItem = {};
+
+                } else {
+                    // Do nothing!
+                }
+
+            }
+
+        });
+
+        App.selfClosablesInit();
+
+
+    });
+
+
+</script>
+
+
+</body>
+</html>
