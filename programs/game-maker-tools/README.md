@@ -6,6 +6,8 @@
 
 <img style="position:relative; left:20%; width:60%; height:auto;  " src="programs/game-maker-tools/client/assets/image/gamestack-banner.png" />
 
+<img style="position:relative; left:20%; width:60%; height:auto;  " src="client/assets/image/gamestack-banner.png" />
+
 ##### Welcome to the repository #####
 
 * Gamestack is the fast, easy-to-use library for simple javascript game development. This library makes it easy to both create and manipulate game-objects. The goal of our project is to bring speed and ease to the overral process of 2d-game-development.
