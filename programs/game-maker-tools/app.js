@@ -2,9 +2,7 @@
  * Created by The Blakes on 6/16/2017.
  */
 
-
-module.exports = function() {
-
+module.exports = function(openNow) {
 
    require(__dirname + '/static-express.js')(3137, function (err, app) {
 
@@ -41,8 +39,6 @@ module.exports = function() {
            return response;
        }
 
-
-
        app.post('/save', function(req, res){
 
            var content = req.body.content;
@@ -52,6 +48,32 @@ module.exports = function() {
            var relpath = 'client/assets/uploads/' + filename;
 
            var dataString = content;
+
+           if(filename.toLowerCase().indexOf('.mp3') >= 0)
+           {
+               var response = {};
+               response.data = new Buffer(dataString, 'base64');
+
+               response.type = "audo/mp3";
+
+               // Save decoded binary image to disk
+               try {
+                   require('fs').writeFile(relpath, response.data,
+                       function () {
+                           console.log('DEBUG - feed:message: Saved to disk image attached by user:', relpath);
+
+                           res.end(JSON.stringify({relpath: relpath, content: content}));
+
+                       });
+               }
+               catch (error) {
+                   console.log('ERROR:', error);
+
+                   res.end('save-file: error:' + error);
+               }
+
+
+           }
 
            if(filename.indexOf('.json') >= 0)
            {
@@ -70,7 +92,7 @@ module.exports = function() {
 
                            res.end(JSON.stringify({action:"download", status:"complete", path:path}));
 
-                          // res.end(JSON.stringify({relpath:relpath, content:content}));
+                           // res.end(JSON.stringify({relpath:relpath, content:content}));
 
                        });
                }
@@ -137,7 +159,7 @@ module.exports = function() {
                        try {
                            require('fs').writeFile(relpath, imageBuffer.data,
                                function () {
-                                   console.log('DEBUG - feed:message: Saved to disk image attached by user:', userUploadedImagePath);
+                                   console.log('DEBUG - feed:message: Saved to disk image attached by user:', relpath);
 
                                    res.end(JSON.stringify({relpath: relpath, content: content}));
 
@@ -164,8 +186,6 @@ module.exports = function() {
 
        var fs = require('fs');
 
-
-
        function copy(oldPath, newPath) {
            var readStream = fs.createReadStream(oldPath);
            var writeStream = fs.createWriteStream(newPath);
@@ -179,7 +199,6 @@ module.exports = function() {
 
            readStream.pipe(writeStream);
        }
-
 
        app.post('/save-image-persistent', function(req, res){
 
@@ -217,8 +236,6 @@ module.exports = function() {
 
 
        });
-
-
 
        app.post('/save-object', function (req, res) {
 
@@ -275,8 +292,6 @@ module.exports = function() {
 
        });
 
-
-
        app.post('/save-map-options', function (req, res) {
 
             var data = req.body.data;
@@ -327,14 +342,23 @@ module.exports = function() {
 
         });
 
-
-       console.log('listing:' + app.port);
+       console.log('listening at:' + 'http://localhost:3137/main.html');
 
        app.listen(app.port);
 
+       if(openNow) {
 
-    });
+           var opn = require('opn');
 
+           opn('http://localhost:3137/main.html', {app:"chrome"}) // Opens the url in the default browser
+
+       }
+
+   });
 
 };
+
+
+
+
 

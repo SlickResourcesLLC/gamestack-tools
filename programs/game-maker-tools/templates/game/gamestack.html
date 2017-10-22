@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/*PROJECT_TITLE*/</title>
+
+    <script src="../assets/js/ui/Tween.js"></script>
+
+    <script src="../dist/js/GameStack.js"></script>
+
+</head>
+<body>
+
+<script>
+
+        GameStack.ready(function(lib){
+
+        console.info('gs-library is ready');
+
+        var __GameWindow = lib.add(new GameWindow({}));
+
+        var resources = lib.loadResourcesToGameWindow(/*RESOURCES_FILE*/, __GameWindow, function(){
+
+            lib.animate();
+
+        });
+
+        });
+
+</script>
+
+</body>
+</html>

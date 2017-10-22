@@ -1,4 +1,3 @@
-
 /**
  * Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.
 
@@ -68,13 +67,13 @@ class Sprite {
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
-        this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
+        this.size = new Vector(__gameStack.getArg(args, 'size', new Vector3(100, 100)));
 
-        this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
+        this.position = new Vector( __gameStack.getArg(args, 'position', new Vector3(0, 0, 0)));
 
         this.collision_bounds = __gameStack.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
-        this.rotation = __gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0));
+        this.rotation =  new Vector(__gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0)));
 
         this.selected_animation = {};
 
@@ -88,7 +87,6 @@ class Sprite {
 
 
         this.padding = __gameStack.getArg(args, 'padding', new Vector3(0, 0, 0));
-
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
@@ -104,13 +102,18 @@ class Sprite {
 
         });
 
-
         GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
 
+
         });
 
+        GameStack.each(this.projectiles, function (ix, item) {
+
+            __inst.projectiles[ix] = new Projectile(item);
+
+        });
 
         //Apply initializers:
 
@@ -1361,8 +1364,6 @@ class Sprite {
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
-
-
 
 Gamestack.Sprite = Sprite;
 

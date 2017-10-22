@@ -1,0 +1,7732 @@
+{
+  "active": true,
+  "name": "sci-fi-gunner-sprite",
+  "description": "running, shooting sprite",
+  "gravity": "medium",
+  "__initializers": [],
+  "position": {
+    "x": 368,
+    "y": 203,
+    "z": 0
+  },
+  "size": {
+    "x": 50,
+    "y": 52,
+    "z": 0
+  },
+  "type": "basic",
+  "animations": [
+    {
+      "defaultArgs": {
+        "name": "my-animation",
+        "description": "my-description",
+        "frames": [],
+        "type": "none",
+        "delay": 0,
+        "frameSize": {
+          "x": 44,
+          "y": 44,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "flipX": false,
+        "duration": 1000,
+        "size": {
+          "x": 20,
+          "y": 20,
+          "z": 20
+        }
+      },
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {},
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "extras": false,
+      "frames": [
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 50,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 100,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 150,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 200,
+            "y": 0
+          }
+        }
+      ],
+      "flipX": false,
+      "cix": 0,
+      "selected_frame": {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 200,
+          "y": 0
+        }
+      },
+      "timer": 0,
+      "duration": 2000,
+      "seesaw_mode": false,
+      "name": "my-animation",
+      "description": "my-description",
+      "type": "none",
+      "delay": 0,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      },
+      "tween": {},
+      "isComplete": true
+    },
+    {
+      "defaultArgs": {
+        "name": "my-animation",
+        "description": "my-description",
+        "frames": [],
+        "type": "none",
+        "delay": 0,
+        "frameSize": {
+          "x": 44,
+          "y": 44,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "flipX": false,
+        "duration": 1000,
+        "size": {
+          "x": 20,
+          "y": 20,
+          "z": 20
+        }
+      },
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {},
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 4,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "extras": false,
+      "frames": [
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 50,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 100,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 150,
+            "y": 0
+          }
+        },
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 200,
+            "y": 0
+          }
+        }
+      ],
+      "flipX": false,
+      "cix": 2.310368327330327,
+      "selected_frame": {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 100,
+          "y": 0
+        }
+      },
+      "timer": 0,
+      "duration": 2248,
+      "seesaw_mode": false,
+      "name": "my-animation*",
+      "tween": {},
+      "isComplete": true
+    }
+  ],
+  "motions": [
+    {
+      "distance": {
+        "x": 0,
+        "y": -200,
+        "z": 0
+      },
+      "curvesList": [
+        "Linear_None",
+        "Quadratic_In",
+        "Quadratic_Out",
+        "Quadratic_InOut",
+        "Cubic_In",
+        "Cubic_Out",
+        "Cubic_InOut",
+        "Quartic_In",
+        "Quartic_Out",
+        "Quartic_InOut",
+        "Quintic_In",
+        "Quintic_Out",
+        "Quintic_InOut",
+        "Sinusoidal_In",
+        "Sinusoidal_Out",
+        "Sinusoidal_InOut",
+        "Exponential_In",
+        "Exponential_Out",
+        "Exponential_InOut",
+        "Circular_In",
+        "Circular_Out",
+        "Circular_InOut",
+        "Elastic_In",
+        "Elastic_Out",
+        "Elastic_InOut",
+        "Back_In",
+        "Back_Out",
+        "Back_InOut",
+        "Bounce_In",
+        "Bounce_Out",
+        "Bounce_InOut"
+      ],
+      "lineCurvesList": [
+        "Linear_None",
+        "Quadratic_In",
+        "Quadratic_Out",
+        "Quadratic_InOut",
+        "Cubic_In",
+        "Cubic_Out",
+        "Cubic_InOut",
+        "Quartic_In",
+        "Quartic_Out",
+        "Quartic_InOut",
+        "Quintic_In",
+        "Quintic_Out",
+        "Quintic_InOut"
+      ],
+      "parent_id": "34a05919-0214-4676-92e7-53b75f8b7fe8",
+      "rotation": 0,
+      "targetRotation": 0,
+      "name": "jump",
+      "description": "the jump movmement.",
+      "motionCurveString": "Bounce_InOut",
+      "lineCurveString": "Linear_None",
+      "duration": 400,
+      "delay": 0
+    },
+    {
+      "distance": {
+        "x": 0,
+        "y": -200,
+        "z": 0
+      },
+      "curvesList": [
+        "Linear_None",
+        "Quadratic_In",
+        "Quadratic_Out",
+        "Quadratic_InOut",
+        "Cubic_In",
+        "Cubic_Out",
+        "Cubic_InOut",
+        "Quartic_In",
+        "Quartic_Out",
+        "Quartic_InOut",
+        "Quintic_In",
+        "Quintic_Out",
+        "Quintic_InOut",
+        "Sinusoidal_In",
+        "Sinusoidal_Out",
+        "Sinusoidal_InOut",
+        "Exponential_In",
+        "Exponential_Out",
+        "Exponential_InOut",
+        "Circular_In",
+        "Circular_Out",
+        "Circular_InOut",
+        "Elastic_In",
+        "Elastic_Out",
+        "Elastic_InOut",
+        "Back_In",
+        "Back_Out",
+        "Back_InOut",
+        "Bounce_In",
+        "Bounce_Out",
+        "Bounce_InOut"
+      ],
+      "lineCurvesList": [
+        "Linear_None",
+        "Quadratic_In",
+        "Quadratic_Out",
+        "Quadratic_InOut",
+        "Cubic_In",
+        "Cubic_Out",
+        "Cubic_InOut",
+        "Quartic_In",
+        "Quartic_Out",
+        "Quartic_InOut",
+        "Quintic_In",
+        "Quintic_Out",
+        "Quintic_InOut"
+      ],
+      "parent_id": "34a05919-0214-4676-92e7-53b75f8b7fe8",
+      "rotation": 0,
+      "targetRotation": 470.63809224816873,
+      "name": "jump*",
+      "description": "the jump movmement.",
+      "motionCurveString": "Quadratic_InOut",
+      "lineCurveString": "Linear_None",
+      "duration": 400,
+      "delay": 0
+    }
+  ],
+  "projectiles": [
+    {
+      "line": {
+        "curve_string": "Quadratic_InOut",
+        "points": [
+          {
+            "x": 3,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": 9,
+            "y": 1,
+            "z": 0
+          },
+          {
+            "x": 12,
+            "y": 1,
+            "z": 0
+          },
+          {
+            "x": 15,
+            "y": 2,
+            "z": 0
+          },
+          {
+            "x": 18,
+            "y": 3,
+            "z": 0
+          },
+          {
+            "x": 21,
+            "y": 4,
+            "z": 0
+          },
+          {
+            "x": 24,
+            "y": 6,
+            "z": 0
+          },
+          {
+            "x": 27,
+            "y": 7,
+            "z": 0
+          },
+          {
+            "x": 30,
+            "y": 9,
+            "z": 0
+          },
+          {
+            "x": 33,
+            "y": 11,
+            "z": 0
+          },
+          {
+            "x": 36,
+            "y": 13,
+            "z": 0
+          },
+          {
+            "x": 39,
+            "y": 15,
+            "z": 0
+          },
+          {
+            "x": 42,
+            "y": 18,
+            "z": 0
+          },
+          {
+            "x": 45,
+            "y": 20,
+            "z": 0
+          },
+          {
+            "x": 48,
+            "y": 23,
+            "z": 0
+          },
+          {
+            "x": 51,
+            "y": 26,
+            "z": 0
+          },
+          {
+            "x": 54,
+            "y": 29,
+            "z": 0
+          },
+          {
+            "x": 57,
+            "y": 32,
+            "z": 0
+          },
+          {
+            "x": 59,
+            "y": 35,
+            "z": 0
+          },
+          {
+            "x": 62,
+            "y": 38,
+            "z": 0
+          },
+          {
+            "x": 64,
+            "y": 41,
+            "z": 0
+          },
+          {
+            "x": 66,
+            "y": 44,
+            "z": 0
+          },
+          {
+            "x": 69,
+            "y": 48,
+            "z": 0
+          },
+          {
+            "x": 72,
+            "y": 52,
+            "z": 0
+          },
+          {
+            "x": 74,
+            "y": 55,
+            "z": 0
+          },
+          {
+            "x": 76,
+            "y": 58,
+            "z": 0
+          },
+          {
+            "x": 78,
+            "y": 61,
+            "z": 0
+          },
+          {
+            "x": 80,
+            "y": 64,
+            "z": 0
+          },
+          {
+            "x": 82,
+            "y": 67,
+            "z": 0
+          },
+          {
+            "x": 84,
+            "y": 71,
+            "z": 0
+          },
+          {
+            "x": 86,
+            "y": 74,
+            "z": 0
+          },
+          {
+            "x": 88,
+            "y": 77,
+            "z": 0
+          },
+          {
+            "x": 90,
+            "y": 81,
+            "z": 0
+          },
+          {
+            "x": 92,
+            "y": 85,
+            "z": 0
+          },
+          {
+            "x": 94,
+            "y": 88,
+            "z": 0
+          },
+          {
+            "x": 96,
+            "y": 92,
+            "z": 0
+          },
+          {
+            "x": 98,
+            "y": 96,
+            "z": 0
+          },
+          {
+            "x": 100,
+            "y": 100,
+            "z": 0
+          },
+          {
+            "x": 102,
+            "y": 104,
+            "z": 0
+          },
+          {
+            "x": 104,
+            "y": 108,
+            "z": 0
+          },
+          {
+            "x": 106,
+            "y": 112,
+            "z": 0
+          },
+          {
+            "x": 108,
+            "y": 115,
+            "z": 0
+          },
+          {
+            "x": 110,
+            "y": 119,
+            "z": 0
+          },
+          {
+            "x": 112,
+            "y": 123,
+            "z": 0
+          },
+          {
+            "x": 114,
+            "y": 126,
+            "z": 0
+          },
+          {
+            "x": 116,
+            "y": 129,
+            "z": 0
+          },
+          {
+            "x": 118,
+            "y": 133,
+            "z": 0
+          },
+          {
+            "x": 120,
+            "y": 136,
+            "z": 0
+          },
+          {
+            "x": 122,
+            "y": 139,
+            "z": 0
+          },
+          {
+            "x": 124,
+            "y": 142,
+            "z": 0
+          },
+          {
+            "x": 126,
+            "y": 145,
+            "z": 0
+          },
+          {
+            "x": 128,
+            "y": 148,
+            "z": 0
+          },
+          {
+            "x": 130,
+            "y": 151,
+            "z": 0
+          },
+          {
+            "x": 132,
+            "y": 154,
+            "z": 0
+          },
+          {
+            "x": 135,
+            "y": 158,
+            "z": 0
+          },
+          {
+            "x": 138,
+            "y": 162,
+            "z": 0
+          },
+          {
+            "x": 141,
+            "y": 165,
+            "z": 0
+          },
+          {
+            "x": 143,
+            "y": 168,
+            "z": 0
+          },
+          {
+            "x": 146,
+            "y": 171,
+            "z": 0
+          },
+          {
+            "x": 149,
+            "y": 174,
+            "z": 0
+          },
+          {
+            "x": 152,
+            "y": 177,
+            "z": 0
+          },
+          {
+            "x": 155,
+            "y": 180,
+            "z": 0
+          },
+          {
+            "x": 158,
+            "y": 182,
+            "z": 0
+          },
+          {
+            "x": 161,
+            "y": 185,
+            "z": 0
+          },
+          {
+            "x": 164,
+            "y": 187,
+            "z": 0
+          },
+          {
+            "x": 167,
+            "y": 189,
+            "z": 0
+          },
+          {
+            "x": 170,
+            "y": 191,
+            "z": 0
+          },
+          {
+            "x": 173,
+            "y": 193,
+            "z": 0
+          },
+          {
+            "x": 176,
+            "y": 194,
+            "z": 0
+          },
+          {
+            "x": 179,
+            "y": 196,
+            "z": 0
+          },
+          {
+            "x": 182,
+            "y": 197,
+            "z": 0
+          },
+          {
+            "x": 185,
+            "y": 198,
+            "z": 0
+          },
+          {
+            "x": 188,
+            "y": 199,
+            "z": 0
+          },
+          {
+            "x": 191,
+            "y": 199,
+            "z": 0
+          },
+          {
+            "x": 194,
+            "y": 200,
+            "z": 0
+          },
+          {
+            "x": 197,
+            "y": 200,
+            "z": 0
+          },
+          {
+            "x": 200,
+            "y": 200,
+            "z": 0
+          },
+          {
+            "x": 203,
+            "y": 200,
+            "z": 0
+          },
+          {
+            "x": 206,
+            "y": 200,
+            "z": 0
+          },
+          {
+            "x": 209,
+            "y": 201,
+            "z": 0
+          },
+          {
+            "x": 212,
+            "y": 201,
+            "z": 0
+          },
+          {
+            "x": 215,
+            "y": 202,
+            "z": 0
+          },
+          {
+            "x": 218,
+            "y": 202,
+            "z": 0
+          },
+          {
+            "x": 221,
+            "y": 203,
+            "z": 0
+          },
+          {
+            "x": 224,
+            "y": 204,
+            "z": 0
+          },
+          {
+            "x": 227,
+            "y": 205,
+            "z": 0
+          },
+          {
+            "x": 230,
+            "y": 206,
+            "z": 0
+          },
+          {
+            "x": 233,
+            "y": 207,
+            "z": 0
+          },
+          {
+            "x": 236,
+            "y": 208,
+            "z": 0
+          },
+          {
+            "x": 239,
+            "y": 210,
+            "z": 0
+          },
+          {
+            "x": 242,
+            "y": 211,
+            "z": 0
+          },
+          {
+            "x": 245,
+            "y": 213,
+            "z": 0
+          },
+          {
+            "x": 248,
+            "y": 214,
+            "z": 0
+          },
+          {
+            "x": 251,
+            "y": 216,
+            "z": 0
+          },
+          {
+            "x": 254,
+            "y": 218,
+            "z": 0
+          },
+          {
+            "x": 257,
+            "y": 220,
+            "z": 0
+          },
+          {
+            "x": 260,
+            "y": 222,
+            "z": 0
+          },
+          {
+            "x": 263,
+            "y": 224,
+            "z": 0
+          },
+          {
+            "x": 266,
+            "y": 226,
+            "z": 0
+          },
+          {
+            "x": 269,
+            "y": 229,
+            "z": 0
+          },
+          {
+            "x": 272,
+            "y": 231,
+            "z": 0
+          },
+          {
+            "x": 275,
+            "y": 234,
+            "z": 0
+          },
+          {
+            "x": 278,
+            "y": 236,
+            "z": 0
+          },
+          {
+            "x": 281,
+            "y": 239,
+            "z": 0
+          },
+          {
+            "x": 284,
+            "y": 242,
+            "z": 0
+          },
+          {
+            "x": 287,
+            "y": 245,
+            "z": 0
+          },
+          {
+            "x": 290,
+            "y": 248,
+            "z": 0
+          },
+          {
+            "x": 293,
+            "y": 251,
+            "z": 0
+          },
+          {
+            "x": 296,
+            "y": 254,
+            "z": 0
+          },
+          {
+            "x": 298,
+            "y": 257,
+            "z": 0
+          },
+          {
+            "x": 301,
+            "y": 260,
+            "z": 0
+          },
+          {
+            "x": 304,
+            "y": 264,
+            "z": 0
+          },
+          {
+            "x": 307,
+            "y": 267,
+            "z": 0
+          },
+          {
+            "x": 309,
+            "y": 270,
+            "z": 0
+          },
+          {
+            "x": 312,
+            "y": 273,
+            "z": 0
+          },
+          {
+            "x": 314,
+            "y": 276,
+            "z": 0
+          },
+          {
+            "x": 316,
+            "y": 279,
+            "z": 0
+          },
+          {
+            "x": 319,
+            "y": 283,
+            "z": 0
+          },
+          {
+            "x": 322,
+            "y": 287,
+            "z": 0
+          },
+          {
+            "x": 324,
+            "y": 290,
+            "z": 0
+          },
+          {
+            "x": 327,
+            "y": 294,
+            "z": 0
+          },
+          {
+            "x": 329,
+            "y": 297,
+            "z": 0
+          },
+          {
+            "x": 331,
+            "y": 300,
+            "z": 0
+          },
+          {
+            "x": 333,
+            "y": 303,
+            "z": 0
+          },
+          {
+            "x": 335,
+            "y": 306,
+            "z": 0
+          },
+          {
+            "x": 337,
+            "y": 309,
+            "z": 0
+          },
+          {
+            "x": 339,
+            "y": 312,
+            "z": 0
+          },
+          {
+            "x": 341,
+            "y": 315,
+            "z": 0
+          },
+          {
+            "x": 343,
+            "y": 318,
+            "z": 0
+          },
+          {
+            "x": 345,
+            "y": 322,
+            "z": 0
+          },
+          {
+            "x": 347,
+            "y": 325,
+            "z": 0
+          },
+          {
+            "x": 349,
+            "y": 328,
+            "z": 0
+          },
+          {
+            "x": 351,
+            "y": 332,
+            "z": 0
+          },
+          {
+            "x": 353,
+            "y": 335,
+            "z": 0
+          },
+          {
+            "x": 355,
+            "y": 339,
+            "z": 0
+          },
+          {
+            "x": 357,
+            "y": 342,
+            "z": 0
+          },
+          {
+            "x": 359,
+            "y": 346,
+            "z": 0
+          },
+          {
+            "x": 361,
+            "y": 349,
+            "z": 0
+          },
+          {
+            "x": 363,
+            "y": 353,
+            "z": 0
+          },
+          {
+            "x": 365,
+            "y": 357,
+            "z": 0
+          },
+          {
+            "x": 367,
+            "y": 361,
+            "z": 0
+          },
+          {
+            "x": 369,
+            "y": 364,
+            "z": 0
+          },
+          {
+            "x": 371,
+            "y": 368,
+            "z": 0
+          },
+          {
+            "x": 373,
+            "y": 372,
+            "z": 0
+          },
+          {
+            "x": 375,
+            "y": 376,
+            "z": 0
+          },
+          {
+            "x": 377,
+            "y": 380,
+            "z": 0
+          },
+          {
+            "x": 379,
+            "y": 384,
+            "z": 0
+          },
+          {
+            "x": 381,
+            "y": 388,
+            "z": 0
+          },
+          {
+            "x": 383,
+            "y": 392,
+            "z": 0
+          },
+          {
+            "x": 385,
+            "y": 396,
+            "z": 0
+          },
+          {
+            "x": 387,
+            "y": 399,
+            "z": 0
+          },
+          {
+            "x": 389,
+            "y": 403,
+            "z": 0
+          },
+          {
+            "x": 391,
+            "y": 407,
+            "z": 0
+          },
+          {
+            "x": 393,
+            "y": 411,
+            "z": 0
+          },
+          {
+            "x": 395,
+            "y": 414,
+            "z": 0
+          },
+          {
+            "x": 397,
+            "y": 418,
+            "z": 0
+          },
+          {
+            "x": 399,
+            "y": 421,
+            "z": 0
+          },
+          {
+            "x": 401,
+            "y": 425,
+            "z": 0
+          },
+          {
+            "x": 403,
+            "y": 428,
+            "z": 0
+          },
+          {
+            "x": 405,
+            "y": 432,
+            "z": 0
+          },
+          {
+            "x": 407,
+            "y": 435,
+            "z": 0
+          },
+          {
+            "x": 409,
+            "y": 438,
+            "z": 0
+          },
+          {
+            "x": 411,
+            "y": 442,
+            "z": 0
+          },
+          {
+            "x": 413,
+            "y": 445,
+            "z": 0
+          },
+          {
+            "x": 415,
+            "y": 448,
+            "z": 0
+          },
+          {
+            "x": 417,
+            "y": 451,
+            "z": 0
+          },
+          {
+            "x": 419,
+            "y": 454,
+            "z": 0
+          },
+          {
+            "x": 421,
+            "y": 457,
+            "z": 0
+          },
+          {
+            "x": 423,
+            "y": 460,
+            "z": 0
+          },
+          {
+            "x": 425,
+            "y": 463,
+            "z": 0
+          },
+          {
+            "x": 427,
+            "y": 466,
+            "z": 0
+          },
+          {
+            "x": 429,
+            "y": 469,
+            "z": 0
+          },
+          {
+            "x": 431,
+            "y": 472,
+            "z": 0
+          },
+          {
+            "x": 433,
+            "y": 475,
+            "z": 0
+          },
+          {
+            "x": 436,
+            "y": 479,
+            "z": 0
+          },
+          {
+            "x": 439,
+            "y": 483,
+            "z": 0
+          },
+          {
+            "x": 442,
+            "y": 487,
+            "z": 0
+          },
+          {
+            "x": 445,
+            "y": 490,
+            "z": 0
+          },
+          {
+            "x": 447,
+            "y": 493,
+            "z": 0
+          },
+          {
+            "x": 450,
+            "y": 496,
+            "z": 0
+          },
+          {
+            "x": 452,
+            "y": 499,
+            "z": 0
+          },
+          {
+            "x": 455,
+            "y": 502,
+            "z": 0
+          },
+          {
+            "x": 458,
+            "y": 506,
+            "z": 0
+          },
+          {
+            "x": 461,
+            "y": 509,
+            "z": 0
+          },
+          {
+            "x": 464,
+            "y": 512,
+            "z": 0
+          },
+          {
+            "x": 467,
+            "y": 515,
+            "z": 0
+          },
+          {
+            "x": 470,
+            "y": 518,
+            "z": 0
+          },
+          {
+            "x": 473,
+            "y": 521,
+            "z": 0
+          },
+          {
+            "x": 476,
+            "y": 524,
+            "z": 0
+          },
+          {
+            "x": 479,
+            "y": 526,
+            "z": 0
+          },
+          {
+            "x": 482,
+            "y": 529,
+            "z": 0
+          },
+          {
+            "x": 485,
+            "y": 531,
+            "z": 0
+          },
+          {
+            "x": 488,
+            "y": 534,
+            "z": 0
+          },
+          {
+            "x": 491,
+            "y": 536,
+            "z": 0
+          },
+          {
+            "x": 494,
+            "y": 538,
+            "z": 0
+          },
+          {
+            "x": 497,
+            "y": 540,
+            "z": 0
+          },
+          {
+            "x": 500,
+            "y": 542,
+            "z": 0
+          },
+          {
+            "x": 503,
+            "y": 544,
+            "z": 0
+          },
+          {
+            "x": 506,
+            "y": 546,
+            "z": 0
+          },
+          {
+            "x": 509,
+            "y": 547,
+            "z": 0
+          },
+          {
+            "x": 512,
+            "y": 549,
+            "z": 0
+          },
+          {
+            "x": 515,
+            "y": 550,
+            "z": 0
+          },
+          {
+            "x": 518,
+            "y": 552,
+            "z": 0
+          },
+          {
+            "x": 521,
+            "y": 553,
+            "z": 0
+          },
+          {
+            "x": 524,
+            "y": 554,
+            "z": 0
+          },
+          {
+            "x": 527,
+            "y": 555,
+            "z": 0
+          },
+          {
+            "x": 530,
+            "y": 556,
+            "z": 0
+          },
+          {
+            "x": 533,
+            "y": 557,
+            "z": 0
+          },
+          {
+            "x": 536,
+            "y": 558,
+            "z": 0
+          },
+          {
+            "x": 539,
+            "y": 558,
+            "z": 0
+          },
+          {
+            "x": 542,
+            "y": 559,
+            "z": 0
+          },
+          {
+            "x": 545,
+            "y": 559,
+            "z": 0
+          },
+          {
+            "x": 548,
+            "y": 560,
+            "z": 0
+          },
+          {
+            "x": 551,
+            "y": 560,
+            "z": 0
+          },
+          {
+            "x": 554,
+            "y": 560,
+            "z": 0
+          }
+        ],
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "is_highlighted": false,
+        "offset": {
+          "z": 0
+        },
+        "pointDist": 3,
+        "size": {
+          "x": 200,
+          "y": 200,
+          "z": 0
+        },
+        "rotation": 0,
+        "iterations": 1,
+        "growth": 1.8
+      },
+      "size": {
+        "x": 10,
+        "y": 10,
+        "z": 0
+      },
+      "animation": {
+        "defaultArgs": {
+          "name": "my-animation",
+          "description": "my-description",
+          "frames": [],
+          "type": "none",
+          "delay": 0,
+          "frameSize": {
+            "x": 44,
+            "y": 44,
+            "z": 0
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "termPoint": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "flipX": false,
+          "duration": 1000,
+          "size": {
+            "x": 20,
+            "y": 20,
+            "z": 20
+          }
+        },
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+          "domElement": {}
+        },
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+        "domElement": {},
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "extras": false,
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 50,
+              "y": 50,
+              "z": 0
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "flipX": false,
+        "cix": 0,
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "timer": 0,
+        "duration": 1000,
+        "seesaw_mode": false
+      },
+      "parent_id": "__blank",
+      "name": "bullet",
+      "description": false,
+      "duration": 500,
+      "delay": 0,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "highlighted": false,
+      "sprites": []
+    },
+    {
+      "line": {
+        "curve_string": "Cubic_InOut",
+        "points": [
+          {
+            "x": 2.9108871788279895,
+            "y": -0.7257656867990032,
+            "z": 0
+          },
+          {
+            "x": 5.821774357655979,
+            "y": -1.4515313735980064,
+            "z": 0
+          },
+          {
+            "x": 8.732661536483969,
+            "y": -2.1772970603970094,
+            "z": 0
+          },
+          {
+            "x": 11.643548715311958,
+            "y": -2.903062747196013,
+            "z": 0
+          },
+          {
+            "x": 14.554435894139948,
+            "y": -3.628828433995016,
+            "z": 0
+          },
+          {
+            "x": 17.707244968567604,
+            "y": -3.3842983945180225,
+            "z": 0
+          },
+          {
+            "x": 20.618132147395592,
+            "y": -4.1100640813170255,
+            "z": 0
+          },
+          {
+            "x": 23.529019326223583,
+            "y": -4.835829768116029,
+            "z": 0
+          },
+          {
+            "x": 26.681828400651238,
+            "y": -4.591299728639036,
+            "z": 0
+          },
+          {
+            "x": 29.8346374750789,
+            "y": -4.346769689162042,
+            "z": 0
+          },
+          {
+            "x": 32.98744654950655,
+            "y": -4.10223964968505,
+            "z": 0
+          },
+          {
+            "x": 36.140255623934216,
+            "y": -3.8577096102080555,
+            "z": 0
+          },
+          {
+            "x": 39.293064698361874,
+            "y": -3.613179570731063,
+            "z": 0
+          },
+          {
+            "x": 42.445873772789525,
+            "y": -3.3686495312540696,
+            "z": 0
+          },
+          {
+            "x": 45.84060474281685,
+            "y": -2.1538237655010786,
+            "z": 0
+          },
+          {
+            "x": 49.235335712844176,
+            "y": -0.9389979997480911,
+            "z": 0
+          },
+          {
+            "x": 52.6300666828715,
+            "y": 0.2758277660049,
+            "z": 0
+          },
+          {
+            "x": 56.26671954849849,
+            "y": 2.460949258033887,
+            "z": 0
+          },
+          {
+            "x": 59.903372414125485,
+            "y": 4.646070750062872,
+            "z": 0
+          },
+          {
+            "x": 63.540025279752484,
+            "y": 6.831192242091857,
+            "z": 0
+          },
+          {
+            "x": 67.17667814537947,
+            "y": 9.016313734120844,
+            "z": 0
+          },
+          {
+            "x": 71.05525290660613,
+            "y": 12.171730952425829,
+            "z": 0
+          },
+          {
+            "x": 74.93382766783279,
+            "y": 15.327148170730808,
+            "z": 0
+          },
+          {
+            "x": 77.6001848071838,
+            "y": 17.754191558359466,
+            "z": 0
+          },
+          {
+            "x": 80.26654194653479,
+            "y": 20.18123494598812,
+            "z": 0
+          },
+          {
+            "x": 82.93289908588578,
+            "y": 22.60827833361677,
+            "z": 0
+          },
+          {
+            "x": 85.84117812083645,
+            "y": 26.005617447521427,
+            "z": 0
+          },
+          {
+            "x": 88.50753526018744,
+            "y": 28.432660835150074,
+            "z": 0
+          },
+          {
+            "x": 91.41581429513809,
+            "y": 31.82999994905473,
+            "z": 0
+          },
+          {
+            "x": 94.32409333008877,
+            "y": 35.22733906295937,
+            "z": 0
+          },
+          {
+            "x": 97.23237236503944,
+            "y": 38.62467817686402,
+            "z": 0
+          },
+          {
+            "x": 98.92843377811444,
+            "y": 41.293643460092355,
+            "z": 0
+          },
+          {
+            "x": 101.83671281306509,
+            "y": 44.690982573997005,
+            "z": 0
+          },
+          {
+            "x": 104.98691374361543,
+            "y": 49.05861741417765,
+            "z": 0
+          },
+          {
+            "x": 108.13711467416576,
+            "y": 53.4262522543583,
+            "z": 0
+          },
+          {
+            "x": 111.28731560471608,
+            "y": 57.793887094538945,
+            "z": 0
+          },
+          {
+            "x": 112.98337701779108,
+            "y": 60.46285237776726,
+            "z": 0
+          },
+          {
+            "x": 116.13357794834143,
+            "y": 64.8304872179479,
+            "z": 0
+          },
+          {
+            "x": 117.82963936141641,
+            "y": 67.49945250117622,
+            "z": 0
+          },
+          {
+            "x": 119.52570077449143,
+            "y": 70.16841778440455,
+            "z": 0
+          },
+          {
+            "x": 121.22176218756643,
+            "y": 72.83738306763287,
+            "z": 0
+          },
+          {
+            "x": 122.91782360064141,
+            "y": 75.5063483508612,
+            "z": 0
+          },
+          {
+            "x": 124.61388501371641,
+            "y": 78.17531363408952,
+            "z": 0
+          },
+          {
+            "x": 126.30994642679143,
+            "y": 80.84427891731785,
+            "z": 0
+          },
+          {
+            "x": 128.0060078398664,
+            "y": 83.51324420054615,
+            "z": 0
+          },
+          {
+            "x": 131.15620877041675,
+            "y": 87.88087904072681,
+            "z": 0
+          },
+          {
+            "x": 132.85227018349175,
+            "y": 90.54984432395514,
+            "z": 0
+          },
+          {
+            "x": 136.0024711140421,
+            "y": 94.91747916413577,
+            "z": 0
+          },
+          {
+            "x": 139.1526720445924,
+            "y": 99.28511400431643,
+            "z": 0
+          },
+          {
+            "x": 142.0609510795431,
+            "y": 102.68245311822106,
+            "z": 0
+          },
+          {
+            "x": 145.2111520100934,
+            "y": 107.05008795840172,
+            "z": 0
+          },
+          {
+            "x": 148.11943104504408,
+            "y": 110.44742707230638,
+            "z": 0
+          },
+          {
+            "x": 151.02771007999473,
+            "y": 113.84476618621102,
+            "z": 0
+          },
+          {
+            "x": 153.93598911494541,
+            "y": 117.24210530011568,
+            "z": 0
+          },
+          {
+            "x": 156.6023462542964,
+            "y": 119.66914868774433,
+            "z": 0
+          },
+          {
+            "x": 159.51062528924706,
+            "y": 123.06648780164898,
+            "z": 0
+          },
+          {
+            "x": 162.17698242859805,
+            "y": 125.49353118927762,
+            "z": 0
+          },
+          {
+            "x": 164.84333956794904,
+            "y": 127.92057457690629,
+            "z": 0
+          },
+          {
+            "x": 167.50969670730007,
+            "y": 130.34761796453495,
+            "z": 0
+          },
+          {
+            "x": 170.17605384665103,
+            "y": 132.7746613521636,
+            "z": 0
+          },
+          {
+            "x": 172.84241098600205,
+            "y": 135.20170473979226,
+            "z": 0
+          },
+          {
+            "x": 176.47906385162904,
+            "y": 137.3868262318212,
+            "z": 0
+          },
+          {
+            "x": 180.11571671725602,
+            "y": 139.57194772385023,
+            "z": 0
+          },
+          {
+            "x": 183.75236958288303,
+            "y": 141.7570692158792,
+            "z": 0
+          },
+          {
+            "x": 187.38902244851,
+            "y": 143.9421907079082,
+            "z": 0
+          },
+          {
+            "x": 191.025675314137,
+            "y": 146.12731219993717,
+            "z": 0
+          },
+          {
+            "x": 194.42040628416433,
+            "y": 147.34213796569014,
+            "z": 0
+          },
+          {
+            "x": 197.573215358592,
+            "y": 147.58666800516716,
+            "z": 0
+          },
+          {
+            "x": 200.96794632861932,
+            "y": 148.80149377092016,
+            "z": 0
+          },
+          {
+            "x": 204.36267729864662,
+            "y": 150.01631953667314,
+            "z": 0
+          },
+          {
+            "x": 207.51548637307428,
+            "y": 150.26084957615012,
+            "z": 0
+          },
+          {
+            "x": 210.66829544750195,
+            "y": 150.5053796156271,
+            "z": 0
+          },
+          {
+            "x": 213.8211045219296,
+            "y": 150.74990965510415,
+            "z": 0
+          },
+          {
+            "x": 216.7319917007576,
+            "y": 150.0241439683051,
+            "z": 0
+          },
+          {
+            "x": 219.88480077518528,
+            "y": 150.26867400778212,
+            "z": 0
+          },
+          {
+            "x": 222.79568795401326,
+            "y": 149.54290832098312,
+            "z": 0
+          },
+          {
+            "x": 225.9484970284409,
+            "y": 149.7874383604601,
+            "z": 0
+          },
+          {
+            "x": 228.8593842072689,
+            "y": 149.0616726736611,
+            "z": 0
+          },
+          {
+            "x": 231.77027138609688,
+            "y": 148.33590698686208,
+            "z": 0
+          },
+          {
+            "x": 234.68115856492489,
+            "y": 147.6101413000631,
+            "z": 0
+          },
+          {
+            "x": 237.59204574375286,
+            "y": 146.8843756132641,
+            "z": 0
+          },
+          {
+            "x": 240.50293292258087,
+            "y": 146.1586099264651,
+            "z": 0
+          },
+          {
+            "x": 243.41382010140885,
+            "y": 145.43284423966608,
+            "z": 0
+          },
+          {
+            "x": 246.32470728023682,
+            "y": 144.70707855286707,
+            "z": 0
+          },
+          {
+            "x": 249.23559445906483,
+            "y": 143.9813128660681,
+            "z": 0
+          },
+          {
+            "x": 252.1464816378928,
+            "y": 143.25554717926906,
+            "z": 0
+          },
+          {
+            "x": 255.0573688167208,
+            "y": 142.52978149247008,
+            "z": 0
+          },
+          {
+            "x": 257.96825599554876,
+            "y": 141.80401580567107,
+            "z": 0
+          },
+          {
+            "x": 260.8791431743768,
+            "y": 141.07825011887206,
+            "z": 0
+          },
+          {
+            "x": 263.79003035320477,
+            "y": 140.35248443207306,
+            "z": 0
+          },
+          {
+            "x": 266.9428394276324,
+            "y": 140.59701447155004,
+            "z": 0
+          },
+          {
+            "x": 269.85372660646044,
+            "y": 139.87124878475106,
+            "z": 0
+          },
+          {
+            "x": 272.76461378528836,
+            "y": 139.14548309795205,
+            "z": 0
+          },
+          {
+            "x": 275.6755009641164,
+            "y": 138.41971741115304,
+            "z": 0
+          },
+          {
+            "x": 278.82831003854403,
+            "y": 138.66424745063003,
+            "z": 0
+          },
+          {
+            "x": 281.73919721737207,
+            "y": 137.93848176383102,
+            "z": 0
+          },
+          {
+            "x": 284.8920062917997,
+            "y": 138.183011803308,
+            "z": 0
+          },
+          {
+            "x": 287.8028934706277,
+            "y": 137.457246116509,
+            "z": 0
+          },
+          {
+            "x": 290.9557025450553,
+            "y": 137.701776155986,
+            "z": 0
+          },
+          {
+            "x": 294.108511619483,
+            "y": 137.94630619546302,
+            "z": 0
+          },
+          {
+            "x": 297.26132069391065,
+            "y": 138.19083623494,
+            "z": 0
+          },
+          {
+            "x": 300.4141297683383,
+            "y": 138.435366274417,
+            "z": 0
+          },
+          {
+            "x": 303.566938842766,
+            "y": 138.67989631389398,
+            "z": 0
+          },
+          {
+            "x": 306.7197479171936,
+            "y": 138.92442635337096,
+            "z": 0
+          },
+          {
+            "x": 309.87255699162125,
+            "y": 139.16895639284797,
+            "z": 0
+          },
+          {
+            "x": 313.26728796164866,
+            "y": 140.38378215860098,
+            "z": 0
+          },
+          {
+            "x": 316.4200970360763,
+            "y": 140.62831219807796,
+            "z": 0
+          },
+          {
+            "x": 319.8148280061036,
+            "y": 141.84313796383094,
+            "z": 0
+          },
+          {
+            "x": 322.96763708053123,
+            "y": 142.08766800330795,
+            "z": 0
+          },
+          {
+            "x": 326.36236805055853,
+            "y": 143.30249376906096,
+            "z": 0
+          },
+          {
+            "x": 329.75709902058594,
+            "y": 144.5173195348139,
+            "z": 0
+          },
+          {
+            "x": 333.3937518862129,
+            "y": 146.7024410268429,
+            "z": 0
+          },
+          {
+            "x": 336.7884828562402,
+            "y": 147.9172667925959,
+            "z": 0
+          },
+          {
+            "x": 340.18321382626755,
+            "y": 149.1320925583489,
+            "z": 0
+          },
+          {
+            "x": 343.8198666918945,
+            "y": 151.31721405037786,
+            "z": 0
+          },
+          {
+            "x": 347.4565195575215,
+            "y": 153.50233554240685,
+            "z": 0
+          },
+          {
+            "x": 351.09317242314853,
+            "y": 155.68745703443585,
+            "z": 0
+          },
+          {
+            "x": 354.7298252887755,
+            "y": 157.87257852646485,
+            "z": 0
+          },
+          {
+            "x": 358.3664781544025,
+            "y": 160.05770001849382,
+            "z": 0
+          },
+          {
+            "x": 361.03283529375346,
+            "y": 162.48474340612245,
+            "z": 0
+          },
+          {
+            "x": 364.66948815938053,
+            "y": 164.66986489815145,
+            "z": 0
+          },
+          {
+            "x": 367.3358452987315,
+            "y": 167.0969082857801,
+            "z": 0
+          },
+          {
+            "x": 371.2144200599581,
+            "y": 170.2523255040851,
+            "z": 0
+          },
+          {
+            "x": 375.0929948211848,
+            "y": 173.40774272239008,
+            "z": 0
+          },
+          {
+            "x": 377.7593519605358,
+            "y": 175.83478611001874,
+            "z": 0
+          },
+          {
+            "x": 380.42570909988683,
+            "y": 178.2618294976474,
+            "z": 0
+          },
+          {
+            "x": 383.0920662392378,
+            "y": 180.688872885276,
+            "z": 0
+          },
+          {
+            "x": 385.7584233785888,
+            "y": 183.1159162729047,
+            "z": 0
+          },
+          {
+            "x": 388.4247805179398,
+            "y": 185.54295966053337,
+            "z": 0
+          },
+          {
+            "x": 391.33305955289046,
+            "y": 188.940298774438,
+            "z": 0
+          },
+          {
+            "x": 393.9994166922414,
+            "y": 191.36734216206662,
+            "z": 0
+          },
+          {
+            "x": 396.9076957271921,
+            "y": 194.76468127597133,
+            "z": 0
+          },
+          {
+            "x": 399.5740528665431,
+            "y": 197.19172466359998,
+            "z": 0
+          },
+          {
+            "x": 402.4823319014938,
+            "y": 200.5890637775046,
+            "z": 0
+          },
+          {
+            "x": 405.39061093644443,
+            "y": 203.98640289140923,
+            "z": 0
+          },
+          {
+            "x": 408.2988899713951,
+            "y": 207.38374200531393,
+            "z": 0
+          },
+          {
+            "x": 411.20716900634574,
+            "y": 210.78108111921856,
+            "z": 0
+          },
+          {
+            "x": 414.1154480412964,
+            "y": 214.17842023312318,
+            "z": 0
+          },
+          {
+            "x": 415.8115094543714,
+            "y": 216.8473855163515,
+            "z": 0
+          },
+          {
+            "x": 418.7197884893221,
+            "y": 220.2447246302562,
+            "z": 0
+          },
+          {
+            "x": 421.62806752427275,
+            "y": 223.64206374416082,
+            "z": 0
+          },
+          {
+            "x": 423.3241289373478,
+            "y": 226.31102902738914,
+            "z": 0
+          },
+          {
+            "x": 426.2324079722984,
+            "y": 229.70836814129382,
+            "z": 0
+          },
+          {
+            "x": 427.92846938537343,
+            "y": 232.37733342452213,
+            "z": 0
+          },
+          {
+            "x": 431.0786703159238,
+            "y": 236.74496826470278,
+            "z": 0
+          },
+          {
+            "x": 434.22887124647406,
+            "y": 241.1126031048834,
+            "z": 0
+          },
+          {
+            "x": 437.3790721770244,
+            "y": 245.48023794506406,
+            "z": 0
+          },
+          {
+            "x": 440.5292731075748,
+            "y": 249.8478727852447,
+            "z": 0
+          },
+          {
+            "x": 442.22533452064977,
+            "y": 252.51683806847302,
+            "z": 0
+          },
+          {
+            "x": 445.3755354512001,
+            "y": 256.8844729086537,
+            "z": 0
+          },
+          {
+            "x": 447.0715968642751,
+            "y": 259.553438191882,
+            "z": 0
+          },
+          {
+            "x": 448.76765827735005,
+            "y": 262.2224034751103,
+            "z": 0
+          },
+          {
+            "x": 451.9178592079004,
+            "y": 266.590038315291,
+            "z": 0
+          },
+          {
+            "x": 453.6139206209754,
+            "y": 269.2590035985193,
+            "z": 0
+          },
+          {
+            "x": 455.3099820340504,
+            "y": 271.92796888174763,
+            "z": 0
+          },
+          {
+            "x": 457.0060434471254,
+            "y": 274.5969341649759,
+            "z": 0
+          },
+          {
+            "x": 458.7021048602004,
+            "y": 277.2658994482042,
+            "z": 0
+          },
+          {
+            "x": 460.39816627327536,
+            "y": 279.9348647314326,
+            "z": 0
+          },
+          {
+            "x": 462.0942276863504,
+            "y": 282.6038300146609,
+            "z": 0
+          },
+          {
+            "x": 463.7902890994254,
+            "y": 285.2727952978892,
+            "z": 0
+          },
+          {
+            "x": 465.4863505125004,
+            "y": 287.94176058111753,
+            "z": 0
+          },
+          {
+            "x": 467.1824119255754,
+            "y": 290.6107258643459,
+            "z": 0
+          },
+          {
+            "x": 470.33261285612576,
+            "y": 294.9783607045265,
+            "z": 0
+          },
+          {
+            "x": 472.02867426920074,
+            "y": 297.6473259877548,
+            "z": 0
+          },
+          {
+            "x": 473.72473568227576,
+            "y": 300.31629127098313,
+            "z": 0
+          },
+          {
+            "x": 476.87493661282605,
+            "y": 304.6839261111638,
+            "z": 0
+          },
+          {
+            "x": 478.5709980259011,
+            "y": 307.35289139439215,
+            "z": 0
+          },
+          {
+            "x": 481.72119895645136,
+            "y": 311.72052623457273,
+            "z": 0
+          },
+          {
+            "x": 484.8713998870017,
+            "y": 316.08816107475343,
+            "z": 0
+          },
+          {
+            "x": 488.0216008175521,
+            "y": 320.4557959149341,
+            "z": 0
+          },
+          {
+            "x": 491.17180174810244,
+            "y": 324.8234307551147,
+            "z": 0
+          },
+          {
+            "x": 494.08008078305306,
+            "y": 328.22076986901936,
+            "z": 0
+          },
+          {
+            "x": 495.77614219612803,
+            "y": 330.8897351522477,
+            "z": 0
+          },
+          {
+            "x": 498.6844212310787,
+            "y": 334.28707426615233,
+            "z": 0
+          },
+          {
+            "x": 501.5927002660294,
+            "y": 337.684413380057,
+            "z": 0
+          },
+          {
+            "x": 503.28876167910437,
+            "y": 340.3533786632853,
+            "z": 0
+          },
+          {
+            "x": 506.197040714055,
+            "y": 343.75071777718995,
+            "z": 0
+          },
+          {
+            "x": 509.10531974900573,
+            "y": 347.1480568910946,
+            "z": 0
+          },
+          {
+            "x": 512.0135987839564,
+            "y": 350.5453960049993,
+            "z": 0
+          },
+          {
+            "x": 514.9218778189071,
+            "y": 353.9427351189039,
+            "z": 0
+          },
+          {
+            "x": 517.8301568538577,
+            "y": 357.34007423280855,
+            "z": 0
+          },
+          {
+            "x": 520.4965139932087,
+            "y": 359.7671176204372,
+            "z": 0
+          },
+          {
+            "x": 523.4047930281594,
+            "y": 363.1644567343419,
+            "z": 0
+          },
+          {
+            "x": 526.0711501675103,
+            "y": 365.5915001219705,
+            "z": 0
+          },
+          {
+            "x": 528.979429202461,
+            "y": 368.98883923587516,
+            "z": 0
+          },
+          {
+            "x": 531.645786341812,
+            "y": 371.4158826235038,
+            "z": 0
+          },
+          {
+            "x": 534.312143481163,
+            "y": 373.8429260111325,
+            "z": 0
+          },
+          {
+            "x": 536.9785006205141,
+            "y": 376.26996939876113,
+            "z": 0
+          },
+          {
+            "x": 539.644857759865,
+            "y": 378.6970127863898,
+            "z": 0
+          },
+          {
+            "x": 542.311214899216,
+            "y": 381.1240561740184,
+            "z": 0
+          },
+          {
+            "x": 544.977572038567,
+            "y": 383.55109956164705,
+            "z": 0
+          },
+          {
+            "x": 547.643929177918,
+            "y": 385.97814294927576,
+            "z": 0
+          },
+          {
+            "x": 551.5225039391446,
+            "y": 389.13356016758075,
+            "z": 0
+          },
+          {
+            "x": 555.1591568047717,
+            "y": 391.3186816596097,
+            "z": 0
+          },
+          {
+            "x": 557.8255139441226,
+            "y": 393.74572504723835,
+            "z": 0
+          },
+          {
+            "x": 561.4621668097496,
+            "y": 395.93084653926735,
+            "z": 0
+          },
+          {
+            "x": 565.0988196753766,
+            "y": 398.11596803129635,
+            "z": 0
+          },
+          {
+            "x": 568.7354725410037,
+            "y": 400.30108952332534,
+            "z": 0
+          },
+          {
+            "x": 572.3721254066306,
+            "y": 402.48621101535434,
+            "z": 0
+          },
+          {
+            "x": 576.0087782722576,
+            "y": 404.6713325073833,
+            "z": 0
+          },
+          {
+            "x": 579.4035092422849,
+            "y": 405.8861582731363,
+            "z": 0
+          },
+          {
+            "x": 583.0401621079119,
+            "y": 408.0712797651653,
+            "z": 0
+          },
+          {
+            "x": 586.4348930779393,
+            "y": 409.28610553091823,
+            "z": 0
+          },
+          {
+            "x": 589.8296240479666,
+            "y": 410.50093129667124,
+            "z": 0
+          },
+          {
+            "x": 593.2243550179938,
+            "y": 411.71575706242425,
+            "z": 0
+          },
+          {
+            "x": 596.6190859880212,
+            "y": 412.9305828281772,
+            "z": 0
+          },
+          {
+            "x": 599.771895062449,
+            "y": 413.17511286765426,
+            "z": 0
+          },
+          {
+            "x": 603.1666260324762,
+            "y": 414.38993863340727,
+            "z": 0
+          },
+          {
+            "x": 606.3194351069038,
+            "y": 414.63446867288417,
+            "z": 0
+          },
+          {
+            "x": 609.7141660769312,
+            "y": 415.8492944386372,
+            "z": 0
+          },
+          {
+            "x": 612.8669751513589,
+            "y": 416.0938244781142,
+            "z": 0
+          },
+          {
+            "x": 616.0197842257865,
+            "y": 416.33835451759114,
+            "z": 0
+          },
+          {
+            "x": 619.1725933002142,
+            "y": 416.58288455706816,
+            "z": 0
+          },
+          {
+            "x": 622.3254023746417,
+            "y": 416.8274145965452,
+            "z": 0
+          },
+          {
+            "x": 625.4782114490695,
+            "y": 417.0719446360222,
+            "z": 0
+          },
+          {
+            "x": 628.3890986278975,
+            "y": 416.34617894922314,
+            "z": 0
+          },
+          {
+            "x": 631.5419077023251,
+            "y": 416.5907089887002,
+            "z": 0
+          },
+          {
+            "x": 634.6947167767528,
+            "y": 416.8352390281771,
+            "z": 0
+          },
+          {
+            "x": 637.6056039555807,
+            "y": 416.10947334137813,
+            "z": 0
+          },
+          {
+            "x": 640.5164911344087,
+            "y": 415.3837076545791,
+            "z": 0
+          },
+          {
+            "x": 643.6693002088364,
+            "y": 415.62823769405617,
+            "z": 0
+          },
+          {
+            "x": 646.5801873876644,
+            "y": 414.9024720072572,
+            "z": 0
+          },
+          {
+            "x": 649.4910745664924,
+            "y": 414.17670632045815,
+            "z": 0
+          },
+          {
+            "x": 652.6438836409201,
+            "y": 414.4212363599351,
+            "z": 0
+          },
+          {
+            "x": 655.554770819748,
+            "y": 413.69547067313613,
+            "z": 0
+          },
+          {
+            "x": 658.465657998576,
+            "y": 412.9697049863371,
+            "z": 0
+          },
+          {
+            "x": 661.3765451774041,
+            "y": 412.24393929953806,
+            "z": 0
+          },
+          {
+            "x": 664.287432356232,
+            "y": 411.5181736127391,
+            "z": 0
+          },
+          {
+            "x": 667.19831953506,
+            "y": 410.7924079259401,
+            "z": 0
+          },
+          {
+            "x": 670.1092067138879,
+            "y": 410.06664223914106,
+            "z": 0
+          },
+          {
+            "x": 673.020093892716,
+            "y": 409.3408765523421,
+            "z": 0
+          },
+          {
+            "x": 675.930981071544,
+            "y": 408.6151108655431,
+            "z": 0
+          }
+        ],
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "is_highlighted": false,
+        "offset": {
+          "z": 0
+        },
+        "pointDist": 3,
+        "size": {
+          "x": 200,
+          "y": 200,
+          "z": 0
+        },
+        "rotation": -14,
+        "iterations": 1,
+        "growth": 1.8
+      },
+      "size": {
+        "x": 10,
+        "y": 10,
+        "z": 0
+      },
+      "animation": {
+        "defaultArgs": {
+          "name": "my-animation",
+          "description": "my-description",
+          "frames": [],
+          "type": "none",
+          "delay": 0,
+          "frameSize": {
+            "x": 44,
+            "y": 44,
+            "z": 0
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "termPoint": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "flipX": false,
+          "duration": 1000,
+          "size": {
+            "x": 20,
+            "y": 20,
+            "z": 20
+          }
+        },
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+          "domElement": {}
+        },
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+        "domElement": {},
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "extras": false,
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 50,
+              "y": 50,
+              "z": 0
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "flipX": false,
+        "cix": 0,
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "timer": 0,
+        "duration": 1000,
+        "seesaw_mode": false
+      },
+      "parent_id": "__blank",
+      "name": "bullet*",
+      "description": false,
+      "duration": 500,
+      "delay": 0,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "highlighted": false,
+      "sprites": []
+    },
+    {
+      "line": {
+        "curve_string": "Quartic_InOut",
+        "points": [
+          {
+            "x": 1.4635789774161982,
+            "y": -2.618766231809429,
+            "z": 0
+          },
+          {
+            "x": 2.9271579548323965,
+            "y": -5.237532463618858,
+            "z": 0
+          },
+          {
+            "x": 4.390736932248595,
+            "y": -7.856298695428286,
+            "z": 0
+          },
+          {
+            "x": 5.854315909664793,
+            "y": -10.475064927237716,
+            "z": 0
+          },
+          {
+            "x": 7.317894887080991,
+            "y": -13.093831159047145,
+            "z": 0
+          },
+          {
+            "x": 8.78147386449719,
+            "y": -15.712597390856573,
+            "z": 0
+          },
+          {
+            "x": 10.245052841913388,
+            "y": -18.331363622666004,
+            "z": 0
+          },
+          {
+            "x": 11.708631819329586,
+            "y": -20.95012985447543,
+            "z": 0
+          },
+          {
+            "x": 14.045132874015593,
+            "y": -23.081036427146127,
+            "z": 0
+          },
+          {
+            "x": 15.50871185143179,
+            "y": -25.69980265895556,
+            "z": 0
+          },
+          {
+            "x": 16.97229082884799,
+            "y": -28.318568890764986,
+            "z": 0
+          },
+          {
+            "x": 19.308791883534,
+            "y": -30.44947546343568,
+            "z": 0
+          },
+          {
+            "x": 20.772370860950197,
+            "y": -33.06824169524511,
+            "z": 0
+          },
+          {
+            "x": 23.108871915636204,
+            "y": -35.19914826791581,
+            "z": 0
+          },
+          {
+            "x": 25.44537297032221,
+            "y": -37.3300548405865,
+            "z": 0
+          },
+          {
+            "x": 27.78187402500822,
+            "y": -39.4609614132572,
+            "z": 0
+          },
+          {
+            "x": 30.991297156964038,
+            "y": -41.10400832678916,
+            "z": 0
+          },
+          {
+            "x": 34.200720288919854,
+            "y": -42.747055240321124,
+            "z": 0
+          },
+          {
+            "x": 37.41014342087567,
+            "y": -44.39010215385309,
+            "z": 0
+          },
+          {
+            "x": 40.619566552831486,
+            "y": -46.033149067385054,
+            "z": 0
+          },
+          {
+            "x": 44.70191176205712,
+            "y": -47.18833632177828,
+            "z": 0
+          },
+          {
+            "x": 48.784256971282744,
+            "y": -48.34352357617151,
+            "z": 0
+          },
+          {
+            "x": 53.73952425777818,
+            "y": -49.01085117142601,
+            "z": 0
+          },
+          {
+            "x": 58.69479154427362,
+            "y": -49.6781787666805,
+            "z": 0
+          },
+          {
+            "x": 62.289277094360514,
+            "y": -49.96044394380394,
+            "z": 0
+          },
+          {
+            "x": 65.8837626444474,
+            "y": -50.242709120927344,
+            "z": 0
+          },
+          {
+            "x": 70.35117027180411,
+            "y": -50.037114638912044,
+            "z": 0
+          },
+          {
+            "x": 74.81857789916081,
+            "y": -49.83152015689672,
+            "z": 0
+          },
+          {
+            "x": 79.28598552651752,
+            "y": -49.625925674881415,
+            "z": 0
+          },
+          {
+            "x": 84.62631523114403,
+            "y": -48.93247153372738,
+            "z": 0
+          },
+          {
+            "x": 89.96664493577055,
+            "y": -48.239017392573324,
+            "z": 0
+          },
+          {
+            "x": 95.30697464039706,
+            "y": -47.54556325141929,
+            "z": 0
+          },
+          {
+            "x": 98.41360053134522,
+            "y": -46.954906351272896,
+            "z": 0
+          },
+          {
+            "x": 101.52022642229338,
+            "y": -46.364249451126504,
+            "z": 0
+          },
+          {
+            "x": 104.62685231324156,
+            "y": -45.773592550980126,
+            "z": 0
+          },
+          {
+            "x": 107.73347820418971,
+            "y": -45.18293565083373,
+            "z": 0
+          },
+          {
+            "x": 110.84010409513786,
+            "y": -44.592278750687335,
+            "z": 0
+          },
+          {
+            "x": 113.94672998608604,
+            "y": -44.00162185054094,
+            "z": 0
+          },
+          {
+            "x": 117.05335587703419,
+            "y": -43.410964950394565,
+            "z": 0
+          },
+          {
+            "x": 121.03290384525216,
+            "y": -42.332448391109445,
+            "z": 0
+          },
+          {
+            "x": 125.01245181347014,
+            "y": -41.25393183182432,
+            "z": 0
+          },
+          {
+            "x": 128.1190777044183,
+            "y": -40.66327493167794,
+            "z": 0
+          },
+          {
+            "x": 132.09862567263627,
+            "y": -39.58475837239281,
+            "z": 0
+          },
+          {
+            "x": 136.07817364085423,
+            "y": -38.506241813107685,
+            "z": 0
+          },
+          {
+            "x": 140.0577216090722,
+            "y": -37.42772525382256,
+            "z": 0
+          },
+          {
+            "x": 144.03726957729017,
+            "y": -36.34920869453745,
+            "z": 0
+          },
+          {
+            "x": 147.14389546823833,
+            "y": -35.75855179439106,
+            "z": 0
+          },
+          {
+            "x": 151.1234434364563,
+            "y": -34.68003523510593,
+            "z": 0
+          },
+          {
+            "x": 155.10299140467427,
+            "y": -33.60151867582082,
+            "z": 0
+          },
+          {
+            "x": 158.20961729562245,
+            "y": -33.01086177567443,
+            "z": 0
+          },
+          {
+            "x": 161.3162431865706,
+            "y": -32.420204875528036,
+            "z": 0
+          },
+          {
+            "x": 164.42286907751878,
+            "y": -31.829547975381644,
+            "z": 0
+          },
+          {
+            "x": 167.52949496846693,
+            "y": -31.238891075235266,
+            "z": 0
+          },
+          {
+            "x": 170.6361208594151,
+            "y": -30.648234175088874,
+            "z": 0
+          },
+          {
+            "x": 173.74274675036327,
+            "y": -30.057577274942474,
+            "z": 0
+          },
+          {
+            "x": 176.84937264131142,
+            "y": -29.466920374796103,
+            "z": 0
+          },
+          {
+            "x": 179.95599853225957,
+            "y": -28.876263474649704,
+            "z": 0
+          },
+          {
+            "x": 185.2963282368861,
+            "y": -28.182809333495655,
+            "z": 0
+          },
+          {
+            "x": 190.63665794151262,
+            "y": -27.48935519234162,
+            "z": 0
+          },
+          {
+            "x": 195.10406556886932,
+            "y": -27.283760710326305,
+            "z": 0
+          },
+          {
+            "x": 199.571473196226,
+            "y": -27.07816622831099,
+            "z": 0
+          },
+          {
+            "x": 204.0388808235827,
+            "y": -26.87257174629569,
+            "z": 0
+          },
+          {
+            "x": 207.63336637366962,
+            "y": -27.154836923419097,
+            "z": 0
+          },
+          {
+            "x": 212.1007740010263,
+            "y": -26.949242441403797,
+            "z": 0
+          },
+          {
+            "x": 215.69525955111322,
+            "y": -27.231507618527203,
+            "z": 0
+          },
+          {
+            "x": 220.65052683760865,
+            "y": -27.89883521378171,
+            "z": 0
+          },
+          {
+            "x": 224.7328720468343,
+            "y": -29.054022468174935,
+            "z": 0
+          },
+          {
+            "x": 228.8152172560599,
+            "y": -30.209209722568175,
+            "z": 0
+          },
+          {
+            "x": 232.89756246528552,
+            "y": -31.3643969769614,
+            "z": 0
+          },
+          {
+            "x": 236.10698559724136,
+            "y": -33.00744389049336,
+            "z": 0
+          },
+          {
+            "x": 239.31640872919718,
+            "y": -34.65049080402534,
+            "z": 0
+          },
+          {
+            "x": 242.525831861153,
+            "y": -36.293537717557285,
+            "z": 0
+          },
+          {
+            "x": 244.86233291583898,
+            "y": -38.424444290227996,
+            "z": 0
+          },
+          {
+            "x": 247.19883397052502,
+            "y": -40.55535086289869,
+            "z": 0
+          },
+          {
+            "x": 249.535335025211,
+            "y": -42.686257435569374,
+            "z": 0
+          },
+          {
+            "x": 251.87183607989704,
+            "y": -44.817164008240084,
+            "z": 0
+          },
+          {
+            "x": 253.3354150573132,
+            "y": -47.4359302400495,
+            "z": 0
+          },
+          {
+            "x": 255.67191611199922,
+            "y": -49.56683681272021,
+            "z": 0
+          },
+          {
+            "x": 257.13549508941543,
+            "y": -52.18560304452963,
+            "z": 0
+          },
+          {
+            "x": 259.4719961441014,
+            "y": -54.31650961720031,
+            "z": 0
+          },
+          {
+            "x": 260.9355751215176,
+            "y": -56.935275849009756,
+            "z": 0
+          },
+          {
+            "x": 262.3991540989338,
+            "y": -59.55404208081917,
+            "z": 0
+          },
+          {
+            "x": 263.86273307635,
+            "y": -62.17280831262862,
+            "z": 0
+          },
+          {
+            "x": 265.32631205376623,
+            "y": -64.79157454443803,
+            "z": 0
+          },
+          {
+            "x": 266.7898910311824,
+            "y": -67.41034077624748,
+            "z": 0
+          },
+          {
+            "x": 268.2534700085986,
+            "y": -70.0291070080569,
+            "z": 0
+          },
+          {
+            "x": 269.7170489860148,
+            "y": -72.64787323986631,
+            "z": 0
+          },
+          {
+            "x": 271.180627963431,
+            "y": -75.26663947167576,
+            "z": 0
+          },
+          {
+            "x": 272.6442069408472,
+            "y": -77.88540570348518,
+            "z": 0
+          },
+          {
+            "x": 274.1077859182634,
+            "y": -80.50417193529462,
+            "z": 0
+          },
+          {
+            "x": 275.5713648956796,
+            "y": -83.12293816710404,
+            "z": 0
+          },
+          {
+            "x": 277.0349438730958,
+            "y": -85.74170439891348,
+            "z": 0
+          },
+          {
+            "x": 278.498522850512,
+            "y": -88.3604706307229,
+            "z": 0
+          },
+          {
+            "x": 279.9621018279282,
+            "y": -90.97923686253232,
+            "z": 0
+          },
+          {
+            "x": 281.4256808053444,
+            "y": -93.59800309434176,
+            "z": 0
+          },
+          {
+            "x": 282.8892597827606,
+            "y": -96.21676932615118,
+            "z": 0
+          },
+          {
+            "x": 284.3528387601768,
+            "y": -98.83553555796063,
+            "z": 0
+          },
+          {
+            "x": 285.816417737593,
+            "y": -101.45430178977004,
+            "z": 0
+          },
+          {
+            "x": 287.2799967150092,
+            "y": -104.07306802157946,
+            "z": 0
+          },
+          {
+            "x": 288.7435756924254,
+            "y": -106.6918342533889,
+            "z": 0
+          },
+          {
+            "x": 290.2071546698416,
+            "y": -109.31060048519832,
+            "z": 0
+          },
+          {
+            "x": 292.5436557245276,
+            "y": -111.44150705786903,
+            "z": 0
+          },
+          {
+            "x": 294.0072347019438,
+            "y": -114.06027328967845,
+            "z": 0
+          },
+          {
+            "x": 295.47081367936,
+            "y": -116.6790395214879,
+            "z": 0
+          },
+          {
+            "x": 296.9343926567762,
+            "y": -119.29780575329731,
+            "z": 0
+          },
+          {
+            "x": 298.3979716341924,
+            "y": -121.91657198510673,
+            "z": 0
+          },
+          {
+            "x": 300.7344726888784,
+            "y": -124.04747855777745,
+            "z": 0
+          },
+          {
+            "x": 302.1980516662946,
+            "y": -126.66624478958687,
+            "z": 0
+          },
+          {
+            "x": 304.5345527209806,
+            "y": -128.79715136225758,
+            "z": 0
+          },
+          {
+            "x": 305.99813169839683,
+            "y": -131.415917594067,
+            "z": 0
+          },
+          {
+            "x": 308.3346327530828,
+            "y": -133.5468241667377,
+            "z": 0
+          },
+          {
+            "x": 310.6711338077688,
+            "y": -135.6777307394084,
+            "z": 0
+          },
+          {
+            "x": 312.134712785185,
+            "y": -138.2964969712178,
+            "z": 0
+          },
+          {
+            "x": 314.471213839871,
+            "y": -140.42740354388852,
+            "z": 0
+          },
+          {
+            "x": 316.807714894557,
+            "y": -142.5583101165592,
+            "z": 0
+          },
+          {
+            "x": 320.01713802651284,
+            "y": -144.20135703009117,
+            "z": 0
+          },
+          {
+            "x": 322.3536390811989,
+            "y": -146.33226360276188,
+            "z": 0
+          },
+          {
+            "x": 324.6901401358849,
+            "y": -148.46317017543254,
+            "z": 0
+          },
+          {
+            "x": 327.8995632678407,
+            "y": -150.1062170889645,
+            "z": 0
+          },
+          {
+            "x": 331.1089863997965,
+            "y": -151.74926400249652,
+            "z": 0
+          },
+          {
+            "x": 333.44548745448253,
+            "y": -153.88017057516717,
+            "z": 0
+          },
+          {
+            "x": 337.5278326637082,
+            "y": -155.0353578295604,
+            "z": 0
+          },
+          {
+            "x": 340.73725579566394,
+            "y": -156.67840474309241,
+            "z": 0
+          },
+          {
+            "x": 343.94667892761976,
+            "y": -158.3214516566244,
+            "z": 0
+          },
+          {
+            "x": 348.0290241368454,
+            "y": -159.47663891101757,
+            "z": 0
+          },
+          {
+            "x": 352.111369346071,
+            "y": -160.6318261654108,
+            "z": 0
+          },
+          {
+            "x": 356.19371455529665,
+            "y": -161.78701341980405,
+            "z": 0
+          },
+          {
+            "x": 361.1489818417921,
+            "y": -162.4543410150585,
+            "z": 0
+          },
+          {
+            "x": 365.23132705101773,
+            "y": -163.60952826945174,
+            "z": 0
+          },
+          {
+            "x": 368.82581260110464,
+            "y": -163.89179344657518,
+            "z": 0
+          },
+          {
+            "x": 372.4202981511915,
+            "y": -164.17405862369858,
+            "z": 0
+          },
+          {
+            "x": 377.37556543768693,
+            "y": -164.84138621895312,
+            "z": 0
+          },
+          {
+            "x": 380.9700509877738,
+            "y": -165.12365139607653,
+            "z": 0
+          },
+          {
+            "x": 384.5645365378607,
+            "y": -165.40591657319993,
+            "z": 0
+          },
+          {
+            "x": 389.0319441652174,
+            "y": -165.2003220911846,
+            "z": 0
+          },
+          {
+            "x": 392.6264297153043,
+            "y": -165.48258726830807,
+            "z": 0
+          },
+          {
+            "x": 397.093837342661,
+            "y": -165.27699278629277,
+            "z": 0
+          },
+          {
+            "x": 401.5612449700177,
+            "y": -165.07139830427744,
+            "z": 0
+          },
+          {
+            "x": 406.02865259737445,
+            "y": -164.8658038222621,
+            "z": 0
+          },
+          {
+            "x": 410.49606022473114,
+            "y": -164.6602093402468,
+            "z": 0
+          },
+          {
+            "x": 414.9634678520879,
+            "y": -164.45461485823148,
+            "z": 0
+          },
+          {
+            "x": 418.070093743036,
+            "y": -163.8639579580851,
+            "z": 0
+          },
+          {
+            "x": 422.53750137039276,
+            "y": -163.6583634760698,
+            "z": 0
+          },
+          {
+            "x": 425.6441272613409,
+            "y": -163.06770657592344,
+            "z": 0
+          },
+          {
+            "x": 430.1115348886976,
+            "y": -162.8621120939081,
+            "z": 0
+          },
+          {
+            "x": 433.21816077964576,
+            "y": -162.27145519376168,
+            "z": 0
+          },
+          {
+            "x": 436.3247866705939,
+            "y": -161.68079829361534,
+            "z": 0
+          },
+          {
+            "x": 441.6651163752204,
+            "y": -160.98734415246128,
+            "z": 0
+          },
+          {
+            "x": 444.7717422661686,
+            "y": -160.3966872523149,
+            "z": 0
+          },
+          {
+            "x": 450.1120719707951,
+            "y": -159.70323311116087,
+            "z": 0
+          },
+          {
+            "x": 453.21869786174324,
+            "y": -159.11257621101444,
+            "z": 0
+          },
+          {
+            "x": 456.3253237526914,
+            "y": -158.52191931086807,
+            "z": 0
+          },
+          {
+            "x": 459.4319496436396,
+            "y": -157.93126241072164,
+            "z": 0
+          },
+          {
+            "x": 462.5385755345877,
+            "y": -157.3406055105753,
+            "z": 0
+          },
+          {
+            "x": 465.6452014255359,
+            "y": -156.74994861042893,
+            "z": 0
+          },
+          {
+            "x": 468.7518273164841,
+            "y": -156.1592917102825,
+            "z": 0
+          },
+          {
+            "x": 472.73137528470204,
+            "y": -155.0807751509974,
+            "z": 0
+          },
+          {
+            "x": 475.8380011756502,
+            "y": -154.490118250851,
+            "z": 0
+          },
+          {
+            "x": 478.9446270665984,
+            "y": -153.89946135070463,
+            "z": 0
+          },
+          {
+            "x": 482.92417503481636,
+            "y": -152.82094479141946,
+            "z": 0
+          },
+          {
+            "x": 486.03080092576454,
+            "y": -152.2302878912731,
+            "z": 0
+          },
+          {
+            "x": 490.0103488939825,
+            "y": -151.15177133198802,
+            "z": 0
+          },
+          {
+            "x": 493.1169747849307,
+            "y": -150.5611144318416,
+            "z": 0
+          },
+          {
+            "x": 497.09652275314863,
+            "y": -149.48259787255648,
+            "z": 0
+          },
+          {
+            "x": 501.0760707213666,
+            "y": -148.40408131327135,
+            "z": 0
+          },
+          {
+            "x": 504.18269661231477,
+            "y": -147.81342441312498,
+            "z": 0
+          },
+          {
+            "x": 508.16224458053273,
+            "y": -146.73490785383981,
+            "z": 0
+          },
+          {
+            "x": 512.1417925487507,
+            "y": -145.6563912945547,
+            "z": 0
+          },
+          {
+            "x": 516.1213405169686,
+            "y": -144.57787473526963,
+            "z": 0
+          },
+          {
+            "x": 520.1008884851866,
+            "y": -143.49935817598447,
+            "z": 0
+          },
+          {
+            "x": 524.0804364534046,
+            "y": -142.42084161669936,
+            "z": 0
+          },
+          {
+            "x": 528.0599844216226,
+            "y": -141.34232505741423,
+            "z": 0
+          },
+          {
+            "x": 531.1666103125707,
+            "y": -140.75166815726786,
+            "z": 0
+          },
+          {
+            "x": 535.1461582807888,
+            "y": -139.6731515979827,
+            "z": 0
+          },
+          {
+            "x": 539.1257062490067,
+            "y": -138.5946350386976,
+            "z": 0
+          },
+          {
+            "x": 542.2323321399549,
+            "y": -138.00397813855125,
+            "z": 0
+          },
+          {
+            "x": 546.2118801081729,
+            "y": -136.92546157926608,
+            "z": 0
+          },
+          {
+            "x": 549.318505999121,
+            "y": -136.3348046791197,
+            "z": 0
+          },
+          {
+            "x": 553.298053967339,
+            "y": -135.25628811983458,
+            "z": 0
+          },
+          {
+            "x": 556.4046798582872,
+            "y": -134.6656312196882,
+            "z": 0
+          },
+          {
+            "x": 559.5113057492352,
+            "y": -134.07497431954178,
+            "z": 0
+          },
+          {
+            "x": 563.4908537174532,
+            "y": -132.99645776025667,
+            "z": 0
+          },
+          {
+            "x": 566.5974796084014,
+            "y": -132.40580086011033,
+            "z": 0
+          },
+          {
+            "x": 569.7041054993496,
+            "y": -131.8151439599639,
+            "z": 0
+          },
+          {
+            "x": 572.8107313902977,
+            "y": -131.22448705981753,
+            "z": 0
+          },
+          {
+            "x": 575.9173572812458,
+            "y": -130.6338301596711,
+            "z": 0
+          },
+          {
+            "x": 579.023983172194,
+            "y": -130.04317325952476,
+            "z": 0
+          },
+          {
+            "x": 582.1306090631422,
+            "y": -129.45251635937834,
+            "z": 0
+          },
+          {
+            "x": 585.2372349540904,
+            "y": -128.86185945923197,
+            "z": 0
+          },
+          {
+            "x": 590.5775646587168,
+            "y": -128.1684053180779,
+            "z": 0
+          },
+          {
+            "x": 593.684190549665,
+            "y": -127.57774841793156,
+            "z": 0
+          },
+          {
+            "x": 599.0245202542916,
+            "y": -126.8842942767775,
+            "z": 0
+          },
+          {
+            "x": 602.1311461452397,
+            "y": -126.29363737663107,
+            "z": 0
+          },
+          {
+            "x": 606.5985537725965,
+            "y": -126.08804289461582,
+            "z": 0
+          },
+          {
+            "x": 609.7051796635446,
+            "y": -125.4973859944694,
+            "z": 0
+          },
+          {
+            "x": 614.1725872909012,
+            "y": -125.29179151245407,
+            "z": 0
+          },
+          {
+            "x": 617.2792131818494,
+            "y": -124.7011346123077,
+            "z": 0
+          },
+          {
+            "x": 621.7466208092062,
+            "y": -124.4955401302924,
+            "z": 0
+          },
+          {
+            "x": 626.2140284365628,
+            "y": -124.28994564827707,
+            "z": 0
+          },
+          {
+            "x": 630.6814360639196,
+            "y": -124.08435116626174,
+            "z": 0
+          },
+          {
+            "x": 635.1488436912763,
+            "y": -123.87875668424644,
+            "z": 0
+          },
+          {
+            "x": 639.616251318633,
+            "y": -123.67316220223117,
+            "z": 0
+          },
+          {
+            "x": 643.2107368687199,
+            "y": -123.95542737935457,
+            "z": 0
+          },
+          {
+            "x": 647.6781444960766,
+            "y": -123.74983289733925,
+            "z": 0
+          },
+          {
+            "x": 651.2726300461635,
+            "y": -124.03209807446268,
+            "z": 0
+          },
+          {
+            "x": 654.8671155962503,
+            "y": -124.31436325158609,
+            "z": 0
+          },
+          {
+            "x": 658.4616011463372,
+            "y": -124.5966284287095,
+            "z": 0
+          },
+          {
+            "x": 662.0560866964241,
+            "y": -124.8788936058329,
+            "z": 0
+          },
+          {
+            "x": 667.0113539829196,
+            "y": -125.54622120108743,
+            "z": 0
+          },
+          {
+            "x": 671.0936991921452,
+            "y": -126.70140845548067,
+            "z": 0
+          },
+          {
+            "x": 674.6881847422321,
+            "y": -126.98367363260411,
+            "z": 0
+          },
+          {
+            "x": 678.7705299514577,
+            "y": -128.13886088699735,
+            "z": 0
+          },
+          {
+            "x": 682.8528751606833,
+            "y": -129.29404814139053,
+            "z": 0
+          },
+          {
+            "x": 686.935220369909,
+            "y": -130.44923539578377,
+            "z": 0
+          },
+          {
+            "x": 690.1446435018648,
+            "y": -132.09228230931575,
+            "z": 0
+          },
+          {
+            "x": 694.2269887110904,
+            "y": -133.24746956370893,
+            "z": 0
+          },
+          {
+            "x": 697.4364118430462,
+            "y": -134.8905164772409,
+            "z": 0
+          },
+          {
+            "x": 700.6458349750021,
+            "y": -136.53356339077288,
+            "z": 0
+          },
+          {
+            "x": 703.8552581069579,
+            "y": -138.17661030430486,
+            "z": 0
+          },
+          {
+            "x": 706.1917591616439,
+            "y": -140.3075168769755,
+            "z": 0
+          },
+          {
+            "x": 709.4011822935997,
+            "y": -141.9505637905075,
+            "z": 0
+          },
+          {
+            "x": 711.7376833482857,
+            "y": -144.08147036317825,
+            "z": 0
+          },
+          {
+            "x": 714.0741844029717,
+            "y": -146.2123769358489,
+            "z": 0
+          },
+          {
+            "x": 716.4106854576577,
+            "y": -148.34328350851962,
+            "z": 0
+          },
+          {
+            "x": 718.7471865123437,
+            "y": -150.47419008119033,
+            "z": 0
+          },
+          {
+            "x": 721.0836875670298,
+            "y": -152.60509665386104,
+            "z": 0
+          },
+          {
+            "x": 723.4201886217157,
+            "y": -154.7360032265317,
+            "z": 0
+          },
+          {
+            "x": 725.7566896764017,
+            "y": -156.8669097992024,
+            "z": 0
+          },
+          {
+            "x": 727.2202686538179,
+            "y": -159.48567603101185,
+            "z": 0
+          },
+          {
+            "x": 729.5567697085039,
+            "y": -161.6165826036825,
+            "z": 0
+          },
+          {
+            "x": 731.0203486859201,
+            "y": -164.23534883549195,
+            "z": 0
+          },
+          {
+            "x": 732.4839276633363,
+            "y": -166.8541150673014,
+            "z": 0
+          },
+          {
+            "x": 734.8204287180224,
+            "y": -168.9850216399721,
+            "z": 0
+          },
+          {
+            "x": 736.2840076954385,
+            "y": -171.6037878717815,
+            "z": 0
+          },
+          {
+            "x": 737.7475866728548,
+            "y": -174.22255410359094,
+            "z": 0
+          },
+          {
+            "x": 739.2111656502709,
+            "y": -176.84132033540038,
+            "z": 0
+          },
+          {
+            "x": 741.547666704957,
+            "y": -178.97222690807104,
+            "z": 0
+          },
+          {
+            "x": 743.0112456823731,
+            "y": -181.59099313988048,
+            "z": 0
+          },
+          {
+            "x": 744.4748246597893,
+            "y": -184.20975937168993,
+            "z": 0
+          },
+          {
+            "x": 745.9384036372055,
+            "y": -186.82852560349937,
+            "z": 0
+          },
+          {
+            "x": 747.4019826146217,
+            "y": -189.44729183530876,
+            "z": 0
+          },
+          {
+            "x": 748.8655615920379,
+            "y": -192.0660580671182,
+            "z": 0
+          },
+          {
+            "x": 750.3291405694541,
+            "y": -194.68482429892765,
+            "z": 0
+          },
+          {
+            "x": 751.7927195468703,
+            "y": -197.30359053073704,
+            "z": 0
+          },
+          {
+            "x": 753.2562985242865,
+            "y": -199.92235676254649,
+            "z": 0
+          },
+          {
+            "x": 754.7198775017027,
+            "y": -202.54112299435593,
+            "z": 0
+          },
+          {
+            "x": 756.183456479119,
+            "y": -205.15988922616538,
+            "z": 0
+          },
+          {
+            "x": 757.6470354565351,
+            "y": -207.77865545797476,
+            "z": 0
+          },
+          {
+            "x": 759.1106144339512,
+            "y": -210.3974216897842,
+            "z": 0
+          },
+          {
+            "x": 760.5741934113676,
+            "y": -213.01618792159366,
+            "z": 0
+          }
+        ],
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "is_highlighted": false,
+        "offset": {
+          "z": 0
+        },
+        "pointDist": 3,
+        "size": {
+          "x": 200,
+          "y": 200,
+          "z": 0
+        },
+        "rotation": -60.800000000000004,
+        "iterations": 1,
+        "growth": 1.8
+      },
+      "size": {
+        "x": 10,
+        "y": 10,
+        "z": 0
+      },
+      "animation": {
+        "defaultArgs": {
+          "name": "my-animation",
+          "description": "my-description",
+          "frames": [],
+          "type": "none",
+          "delay": 0,
+          "frameSize": {
+            "x": 44,
+            "y": 44,
+            "z": 0
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "termPoint": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "flipX": false,
+          "duration": 1000,
+          "size": {
+            "x": 20,
+            "y": 20,
+            "z": 20
+          }
+        },
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+          "domElement": {}
+        },
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+        "domElement": {},
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "extras": false,
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 50,
+              "y": 50,
+              "z": 0
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "flipX": false,
+        "cix": 0,
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "timer": 0,
+        "duration": 1000,
+        "seesaw_mode": false
+      },
+      "parent_id": "__blank",
+      "name": "bullet**",
+      "description": false,
+      "duration": 500,
+      "delay": 0,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "highlighted": false,
+      "sprites": []
+    },
+    {
+      "line": {
+        "curve_string": "Quintic_InOut",
+        "points": [
+          {
+            "x": -2.253792400510533,
+            "y": -1.9800050038828105,
+            "z": 0
+          },
+          {
+            "x": -4.507584801021066,
+            "y": -3.960010007765621,
+            "z": 0
+          },
+          {
+            "x": -6.7613772015316,
+            "y": -5.940015011648431,
+            "z": 0
+          },
+          {
+            "x": -9.015169602042132,
+            "y": -7.920020015531242,
+            "z": 0
+          },
+          {
+            "x": -11.268962002552666,
+            "y": -9.900025019414052,
+            "z": 0
+          },
+          {
+            "x": -13.5227544030632,
+            "y": -11.880030023296863,
+            "z": 0
+          },
+          {
+            "x": -15.776546803573732,
+            "y": -13.860035027179674,
+            "z": 0
+          },
+          {
+            "x": -18.030339204084264,
+            "y": -15.840040031062484,
+            "z": 0
+          },
+          {
+            "x": -20.284131604594798,
+            "y": -17.820045034945295,
+            "z": 0
+          },
+          {
+            "x": -22.53792400510533,
+            "y": -19.800050038828104,
+            "z": 0
+          },
+          {
+            "x": -24.791716405615865,
+            "y": -21.780055042710917,
+            "z": 0
+          },
+          {
+            "x": -26.385507138165462,
+            "y": -24.511324180097237,
+            "z": 0
+          },
+          {
+            "x": -28.639299538675996,
+            "y": -26.49132918398005,
+            "z": 0
+          },
+          {
+            "x": -30.893091939186526,
+            "y": -28.47133418786286,
+            "z": 0
+          },
+          {
+            "x": -32.486882671736126,
+            "y": -31.202603325249182,
+            "z": 0
+          },
+          {
+            "x": -34.08067340428572,
+            "y": -33.9338724626355,
+            "z": 0
+          },
+          {
+            "x": -36.33446580479625,
+            "y": -35.913877466518315,
+            "z": 0
+          },
+          {
+            "x": -37.26825486938491,
+            "y": -39.39641073740815,
+            "z": 0
+          },
+          {
+            "x": -38.86204560193451,
+            "y": -42.12767987479447,
+            "z": 0
+          },
+          {
+            "x": -39.79583466652317,
+            "y": -45.6102131456843,
+            "z": 0
+          },
+          {
+            "x": -40.72962373111183,
+            "y": -49.09274641657414,
+            "z": 0
+          },
+          {
+            "x": -41.003411127739554,
+            "y": -53.32654382096747,
+            "z": 0
+          },
+          {
+            "x": -41.27719852436728,
+            "y": -57.560341225360816,
+            "z": 0
+          },
+          {
+            "x": -41.550985920995,
+            "y": -61.79413862975416,
+            "z": 0
+          },
+          {
+            "x": -41.07350918411921,
+            "y": -65.36793436618657,
+            "z": 0
+          },
+          {
+            "x": -40.596032447243424,
+            "y": -68.94173010261898,
+            "z": 0
+          },
+          {
+            "x": -39.458554042406696,
+            "y": -73.2667899725549,
+            "z": 0
+          },
+          {
+            "x": -38.321075637569976,
+            "y": -77.5918498424908,
+            "z": 0
+          },
+          {
+            "x": -37.18359723273324,
+            "y": -81.91690971242673,
+            "z": 0
+          },
+          {
+            "x": -35.38611715993558,
+            "y": -86.99323371586615,
+            "z": 0
+          },
+          {
+            "x": -33.588637087137926,
+            "y": -92.06955771930559,
+            "z": 0
+          },
+          {
+            "x": -32.35989621675863,
+            "y": -94.98335178777705,
+            "z": 0
+          },
+          {
+            "x": -31.131155346379323,
+            "y": -97.89714585624853,
+            "z": 0
+          },
+          {
+            "x": -29.902414476000025,
+            "y": -100.81093992472,
+            "z": 0
+          },
+          {
+            "x": -28.673673605620728,
+            "y": -103.72473399319148,
+            "z": 0
+          },
+          {
+            "x": -27.44493273524143,
+            "y": -106.63852806166294,
+            "z": 0
+          },
+          {
+            "x": -25.55619019690119,
+            "y": -110.30358626363792,
+            "z": 0
+          },
+          {
+            "x": -23.66744765856096,
+            "y": -113.9686444656129,
+            "z": 0
+          },
+          {
+            "x": -22.438706788181655,
+            "y": -116.88243853408437,
+            "z": 0
+          },
+          {
+            "x": -20.549964249841423,
+            "y": -120.54749673605936,
+            "z": 0
+          },
+          {
+            "x": -18.001220043540236,
+            "y": -124.96381907153784,
+            "z": 0
+          },
+          {
+            "x": -16.112477505199998,
+            "y": -128.62887727351284,
+            "z": 0
+          },
+          {
+            "x": -14.223734966859759,
+            "y": -132.2939354754878,
+            "z": 0
+          },
+          {
+            "x": -11.674990760558586,
+            "y": -136.7102578109663,
+            "z": 0
+          },
+          {
+            "x": -9.12624655425742,
+            "y": -141.12658014644478,
+            "z": 0
+          },
+          {
+            "x": -6.577502347956241,
+            "y": -145.54290248192328,
+            "z": 0
+          },
+          {
+            "x": -4.028758141655075,
+            "y": -149.95922481740178,
+            "z": 0
+          },
+          {
+            "x": -2.1400156033148363,
+            "y": -153.62428301937675,
+            "z": 0
+          },
+          {
+            "x": -0.25127306497459756,
+            "y": -157.28934122135172,
+            "z": 0
+          },
+          {
+            "x": 2.297471141326568,
+            "y": -161.70566355683025,
+            "z": 0
+          },
+          {
+            "x": 4.186213679666807,
+            "y": -165.37072175880522,
+            "z": 0
+          },
+          {
+            "x": 5.4149545500461045,
+            "y": -168.28451582727666,
+            "z": 0
+          },
+          {
+            "x": 7.303697088386343,
+            "y": -171.94957402925166,
+            "z": 0
+          },
+          {
+            "x": 9.192439626726582,
+            "y": -175.61463223122666,
+            "z": 0
+          },
+          {
+            "x": 10.42118049710588,
+            "y": -178.5284262996981,
+            "z": 0
+          },
+          {
+            "x": 11.649921367485177,
+            "y": -181.4422203681696,
+            "z": 0
+          },
+          {
+            "x": 12.878662237864475,
+            "y": -184.35601443664106,
+            "z": 0
+          },
+          {
+            "x": 14.107403108243773,
+            "y": -187.2698085051125,
+            "z": 0
+          },
+          {
+            "x": 15.336143978623085,
+            "y": -190.18360257358398,
+            "z": 0
+          },
+          {
+            "x": 16.564884849002382,
+            "y": -193.09739664205546,
+            "z": 0
+          },
+          {
+            "x": 18.362364921800037,
+            "y": -198.17372064549488,
+            "z": 0
+          },
+          {
+            "x": 19.499843326636764,
+            "y": -202.4987805154308,
+            "z": 0
+          },
+          {
+            "x": 20.63732173147349,
+            "y": -206.82384038536674,
+            "z": 0
+          },
+          {
+            "x": 21.77480013631022,
+            "y": -211.14890025530264,
+            "z": 0
+          },
+          {
+            "x": 22.252276873186005,
+            "y": -214.72269599173507,
+            "z": 0
+          },
+          {
+            "x": 22.729753610061792,
+            "y": -218.29649172816744,
+            "z": 0
+          },
+          {
+            "x": 23.20723034693758,
+            "y": -221.87028746459987,
+            "z": 0
+          },
+          {
+            "x": 22.933442950309853,
+            "y": -226.1040848689932,
+            "z": 0
+          },
+          {
+            "x": 22.65965555368213,
+            "y": -230.33788227338658,
+            "z": 0
+          },
+          {
+            "x": 22.385868157054404,
+            "y": -234.5716796777799,
+            "z": 0
+          },
+          {
+            "x": 21.452079092465752,
+            "y": -238.05421294866971,
+            "z": 0
+          },
+          {
+            "x": 19.858288359916145,
+            "y": -240.78548208605605,
+            "z": 0
+          },
+          {
+            "x": 18.924499295327493,
+            "y": -244.26801535694585,
+            "z": 0
+          },
+          {
+            "x": 17.330708562777886,
+            "y": -246.9992844943322,
+            "z": 0
+          },
+          {
+            "x": 15.736917830228307,
+            "y": -249.73055363171852,
+            "z": 0
+          },
+          {
+            "x": 13.483125429717774,
+            "y": -251.71055863560133,
+            "z": 0
+          },
+          {
+            "x": 11.889334697168167,
+            "y": -254.44182777298766,
+            "z": 0
+          },
+          {
+            "x": 9.635542296657647,
+            "y": -256.4218327768705,
+            "z": 0
+          },
+          {
+            "x": 7.381749896147113,
+            "y": -258.4018377807533,
+            "z": 0
+          },
+          {
+            "x": 5.787959163597506,
+            "y": -261.13310691813956,
+            "z": 0
+          },
+          {
+            "x": 3.534166763086972,
+            "y": -263.1131119220224,
+            "z": 0
+          },
+          {
+            "x": 1.2803743625764241,
+            "y": -265.0931169259052,
+            "z": 0
+          },
+          {
+            "x": -0.9734180379340955,
+            "y": -267.07312192978804,
+            "z": 0
+          },
+          {
+            "x": -3.2272104384446436,
+            "y": -269.05312693367085,
+            "z": 0
+          },
+          {
+            "x": -5.481002838955163,
+            "y": -271.03313193755366,
+            "z": 0
+          },
+          {
+            "x": -7.734795239465711,
+            "y": -273.01313694143647,
+            "z": 0
+          },
+          {
+            "x": -9.988587639976231,
+            "y": -274.9931419453193,
+            "z": 0
+          },
+          {
+            "x": -12.24238004048675,
+            "y": -276.9731469492021,
+            "z": 0
+          },
+          {
+            "x": -14.496172440997299,
+            "y": -278.9531519530849,
+            "z": 0
+          },
+          {
+            "x": -16.74996484150782,
+            "y": -280.9331569569677,
+            "z": 0
+          },
+          {
+            "x": -19.003757242018366,
+            "y": -282.9131619608505,
+            "z": 0
+          },
+          {
+            "x": -21.257549642528886,
+            "y": -284.8931669647333,
+            "z": 0
+          },
+          {
+            "x": -23.511342043039434,
+            "y": -286.87317196861613,
+            "z": 0
+          },
+          {
+            "x": -25.765134443549954,
+            "y": -288.85317697249894,
+            "z": 0
+          },
+          {
+            "x": -28.018926844060502,
+            "y": -290.83318197638175,
+            "z": 0
+          },
+          {
+            "x": -30.27271924457102,
+            "y": -292.81318698026456,
+            "z": 0
+          },
+          {
+            "x": -32.52651164508157,
+            "y": -294.79319198414737,
+            "z": 0
+          },
+          {
+            "x": -34.78030404559209,
+            "y": -296.7731969880302,
+            "z": 0
+          },
+          {
+            "x": -37.03409644610264,
+            "y": -298.753201991913,
+            "z": 0
+          },
+          {
+            "x": -39.28788884661316,
+            "y": -300.7332069957958,
+            "z": 0
+          },
+          {
+            "x": -41.541681247123705,
+            "y": -302.7132119996786,
+            "z": 0
+          },
+          {
+            "x": -43.795473647634225,
+            "y": -304.6932170035614,
+            "z": 0
+          },
+          {
+            "x": -46.04926604814477,
+            "y": -306.6732220074442,
+            "z": 0
+          },
+          {
+            "x": -48.30305844865529,
+            "y": -308.65322701132703,
+            "z": 0
+          },
+          {
+            "x": -50.55685084916584,
+            "y": -310.63323201520984,
+            "z": 0
+          },
+          {
+            "x": -52.81064324967636,
+            "y": -312.61323701909265,
+            "z": 0
+          },
+          {
+            "x": -55.06443565018691,
+            "y": -314.59324202297546,
+            "z": 0
+          },
+          {
+            "x": -57.31822805069743,
+            "y": -316.5732470268583,
+            "z": 0
+          },
+          {
+            "x": -58.91201878324702,
+            "y": -319.30451616424466,
+            "z": 0
+          },
+          {
+            "x": -61.16581118375754,
+            "y": -321.2845211681274,
+            "z": 0
+          },
+          {
+            "x": -63.41960358426806,
+            "y": -323.2645261720103,
+            "z": 0
+          },
+          {
+            "x": -65.67339598477861,
+            "y": -325.24453117589303,
+            "z": 0
+          },
+          {
+            "x": -67.92718838528913,
+            "y": -327.2245361797759,
+            "z": 0
+          },
+          {
+            "x": -69.52097911783875,
+            "y": -329.9558053171622,
+            "z": 0
+          },
+          {
+            "x": -71.77477151834927,
+            "y": -331.935810321045,
+            "z": 0
+          },
+          {
+            "x": -73.36856225089889,
+            "y": -334.6670794584313,
+            "z": 0
+          },
+          {
+            "x": -75.62235465140941,
+            "y": -336.6470844623141,
+            "z": 0
+          },
+          {
+            "x": -77.216145383959,
+            "y": -339.3783535997004,
+            "z": 0
+          },
+          {
+            "x": -78.8099361165086,
+            "y": -342.10962273708674,
+            "z": 0
+          },
+          {
+            "x": -80.40372684905822,
+            "y": -344.8408918744731,
+            "z": 0
+          },
+          {
+            "x": -81.99751758160778,
+            "y": -347.5721610118594,
+            "z": 0
+          },
+          {
+            "x": -83.5913083141574,
+            "y": -350.30343014924574,
+            "z": 0
+          },
+          {
+            "x": -85.185099046707,
+            "y": -353.0346992866321,
+            "z": 0
+          },
+          {
+            "x": -86.11888811129566,
+            "y": -356.5172325575219,
+            "z": 0
+          },
+          {
+            "x": -87.71267884384523,
+            "y": -359.2485016949082,
+            "z": 0
+          },
+          {
+            "x": -88.64646790843392,
+            "y": -362.731034965798,
+            "z": 0
+          },
+          {
+            "x": -89.58025697302256,
+            "y": -366.2135682366879,
+            "z": 0
+          },
+          {
+            "x": -90.51404603761122,
+            "y": -369.69610150757774,
+            "z": 0
+          },
+          {
+            "x": -90.78783343423893,
+            "y": -373.92989891197107,
+            "z": 0
+          },
+          {
+            "x": -91.06162083086667,
+            "y": -378.1636963163644,
+            "z": 0
+          },
+          {
+            "x": -91.33540822749438,
+            "y": -382.3974937207578,
+            "z": 0
+          },
+          {
+            "x": -91.6091956241221,
+            "y": -386.63129112515105,
+            "z": 0
+          },
+          {
+            "x": -91.13171888724631,
+            "y": -390.2050868615835,
+            "z": 0
+          },
+          {
+            "x": -90.74550461591312,
+            "y": -395.19014839948034,
+            "z": 0
+          },
+          {
+            "x": -90.26802787903733,
+            "y": -398.76394413591277,
+            "z": 0
+          },
+          {
+            "x": -89.79055114216155,
+            "y": -402.3377398723452,
+            "z": 0
+          },
+          {
+            "x": -89.31307440528576,
+            "y": -405.91153560877757,
+            "z": 0
+          },
+          {
+            "x": -88.83559766840995,
+            "y": -409.48533134520994,
+            "z": 0
+          },
+          {
+            "x": -87.69811926357323,
+            "y": -413.8103912151459,
+            "z": 0
+          },
+          {
+            "x": -86.56064085873649,
+            "y": -418.1354510850818,
+            "z": 0
+          },
+          {
+            "x": -85.42316245389978,
+            "y": -422.46051095501775,
+            "z": 0
+          },
+          {
+            "x": -84.28568404906304,
+            "y": -426.78557082495365,
+            "z": 0
+          },
+          {
+            "x": -83.05694317868375,
+            "y": -429.6993648934251,
+            "z": 0
+          },
+          {
+            "x": -81.91946477384704,
+            "y": -434.024424763361,
+            "z": 0
+          },
+          {
+            "x": -80.6907239034677,
+            "y": -436.9382188318325,
+            "z": 0
+          },
+          {
+            "x": -78.89324383067009,
+            "y": -442.0145428352719,
+            "z": 0
+          },
+          {
+            "x": -77.6645029602908,
+            "y": -444.9283369037434,
+            "z": 0
+          },
+          {
+            "x": -75.8670228874931,
+            "y": -450.0046609071828,
+            "z": 0
+          },
+          {
+            "x": -74.63828201711382,
+            "y": -452.9184549756543,
+            "z": 0
+          },
+          {
+            "x": -73.40954114673454,
+            "y": -455.8322490441258,
+            "z": 0
+          },
+          {
+            "x": -72.1808002763552,
+            "y": -458.74604311259725,
+            "z": 0
+          },
+          {
+            "x": -70.95205940597592,
+            "y": -461.6598371810687,
+            "z": 0
+          },
+          {
+            "x": -69.7233185355966,
+            "y": -464.5736312495402,
+            "z": 0
+          },
+          {
+            "x": -68.49457766521732,
+            "y": -467.4874253180117,
+            "z": 0
+          },
+          {
+            "x": -66.60583512687705,
+            "y": -471.1524835199866,
+            "z": 0
+          },
+          {
+            "x": -65.37709425649777,
+            "y": -474.0662775884581,
+            "z": 0
+          },
+          {
+            "x": -63.48835171815756,
+            "y": -477.7313357904331,
+            "z": 0
+          },
+          {
+            "x": -62.259610847778276,
+            "y": -480.64512985890457,
+            "z": 0
+          },
+          {
+            "x": -60.37086830943798,
+            "y": -484.3101880608795,
+            "z": 0
+          },
+          {
+            "x": -59.1421274390587,
+            "y": -487.22398212935104,
+            "z": 0
+          },
+          {
+            "x": -57.25338490071849,
+            "y": -490.889040331326,
+            "z": 0
+          },
+          {
+            "x": -55.36464236237825,
+            "y": -494.55409853330093,
+            "z": 0
+          },
+          {
+            "x": -53.47589982403798,
+            "y": -498.219156735276,
+            "z": 0
+          },
+          {
+            "x": -51.58715728569774,
+            "y": -501.88421493725093,
+            "z": 0
+          },
+          {
+            "x": -49.038413079396605,
+            "y": -506.30053727272946,
+            "z": 0
+          },
+          {
+            "x": -47.149670541056366,
+            "y": -509.9655954747044,
+            "z": 0
+          },
+          {
+            "x": -45.2609280027161,
+            "y": -513.6306536766795,
+            "z": 0
+          },
+          {
+            "x": -42.712183796414934,
+            "y": -518.0469760121579,
+            "z": 0
+          },
+          {
+            "x": -40.82344125807472,
+            "y": -521.7120342141328,
+            "z": 0
+          },
+          {
+            "x": -38.27469705177356,
+            "y": -526.1283565496113,
+            "z": 0
+          },
+          {
+            "x": -35.725952845472335,
+            "y": -530.5446788850899,
+            "z": 0
+          },
+          {
+            "x": -33.17720863917117,
+            "y": -534.9610012205684,
+            "z": 0
+          },
+          {
+            "x": -30.628464432870032,
+            "y": -539.3773235560468,
+            "z": 0
+          },
+          {
+            "x": -28.07972022656884,
+            "y": -543.7936458915253,
+            "z": 0
+          },
+          {
+            "x": -25.530976020267644,
+            "y": -548.2099682270039,
+            "z": 0
+          },
+          {
+            "x": -23.642233481927406,
+            "y": -551.8750264289788,
+            "z": 0
+          },
+          {
+            "x": -21.09348927562627,
+            "y": -556.2913487644573,
+            "z": 0
+          },
+          {
+            "x": -19.204746737285973,
+            "y": -559.9564069664323,
+            "z": 0
+          },
+          {
+            "x": -17.31600419894579,
+            "y": -563.6214651684072,
+            "z": 0
+          },
+          {
+            "x": -14.767259992644597,
+            "y": -568.0377875038857,
+            "z": 0
+          },
+          {
+            "x": -12.878517454304358,
+            "y": -571.7028457058607,
+            "z": 0
+          },
+          {
+            "x": -10.98977491596412,
+            "y": -575.3679039078356,
+            "z": 0
+          },
+          {
+            "x": -9.10103237762388,
+            "y": -579.0329621098107,
+            "z": 0
+          },
+          {
+            "x": -7.212289839283642,
+            "y": -582.6980203117857,
+            "z": 0
+          },
+          {
+            "x": -5.983548968904358,
+            "y": -585.6118143802571,
+            "z": 0
+          },
+          {
+            "x": -4.09480643056412,
+            "y": -589.276872582232,
+            "z": 0
+          },
+          {
+            "x": -2.866065560184836,
+            "y": -592.1906666507036,
+            "z": 0
+          },
+          {
+            "x": -0.9773230218445974,
+            "y": -595.8557248526786,
+            "z": 0
+          },
+          {
+            "x": 0.2514178485346861,
+            "y": -598.76951892115,
+            "z": 0
+          },
+          {
+            "x": 2.1401603868749817,
+            "y": -602.4345771231251,
+            "z": 0
+          },
+          {
+            "x": 3.368901257254265,
+            "y": -605.3483711915965,
+            "z": 0
+          },
+          {
+            "x": 4.597642127633549,
+            "y": -608.262165260068,
+            "z": 0
+          },
+          {
+            "x": 5.826382998012832,
+            "y": -611.1759593285394,
+            "z": 0
+          },
+          {
+            "x": 7.055123868392172,
+            "y": -614.0897533970109,
+            "z": 0
+          },
+          {
+            "x": 8.283864738771456,
+            "y": -617.0035474654824,
+            "z": 0
+          },
+          {
+            "x": 9.51260560915074,
+            "y": -619.9173415339538,
+            "z": 0
+          },
+          {
+            "x": 10.741346479530023,
+            "y": -622.8311356024253,
+            "z": 0
+          },
+          {
+            "x": 12.538826552327691,
+            "y": -627.9074596058647,
+            "z": 0
+          },
+          {
+            "x": 13.767567422706975,
+            "y": -630.8212536743362,
+            "z": 0
+          },
+          {
+            "x": 15.5650474955047,
+            "y": -635.8975776777756,
+            "z": 0
+          },
+          {
+            "x": 16.702525900341357,
+            "y": -640.2226375477115,
+            "z": 0
+          },
+          {
+            "x": 17.931266770720697,
+            "y": -643.136431616183,
+            "z": 0
+          },
+          {
+            "x": 19.06874517555741,
+            "y": -647.4614914861189,
+            "z": 0
+          },
+          {
+            "x": 20.206223580394123,
+            "y": -651.7865513560548,
+            "z": 0
+          },
+          {
+            "x": 21.343701985230894,
+            "y": -656.1116112259908,
+            "z": 0
+          },
+          {
+            "x": 22.48118039006755,
+            "y": -660.4366710959266,
+            "z": 0
+          },
+          {
+            "x": 22.958657126943365,
+            "y": -664.010466832359,
+            "z": 0
+          },
+          {
+            "x": 23.436133863819123,
+            "y": -667.5842625687915,
+            "z": 0
+          },
+          {
+            "x": 23.913610600694938,
+            "y": -671.1580583052239,
+            "z": 0
+          },
+          {
+            "x": 24.391087337570696,
+            "y": -674.7318540416563,
+            "z": 0
+          },
+          {
+            "x": 24.86856407444651,
+            "y": -678.3056497780888,
+            "z": 0
+          },
+          {
+            "x": 25.34604081132227,
+            "y": -681.8794455145212,
+            "z": 0
+          },
+          {
+            "x": 25.072253414694615,
+            "y": -686.1132429189145,
+            "z": 0
+          },
+          {
+            "x": 24.798466018066904,
+            "y": -690.3470403233077,
+            "z": 0
+          },
+          {
+            "x": 24.524678621439193,
+            "y": -694.5808377277011,
+            "z": 0
+          },
+          {
+            "x": 24.250891224811426,
+            "y": -698.8146351320945,
+            "z": 0
+          },
+          {
+            "x": 23.31710216022276,
+            "y": -702.2971684029843,
+            "z": 0
+          },
+          {
+            "x": 22.383313095634094,
+            "y": -705.7797016738741,
+            "z": 0
+          },
+          {
+            "x": 21.449524031045485,
+            "y": -709.262234944764,
+            "z": 0
+          },
+          {
+            "x": 20.51573496645682,
+            "y": -712.7447682156538,
+            "z": 0
+          },
+          {
+            "x": 18.921944233907197,
+            "y": -715.4760373530402,
+            "z": 0
+          },
+          {
+            "x": 17.98815516931853,
+            "y": -718.95857062393,
+            "z": 0
+          },
+          {
+            "x": 16.394364436768967,
+            "y": -721.6898397613163,
+            "z": 0
+          },
+          {
+            "x": 14.800573704219346,
+            "y": -724.4211088987026,
+            "z": 0
+          },
+          {
+            "x": 13.206782971669725,
+            "y": -727.152378036089,
+            "z": 0
+          },
+          {
+            "x": 11.61299223912016,
+            "y": -729.8836471734753,
+            "z": 0
+          },
+          {
+            "x": 9.35919983860964,
+            "y": -731.8636521773581,
+            "z": 0
+          },
+          {
+            "x": 7.765409106060019,
+            "y": -734.5949213147444,
+            "z": 0
+          },
+          {
+            "x": 6.171618373510398,
+            "y": -737.3261904521307,
+            "z": 0
+          },
+          {
+            "x": 3.9178259729998786,
+            "y": -739.3061954560135,
+            "z": 0
+          },
+          {
+            "x": 1.664033572489359,
+            "y": -741.2862004598963,
+            "z": 0
+          },
+          {
+            "x": 0.07024283993979452,
+            "y": -744.0174695972827,
+            "z": 0
+          },
+          {
+            "x": -2.183549560570782,
+            "y": -745.9974746011655,
+            "z": 0
+          },
+          {
+            "x": -4.437341961081302,
+            "y": -747.9774796050483,
+            "z": 0
+          },
+          {
+            "x": -6.691134361591821,
+            "y": -749.957484608931,
+            "z": 0
+          },
+          {
+            "x": -8.284925094141443,
+            "y": -752.6887537463174,
+            "z": 0
+          },
+          {
+            "x": -10.538717494652019,
+            "y": -754.6687587502003,
+            "z": 0
+          },
+          {
+            "x": -12.792509895162539,
+            "y": -756.6487637540831,
+            "z": 0
+          },
+          {
+            "x": -15.046302295673058,
+            "y": -758.6287687579659,
+            "z": 0
+          },
+          {
+            "x": -17.300094696183578,
+            "y": -760.6087737618486,
+            "z": 0
+          },
+          {
+            "x": -19.553887096694098,
+            "y": -762.5887787657315,
+            "z": 0
+          },
+          {
+            "x": -21.807679497204674,
+            "y": -764.5687837696144,
+            "z": 0
+          },
+          {
+            "x": -24.061471897715194,
+            "y": -766.5487887734971,
+            "z": 0
+          },
+          {
+            "x": -26.315264298225713,
+            "y": -768.5287937773799,
+            "z": 0
+          },
+          {
+            "x": -28.569056698736233,
+            "y": -770.5087987812627,
+            "z": 0
+          },
+          {
+            "x": -30.82284909924681,
+            "y": -772.4888037851456,
+            "z": 0
+          },
+          {
+            "x": -33.07664149975733,
+            "y": -774.4688087890283,
+            "z": 0
+          },
+          {
+            "x": -35.33043390026785,
+            "y": -776.4488137929111,
+            "z": 0
+          },
+          {
+            "x": -37.58422630077837,
+            "y": -778.428818796794,
+            "z": 0
+          },
+          {
+            "x": -39.838018701288945,
+            "y": -780.4088238006768,
+            "z": 0
+          },
+          {
+            "x": -42.091811101799465,
+            "y": -782.3888288045596,
+            "z": 0
+          },
+          {
+            "x": -44.345603502309984,
+            "y": -784.3688338084423,
+            "z": 0
+          },
+          {
+            "x": -46.599395902820504,
+            "y": -786.3488388123252,
+            "z": 0
+          },
+          {
+            "x": -48.85318830333108,
+            "y": -788.3288438162081,
+            "z": 0
+          }
+        ],
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "is_highlighted": false,
+        "offset": {
+          "z": 0
+        },
+        "pointDist": 3,
+        "size": {
+          "x": 200,
+          "y": 200,
+          "z": 0
+        },
+        "rotation": -138.70000000000002,
+        "iterations": 1,
+        "growth": 1.8
+      },
+      "size": {
+        "x": 10,
+        "y": 10,
+        "z": 0
+      },
+      "animation": {
+        "defaultArgs": {
+          "name": "my-animation",
+          "description": "my-description",
+          "frames": [],
+          "type": "none",
+          "delay": 0,
+          "frameSize": {
+            "x": 44,
+            "y": 44,
+            "z": 0
+          },
+          "frameBounds": {
+            "min": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "max": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "termPoint": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          "frameOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "flipX": false,
+          "duration": 1000,
+          "size": {
+            "x": 20,
+            "y": 20,
+            "z": 20
+          }
+        },
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+          "domElement": {}
+        },
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+        "domElement": {},
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "extras": false,
+        "frames": [
+          {
+            "image": {
+              "image": {},
+              "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+              "domElement": {}
+            },
+            "frameSize": {
+              "x": 50,
+              "y": 50,
+              "z": 0
+            },
+            "framePos": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "flipX": false,
+        "cix": 0,
+        "selected_frame": {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "timer": 0,
+        "duration": 1000,
+        "seesaw_mode": false
+      },
+      "parent_id": "__blank",
+      "name": "bullet***",
+      "description": false,
+      "duration": 500,
+      "delay": 0,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "highlighted": false,
+      "sprites": []
+    }
+  ],
+  "id": "34a05919-0214-4676-92e7-53b75f8b7fe8",
+  "sounds": [
+    {
+      "src": "../assets/sound/shot.mp3",
+      "sound": {},
+      "name": "shot-sound"
+    }
+  ],
+  "image": {
+    "image": {
+      "error": "Image not instantiated, set to object by default"
+    },
+    "domElement": {
+      "error": "Image not instantiated, set to object by default"
+    }
+  },
+  "collision_bounds": {
+    "min": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "max": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "rotation": {
+    "x": 470.63809224816873,
+    "y": 0,
+    "z": 0
+  },
+  "selected_animation": {
+    "defaultArgs": {
+      "name": "my-animation",
+      "description": "my-description",
+      "frames": [],
+      "type": "none",
+      "delay": 0,
+      "frameSize": {
+        "x": 44,
+        "y": 44,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "flipX": false,
+      "duration": 1000,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      }
+    },
+    "image": {
+      "image": {},
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {}
+    },
+    "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+    "domElement": {},
+    "frameSize": {
+      "x": 50,
+      "y": 50,
+      "z": 0
+    },
+    "frameBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      },
+      "termPoint": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "frameOffset": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "extras": false,
+    "frames": [
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 100,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 150,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 200,
+          "y": 0
+        }
+      }
+    ],
+    "flipX": false,
+    "cix": 2.310368327330327,
+    "selected_frame": {
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "framePos": {
+        "x": 100,
+        "y": 0
+      }
+    },
+    "timer": 0,
+    "duration": 2248,
+    "seesaw_mode": false,
+    "name": "my-animation*",
+    "tween": {},
+    "isComplete": true
+  },
+  "speed": {
+    "x": 0,
+    "y": 5,
+    "z": 0
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "rot_speed": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "rot_accel": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "padding": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "jump_anime": {
+    "defaultArgs": {
+      "name": "my-animation",
+      "description": "my-description",
+      "frames": [],
+      "type": "none",
+      "delay": 0,
+      "frameSize": {
+        "x": 44,
+        "y": 44,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "flipX": false,
+      "duration": 1000,
+      "size": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+      }
+    },
+    "image": {
+      "image": {},
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+      "domElement": {}
+    },
+    "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+    "domElement": {},
+    "frameSize": {
+      "x": 50,
+      "y": 50,
+      "z": 0
+    },
+    "frameBounds": {
+      "min": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "max": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      },
+      "termPoint": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "frameOffset": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "extras": false,
+    "frames": [
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 100,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 150,
+          "y": 0
+        }
+      },
+      {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 200,
+          "y": 0
+        }
+      }
+    ],
+    "flipX": false,
+    "cix": 0,
+    "selected_frame": {
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/samus2.png",
+        "domElement": {}
+      },
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "framePos": {
+        "x": 200,
+        "y": 0
+      }
+    },
+    "timer": 0,
+    "duration": 2000,
+    "seesaw_mode": false,
+    "name": "my-animation",
+    "description": "my-description",
+    "type": "none",
+    "delay": 0,
+    "size": {
+      "x": 20,
+      "y": 20,
+      "z": 20
+    },
+    "tween": {},
+    "isComplete": true
+  },
+  "jumpmotion": {
+    "distance": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+    },
+    "curvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut",
+      "Sinusoidal_In",
+      "Sinusoidal_Out",
+      "Sinusoidal_InOut",
+      "Exponential_In",
+      "Exponential_Out",
+      "Exponential_InOut",
+      "Circular_In",
+      "Circular_Out",
+      "Circular_InOut",
+      "Elastic_In",
+      "Elastic_Out",
+      "Elastic_InOut",
+      "Back_In",
+      "Back_Out",
+      "Back_InOut",
+      "Bounce_In",
+      "Bounce_Out",
+      "Bounce_InOut"
+    ],
+    "lineCurvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut"
+    ],
+    "parent_id": "34a05919-0214-4676-92e7-53b75f8b7fe8",
+    "rotation": 0,
+    "targetRotation": 0,
+    "name": "jump",
+    "description": "the jump movmement.",
+    "motionCurveString": "Bounce_InOut",
+    "lineCurveString": "Linear_None",
+    "duration": 400,
+    "delay": 0
+  },
+  "selected_motion": {
+    "distance": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+    },
+    "curvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut",
+      "Sinusoidal_In",
+      "Sinusoidal_Out",
+      "Sinusoidal_InOut",
+      "Exponential_In",
+      "Exponential_Out",
+      "Exponential_InOut",
+      "Circular_In",
+      "Circular_Out",
+      "Circular_InOut",
+      "Elastic_In",
+      "Elastic_Out",
+      "Elastic_InOut",
+      "Back_In",
+      "Back_Out",
+      "Back_InOut",
+      "Bounce_In",
+      "Bounce_Out",
+      "Bounce_InOut"
+    ],
+    "lineCurvesList": [
+      "Linear_None",
+      "Quadratic_In",
+      "Quadratic_Out",
+      "Quadratic_InOut",
+      "Cubic_In",
+      "Cubic_Out",
+      "Cubic_InOut",
+      "Quartic_In",
+      "Quartic_Out",
+      "Quartic_InOut",
+      "Quintic_In",
+      "Quintic_Out",
+      "Quintic_InOut"
+    ],
+    "parent_id": "34a05919-0214-4676-92e7-53b75f8b7fe8",
+    "rotation": 0,
+    "targetRotation": 470.63809224816873,
+    "name": "jump*",
+    "description": "the jump movmement.",
+    "motionCurveString": "Quadratic_InOut",
+    "lineCurveString": "Linear_None",
+    "duration": 400,
+    "delay": 0
+  },
+  "selected_sound": {
+    "src": "../assets/sound/shot.mp3",
+    "sound": {},
+    "name": "shot-sound"
+  },
+  "selected_projectile": {
+    "line": {
+      "curve_string": "Quadratic_InOut",
+      "points": [
+        {
+          "x": 3,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 9,
+          "y": 1,
+          "z": 0
+        },
+        {
+          "x": 12,
+          "y": 1,
+          "z": 0
+        },
+        {
+          "x": 15,
+          "y": 2,
+          "z": 0
+        },
+        {
+          "x": 18,
+          "y": 3,
+          "z": 0
+        },
+        {
+          "x": 21,
+          "y": 4,
+          "z": 0
+        },
+        {
+          "x": 24,
+          "y": 6,
+          "z": 0
+        },
+        {
+          "x": 27,
+          "y": 7,
+          "z": 0
+        },
+        {
+          "x": 30,
+          "y": 9,
+          "z": 0
+        },
+        {
+          "x": 33,
+          "y": 11,
+          "z": 0
+        },
+        {
+          "x": 36,
+          "y": 13,
+          "z": 0
+        },
+        {
+          "x": 39,
+          "y": 15,
+          "z": 0
+        },
+        {
+          "x": 42,
+          "y": 18,
+          "z": 0
+        },
+        {
+          "x": 45,
+          "y": 20,
+          "z": 0
+        },
+        {
+          "x": 48,
+          "y": 23,
+          "z": 0
+        },
+        {
+          "x": 51,
+          "y": 26,
+          "z": 0
+        },
+        {
+          "x": 54,
+          "y": 29,
+          "z": 0
+        },
+        {
+          "x": 57,
+          "y": 32,
+          "z": 0
+        },
+        {
+          "x": 59,
+          "y": 35,
+          "z": 0
+        },
+        {
+          "x": 62,
+          "y": 38,
+          "z": 0
+        },
+        {
+          "x": 64,
+          "y": 41,
+          "z": 0
+        },
+        {
+          "x": 66,
+          "y": 44,
+          "z": 0
+        },
+        {
+          "x": 69,
+          "y": 48,
+          "z": 0
+        },
+        {
+          "x": 72,
+          "y": 52,
+          "z": 0
+        },
+        {
+          "x": 74,
+          "y": 55,
+          "z": 0
+        },
+        {
+          "x": 76,
+          "y": 58,
+          "z": 0
+        },
+        {
+          "x": 78,
+          "y": 61,
+          "z": 0
+        },
+        {
+          "x": 80,
+          "y": 64,
+          "z": 0
+        },
+        {
+          "x": 82,
+          "y": 67,
+          "z": 0
+        },
+        {
+          "x": 84,
+          "y": 71,
+          "z": 0
+        },
+        {
+          "x": 86,
+          "y": 74,
+          "z": 0
+        },
+        {
+          "x": 88,
+          "y": 77,
+          "z": 0
+        },
+        {
+          "x": 90,
+          "y": 81,
+          "z": 0
+        },
+        {
+          "x": 92,
+          "y": 85,
+          "z": 0
+        },
+        {
+          "x": 94,
+          "y": 88,
+          "z": 0
+        },
+        {
+          "x": 96,
+          "y": 92,
+          "z": 0
+        },
+        {
+          "x": 98,
+          "y": 96,
+          "z": 0
+        },
+        {
+          "x": 100,
+          "y": 100,
+          "z": 0
+        },
+        {
+          "x": 102,
+          "y": 104,
+          "z": 0
+        },
+        {
+          "x": 104,
+          "y": 108,
+          "z": 0
+        },
+        {
+          "x": 106,
+          "y": 112,
+          "z": 0
+        },
+        {
+          "x": 108,
+          "y": 115,
+          "z": 0
+        },
+        {
+          "x": 110,
+          "y": 119,
+          "z": 0
+        },
+        {
+          "x": 112,
+          "y": 123,
+          "z": 0
+        },
+        {
+          "x": 114,
+          "y": 126,
+          "z": 0
+        },
+        {
+          "x": 116,
+          "y": 129,
+          "z": 0
+        },
+        {
+          "x": 118,
+          "y": 133,
+          "z": 0
+        },
+        {
+          "x": 120,
+          "y": 136,
+          "z": 0
+        },
+        {
+          "x": 122,
+          "y": 139,
+          "z": 0
+        },
+        {
+          "x": 124,
+          "y": 142,
+          "z": 0
+        },
+        {
+          "x": 126,
+          "y": 145,
+          "z": 0
+        },
+        {
+          "x": 128,
+          "y": 148,
+          "z": 0
+        },
+        {
+          "x": 130,
+          "y": 151,
+          "z": 0
+        },
+        {
+          "x": 132,
+          "y": 154,
+          "z": 0
+        },
+        {
+          "x": 135,
+          "y": 158,
+          "z": 0
+        },
+        {
+          "x": 138,
+          "y": 162,
+          "z": 0
+        },
+        {
+          "x": 141,
+          "y": 165,
+          "z": 0
+        },
+        {
+          "x": 143,
+          "y": 168,
+          "z": 0
+        },
+        {
+          "x": 146,
+          "y": 171,
+          "z": 0
+        },
+        {
+          "x": 149,
+          "y": 174,
+          "z": 0
+        },
+        {
+          "x": 152,
+          "y": 177,
+          "z": 0
+        },
+        {
+          "x": 155,
+          "y": 180,
+          "z": 0
+        },
+        {
+          "x": 158,
+          "y": 182,
+          "z": 0
+        },
+        {
+          "x": 161,
+          "y": 185,
+          "z": 0
+        },
+        {
+          "x": 164,
+          "y": 187,
+          "z": 0
+        },
+        {
+          "x": 167,
+          "y": 189,
+          "z": 0
+        },
+        {
+          "x": 170,
+          "y": 191,
+          "z": 0
+        },
+        {
+          "x": 173,
+          "y": 193,
+          "z": 0
+        },
+        {
+          "x": 176,
+          "y": 194,
+          "z": 0
+        },
+        {
+          "x": 179,
+          "y": 196,
+          "z": 0
+        },
+        {
+          "x": 182,
+          "y": 197,
+          "z": 0
+        },
+        {
+          "x": 185,
+          "y": 198,
+          "z": 0
+        },
+        {
+          "x": 188,
+          "y": 199,
+          "z": 0
+        },
+        {
+          "x": 191,
+          "y": 199,
+          "z": 0
+        },
+        {
+          "x": 194,
+          "y": 200,
+          "z": 0
+        },
+        {
+          "x": 197,
+          "y": 200,
+          "z": 0
+        },
+        {
+          "x": 200,
+          "y": 200,
+          "z": 0
+        },
+        {
+          "x": 203,
+          "y": 200,
+          "z": 0
+        },
+        {
+          "x": 206,
+          "y": 200,
+          "z": 0
+        },
+        {
+          "x": 209,
+          "y": 201,
+          "z": 0
+        },
+        {
+          "x": 212,
+          "y": 201,
+          "z": 0
+        },
+        {
+          "x": 215,
+          "y": 202,
+          "z": 0
+        },
+        {
+          "x": 218,
+          "y": 202,
+          "z": 0
+        },
+        {
+          "x": 221,
+          "y": 203,
+          "z": 0
+        },
+        {
+          "x": 224,
+          "y": 204,
+          "z": 0
+        },
+        {
+          "x": 227,
+          "y": 205,
+          "z": 0
+        },
+        {
+          "x": 230,
+          "y": 206,
+          "z": 0
+        },
+        {
+          "x": 233,
+          "y": 207,
+          "z": 0
+        },
+        {
+          "x": 236,
+          "y": 208,
+          "z": 0
+        },
+        {
+          "x": 239,
+          "y": 210,
+          "z": 0
+        },
+        {
+          "x": 242,
+          "y": 211,
+          "z": 0
+        },
+        {
+          "x": 245,
+          "y": 213,
+          "z": 0
+        },
+        {
+          "x": 248,
+          "y": 214,
+          "z": 0
+        },
+        {
+          "x": 251,
+          "y": 216,
+          "z": 0
+        },
+        {
+          "x": 254,
+          "y": 218,
+          "z": 0
+        },
+        {
+          "x": 257,
+          "y": 220,
+          "z": 0
+        },
+        {
+          "x": 260,
+          "y": 222,
+          "z": 0
+        },
+        {
+          "x": 263,
+          "y": 224,
+          "z": 0
+        },
+        {
+          "x": 266,
+          "y": 226,
+          "z": 0
+        },
+        {
+          "x": 269,
+          "y": 229,
+          "z": 0
+        },
+        {
+          "x": 272,
+          "y": 231,
+          "z": 0
+        },
+        {
+          "x": 275,
+          "y": 234,
+          "z": 0
+        },
+        {
+          "x": 278,
+          "y": 236,
+          "z": 0
+        },
+        {
+          "x": 281,
+          "y": 239,
+          "z": 0
+        },
+        {
+          "x": 284,
+          "y": 242,
+          "z": 0
+        },
+        {
+          "x": 287,
+          "y": 245,
+          "z": 0
+        },
+        {
+          "x": 290,
+          "y": 248,
+          "z": 0
+        },
+        {
+          "x": 293,
+          "y": 251,
+          "z": 0
+        },
+        {
+          "x": 296,
+          "y": 254,
+          "z": 0
+        },
+        {
+          "x": 298,
+          "y": 257,
+          "z": 0
+        },
+        {
+          "x": 301,
+          "y": 260,
+          "z": 0
+        },
+        {
+          "x": 304,
+          "y": 264,
+          "z": 0
+        },
+        {
+          "x": 307,
+          "y": 267,
+          "z": 0
+        },
+        {
+          "x": 309,
+          "y": 270,
+          "z": 0
+        },
+        {
+          "x": 312,
+          "y": 273,
+          "z": 0
+        },
+        {
+          "x": 314,
+          "y": 276,
+          "z": 0
+        },
+        {
+          "x": 316,
+          "y": 279,
+          "z": 0
+        },
+        {
+          "x": 319,
+          "y": 283,
+          "z": 0
+        },
+        {
+          "x": 322,
+          "y": 287,
+          "z": 0
+        },
+        {
+          "x": 324,
+          "y": 290,
+          "z": 0
+        },
+        {
+          "x": 327,
+          "y": 294,
+          "z": 0
+        },
+        {
+          "x": 329,
+          "y": 297,
+          "z": 0
+        },
+        {
+          "x": 331,
+          "y": 300,
+          "z": 0
+        },
+        {
+          "x": 333,
+          "y": 303,
+          "z": 0
+        },
+        {
+          "x": 335,
+          "y": 306,
+          "z": 0
+        },
+        {
+          "x": 337,
+          "y": 309,
+          "z": 0
+        },
+        {
+          "x": 339,
+          "y": 312,
+          "z": 0
+        },
+        {
+          "x": 341,
+          "y": 315,
+          "z": 0
+        },
+        {
+          "x": 343,
+          "y": 318,
+          "z": 0
+        },
+        {
+          "x": 345,
+          "y": 322,
+          "z": 0
+        },
+        {
+          "x": 347,
+          "y": 325,
+          "z": 0
+        },
+        {
+          "x": 349,
+          "y": 328,
+          "z": 0
+        },
+        {
+          "x": 351,
+          "y": 332,
+          "z": 0
+        },
+        {
+          "x": 353,
+          "y": 335,
+          "z": 0
+        },
+        {
+          "x": 355,
+          "y": 339,
+          "z": 0
+        },
+        {
+          "x": 357,
+          "y": 342,
+          "z": 0
+        },
+        {
+          "x": 359,
+          "y": 346,
+          "z": 0
+        },
+        {
+          "x": 361,
+          "y": 349,
+          "z": 0
+        },
+        {
+          "x": 363,
+          "y": 353,
+          "z": 0
+        },
+        {
+          "x": 365,
+          "y": 357,
+          "z": 0
+        },
+        {
+          "x": 367,
+          "y": 361,
+          "z": 0
+        },
+        {
+          "x": 369,
+          "y": 364,
+          "z": 0
+        },
+        {
+          "x": 371,
+          "y": 368,
+          "z": 0
+        },
+        {
+          "x": 373,
+          "y": 372,
+          "z": 0
+        },
+        {
+          "x": 375,
+          "y": 376,
+          "z": 0
+        },
+        {
+          "x": 377,
+          "y": 380,
+          "z": 0
+        },
+        {
+          "x": 379,
+          "y": 384,
+          "z": 0
+        },
+        {
+          "x": 381,
+          "y": 388,
+          "z": 0
+        },
+        {
+          "x": 383,
+          "y": 392,
+          "z": 0
+        },
+        {
+          "x": 385,
+          "y": 396,
+          "z": 0
+        },
+        {
+          "x": 387,
+          "y": 399,
+          "z": 0
+        },
+        {
+          "x": 389,
+          "y": 403,
+          "z": 0
+        },
+        {
+          "x": 391,
+          "y": 407,
+          "z": 0
+        },
+        {
+          "x": 393,
+          "y": 411,
+          "z": 0
+        },
+        {
+          "x": 395,
+          "y": 414,
+          "z": 0
+        },
+        {
+          "x": 397,
+          "y": 418,
+          "z": 0
+        },
+        {
+          "x": 399,
+          "y": 421,
+          "z": 0
+        },
+        {
+          "x": 401,
+          "y": 425,
+          "z": 0
+        },
+        {
+          "x": 403,
+          "y": 428,
+          "z": 0
+        },
+        {
+          "x": 405,
+          "y": 432,
+          "z": 0
+        },
+        {
+          "x": 407,
+          "y": 435,
+          "z": 0
+        },
+        {
+          "x": 409,
+          "y": 438,
+          "z": 0
+        },
+        {
+          "x": 411,
+          "y": 442,
+          "z": 0
+        },
+        {
+          "x": 413,
+          "y": 445,
+          "z": 0
+        },
+        {
+          "x": 415,
+          "y": 448,
+          "z": 0
+        },
+        {
+          "x": 417,
+          "y": 451,
+          "z": 0
+        },
+        {
+          "x": 419,
+          "y": 454,
+          "z": 0
+        },
+        {
+          "x": 421,
+          "y": 457,
+          "z": 0
+        },
+        {
+          "x": 423,
+          "y": 460,
+          "z": 0
+        },
+        {
+          "x": 425,
+          "y": 463,
+          "z": 0
+        },
+        {
+          "x": 427,
+          "y": 466,
+          "z": 0
+        },
+        {
+          "x": 429,
+          "y": 469,
+          "z": 0
+        },
+        {
+          "x": 431,
+          "y": 472,
+          "z": 0
+        },
+        {
+          "x": 433,
+          "y": 475,
+          "z": 0
+        },
+        {
+          "x": 436,
+          "y": 479,
+          "z": 0
+        },
+        {
+          "x": 439,
+          "y": 483,
+          "z": 0
+        },
+        {
+          "x": 442,
+          "y": 487,
+          "z": 0
+        },
+        {
+          "x": 445,
+          "y": 490,
+          "z": 0
+        },
+        {
+          "x": 447,
+          "y": 493,
+          "z": 0
+        },
+        {
+          "x": 450,
+          "y": 496,
+          "z": 0
+        },
+        {
+          "x": 452,
+          "y": 499,
+          "z": 0
+        },
+        {
+          "x": 455,
+          "y": 502,
+          "z": 0
+        },
+        {
+          "x": 458,
+          "y": 506,
+          "z": 0
+        },
+        {
+          "x": 461,
+          "y": 509,
+          "z": 0
+        },
+        {
+          "x": 464,
+          "y": 512,
+          "z": 0
+        },
+        {
+          "x": 467,
+          "y": 515,
+          "z": 0
+        },
+        {
+          "x": 470,
+          "y": 518,
+          "z": 0
+        },
+        {
+          "x": 473,
+          "y": 521,
+          "z": 0
+        },
+        {
+          "x": 476,
+          "y": 524,
+          "z": 0
+        },
+        {
+          "x": 479,
+          "y": 526,
+          "z": 0
+        },
+        {
+          "x": 482,
+          "y": 529,
+          "z": 0
+        },
+        {
+          "x": 485,
+          "y": 531,
+          "z": 0
+        },
+        {
+          "x": 488,
+          "y": 534,
+          "z": 0
+        },
+        {
+          "x": 491,
+          "y": 536,
+          "z": 0
+        },
+        {
+          "x": 494,
+          "y": 538,
+          "z": 0
+        },
+        {
+          "x": 497,
+          "y": 540,
+          "z": 0
+        },
+        {
+          "x": 500,
+          "y": 542,
+          "z": 0
+        },
+        {
+          "x": 503,
+          "y": 544,
+          "z": 0
+        },
+        {
+          "x": 506,
+          "y": 546,
+          "z": 0
+        },
+        {
+          "x": 509,
+          "y": 547,
+          "z": 0
+        },
+        {
+          "x": 512,
+          "y": 549,
+          "z": 0
+        },
+        {
+          "x": 515,
+          "y": 550,
+          "z": 0
+        },
+        {
+          "x": 518,
+          "y": 552,
+          "z": 0
+        },
+        {
+          "x": 521,
+          "y": 553,
+          "z": 0
+        },
+        {
+          "x": 524,
+          "y": 554,
+          "z": 0
+        },
+        {
+          "x": 527,
+          "y": 555,
+          "z": 0
+        },
+        {
+          "x": 530,
+          "y": 556,
+          "z": 0
+        },
+        {
+          "x": 533,
+          "y": 557,
+          "z": 0
+        },
+        {
+          "x": 536,
+          "y": 558,
+          "z": 0
+        },
+        {
+          "x": 539,
+          "y": 558,
+          "z": 0
+        },
+        {
+          "x": 542,
+          "y": 559,
+          "z": 0
+        },
+        {
+          "x": 545,
+          "y": 559,
+          "z": 0
+        },
+        {
+          "x": 548,
+          "y": 560,
+          "z": 0
+        },
+        {
+          "x": 551,
+          "y": 560,
+          "z": 0
+        },
+        {
+          "x": 554,
+          "y": 560,
+          "z": 0
+        }
+      ],
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "is_highlighted": false,
+      "offset": {
+        "z": 0
+      },
+      "pointDist": 3,
+      "size": {
+        "x": 200,
+        "y": 200,
+        "z": 0
+      },
+      "rotation": 0,
+      "iterations": 1,
+      "growth": 1.8
+    },
+    "size": {
+      "x": 10,
+      "y": 10,
+      "z": 0
+    },
+    "animation": {
+      "defaultArgs": {
+        "name": "my-animation",
+        "description": "my-description",
+        "frames": [],
+        "type": "none",
+        "delay": 0,
+        "frameSize": {
+          "x": 44,
+          "y": 44,
+          "z": 0
+        },
+        "frameBounds": {
+          "min": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "max": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "termPoint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "frameOffset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "flipX": false,
+        "duration": 1000,
+        "size": {
+          "x": 20,
+          "y": 20,
+          "z": 20
+        }
+      },
+      "image": {
+        "image": {},
+        "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+        "domElement": {}
+      },
+      "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+      "domElement": {},
+      "frameSize": {
+        "x": 50,
+        "y": 50,
+        "z": 0
+      },
+      "frameBounds": {
+        "min": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "max": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "termPoint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "frameOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "extras": false,
+      "frames": [
+        {
+          "image": {
+            "image": {},
+            "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+            "domElement": {}
+          },
+          "frameSize": {
+            "x": 50,
+            "y": 50,
+            "z": 0
+          },
+          "framePos": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "flipX": false,
+      "cix": 0,
+      "selected_frame": {
+        "image": {
+          "image": {},
+          "src": "file:///C:/Users/Administrator/Google%20Drive/1-Code-Repositories/Game-Maker-Tools/programs/game-maker-tools/client/tools/image/test-bullet.png",
+          "domElement": {}
+        },
+        "frameSize": {
+          "x": 50,
+          "y": 50,
+          "z": 0
+        },
+        "framePos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "timer": 0,
+      "duration": 1000,
+      "seesaw_mode": false
+    },
+    "parent_id": "__blank",
+    "name": "bullet",
+    "description": false,
+    "duration": 500,
+    "delay": 0,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "highlighted": false,
+    "sprites": []
+  },
+  "__inAir": false,
+  "groundMaxY": 3000000
+}

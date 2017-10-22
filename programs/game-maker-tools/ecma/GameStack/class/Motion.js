@@ -22,7 +22,9 @@ class Motion {
 
         this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
 
-        this.curvesList = this.curvesObject(); //Tween.Easing
+        this.curvesList = this.curvesToArray(); //Tween.Easing
+
+        this.lineCurvesList = this.lineCurvesToArray();
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
@@ -52,8 +54,7 @@ class Motion {
 
     }
 
-
-    curvesObject() {
+    curvesToArray() {
 
         var c = [];
 
@@ -62,6 +63,28 @@ class Motion {
             GameStack.each(easing, function (iy, easeType) {
 
                 if (['in', 'out', 'inout','none'].indexOf(iy.toLowerCase()) >= 0) {
+
+                    c.push(ix + "_" + iy);
+
+                }
+
+            });
+
+        });
+
+        return c;
+
+    }
+
+    lineCurvesToArray() {
+
+        var c = [];
+
+        GameStack.each(TWEEN.Easing, function (ix, easing) {
+
+            GameStack.each(easing, function (iy, easeType) {
+
+                if (['linear', 'cubic', 'quadratic', 'quartic', 'quintic'].indexOf(ix.toLowerCase()) >= 0) {
 
                     c.push(ix + "_" + iy);
 

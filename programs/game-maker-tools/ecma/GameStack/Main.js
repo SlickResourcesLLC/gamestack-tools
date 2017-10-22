@@ -275,6 +275,12 @@ let GameStackLibrary = function () {
 
         ,
 
+        reload:function()
+        {
+          this.callReady();
+
+        },
+
         callReady: function () {
 
             var funx = this.ready_callstack;
@@ -462,38 +468,36 @@ class Sound {
 
     constructor(src, data) {
 
+
         if (typeof(src) == 'object') {
 
-            for (var x in src) {
-                this[x] = src[x];
+            this.sound = document.createElement('audio');
 
-            }
+            this.sound.src = src.src;
 
-            this.sound = new Audio(src.src);
-
-            this.onLoad = src.onLoad || function () {
-                };
+            this.src = src.src;
 
         }
 
-        else if (typeof(src) == 'string') {
+    else if (typeof(src) == 'string') {
+
+            this.sound = document.createElement('audio');
+
+            this.sound.src = src;
 
             this.src = src;
 
-            this.sound = new Audio(this.src);
-
         }
+       if(typeof(data)=='object') {
+           for (var x in data) {
+               if (x !== 'sound') {
+                   this[x] = data[x];
 
-        if(typeof(data) == 'object')
-        {
-            for(var x in data)
-            {
-              if(x !== 'volume' && x !== 'play'){  this[x] = data[x]; }
+               }
 
-            }
+           }
 
-        }
-
+       }
 
         this.onLoad = this.onLoad || function () {
             };
@@ -587,6 +591,16 @@ class SoundList{
         this.sounds[this.cix % this.sounds.length].play();
 
         this.cix += 1;
+
+    }
+
+    play()
+    {
+
+        this.sounds[this.cix % this.sounds.length].play();
+
+        this.cix += 1;
+
 
     }
 
@@ -1753,8 +1767,6 @@ class GameWindow {
         GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.def_update) == 'function') {
-
-
 
                 item.def_update(item);
 

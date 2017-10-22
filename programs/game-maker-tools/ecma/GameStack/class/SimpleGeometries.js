@@ -121,13 +121,22 @@ class Line
     constructor(args = {})
     {
 
-        this.curve = args.curve || TWEEN.Easing.Linear.None;
+        this.curve_string = args.curve_string || "Linear_None";
+
+        this.curve = this.get_curve_from_string(this.curve_string);
 
         this.motion_curve = args.motion_curve || TWEEN.Easing.Linear.None;
+
+        if(typeof(args.curve) == 'function')
+        {
+            this.curve = args.curve;
+        }
 
         this.points = [];
 
         this.position = args.position ||  new Vector();
+
+        this.is_highlighted = args.is_highlighted || false;
 
         this.offset = args.offset || new Vector();
 
@@ -140,6 +149,8 @@ class Line
         this.iterations = 1;
 
         this.growth = args.growth || 1.2;
+
+        this.curve_options = Curves;
 
     }
 
@@ -174,6 +185,7 @@ class Line
     Curve(c)
     {
         this.curve = c;
+        this.curve_string = this.get_curve_string(c);
         return this;
     }
 
@@ -184,51 +196,144 @@ class Line
         return this;
     }
 
-    get_curve_from_keys(xkey, ykey)
+    get_curve_from_string(str)
     {
 
-            for (var x in Curves) {
-                if (x.toLowerCase().indexOf(xkey) >= 0 && x.toLowerCase().indexOf(ykey) >= 0) {
-                    // alert('found curve at:' + x)
+        for(var x in this.curve_options) {
 
-                    return Curves[x];
-
-                }
+            if(x.toLowerCase() == str.toLowerCase().replace('_', ''))
+            {
+                return this.curve_options[x];
 
             }
-
-
-    }
-
-    get_curve(c)
-    {
-
-        for(var x in TWEEN.Easing)
-    {
-
-        for(var y in TWEEN.Easing[x])
-        {
-
-           if( TWEEN.Easing[x][y] == c)
-           {
-
-              // alert('found curve at:' + x + ':' + y);
-
-               return this.get_curve_from_keys(x.toLowerCase(), y.toLowerCase());
-
-           }
-
 
         }
 
     }
 
+
+    get_curve_string(c)
+    {
+        for(var x in this.curve_options) {
+
+            if(this.curve_options[x] == c)
+            {
+                return x;
+
+            }
+
+        }
+
+    }
+
+    getGraphCanvas(curveCall, existing_canvas) {
+
+        var canvas = existing_canvas || document.createElement('canvas');
+
+        canvas.style.position = "relative";
+
+        canvas.id = 'curve-display';
+
+        canvas.setAttribute('class', 'motion-curve');
+
+        canvas.width = 180;
+        canvas.height = 100;
+
+        canvas.style.background = "black";
+
+        var context = canvas.getContext('2d');
+        context.fillStyle = "rgb(0,0,0)";
+        context.fillRect(0, 0, 180, 100);
+
+        context.lineWidth = 0.5;
+        context.strokeStyle = "rgb(230,230,230)";
+
+        context.beginPath();
+        context.moveTo(0, 20);
+        context.lineTo(180, 20);
+        context.moveTo(0, 80);
+        context.lineTo(180, 80);
+        context.closePath();
+        context.stroke();
+
+        context.lineWidth = 2;
+        context.strokeStyle = "rgb(255,127,127)";
+
+        var position = {x: 0, y: 80};
+        var position_old = {x: 0, y: 80};
+
+        this.test_graph_size = new Vector(185, 80 -20);
+
+       var points = this.get_line_segment(this.test_graph_size, 5, curveCall);
+
+        for(var x in points)
+        {
+            var position = new Vector(points[x].x, this.test_graph_size.y + 20 - points[x].y);
+
+            context.beginPath();
+            context.moveTo(position_old.x, position_old.y);
+            context.lineTo(position.x, position.y);
+            context.closePath();
+            context.stroke();
+
+            position_old.x = position.x;
+            position_old.y = position.y;
+        }
+
+        return canvas;
+    }
+
+    get_line_segment(size, pointDist, curveCall)
+    {
+        if(!size || !pointDist) //***PREVENT DOUBLE RUN
+        {
+
+            return 0;
+        }
+
+        var points = [];
+
+        var current_point = new Vector(0, 0, 0);
+
+        var position = new Vector(current_point),
+
+            target = new Vector(position.add(size)),
+
+            start = new Vector(position),
+
+            curveMethod = curveCall,
+
+            ptrack = new Vector(start);
+
+        for (position.x = position.x; position.x < target.x; position.x += 1) {
+
+            var dist = position.sub(start);
+
+            var pct = dist.x / size.x;
+
+            console.log(pct);
+
+            position.y = Math.round(curveMethod(pct) * size.y);
+
+            if (ptrack.trig_distance_xy(position) >= pointDist) {
+
+                var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, 0));
+
+                points.push(p);
+
+                current_point = new Vector(position);
+
+                ptrack = new Vector(current_point);
+
+            }
+        }
+
+        return points;
+
     }
 
     fill(size, pointDist)
     {
-
-       console.log(jstr([size, pointDist]));
 
         if(!size || !pointDist) //***PREVENT DOUBLE RUN
         {
@@ -246,6 +351,7 @@ class Line
 
         var current_point = new Vector(this.position), yTrack = 0;
 
+
         for(var x= 0; x <= this.iterations; x++) {
 
             var position = new Vector(current_point),
@@ -254,7 +360,7 @@ class Line
 
                 start = new Vector(position),
 
-                curveMethod = this.get_curve(this.curve),
+                curveMethod = this.curve,
 
                 ptrack = new Vector(start);
 
@@ -264,11 +370,9 @@ class Line
 
                 var pct = dist.x / size.x;
 
-                console.log(pct);
+                position.y = start.y +  Math.round(curveMethod(pct) * size.y);
 
-                position.y = Math.round(curveMethod(pct) * size.y + (yTrack));
-
-                if (ptrack.trig_distance_xy(position) >= this.pointDist) {
+                if (current_point.trig_distance_xy(position) >= this.pointDist) {
 
                     var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, this.rotation));
 
@@ -278,8 +382,6 @@ class Line
 
                 }
             }
-
-            yTrack += size.y;
 
             size = size.mult(this.growth);
 

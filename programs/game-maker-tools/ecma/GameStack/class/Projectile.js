@@ -25,7 +25,11 @@ class Projectile {
 
         }
 
-        this.line = Gamestack.getArg(args, 'line', new Line());
+        this.name = args.name || "__";
+
+        this.description = args.description || "__";
+
+        this.line = new Line(Gamestack.getArg(args, 'line', new Line()));
 
         this.animation = Gamestack.getArg(args, 'animation', new Animation());
 

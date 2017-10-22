@@ -26,6 +26,12 @@
 
     }
 
+    video#intro-video
+    {
+        display:none;
+
+    }
+
     .screen-select img {
 
         width: 200px;
@@ -63,8 +69,6 @@
         position: relative;
 
         color: whitesmoke;
-
-        width: 100%;
 
         display: block;
 
@@ -201,6 +205,8 @@
 
         margin: 10px;
 
+        padding:10px;
+
         justify-content: center;
 
     }
@@ -223,27 +229,26 @@
 
     }
 
-    .title, .title-level2 {
+    .app-section {
+
+
+        position:block;
 
         color: white;
 
-        position: block;
 
         text-align: left;
 
         font-size: 130%;
 
-        margin-left: 50px;
+        padding-left: 50px;
 
-        background-image: url("image/black_surface.png");
+        clear:both;
 
-        background-size: 50% auto;
-
-        background-position:25% 25%;
 
     }
 
-    .title:after, .title-level2:after {
+    .app-section:after, .app-section-level2:after {
         width: 100%;
 
         border-bottom: 1px solid grey;
@@ -256,10 +261,7 @@
 
     }
 
-    .title.left {
-        float: left;
 
-    }
 
     button.create {
         float: left;
@@ -286,23 +288,17 @@
 
     }
 
-    div.game-space
-    {
-
-        position:relative;
-
-        width:100%;
-
-        height:200px;
-
-        clear:left;
-
-    }
 
     ul
     {
 
         position:relative;
+
+        width:150px;
+
+        left:50%;
+
+        margin-left:-120px;
 
         color:lightgrey;
 
@@ -310,7 +306,6 @@
 
         text-align:left;
 
-        left:21%;
 
     }
 
@@ -321,6 +316,7 @@
 
         list-style-type:none;
 
+        font-size:16px;
 
     }
 
@@ -354,6 +350,14 @@
     {
 
         color:white;
+
+    }
+
+    th
+    {
+        text-align:left;
+
+        color:darkorange;
 
     }
 
@@ -393,6 +397,13 @@
         min-height:70px;
 
         background:transparent;
+
+    }
+
+    p.heading
+    {
+
+        border-bottom:2px inset lightgrey;
 
     }
 
@@ -436,19 +447,24 @@
 
 </table>
 
+<br/>
 
 <video autoplay="true" id="intro-video">
     <source src="video/intro.mp4"></source>
 </video>
 
+<div class="app-section">
 <img id="appLogo" src="img/logo.png" style="display:none;"/>
-<p class="title">Gamestack library + Framework</p>
+<p class="heading" >Gamestack.js library + Framework</p>
 
 <div><button class="download" >Download Gamestack.js</button></div>
 
 <div><button class="buy" >Donate/Buy Gamestack.js Toolset</button></div>
 
-<p class="title">Usage examples</p>
+</div>
+
+
+<div class="app-section"><p class="heading" >Usage examples</p>
 <div class="screen-select"><a class="screenlink" href="examples/side-scroller-level.html"> <img
         src="image/spritemaker-shot.png"/> <span>Sprite:from file</span>
     <ul>
@@ -460,7 +476,9 @@
 
 </div>
 
-<p class="title">Tools</p>
+</div>
+
+<div class="app-section"><p class="heading" >Tools</p>
 
 
 <div class="screen-select">
@@ -491,9 +509,10 @@
 </div>
 
 
+</div>
+
+<div class="app-section">
 <div class="screen-select">
-
-
 
     <a class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png"/>
         <span>Sprite Maker</span>
@@ -524,71 +543,81 @@
 
 </div>
 
-
 </div>
+
+
+<div class="app-section">
 
 <div class="game-space object-container"  >
 
-<p class="title left">Games</p>
+  <p class="left">Games</p>
 <button class="create" id="new_game">+</button>
 <div class="object-space game">
 
 </div>
 
-</div>
-
-
-
-<div class="sprite-space object-container"  >
-    <p class="title left">Sprites</p>
-    <button class="create" id="new_object">+</button>
-    <div class="object-space game">
-
     </div>
 
 </div>
 
 
+        <div class="app-section">
 
+<div class="sprite-space object-container"  >
+   <p class="left">Sprites</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space game">
+
+    </div>
+    </div>
+</div>
+
+
+        <div class="app-section">
 <div class="motion-space object-container"  >
-    <p class="title left">Motions</p>
+   <p class="left">Motions</p>
     <button class="create" id="new_object">+</button>
     <div class="object-space motion">
 
     </div>
 
+    </div>
+
 </div>
 
-
-<div class="animation-space object-container"  >
-    <p class="title left">Animations</p>
+    <div class="app-section">
+    <div class="animation-space object-container"  >
+   <p class="left">Animations</p>
     <button class="create" id="new_object">+</button>
     <div class="object-space animation">
 
     </div>
 
-</div>
-
-
-<div class="projectile-space object-container"  >
-    <p class="title left">Projectiles</p>
-    <button class="create" id="new_object">+</button>
-    <div class="object-space projectile">
-
     </div>
 
 </div>
 
+    <div class="app-section">
+<div class="projectile-space object-container"  >
+    <p class="left">Projectiles</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space projectile">
+
+    </div>
+</div>
+</div>
+
+    <div class="app-section" >
 
 <div class="particle-space object-container" >
-    <p class="title left">Particles</p>
+    <p class="left">Particles</p>
     <button class="create" id="new_object">+</button>
     <div class="object-space particle">
 
     </div>
 
 </div>
-
+</div>
 
 
 
@@ -683,7 +712,7 @@
 
         var gameHTML = "" +
 
-            '<p   class="title" style="clear:left; font-size:90% position:relative; top:7px; left:50px;"  >'+name+'</p>' +
+            '<p   class="app-section" style="clear:left; font-size:90% position:relative; top:7px; left:50px;"  >'+name+'</p>' +
 
             '<div class="object-region" >' +
 

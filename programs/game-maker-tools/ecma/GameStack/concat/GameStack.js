@@ -275,6 +275,12 @@ let GameStackLibrary = function () {
 
         ,
 
+        reload:function()
+        {
+          this.callReady();
+
+        },
+
         callReady: function () {
 
             var funx = this.ready_callstack;
@@ -462,38 +468,36 @@ class Sound {
 
     constructor(src, data) {
 
+
         if (typeof(src) == 'object') {
 
-            for (var x in src) {
-                this[x] = src[x];
+            this.sound = document.createElement('audio');
 
-            }
+            this.sound.src = src.src;
 
-            this.sound = new Audio(src.src);
-
-            this.onLoad = src.onLoad || function () {
-                };
+            this.src = src.src;
 
         }
 
-        else if (typeof(src) == 'string') {
+    else if (typeof(src) == 'string') {
+
+            this.sound = document.createElement('audio');
+
+            this.sound.src = src;
 
             this.src = src;
 
-            this.sound = new Audio(this.src);
-
         }
+       if(typeof(data)=='object') {
+           for (var x in data) {
+               if (x !== 'sound') {
+                   this[x] = data[x];
 
-        if(typeof(data) == 'object')
-        {
-            for(var x in data)
-            {
-              if(x !== 'volume' && x !== 'play'){  this[x] = data[x]; }
+               }
 
-            }
+           }
 
-        }
-
+       }
 
         this.onLoad = this.onLoad || function () {
             };
@@ -587,6 +591,16 @@ class SoundList{
         this.sounds[this.cix % this.sounds.length].play();
 
         this.cix += 1;
+
+    }
+
+    play()
+    {
+
+        this.sounds[this.cix % this.sounds.length].play();
+
+        this.cix += 1;
+
 
     }
 
@@ -1753,8 +1767,6 @@ class GameWindow {
         GameStack.each(this.sprites, function (ix, item) {
 
             if (typeof(item.def_update) == 'function') {
-
-
 
                 item.def_update(item);
 
@@ -4849,7 +4861,6 @@ class Animation {
             size:new Vector3(20, 20, 20)
         };
 
-
         for(var x in this.defaultArgs)
         {
             if(!args.hasOwnProperty(x))
@@ -4865,6 +4876,12 @@ class Animation {
            this[x] = args[x];
 
         }
+
+
+        this.name = args.name || "__";
+
+        this.description = args.description || "__";
+
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
@@ -6278,7 +6295,9 @@ class Motion {
 
         this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
 
-        this.curvesList = this.curvesObject(); //Tween.Easing
+        this.curvesList = this.curvesToArray(); //Tween.Easing
+
+        this.lineCurvesList = this.lineCurvesToArray();
 
         this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
 
@@ -6308,8 +6327,7 @@ class Motion {
 
     }
 
-
-    curvesObject() {
+    curvesToArray() {
 
         var c = [];
 
@@ -6318,6 +6336,28 @@ class Motion {
             GameStack.each(easing, function (iy, easeType) {
 
                 if (['in', 'out', 'inout','none'].indexOf(iy.toLowerCase()) >= 0) {
+
+                    c.push(ix + "_" + iy);
+
+                }
+
+            });
+
+        });
+
+        return c;
+
+    }
+
+    lineCurvesToArray() {
+
+        var c = [];
+
+        GameStack.each(TWEEN.Easing, function (ix, easing) {
+
+            GameStack.each(easing, function (iy, easeType) {
+
+                if (['linear', 'cubic', 'quadratic', 'quartic', 'quintic'].indexOf(ix.toLowerCase()) >= 0) {
 
                     c.push(ix + "_" + iy);
 
@@ -6776,7 +6816,11 @@ class Projectile {
 
         }
 
-        this.line = Gamestack.getArg(args, 'line', new Line());
+        this.name = args.name || "__";
+
+        this.description = args.description || "__";
+
+        this.line = new Line(Gamestack.getArg(args, 'line', new Line()));
 
         this.animation = Gamestack.getArg(args, 'animation', new Animation());
 
@@ -7028,13 +7072,22 @@ class Line
     constructor(args = {})
     {
 
-        this.curve = args.curve || TWEEN.Easing.Linear.None;
+        this.curve_string = args.curve_string || "Linear_None";
+
+        this.curve = this.get_curve_from_string(this.curve_string);
 
         this.motion_curve = args.motion_curve || TWEEN.Easing.Linear.None;
+
+        if(typeof(args.curve) == 'function')
+        {
+            this.curve = args.curve;
+        }
 
         this.points = [];
 
         this.position = args.position ||  new Vector();
+
+        this.is_highlighted = args.is_highlighted || false;
 
         this.offset = args.offset || new Vector();
 
@@ -7047,6 +7100,8 @@ class Line
         this.iterations = 1;
 
         this.growth = args.growth || 1.2;
+
+        this.curve_options = Curves;
 
     }
 
@@ -7081,6 +7136,7 @@ class Line
     Curve(c)
     {
         this.curve = c;
+        this.curve_string = this.get_curve_string(c);
         return this;
     }
 
@@ -7091,51 +7147,144 @@ class Line
         return this;
     }
 
-    get_curve_from_keys(xkey, ykey)
+    get_curve_from_string(str)
     {
 
-            for (var x in Curves) {
-                if (x.toLowerCase().indexOf(xkey) >= 0 && x.toLowerCase().indexOf(ykey) >= 0) {
-                    // alert('found curve at:' + x)
+        for(var x in this.curve_options) {
 
-                    return Curves[x];
-
-                }
+            if(x.toLowerCase() == str.toLowerCase().replace('_', ''))
+            {
+                return this.curve_options[x];
 
             }
-
-
-    }
-
-    get_curve(c)
-    {
-
-        for(var x in TWEEN.Easing)
-    {
-
-        for(var y in TWEEN.Easing[x])
-        {
-
-           if( TWEEN.Easing[x][y] == c)
-           {
-
-              // alert('found curve at:' + x + ':' + y);
-
-               return this.get_curve_from_keys(x.toLowerCase(), y.toLowerCase());
-
-           }
-
 
         }
 
     }
 
+
+    get_curve_string(c)
+    {
+        for(var x in this.curve_options) {
+
+            if(this.curve_options[x] == c)
+            {
+                return x;
+
+            }
+
+        }
+
+    }
+
+    getGraphCanvas(curveCall, existing_canvas) {
+
+        var canvas = existing_canvas || document.createElement('canvas');
+
+        canvas.style.position = "relative";
+
+        canvas.id = 'curve-display';
+
+        canvas.setAttribute('class', 'motion-curve');
+
+        canvas.width = 180;
+        canvas.height = 100;
+
+        canvas.style.background = "black";
+
+        var context = canvas.getContext('2d');
+        context.fillStyle = "rgb(0,0,0)";
+        context.fillRect(0, 0, 180, 100);
+
+        context.lineWidth = 0.5;
+        context.strokeStyle = "rgb(230,230,230)";
+
+        context.beginPath();
+        context.moveTo(0, 20);
+        context.lineTo(180, 20);
+        context.moveTo(0, 80);
+        context.lineTo(180, 80);
+        context.closePath();
+        context.stroke();
+
+        context.lineWidth = 2;
+        context.strokeStyle = "rgb(255,127,127)";
+
+        var position = {x: 0, y: 80};
+        var position_old = {x: 0, y: 80};
+
+        this.test_graph_size = new Vector(185, 80 -20);
+
+       var points = this.get_line_segment(this.test_graph_size, 5, curveCall);
+
+        for(var x in points)
+        {
+            var position = new Vector(points[x].x, this.test_graph_size.y + 20 - points[x].y);
+
+            context.beginPath();
+            context.moveTo(position_old.x, position_old.y);
+            context.lineTo(position.x, position.y);
+            context.closePath();
+            context.stroke();
+
+            position_old.x = position.x;
+            position_old.y = position.y;
+        }
+
+        return canvas;
+    }
+
+    get_line_segment(size, pointDist, curveCall)
+    {
+        if(!size || !pointDist) //***PREVENT DOUBLE RUN
+        {
+
+            return 0;
+        }
+
+        var points = [];
+
+        var current_point = new Vector(0, 0, 0);
+
+        var position = new Vector(current_point),
+
+            target = new Vector(position.add(size)),
+
+            start = new Vector(position),
+
+            curveMethod = curveCall,
+
+            ptrack = new Vector(start);
+
+        for (position.x = position.x; position.x < target.x; position.x += 1) {
+
+            var dist = position.sub(start);
+
+            var pct = dist.x / size.x;
+
+            console.log(pct);
+
+            position.y = Math.round(curveMethod(pct) * size.y);
+
+            if (ptrack.trig_distance_xy(position) >= pointDist) {
+
+                var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, 0));
+
+                points.push(p);
+
+                current_point = new Vector(position);
+
+                ptrack = new Vector(current_point);
+
+            }
+        }
+
+        return points;
+
     }
 
     fill(size, pointDist)
     {
-
-       console.log(jstr([size, pointDist]));
 
         if(!size || !pointDist) //***PREVENT DOUBLE RUN
         {
@@ -7153,6 +7302,7 @@ class Line
 
         var current_point = new Vector(this.position), yTrack = 0;
 
+
         for(var x= 0; x <= this.iterations; x++) {
 
             var position = new Vector(current_point),
@@ -7161,7 +7311,7 @@ class Line
 
                 start = new Vector(position),
 
-                curveMethod = this.get_curve(this.curve),
+                curveMethod = this.curve,
 
                 ptrack = new Vector(start);
 
@@ -7171,11 +7321,9 @@ class Line
 
                 var pct = dist.x / size.x;
 
-                console.log(pct);
+                position.y = start.y +  Math.round(curveMethod(pct) * size.y);
 
-                position.y = Math.round(curveMethod(pct) * size.y + (yTrack));
-
-                if (ptrack.trig_distance_xy(position) >= this.pointDist) {
+                if (current_point.trig_distance_xy(position) >= this.pointDist) {
 
                     var p = new Vector(Gamestack.GeoMath.rotatePointsXY(position.x, position.y, this.rotation));
 
@@ -7185,8 +7333,6 @@ class Line
 
                 }
             }
-
-            yTrack += size.y;
 
             size = size.mult(this.growth);
 
@@ -7287,8 +7433,7 @@ var GeoMath = {
 }
 
 Gamestack.GeoMath = GeoMath;
-;
-/**
+;/**
  * Takes an object of arguments and returns Sprite() object. Sprite() is a container for multiple Animations, Motions, and Sounds. Sprites have several behavioral functions for 2d-Game-Objects.
 
  * @param   {Object} args object of arguments
@@ -7357,13 +7502,13 @@ class Sprite {
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
-        this.size = __gameStack.getArg(args, 'size', new Vector3(100, 100));
+        this.size = new Vector(__gameStack.getArg(args, 'size', new Vector3(100, 100)));
 
-        this.position = __gameStack.getArg(args, 'position', new Vector3(0, 0, 0));
+        this.position = new Vector( __gameStack.getArg(args, 'position', new Vector3(0, 0, 0)));
 
         this.collision_bounds = __gameStack.getArg(args, 'collision_bounds', new VectorBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
 
-        this.rotation = __gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0));
+        this.rotation =  new Vector(__gameStack.getArg(args, 'rotation', new Vector3(0, 0, 0)));
 
         this.selected_animation = {};
 
@@ -7377,7 +7522,6 @@ class Sprite {
 
 
         this.padding = __gameStack.getArg(args, 'padding', new Vector3(0, 0, 0));
-
 
         //Apply / instantiate Sound(), Motion(), and Animation() args...
 
@@ -7393,13 +7537,18 @@ class Sprite {
 
         });
 
-
         GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
 
+
         });
 
+        GameStack.each(this.projectiles, function (ix, item) {
+
+            __inst.projectiles[ix] = new Projectile(item);
+
+        });
 
         //Apply initializers:
 
@@ -8650,8 +8799,6 @@ class Sprite {
  * TODO : Complete SpritePresetsOptions::
  *  Use these as options for Sprite Control, etc...
  ****************/
-
-
 
 Gamestack.Sprite = Sprite;
 

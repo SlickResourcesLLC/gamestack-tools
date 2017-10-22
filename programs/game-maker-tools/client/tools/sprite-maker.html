@@ -5,45 +5,51 @@
     <title>Sprite-Maker</title>
 
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-
-
     <link rel="stylesheet" href="../assets/css/Navigation-with-Search1.css">
-
-
-    <link rel="stylesheet" href="../assets/js/ui/dat.gui.css">
-
+    <link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
 
     <!-- Insert this line above script imports  -->
-    <script>if (typeof module === 'object') {
-        window.module = module;
-        module = undefined;
-    }</script>
+    <script>
+
+        //GamestackPRESETS
 
 
-    <script src="../assets/js/ui/serverside-image.js"></script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }</script>
 
-    <script src="../assets/js/ui/dat.gui.js"></script>
+    <script src="../assets/js/serverside-file.js"></script>
 
-    <script src="../assets/js/ui/Tween.js"></script>
+    <script src="../assets/js/dat.gui/dat.gui.js"></script>
 
-    <script src="../assets/js/ui/dat.gui.interface.js"></script>
+    <script src="../assets/js/libs/Tween.js"></script>
 
-    <script src="../assets/js/ui/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/dat.gui/dat.gui.interface.js"></script>
 
+    <script src="../assets/js/jquery/jquery-3.2.1.min.js"></script>
 
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
-    <script src="../assets/js/ui/jquery.fileDownload.js"></script>
+    <script src="../assets/js/jquery/jquery.fileDownload.js"></script>
 
-
-    <script src="../assets/js/ui/contextMenu.js"></script>
-
-
-    <script src="../assets/js/ui/squeezetabs.js"></script>
+    <script src="../assets/js/squeezetabs.js"></script>
 
     <script src="../dist/js/Gamestack.js"></script>
 
-    <script src="../assets/js/ui/object-builder.js"></script>
+    <!-- Insert this line above script imports  -->
+    <script>
+
+        //GamestackPRESETS
+        Gamestack.CONTEXT_MENU = true;
+
+    </script>
+
+    <script src="../assets/js/contextMenu/contextMenu.js"></script>
+
+    <script src="../assets/js/contextMenu/right_click_interface_sprite.js"></script>
+
+    <script src="../assets/js/object-builder.js"></script>
     <!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
 
     <!-- Insert this line after script imports -->
@@ -51,7 +57,7 @@
 
     <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
-    <link rel="stylesheet" href="../assets/js/ui/contextMenu.css">
+    <link rel="stylesheet" href="../assets/js/contextMenu/contextMenu.css">
 
     <style>
         body, html {
@@ -67,6 +73,54 @@
             height: 100%;
         }
 
+
+        nav.top-menu  .button-top {
+
+            background: #45484d; /* Old browsers */
+            background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+
+            border:1px outset grey;
+            color: #FFFFFF;
+            text-align: center;
+
+            padding-right:20px;
+
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+
+            text-decoration:none;
+
+            font-size: 1.0em;
+
+
+        }
+
+        a#download.button-top
+        {
+
+          position:absolute;
+
+            top:0px;
+
+          height:40px;
+
+
+
+        }
+
+        a#download.button-top span
+        {
+
+            vertical-align: middle;
+
+            margin-top:-4px;
+
+        }
+
         div.slider {
             position: absolute;
 
@@ -77,9 +131,8 @@
         }
 
 
-      nav.top-menu a#download span
-        {
-            margin-top:2px;
+        li.folder {
+            margin-top: 5px;
 
         }
 
@@ -403,26 +456,11 @@
 
     </style>
 
-
-
     <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
 
-
 </head>
 <body>
-
-<!--This is a TODO: list. Items todo are as follows
-
-1. rig and maintain the App.Detail_View_Special_Settings{}, pertaining to the bottom sliding panel of this app.
-
-    -detail views must switch focus to the appropriate sprite-property as needed: pressing  'Animation' switches to the nearest animation, etc...
-
-2. maintain html and the css across this web page
-
-3.
-
--->
 
 <input type="file" name="sprite-file-input" id="sprite-file-input"/>
 
@@ -472,7 +510,7 @@
 <div id="ctrl-space-top">
     <nav class="top-menu">
 
-        <img id="logo" src="img/logo-sprite.png"/>
+        <img id="logo" src="image/logo-sprite.png"/>
 
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">
@@ -486,10 +524,11 @@
         </div>
 
         <div style="margin-top:13px;">
-            <a id="download" class="button-top" name="level" href="#"><span>Save to File</span><img src="img/save.png"
+            <a id="download" class="button-top" name="level" href="#"><span>Save to File</span><img src="image/save.png"
                                                                                                     alt="save data"></a>
 
-            <button style="border-radius:0px; height:35px; float:right; margin-top:-7px;" id="settings" onclick="App.showSettings();">Test-Settings
+            <button style="border-radius:0px; height:40px; float:right; margin-top:-7px;" id="settings"
+                    onclick="App.showSettings();">Test-Settings
             </button>
 
         </div>
@@ -517,772 +556,11 @@
 
     /*************************************
      *
-     * SpriteMaker.html, functional list:
-     *  -everything we need to happen on for this page
+     * SpriteMaker.html:
      *
-     *      -Buildable Sprite with dat.GUI():
-     *          1. We can select and edit simple properties of the sprite
-     *          2. Detail views will show any complex class Object() that is selected
-     *          3. We can save the sprite as .json
-     *          4. Retrieving the Sprite from .json file
-     *
-     *
-     *      -Other functionality
-     *          1. Browse and Load Sprite from all sprites available in the app (TODO)
-     *
-     *
-     *
-     *      -Psuedo-Code:
-     *          *The ideal way that js would complete the above tasks:
+     *  -Build and update a Gamestack.js Sprite() object
      *
      * ********************************/
-
-
-    /*************************************
-     *
-     * Object Controller:
-     *
-     *      -What does it do?:
-     *          1. Creates GUI for a complex class object
-     *
-     * ********************************/
-
-
-    //LevelMaker? -an old
-
-    function LevelMaker(filename, settings) {
-
-        return {
-
-            topScroll: 0,
-
-            selected_image_src: {},
-
-            discluded_sprites: [],
-
-            assembled_sprite: {},
-
-            lastPlantedCountRecordArray: [],
-
-            pixelSnap: 10,
-
-            settings: settings || {
-
-                name: filename || "myLevel",
-
-                description: "the default level for our game",
-
-                pixelSnap: 10,
-
-                levelSizeX: 5000,
-
-                levelSizeY: 5000,
-
-                levelSizeZ: 0,
-
-                game_scale: 2.0
-
-            },
-
-
-            restoreInstance: function (sprites, settings, callback) {
-
-                if (typeof(settings) == "object") {
-                    levelMaker.settings = settings;
-
-                }
-
-                if (sprites instanceof Array) {
-
-                    // alert('sprite []');
-
-                    Game.sprites = sprites;
-
-                    Gamestack.each(Game.sprites, function (ix, item) {
-
-                        Game.sprites[ix] = new Sprite(item);
-
-                        if (item.selected_animation && item.selected_animation.src) {
-
-                            Game.sprites[ix].selected_animation = new Animation(item.selected_animation);
-
-
-                        }
-
-                    });
-
-                }
-
-                callback();
-
-            },
-
-            objectMemberToArray: function (object, key) {
-
-                var list = [];
-
-                for (var x in object) {
-
-                    list.push(object[key]);
-
-                }
-
-                return list;
-
-            },
-
-            removeLast: function () {
-
-                var number = levelMaker.lastPlantedCountRecordArray[levelMaker.lastPlantedCountRecordArray.length - 1];
-
-                for (var x = 0; x < number; x++) {
-
-                    Game.sprites.pop();
-
-                }
-            },
-
-            arrayToSelect: function (containerId, selectId, values) {
-
-                var myDiv = document.getElementById(containerId);
-
-                //Create array of options to be added
-                var array = values;
-
-                //Create and append select list
-                var selectList = document.createElement("select");
-                selectList.id = selectId;
-                myDiv.appendChild(selectList);
-
-                //Create and append the options
-                for (var i = 0; i < array.length; i++) {
-                    var option = document.createElement("option");
-                    option.value = array[i];
-                    option.text = array[i];
-                    selectList.appendChild(option);
-                }
-
-            }
-
-            ,
-
-            htmlSettings: function () {
-                var obj = levelMaker.settings;
-
-                $('#map_name').val(obj.name);
-                $('#map_description').val(obj.description);
-                $('#map_type').val(obj.type);
-
-
-                $('#map_snap_size').val(obj.pixelSnap + 'px');
-
-                $('#map_level_size_x').val(obj.levelSizeX);
-                $('#map_level_size_y').val(obj.levelSizeX);
-
-                $('#map_game_scale').val(obj.game_scale);
-
-            },
-
-            applySettings: function (data) {
-
-                if (typeof(data) == 'string') {
-                    data = JSON.parse(data).settings;
-
-                }
-                ;
-
-
-                if (!data) {
-
-                    data = {};
-
-                    data.name = $('#map_name').val();
-
-                    data.description = $('#map_description').val();
-
-                    data.type = $('#map_type').val();
-                    ;
-
-                    data.pixelSnap = parseFloat($('#map_snap_size').val().replace('px', ''));
-
-                    data.levelSizeX = parseInt($('#map_level_size_x').val());
-
-                    data.levelSizeY = parseInt($('#map_level_size_y').val());
-
-
-                }
-
-                levelMaker.settings = data;
-
-                $('.level-maker-canvas').width(data.levelSizeX);
-                $('.level-maker-canvas').height(data.levelSizeY);
-
-
-                Game.canvas.width = data.levelSizeX;
-
-                Game.canvas.height = data.levelSizeY;
-
-
-                $('#map-item-space form').hide('slow');
-
-            },
-
-            showObjectDialog: function () {
-
-                $('#map-item-space form').show();
-
-
-            },
-
-            objectMakerFormEvents: function () {
-
-                levelMaker.assembled_sprite = new Sprite();
-
-                App.setMotionVectorGui();
-
-                $('#create_object').click(function () {
-
-                    var fx = parseFloat($('#frameX').val()),
-
-                        fy = parseFloat($('#frameY').val()),
-
-                        w = parseFloat($('#width').val()),
-
-                        h = parseFloat($('#height').val()),
-
-                        fw = parseFloat($('#framewidth').val()),
-
-                        fh = parseFloat($('#frameheight').val());
-
-
-                    var name = $('#name').val(),
-
-                        type = $('#type').val(),
-
-                        description = $('#description').val(),
-
-                        id = $('#id').val(),
-
-                        image_data = $('#image_data').val();
-
-                    //alert('Creating Map Object');
-
-                    levelMaker.selected_image_src = image_data;
-
-                    console.log('Making objects in create event');
-
-                    var args = {type: type, description: description};
-
-
-                    args.size = new Vector(w, h, 0);
-
-
-                    levelMaker.selectedSprite = levelMaker.MapElement(name, levelMaker.selected_image_src, new Vector(fw, fh, 0), new Vector(w, h, 0),
-                        args);
-
-                    levelMaker.selectedSprite.img.onload = function () {
-
-                        levelMaker.addLevelObjectToUI(levelMaker.selectedSprite);
-
-                    }
-
-                    $('#map-item-space form').hide();
-
-                });
-
-
-                $("#object-maker input").change(function (evt) {
-
-                    var fx = parseFloat($('#frameX').val()),
-
-                        fy = parseFloat($('#frameY').val()),
-
-                        w = parseFloat($('#width').val()),
-
-                        h = parseFloat($('#height').val()),
-
-                        fw = parseFloat($('#framewidth').val()),
-
-                        fh = parseFloat($('#frameheight').val());
-
-
-                    levelMaker.sizeImage(fx, fy, w, h, fw, fh);
-
-
-                });
-
-            },
-
-            sizeImage: function (frameX, frameY, mapWidth, mapHeight, frameWidth, frameHeight) {
-
-                var canvas = document.getElementById('testCanvas');
-
-                var ctx = canvas.getContext('2d');
-
-                var image = $(canvas).parent().find('img')[0];
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                var x = 0, y = 0;
-
-
-                var width = mapWidth, height = mapHeight;
-
-                var portion = mapWidth / mapHeight;
-
-                mapHeight = canvas.height;
-
-                mapWidth = mapHeight * portion;
-
-                x = (canvas.width / 2) - mapWidth / 2;
-
-                y = (canvas.height / 2) - mapHeight / 2;
-
-                $('#frameX').val(frameX);
-
-                $('#frameY').val(frameY);
-
-                $('#width').val(width);
-
-                $('#height').val(height);
-
-                $('#framewidth').val(frameWidth);
-
-                $('#frameheight').val(frameHeight);
-
-                ctx.drawImage(image, frameX, frameY, frameWidth, frameHeight, x, y, mapWidth, mapHeight);
-
-            },
-
-            getRawImageFile: function (input, callback) {
-
-                // var preview =  $(input).parent().find('img')[0];
-                var file = input.files[0];
-                var reader = new FileReader();
-
-                reader.addEventListener("load", function () {
-                    //   preview.src = reader.result;
-
-                    //   levelMaker.selected_image_src = preview.src;
-
-                    //   $('#image_data').val(reader.result);
-
-                    if (typeof(callback) == 'function') {
-                        callback(reader.result);
-
-                    }
-
-                }, false);
-
-                if (file) {
-                    reader.readAsDataURL(file);
-                }
-
-            },
-
-            MapData: function (map, settings) {
-
-                return {map: map, settings: settings};
-            },
-
-
-            selection_sprite: {},
-            mouse: {
-                x: 0, y: 0,
-
-                down: false
-
-            },
-            getDocHeight: function () {
-                var D = document;
-                return Math.max(
-                    D.body.scrollHeight, D.documentElement.scrollHeight,
-                    D.body.offsetHeight, D.documentElement.offsetHeight,
-                    D.body.clientHeight, D.documentElement.clientHeight
-                )
-            },
-            scrollAdjust: function () {
-                var winheight = window.innerHeight || (document.documentElement || document.body).clientHeight
-                var docheight = levelMaker.getDocHeight();
-                var scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
-                var trackLength = docheight - winheight
-                var pctScrolled = Math.floor(scrollTop / trackLength * 100) // gets percentage scrolled (ie: 80 or NaN if tracklength == 0)
-                console.log(pctScrolled + '% scrolled');
-
-
-                levelMaker.topScroll = Game.canvas.height * (pctScrolled / 100);
-
-                return Game.canvas.height * (pctScrolled / 100);
-
-            },
-            mapElements: [],
-            get: function (tag) {
-                if (!tag) {
-                    return this.mapElements[0];
-
-                }
-
-                for (var x = 0; x < this.mapElements.length; x++) {
-
-                    if (this.mapElements[x].tag.toLowerCase() === tag.toLowerCase()) {
-
-                        return this.mapElements[x];
-                    }
-
-                }
-
-            },
-            MapElement: function (tag, imgPath, frameSize, mapSize, extras) {
-                var img = document.createElement('IMG');
-                img.src = imgPath;
-
-                // alert("El image:" + JSON.stringify(img.src));
-
-                var element = {
-                    tag: tag, img: img, src: imgPath, frameSize: frameSize, mapSize: mapSize
-
-                };
-
-                for (var x in extras) {
-                    element[x] = JSON.parse(JSON.stringify(extras[x]));
-
-                }
-                ;
-
-
-                this.mapElements.push(element);
-
-
-                return element;
-
-            },
-            selectedSprite: false,
-            selectedTag: "",
-            selectedElement: {},
-            levelObjects: [],
-            deselectAll: function () {
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    item.selected = false;
-
-                    item.hover_selected = false;
-
-                });
-            },
-            getSelected: function () {
-
-                var getSpr = false;
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    if (item.hover_selected || item.selected) {
-
-                        getSpr = item;
-
-                    }
-
-                });
-
-
-                return getSpr;
-
-            },
-
-            centerPos: function (sprite, x, y) {
-                sprite.position.x = Math.floor(x - sprite.size.x / 2);
-                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
-
-                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
-
-                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
-
-
-            },
-
-            moveSelected: function (x, y) {
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    if (item.selected) {
-
-                        var x1 = x - (x % levelMaker.settings.pixelSnap),
-                            y1 = y - (y % levelMaker.settings.pixelSnap);
-
-
-                        levelMaker.centerPos(item, x1, y1);
-
-                    }
-
-                });
-            },
-
-            leftClickExtra: function () {
-
-
-            },
-
-            leftClick: function (x, y) {
-
-                //  alert('left click');
-
-                if (typeof(this.leftClickExtra) == 'function') {
-                    this.leftClickExtra();
-
-                    this.leftClickExtra = false;
-
-                    return false;
-
-                }
-                ;
-
-                var notSelection = function (obj) {
-                    return obj !== levelMaker.hover_selection_sprite &&
-
-                        obj !== levelMaker.selection_sprite;
-
-                };
-
-
-                var selection = false;
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-
-                    if (notSelection(item) && x > item.position.x && x < item.position.x + item.size.x &&
-                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top) {
-
-                        item.selected = true;
-                        selection = true;
-                    }
-
-                });
-
-                if (!selection) {
-
-                    levelMaker.plantMapSprite(levelMaker.selectedElement, x - (x % levelMaker.settings.pixelSnap), y - (y % levelMaker.settings.pixelSnap))
-
-                    levelMaker.lastPlantedCountRecordArray.push(1);
-                }
-
-            },
-            hoverSelect: function (x, y) {
-
-                var selection = false, basic_selection = false;
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    if (item.selected) {
-                        basic_selection = true;
-
-                    }
-
-                });
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    if (x > item.position.x && x < item.position.x + item.size.x &&
-                        y > item.position.y && y < item.position.y + item.size.y + $('.level-maker-canvas').offset().top) {
-
-                        //  item.hover_selected = !basic_selection && !item.selected ?  true : item.hover_selected;
-                        //   selection = true;
-                    }
-
-                });
-
-
-                if (!selection && !(levelMaker.mouse.down)) {
-                    levelMaker.deselectAll()
-                }
-                ;
-
-
-            },
-            rightClick: function (x, y) {
-
-                alert('rc');
-
-                Gamestack.each(Game.sprites, function (ix, item) {
-
-                    if (x > item.position.x && x < item.position.x + item.size.x &&
-                        y > item.position.y && y < item.position.y + item.size.y) {
-
-                        var ix = Game.sprites.indexOf(item);
-                        Game.sprites.splice(ix, 1);
-                    }
-
-
-                });
-            },
-
-            simpleMapObject: function (object, x, y) {
-
-                var x = Math.floor(x - object.size.x / 2);
-                var y = Math.floor(y - $(Game.canvas).offset().top - object.size.y / 2);
-
-                x = x - ( object.position.x % levelMaker.settings.pixelSnap);
-
-                y = y - ( object.position.y % levelMaker.settings.pixelSnap);
-
-
-                return {size: new Vector(object.size.x, object.size.y, 0), position: {x: x, y: y}};
-
-            },
-
-            createMapSprite: function (mapElement, x, y) {
-
-                // console.log("Selected Element:" + JSON.stringify(mapElement));
-                var img = mapElement.img;
-                console.log("Img src:" + img.src);
-                var sprite = new Sprite({name: 'MapElement', description: 'A level-builder element'});
-
-                sprite.active = true;
-
-                sprite.size = mapElement.mapSize;
-
-                mapElement.src = img.src;
-
-
-                var fs = mapElement.frameSize;
-
-                sprite.setAnimation(new Animation({
-                    src: img,
-                    tool: true,
-                    frameSize: fs,
-                    frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
-                }));
-
-
-                // console.log(JSON.stringify(sprite));
-
-                sprite.position.x = Math.floor(x - sprite.size.x / 2);
-                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
-
-                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
-
-                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
-
-                this.selectedSprite = sprite;
-
-                return sprite;
-
-            },
-
-            plantMapSprite: function (mapElement, x, y) {
-
-                // console.log("Selected Element:" + JSON.stringify(mapElement));
-                var img = mapElement.img;
-                //  console.log("Img src:" + img.src);
-
-
-                if (levelMaker.assembled_sprite.speed) {
-
-                    alert(JSON.stringify(levelMaker.assembled_sprite.speed));
-
-                }
-
-                var args = JSON.parse(JSON.stringify(levelMaker.assembled_sprite));
-
-                args.name = 'MapElement';
-
-                args.description = 'A level-builder element';
-
-                var sprite = new Sprite(args);
-
-                sprite.active = true;
-
-                sprite.size = mapElement.mapSize;
-
-
-                if (sprite.speed) {
-
-                    alert("sprite-speed:" + JSON.stringify(sprite.speed));
-
-                }
-
-
-                var fs = mapElement.frameSize;
-
-                sprite.setAnimation(new Animation({
-                    src: img,
-                    tool: true,
-                    frameSize: fs,
-                    frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
-                }));
-
-                // console.log(JSON.stringify(sprite));
-
-                sprite.position.x = Math.floor(x - sprite.size.x / 2);
-                sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
-
-                sprite.position.x = sprite.position.x - ( sprite.position.x % levelMaker.settings.pixelSnap);
-
-                sprite.position.y = sprite.position.y - ( sprite.position.y % levelMaker.settings.pixelSnap);
-
-                this.selectedSprite = sprite;
-
-                //  sprite.def_update = function(){}; //turn off the motion, we are just mapping
-
-
-                Game.sprites.push(sprite);
-
-
-            },
-            simulateVerticalMouseMove: function (top) {
-
-
-                levelMaker.moveSelected(levelMaker.mouse.x, top);
-            },
-
-            placeGroup: function (x1, y1, dist, n, north, south, east, west) {
-
-                for (var x = 0; x < n; x++) {
-
-                    var x2 = 0, y2 = 0;
-
-                    if (east) {
-                        x2 = x * levelMaker.selectedElement.mapSize.x * -1;
-                    }
-
-                    if (west) {
-                        x2 = x * levelMaker.selectedElement.mapSize.x
-                    }
-
-                    if (north) {
-                        y2 = x * levelMaker.selectedElement.mapSize.y * -1
-                    }
-
-                    if (south) {
-                        y2 = x * levelMaker.selectedElement.mapSize.y;
-                    }
-
-                    levelMaker.plantMapSprite(levelMaker.selectedElement, x1 + x2, y1 + y2);
-
-                    levelMaker.lastPlantedCountRecordArray.push(n - 1);
-
-                }
-
-            },
-
-
-            addLevelObjectToUI: function (item) {
-
-                App._UI_OPTION_MAP.my_objects.push(UI_Funx.OptionActionList(item.tag, item, function (err, element) {
-                    console.log('1');
-
-                    var value = $(element).text();
-
-                    // alert('click on:' + value);
-
-                    levelMaker.selectedElement = levelMaker.get(value);
-
-                }));
-
-            },
-
-            url_prefix: '../assets/game/image/'
-        }
-
-    };
 
 
     var jstr = function (obj) {
@@ -1450,7 +728,6 @@
 
             this.HEIGHT = height;
 
-
             this.canvas.width = width;
 
             this.canvas.height = height;
@@ -1460,7 +737,7 @@
 
         update: function () {
 
-            console.log(jstr(Game.selected_force.max));
+           // console.log(jstr(Game.selected_force.max));
 
             Game.selected_force.update();
 
@@ -1470,7 +747,7 @@
 
             this.update();
 
-            //  console.log('render');
+          //  console.log('render');
 
             this.GameWindow.update();
 
@@ -1483,8 +760,11 @@
 
             Gamestack.camera = new Camera();
 
-            $('#gs-container').append("<canvas id='main-screen'></canvas>");
+            if (!$('#main-screen').length) {
 
+                $('#gs-container').append("<canvas id='main-screen'></canvas>");
+
+            }
             // 1. demonstrate that the threejs canvas can be intercepted at runtime
 
             this.canvas = document.getElementById('main-screen');
@@ -1501,7 +781,6 @@
 
                 //3. the player sprite
 
-
                 this.player = new Sprite({
 
                     name: "sci-fi-gunner-sprite",
@@ -1513,7 +792,6 @@
                     size: new Vector(50, 52)
                 });
 
-
                 this.player.jump_anime = new Animation({
                     name: "anime_one",
                     src: "../tools/image/samus2.png",
@@ -1521,13 +799,12 @@
                     size: new Vector2(100, 100),
 
                     frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 4)),
-                    duration:2000,
+                    duration: 2000,
                     delay: 7,
                     tool: true,
                     frameSize: new Vector(50, 50, 0),
                     frameBounds: new VectorFrameBounds(new Vector(0, 0, 0), new Vector(4, 0, 0))
                 });
-
 
                 this.player.jumpmotion = new Motion({
 
@@ -1553,41 +830,46 @@
 
                 this.player.motions.push(this.player.jumpmotion);
 
+
+                this.player.selected_animation = new Animation(this.player.jump_anime);
+
+                var shot = new Sound('../assets/game/sound/shot.mp3');
+
+                shot.name = "shot-sound";
+
+
+                shot.play();
+
+                Game.player.sounds.push(shot);
+
+
+                Game.player.selected_sound = new Sound(shot);
+
+                Game.player.selected_sound.play();
+
+
+                Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
+                    .Curve(Curves.easeInOutQuadratic)
+                    .Duration(2000)
+                    .Iterations(3).Growth(1.8);
+
+                // Game.test_line.fill(new Size(200, 200));
+
+                var bullet = new Projectile({line: Game.test_line, size: new Vector(10, 10, 0)});
+
+                bullet.name = "bullet";
+
+                bullet.setAnimation(Gamestack.test_bullet.animations[0]);
+
+                bullet.setMotionCurve(TWEEN.Easing.Linear.None);
+
+                this.player.projectiles.push(bullet);
+
+                this.player.selected_projectile = new Projectile(bullet);
+
             }
 
-            this.player.selected_animation = new Animation(this.player.jump_anime);
-
-            var shot = new Sound('../assets/sound/shot.mp3');
-
-            shot.name = "shot-sound";
-
-            this.player.sounds.push(shot);
-
-            this.player.selected_sound = new Sound(shot);
-
-
-            this.player.selected_sound.play();
-
-            Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
-                .Curve(TWEEN.Easing.Quadratic.InOut)
-                .Duration(2000)
-                .Iterations(3).Growth(1.8);
-
-
-               // Game.test_line.fill(new Size(200, 200));
-
-
-            var bullet = new Projectile({line:Game.test_line, size:new Vector(10, 10, 0)});
-
-            bullet.name = "bullet";
-
-            bullet.setAnimation(Gamestack.test_bullet.animations[0]);
-
-            bullet.setMotionCurve(TWEEN.Easing.Linear.None);
-
-            this.player.projectiles.push(bullet);
-
-            this.player.selected_projectile = new Projectile(bullet);
+            Game.sprites[0] = this.player;
 
             this.player.update = function (sprite) {
 
@@ -1598,11 +880,6 @@
 
             };
 
-
-
-            this.player.active = true;
-
-            this.sprites[0] = this.player;
 
             var size_game = function () {
 
@@ -1625,15 +902,14 @@
 
             size_game();
 
-           var r =  function () {
+            var r = function () {
 
                 size_game();
                 var center = Game.centerScreenPos();
                 Game.sprites[0].position = new Vector(center.x * 1.2, center.y - Game.sprites[0].size.y * 2);
             };
 
-            $(window).resize(function(){
-
+            $(window).resize(function () {
 
                 r();
 
@@ -1726,7 +1002,6 @@
 
             selectionImg.src = pathPref + "hover_selection.png";
 
-            this.selection_sprite = new Sprite({name: 'Selection Sprite', description: 'Shows selected area'});
 
             var fs = new Size(191 * 4, 192 * 4);
 
@@ -1736,10 +1011,6 @@
                 frameSize: fs,
                 frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
             }));
-
-            this.testObjects.push(this.selection_sprite);
-
-            Game.sprites.push(this.selection_sprite);
 
             //select the first animation
 
@@ -1756,7 +1027,6 @@
 
                 this.is_init = true;
 
-
             this.refreshBuilder = function () {
 
                 $('.controllable div').html('');
@@ -1767,12 +1037,10 @@
 
             };
 
+
         }
 
     };
-
-    var levelMaker = LevelMaker(false);
-
 
     /******************
      *
@@ -1782,7 +1050,6 @@
      *          @devplans / todo : 1st make the functionality work, then incorporate runtime settings for controllable
      *
      * **********************/
-
 
     var App = {
 
@@ -1799,7 +1066,6 @@
             $(container).append($(gui.domElement));
 
         },
-
 
         showSettings: function () {
 
@@ -1879,18 +1145,31 @@
 
                 //alert('Projectile');
 
+
+                Game.sprites[0].selected_projectile.line.is_highlighted = false;
+
+                Gamestack.each(Game.sprites[0].projectiles, function (ix, item) {
+
+                    item.line.is_highlighted = false;
+
+                });
+
                 Game.sprites[0].selected_projectile = obj;
 
                 obj = Game.sprites[0].selected_projectile;
 
+                obj.line.is_highlighted = true;
+
                 obj.line.size = new Vector(200, 200);
                 obj.line.position = new Vector(0, 0, 0);
 
-                obj.line.fill(obj.line.size, obj.line.minPointDist);
+                obj.line.pointDist = 3;
 
-                Game.sprites[0].onUpdate(function() {
+                obj.line.fill(obj.line.size, obj.line.pointDist);
 
-                    if (obj.line && obj.line.Highlight) {
+                Game.sprites[0].onUpdate(function () {
+
+                    if (obj.line && obj.line.is_highlighted && obj.line.Highlight) {
 
                         var origin = new Vector(Game.sprites[0].position);
 
@@ -1908,9 +1187,18 @@
 
                 // alert(jstr(Game.sprites[0].position));
 
-               // alert(jstr(Game.sprites[0].center()));
+                // alert(jstr(Game.sprites[0].center()));
 
 
+            }
+            else {
+                //projectiles are not highlighted
+
+                Gamestack.each(Game.sprites[0].projectiles, function (ix, item) {
+
+                    item.line.is_highlighted = false;
+
+                });
             }
 
 
@@ -1944,7 +1232,7 @@
                 '</div>');
 
 
-            if (obj.constructor.name == 'Animation' ) {
+            if (obj.constructor.name == 'Animation') {
                 this.animationPaneDisplay(obj);
 
             }
@@ -1974,13 +1262,16 @@
 
             var main_position = {
 
-                xpos:0, ypos:0
+                xpos: 0, ypos: 0
 
             };
 
             var update = function () {
 
-                var t1 =  new TWEEN.Tween(main_position).to({xpos:obj.selected_frame.framePos.y * -1, ypos:(obj.selected_frame.framePos.x) * -1}, 50).easing(TWEEN.Easing.Quadratic.Out).onComplete(function(){
+                var t1 = new TWEEN.Tween(main_position).to({
+                    xpos: obj.selected_frame.framePos.y * -1,
+                    ypos: (obj.selected_frame.framePos.x) * -1
+                }, 50).easing(TWEEN.Easing.Quadratic.Out).onComplete(function () {
 
                     canvas.width = $(canvas).width();
                     canvas.height = $(canvas).height();
@@ -1997,7 +1288,6 @@
 
 
                 }).start();
-
 
 
             };
@@ -2047,7 +1337,6 @@
             }, 50);
 
         },
-
 
 
         selectedItemCanvasInit: function (obj) {
@@ -2115,9 +1404,13 @@
 
             alert('saving + downloading:' + contentObject.name);
 
-            $.post("http://localhost:3137/save-object", {data:{type: contentObject.constructor.name
+            $.post("http://localhost:3137/save-object", {
+                data: {
+                    type: contentObject.constructor.name
 
-                .toLowerCase(), object: jstr(contentObject), name:contentObject.name}})
+                        .toLowerCase(), object: jstr(contentObject), name: contentObject.name
+                }
+            })
 
                 .done(function (data) {
 
@@ -2360,20 +1653,15 @@
 
                 var selectedObject = Game.sprites[0][parentObjectName],
 
-
                     sprop = selectedObject[index];
 
                 App.selectItem(sprop);
 
-
                 evt.preventDefault();
-
-                evt.preventBubble();
 
                 return false;
 
                 // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
-
 
             });
 
@@ -2388,6 +1676,69 @@
                 return false;
 
             });
+
+
+        },
+
+        initTestSprites: function () {
+
+            Gamestack.point_highlighter = new Sprite({
+
+                name: "gs_point_highlighter",
+
+                description: "highlight points on a line",
+
+                position: new Vector(0, 0),
+                size: new Vector(4, 4)
+            });
+
+
+            Gamestack.point_highlighter.main_anime = new Animation({
+                name: "anime_one",
+                src: "../tools/image/point_highlighter.png",
+
+                size: new Vector2(4, 4),
+
+                frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
+
+                delay: 0,
+                tool: true,
+                frameSize: new Vector(50, 50, 0)
+            });
+
+
+            Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
+
+
+            Gamestack.test_bullet = new Sprite({
+
+                name: "test_bullet",
+
+                description: "test_bullet for Projectile class",
+
+                position: new Vector(0, 0),
+                size: new Vector(10, 10)
+            });
+
+
+            Gamestack.test_bullet.main_anime = new Animation({
+                name: "anime_one",
+                src: "../tools/image/test-bullet.png",
+
+                size: new Vector2(10, 10),
+
+                frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
+
+                delay: 0,
+                tool: true,
+                frameSize: new Vector(50, 50, 0)
+            });
+
+
+            Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
+
+
+            Gamestack.test_bullet.setAnimation(Gamestack.test_bullet.main_anime);
 
 
         }
@@ -2408,83 +1759,11 @@
 
     }
 
-
     Gamestack.ready(function (lib) {
 
+        App.initTestSprites();
 
-        //TODO: add to Gamestack
-
-
-        Gamestack.point_highlighter  = new Sprite({
-
-                name: "gs_point_highlighter",
-
-                description: "highlight points on a line",
-
-                position: new Vector(0, 0),
-                size: new Vector(4, 4)
-            });
-
-
-        Gamestack.point_highlighter.main_anime = new Animation({
-            name: "anime_one",
-            src: "../tools/image/point_highlighter.png",
-
-            size: new Vector2(4, 4),
-
-            frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
-
-            delay: 0,
-            tool: true,
-            frameSize: new Vector(50, 50, 0)
-        });
-
-
-
-        Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
-
-
-
-
-        Gamestack.test_bullet  = new Sprite({
-
-            name: "test_bullet",
-
-            description: "test_bullet for Projectile class",
-
-            position: new Vector(0, 0),
-            size: new Vector(10, 10)
-        });
-
-
-        Gamestack.test_bullet.main_anime = new Animation({
-            name: "anime_one",
-            src: "../tools/image/test-bullet.png",
-
-            size: new Vector2(10, 10),
-
-            frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
-
-            delay: 0,
-            tool: true,
-            frameSize: new Vector(50, 50, 0)
-        });
-
-
-
-        Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
-
-
-
-        Gamestack.test_bullet.setAnimation(Gamestack.test_bullet.main_anime);
-
-
-
-
-
-
-        //  alert('hi');
-
+        //add jquery function
         $.fn.animateRotate = function (startAngle, angle, duration, easing, complete) {
             var args = $.speed(duration, easing, complete);
             var step = args.step;
@@ -2499,26 +1778,20 @@
             });
         };
 
-
         Game.init();
 
         App.init();
 
 
-        //Test the line class
-
-
-
-
-
         animate();
-
-
 
         $('#new-sprite').click(function () {
 
-            App.createNewSprite();
+            if(confirm('Start over with a new Sprite()?'))
+            {
+                App.createNewSprite();
 
+            }
 
         });
 
@@ -2530,9 +1803,14 @@
 
                 Game.sprites[0] = new Sprite(sprite);
 
-                Game.init(Game.sprites[0]);
+                Game.sprites[0].selected_animation.image.domElement.onload = function () {
 
-                App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
+                    var name = Game.sprites[0].selected_animation.name;
+
+                    Game.init(Game.sprites[0]);
+                    App.init(Game.sprites[0]);
+
+                };
 
             });
 
@@ -2544,7 +1822,6 @@
 
         });
 
-
         $('#download').click(function () {
 
 
@@ -2554,25 +1831,11 @@
 
         });
 
-        $('.squeeze').on('click', function(evt){
-
-            if($(evt.target).text() == '-')
-            {
-
-                App.selectItem(App.selectedItem);
-
-            }
-
-        });
-
-
         $('.squeeze, ul.nav-tabs li').squeeze(function () {
 
             App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
 
         });
-
-
 
         $(document).on('keydown', function (e) {
 
@@ -2599,7 +1862,6 @@
         });
 
         App.selfClosablesInit();
-
 
     });
 

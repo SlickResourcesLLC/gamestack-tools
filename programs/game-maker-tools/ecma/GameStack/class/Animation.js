@@ -46,7 +46,6 @@ class Animation {
             size:new Vector3(20, 20, 20)
         };
 
-
         for(var x in this.defaultArgs)
         {
             if(!args.hasOwnProperty(x))
@@ -62,6 +61,12 @@ class Animation {
            this[x] = args[x];
 
         }
+
+
+        this.name = args.name || "__";
+
+        this.description = args.description || "__";
+
 
         this.image = new GameImage(__gameStack.getArg(args, 'src', __gameStack.getArg(args, 'image', false)));
 
