@@ -4,7 +4,7 @@
 #### A powerful solution for 2d game development with javascript ####
 --------------------------------------------------------------------
 
-<img style="position:relative; left:20%; width:60%; height:auto;  " src="assets/image/gamestack-banner.png" />
+<img style="position:relative; left:20%; width:60%; height:auto;  " src="programs/game-maker-tools/client/assets/image/gamestack-banner.png" />
 
 ##### Welcome to the repository #####
 
