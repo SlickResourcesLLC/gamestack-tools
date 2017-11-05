@@ -4,11 +4,11 @@
 #### A powerful solution for 2d game development with javascript ####
 --------------------------------------------------------------------
 
+### This repository and programs contained herein are not yet stable. Please stay updated for release info ###
+
 <img style="position:relative; left:30%; width:40%; height:auto;  " src="programs/game-maker-tools/client/assets/image/gamestack-banner.png" />
 
 <img style="position:relative; left:30%; width:40%; height:auto;  " src="client/assets/image/gamestack-banner.png" />
-##### Welcome to the repository #####
-
 ##### Welcome to the repository #####
 
 * Gamestack is the fast, easy-to-use library for simple javascript game development. This library makes it easy to both create and manipulate game-objects. The goal of our project is to bring speed and ease to the overral process of 2d-game-development.
@@ -25,19 +25,9 @@
 
 <li>2D-Level-Building</li>
 
-<li>Incremented Image-Filter Effects</li>
+<li>Animated Image-Filter Effects</li>
 
 </ul>
-
-### Javascript-Dependencies ###
-
-<ul>
-<li>TWEEN.js: for fluid animations, necessary for Gamestack.Motion() object</li>
-<li>JSManipulate</li>
-<li>Other JS libraries</li>
-</ul>
-
-####Various open-source javascript dependencies --bundled with each download of the Gamestack.js project ####
 
 ### Examples ###
 

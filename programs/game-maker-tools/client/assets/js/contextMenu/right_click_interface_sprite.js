@@ -1,4 +1,5 @@
 
+var App = App || {};
 
 var get_selected_sprites = function()
 {
@@ -141,6 +142,36 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
 };
 
+
+function __allMainCallablesSubMenu()
+{
+
+    return [];
+}
+
+function __getSelectedRightClickItemSubMenu()
+{
+
+    var app = !App ? {} : App, item =  app.selectedRightClickItem || {name:"__blank"};
+
+    return[
+
+        {
+            name: 'bind_events...',
+            title: 'bind main-call of item to another event',
+            img: 'image/settings_icon.png',
+            id:'Event_Binder',
+            // disable: true,
+            fun:function(){   //test
+                var g =   DatGui.allCallablesCheckGui(App.selectedRightClickItem, [Game.sprites[0]], 'Bind Events To:');
+
+                App.showGui(g.domElement);
+            }
+        }
+    ]
+
+};
+
 //For example we are defining menu in object. You can also define it on Ul list. See on documentation.
 var __rightClickInterface = [{
     name: 'ComboCall_Builder',
@@ -156,14 +187,53 @@ var __rightClickInterface = [{
 },
 
     {
-        name: 'Apply Sprite_Initializer(s)...',
-        title: 'Apply feature/behavior on init.',
-        img: 'image/settings_icon.png',
-        // disable: true,
-        subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
-    }
+        name: 'Sprite...',
+        img: 'image/sprite_icon.png',
+        title: 'sprite',
+        id:'Sprite',
+
+       subMenu:[
+
+           {
+               name: 'Apply Sprite_Initializer(s)...',
+               title: 'Apply feature/behavior on init.',
+               img: 'image/settings_icon.png',
+               // disable: true,
+               subMenu: spriteInitializersSubMenu(GameStack.options.SpriteInitializers, get_selected_sprites)
+           },
+
+           {
+               name: 'New JavaScript Update',
+               title: 'Apply code to the sprite-update.',
+               img: 'image/settings_icon.png',
+               // disable: true,
+              fun:function()
+              {
+
+                 App.showScriptEditor();
+
+              }
+           }
+
+       ]
+    },
+
+
 
 ]
+
+
+var __rightClickInterfaceOnSelectedObject= [
+    {
+        name: 'Selected Object...',
+        img: 'image/settings_icon.png',
+        title: 'selected_item_settings',
+        id:'selected_item_settings',
+
+       subMenu:__getSelectedRightClickItemSubMenu()
+    }
+
+];
 
 
 $(document).ready( function(){
@@ -174,11 +244,14 @@ $(document).ready( function(){
 
         $(document).bind('contextmenu', function () {
 
-
         });
 
         //Calling context menu
-        $('body #mainContainer,.controllable,.nav-tabs').contextMenu(__rightClickInterface, {triggerOn: 'contextmenu'});
+        $('#gs-container').contextMenu(__rightClickInterface, {triggerOn: 'contextmenu'});
+
+
+        $('#controllable').contextMenu(__rightClickInterfaceOnSelectedObject, {triggerOn: 'contextmenu'});
+
         //Calling context menu
 
     }

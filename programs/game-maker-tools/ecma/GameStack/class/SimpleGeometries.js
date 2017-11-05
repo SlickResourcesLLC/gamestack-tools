@@ -23,6 +23,7 @@ class Rectangle {
 ;
 
 
+
 let VectorBounds = Rectangle;
 
 
@@ -93,8 +94,105 @@ var Curves = { //ALL HAVE INPUT AND OUTPUT OF: 0-1.0
     easeInOutQuintic: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
 }
 
-
 Gamestack.Curves = Curves;
+
+var Shapes = {
+
+    circle:function(radius, freq) {
+
+        return {
+
+            radius:radius,
+
+            points:[],
+
+            fill:function(center, freq)
+            {
+
+
+
+            }
+
+        }
+    },
+
+    square:function(s, freq)
+    {
+        console.error('STILL NEED TO BUILD THIS SQUARE IN GS-API');
+
+        return{
+
+            size:new Vector(s, s),
+
+            width:w,
+
+            height:h,
+
+            freq:freq,
+
+            points:[],
+
+            fill:function(start, freq)
+            {
+
+
+            }
+        }
+
+    },
+
+    rect:function(w, h, freq)
+    {
+        console.error('STILL NEED TO BUILD THIS TRIANGLE');
+
+        return{
+
+            size:new Vector(w, h),
+
+            width:w,
+
+            height:h,
+
+            freq:freq,
+
+            points:[],
+
+            fill:function(start, freq)
+            {
+
+
+            }
+        }
+
+    },
+
+    triangle:function(base, h, freq)
+    {
+
+        console.error('STILL NEED TO BUILD THIS TRIANGLE');
+
+        return{
+
+            base:base,
+
+            height:height,
+
+            freq:freq,
+
+            points:[],
+
+            fill:function(start, freq)
+            {
+
+
+            }
+        }
+
+    }
+};
+
+
+Gamestack.Shapes = Shapes;
 
 
 /**
@@ -194,6 +292,36 @@ class Line
         this.duration = d;
 
         return this;
+    }
+    Rotation(r)
+    {
+        this.rotation = r;
+        return this;
+    }
+    next(position)
+    {
+
+        var found = false;
+
+        for(var x = 0; x < this.points.length; x++)
+        {
+
+            if(position.equals(this.points[x]) &&  x < this.points.length - 1)
+            {
+                found = true;
+                return new Vector(this.points[x + 1]);
+
+            }
+
+            if(x==this.points.length - 1 && !found)
+            {
+
+                return new Vector(this.points[0]);
+
+            }
+
+        }
+
     }
 
     get_curve_from_string(str)
@@ -350,7 +478,6 @@ class Line
         this.points = [];
 
         var current_point = new Vector(this.position), yTrack = 0;
-
 
         for(var x= 0; x <= this.iterations; x++) {
 

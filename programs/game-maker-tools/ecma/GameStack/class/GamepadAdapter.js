@@ -12,6 +12,9 @@
  * @returns {GamepadAdapter} object of GamepadAdapter()
  * */
 
+
+GameStack.gamepads = GameStack.gamepads || __gameInstance.gamepads;
+
 class GamepadAdapter {
 
     constructor() {
@@ -164,11 +167,17 @@ class GamepadAdapter {
 
         this.__gamepads.push(gp);
 
+        Gamestack.gamepads = this.__gamepads;
+
         return gp;
 
     }
 
+    getGamepads()
+    {
+        return Gamestack.gamepads;
 
+    }
 
     process(gp, gpEvents)
     {
@@ -269,7 +278,7 @@ class GamepadAdapter {
     }
 
 
-};
+}
 
 /**
  * ControllerSetting()
@@ -287,13 +296,7 @@ class GamepadAdapter {
 
 if(!__gameInstance.GamepadAdapter)
 {
-    __gameInstance.GamepadAdapter = new GamepadAdapter();
-
-    __gameInstance.gamepads = [];
-
-    GameStack.GamepadAdapter = __gameInstance.GamepadAdapter;
-
-    GameStack.gamepads = __gameInstance.gamepads;
+    Gamestack.GamepadAdapter = new GamepadAdapter();
 
     GameStack.GamepadAdapter.on('stick_left', 0, function(x, y){
 
@@ -328,7 +331,5 @@ if(!__gameInstance.GamepadAdapter)
 
    // __gameInstance.gamepads.push(gamepad);
 
-};
-
-
+}
 

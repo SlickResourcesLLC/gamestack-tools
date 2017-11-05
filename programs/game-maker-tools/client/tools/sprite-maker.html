@@ -13,7 +13,6 @@
 
         //GamestackPRESETS
 
-
         if (typeof module === 'object') {
             window.module = module;
             module = undefined;
@@ -58,6 +57,9 @@
     <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
     <link rel="stylesheet" href="../assets/js/contextMenu/contextMenu.css">
+
+    <link rel="stylesheet" href="../assets/css/floating-script.css">
+
 
     <style>
         body, html {
@@ -454,6 +456,31 @@
 
         }
 
+
+
+        div.modal
+        {
+
+            position:relative;
+
+            z-index:9999;
+
+            min-width:50%;
+
+            min-height:50%;
+
+            top:25%;
+
+            left:25%;
+
+            overflow-y: scroll;
+
+            background:#333333;
+
+        }
+
+
+
     </style>
 
     <link rel="stylesheet" href="../assets/css/bottom-tabs.css">
@@ -544,11 +571,16 @@
         <button id="play"></button>
     </div>
 
-    <ul class="controllable selected_object">
+    <ul id="controllable" class="controllable selected_object">
         <span id="*" class="tree-open open">&#9881;</span>
         <li class="building-heading"> Sprite</li>
     </ul>
 
+    <div class="floating-script" >
+        <button class="squeeze close closer" >X</button>
+        <textarea cols="60" rows="300"> sprite.onUpdate(function(){ &#13; &#10;}); </textarea>
+
+    </div>
 
 </div>
 
@@ -600,6 +632,7 @@
         is_init: false,
 
         __builderProfile: false, //the main object builder
+
 
 
         selection_sprite: new Sprite({name: 'Selection Sprite', description: 'Shows selected area'}),
@@ -1055,6 +1088,20 @@
 
         locked: false,
 
+        showGui(content){
+
+            $('#overlay').append(content);
+
+        },
+
+        eventBindMode:function()
+        {
+
+
+            alert('eventBindMode');
+
+        },
+
         object_gui_to_container: function (object, container) //create special object gui, append to container
         {
             var gui = DatGui.get(object);
@@ -1064,6 +1111,26 @@
             $(container).html();
 
             $(container).append($(gui.domElement));
+
+        },
+
+        showScriptEditor:function()
+        {
+
+            $('div.floating-script').show('fast');
+
+            $('div.floating-script button').click(function(){
+
+                $(this).parent().hide('slow');
+
+            });
+
+        },
+
+        hideScriptEditor:function()
+        {
+
+            $('div.floating-script textarea').hide();
 
         },
 
@@ -1385,11 +1452,14 @@
             $.each(parent[listname], function (ix, item) {
 
                 if (item === obj) {
+
                     parent[listname].splice(parent[listname].indexOf(item), 1);
 
                     var member = $('.' + listname + '_member')[ix];
 
                     $(member).remove();
+
+
 
                 }
 
@@ -1571,6 +1641,8 @@
 
                 var icons = [];
 
+                item.guid = Gamestack.create_id();
+
                 icons = icons.concat(iconHtmls);
 
                 if ((ix + '').indexOf('__') == -1) {
@@ -1593,7 +1665,22 @@
 
                     }
 
-                    html += "<li class='" + keyname + "_member'>" + name + icons.join(' ') + "</li>";
+                    html += "<li id='"+(item.guid || "__blank")+"' class='" + keyname + "_member'>" + name + icons.join(' ') + "</li>";
+
+
+                    $('body').on('contextmenu', '#' + item.guid, function(evt){
+
+                        App.selectedRightClickItem = item;
+
+                        var my_guid = $(evt.target).attr('id');
+
+                        if(my_guid) {
+
+                            console.log('found correct id');
+
+                        }
+
+                    });
 
                 }
 
@@ -1612,7 +1699,6 @@
             $(document).on('change', 'input', function (e) {
 
                 // App.GTUI.renderObjectControllable(Game.sprites[0], $('.selected_object')[0]);
-
 
             });
 
@@ -1836,6 +1922,7 @@
             App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
 
         });
+
 
         $(document).on('keydown', function (e) {
 

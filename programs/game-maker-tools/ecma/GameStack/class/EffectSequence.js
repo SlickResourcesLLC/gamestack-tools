@@ -191,18 +191,7 @@ class EffectSequence
 
             var effect_select = __inst.gui.add(__inst, 'selected_effect', Object.keys(__inst.effects));
 
-            $(effect_select.domElement).append('<button style="float:right; color:#333333;  " class="effect-add-button">+</button>');
 
-            $('.effect-add-button').on('click', function(){
-
-                var effect =__inst.effects_list[__inst.effects_list.length - 1];
-
-                effect =  __inst.effects.triangleripple;
-
-                var effect_select_next = __inst.gui.add(__inst, __inst.effects_list[__inst.effects_list.length - 1], Object.keys(__inst.effects));
-
-
-            });
 
             if(!effect)
             {
@@ -231,7 +220,7 @@ class EffectSequence
 
           });
 
-            DatGui.addMotionCurveSelect(__inst, __inst.gui);
+            DatGui.addTweenCurveSelect(__inst, __inst.gui);
 
         }
 

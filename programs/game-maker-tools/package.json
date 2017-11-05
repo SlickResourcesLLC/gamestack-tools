@@ -27,6 +27,9 @@
     "grunt-babel": "^6.0.0",
     "grunt":"latest",
     "grunt-contrib-concat": "^1.0.1",
+
+    "grunt-contrib-uglify": "^1.0.1",
+
     "grunt-jsdoc": "^2.1.0",
     "load-grunt-tasks": "^3.5.2",
     "opn": "latest",

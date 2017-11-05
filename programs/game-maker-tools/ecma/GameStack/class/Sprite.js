@@ -638,6 +638,9 @@ class Sprite {
 
         let rot_offset = options.rot_offset || new Vector3(0, 0, 0);
 
+
+        var __playerInst = this;
+
         if (__gameInstance.isAtPlay) {
 
             var bx = position.x, by = position.y, bw = size.x, bh = size.y;
@@ -668,13 +671,37 @@ class Sprite {
             shot.rotation.x = 0 + rot_offset.x;
 
             shot.stats = {
+
                 damage: 1
 
             };
 
-            shot.speed.x = Math.cos((shot.rotation.x) * 3.14 / 180) * speed;
+            if(!options.line) {
 
-            shot.speed.y = Math.sin((shot.rotation.x) * 3.14 / 180) * speed;
+                shot.speed.x = Math.cos((shot.rotation.x) * 3.14 / 180) * speed;
+
+                shot.speed.y = Math.sin((shot.rotation.x) * 3.14 / 180) * speed;
+
+            }
+            else
+            {
+                options.line.fill(new Vector(500, 500), 4);
+
+                var nextPos = new Vector(0, 0, 0);
+
+              shot.onUpdate(function(spr){
+
+                  nextPos = options.line.next(nextPos);
+
+                  spr.position =  __playerInst.position.add(nextPos);
+
+                  console.log(spr.position);
+
+
+              });
+
+
+            }
 
             return shot;
 
@@ -1369,7 +1396,7 @@ Gamestack.Sprite = Sprite;
 
 let SpriteInitializersOptions = {
 
-    Collideables:{
+    Clastics:{
 
         top_collideable:function(sprite)
         {

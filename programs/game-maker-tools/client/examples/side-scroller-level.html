@@ -10,17 +10,14 @@
         module = undefined;
     }</script>
 
-
     <script src="../assets/js/ui/jquery.js"></script>
 
     <script src="../assets/js/ui/Tween.js"></script>
 
     <script src="../dist/js/GameStack.js"></script>
 
-
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
-
 
 </head>
 <body>
@@ -42,7 +39,6 @@
      * ****************/
 
     var loadLevel = function(callback){
-
 
         __gameWindow.loadLevelFile("../my-game-json/levels/big_brick_level_02.json", function(err, data){
 
@@ -120,7 +116,6 @@
 
             character: {
 
-
                 player_run: new Animation({
                     src: "../assets/game/image/characters/full/spaceman1.png",
 
@@ -157,9 +152,7 @@
                     frameSize: new Vector3(130, 130, 0),
                     frameBounds: new VectorFrameBounds(new Vector3(7, 2), new Vector3(28, 2))
                 })
-
             }
-
             ,
 
             Sound: {
@@ -176,7 +169,6 @@
         //set the frame speed for custom player_run.animate()
 
         GameAssets.character.player_run.fspeed = 1;
-
 
         //custom player_run.animate()
 
@@ -240,7 +232,6 @@
 
         player.setSize(new Vector3(75, 75));
 
-
         //set player.type for later reference (see $Q() queries to reference multiple collections of Sprite() and rig events, etc.. )
 
         player.type = "player";
@@ -257,20 +248,15 @@
 
         player.setAnimation(GameAssets.character.player_run);
 
-
-
-
         //Add the player Sprite()
 
         var rocket_barrel = lib.add(new Sprite({}));
-
 
         rocket_barrel.setAnimation(GameAssets.item.rocket_barrel);
 
         rocket_barrel.setPos(new Vector3(700, 200, 0));
 
         rocket_barrel.setSize(new Vector3(85, 109, 0));
-
 
         rocket_barrel.rot_speed.x = 4;
 
@@ -310,9 +296,7 @@
 
             }, 1000);
 
-
         });
-
 
 
         var start = function()
@@ -380,14 +364,11 @@
 
                         }).onComplete(function () {
 
-
-
                         }).start();
 
                     }
 
                 }
-
 
             });
 
@@ -403,7 +384,6 @@
             {
 
                 obj1.speed.y = obj1.speed_tracker.y;
-
 
                 obj1.jump_tween.stop();
 
@@ -437,10 +417,7 @@
 
                  items.update(player.total_apples);
 
-
              }
-
-
 
         });
 
@@ -465,10 +442,6 @@
             //Update value of item display::
 
             items.update(0);
-
-
-
-
 
 
             //declare player.setState for controlling player animations and state

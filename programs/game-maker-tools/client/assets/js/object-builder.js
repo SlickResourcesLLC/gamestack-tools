@@ -576,6 +576,7 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
             html = App.objectListToUL(clName, list /*INSERT Members of actual array(s)*/, [eye_icon, ""]) + '</ul>';
 
 
+
             var container =  $('.' + clName);
 
             $(container).html( html);

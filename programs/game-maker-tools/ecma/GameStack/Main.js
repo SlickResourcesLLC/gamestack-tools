@@ -99,10 +99,8 @@ let GameStackLibrary = function () {
 
         ,
 
-        getActionablesCheckList: function () {
+        getAllCallables: function () {
             //every unique sound, animation, tweenmotion in the game
-
-            let __inst = {};
 
             let actionables = [];
 
@@ -299,6 +297,9 @@ let GameStackLibrary = function () {
             this.InputEvents.init();
 
 
+            this.__running = true;
+
+
         }
         ,
 
@@ -341,6 +342,22 @@ let GameStackLibrary = function () {
             if (obj instanceof Sprite) {
 
                 this.__gameWindow.sprites.push(obj);
+
+            }
+
+            if (obj instanceof GSEvent) {
+
+               if(__gameStack.__running){
+
+                   return console.error('Events can only be added before Gamstack.animate() is called::aka before the main update / loop begins');
+               }
+               else
+               {
+
+                   obj.apply();
+
+
+               }
 
             }
 
@@ -893,11 +910,11 @@ function $Q(selector) {
 
             console.info('TODO: rig property events');
 
-            var condition = "_", key = evt_profile.evt_key;
+            var condition = "_", key = criterion || evt_profile.evt_key;
 
             if(key.indexOf('[') >= 0 || key.indexOf(']') >= 0)
             {
-                key = key.replace('[', '').replace('[', ']');
+                key = $Q.between('[', ']', key);
 
             }
 

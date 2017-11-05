@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Object-Event-Builder</title>
+</head>
+
+<script src="js/jquery-3.1.1.js"></script>
+
+<script src="js/dat.gui.min.js"></script>
+
+<script src="js/dat.gui.extension.js"></script>
+
+<script src="js/event-builder.js"></script>
+
+<script src="js/object-builder.js"></script>
+
+<link href='js/dat.gui.css' rel='stylesheet' type='text/css'>
+
+<style>
+
+    span.object-builder-layer
+    {
+       position:fixed;
+
+        z-index:9997;
+
+        width:100%;
+
+        height:100%;
+
+    }
+
+    element.style {
+    }
+
+    .ob1-object-col {
+        float: left;
+        width: 60px;
+        text-align: center;
+    }
+
+    vc-left
+    {
+        position:absolute;
+
+        width:10px;
+
+        height:10px;
+
+        border-radius:50%;
+
+        color:aqua;
+
+        border:2px outset silver;
+
+        background:black;
+
+        margin-left:-23.5px;
+
+    }
+
+    vc-right
+    {
+        position:absolute;
+
+        width:10px;
+
+        height:10px;
+
+        border-radius:50%;
+
+        color:aqua;
+
+        border:2px outset silver;
+
+        background:black;
+
+        margin-left:10px;
+
+    }
+
+    vc-plus
+    {
+        position:absolute;
+
+        width:10px;
+
+        height:10px;
+
+        border-radius:0px;
+
+        color:aqua;
+
+        border:2px outset orange;
+
+        background:black;
+
+        margin-left:33.5px;
+
+        content:"+";
+
+        padding:3px;
+
+        text-align:center;
+
+    }
+
+
+    span.obl-object
+    {
+
+        position:absolute;
+
+        font-family: 'Dosis', sans-serif;
+        font-size:14px;
+        font-weight: 600;
+        color: #222222;
+        font-size: 16px;
+        text-transform: uppercase;
+
+        background:lightgrey;
+
+        border:1px outset grey;
+
+        padding:4px;
+
+        border-radius:7px;
+
+        margin:10px;
+
+        overflow:visible;
+
+    }
+
+    img.ctrl.tree-add, img.tree-add-special {
+        position: relative;
+        float: right;
+        top: -25px;
+        width: 20px;
+        height: 20px;
+        margin: 3px;
+        margin-left: -15px;
+        margin-bottom: -3px;
+        background-color: teal;
+        background-image: url(css/img/add_icon_transparent.png);
+        background-position: center center;
+        background-size: 100% auto;
+    }
+
+    img.ctrl {
+        width: 18px;
+        height: 18px;
+        background-color: black;
+        border: 1px solid grey;
+        margin: -3px;
+    }
+
+    img {
+        vertical-align: middle;
+    }
+
+    ul.controllable, ul.options {
+        position: absolute;
+        min-width: 150px;
+        z-index: 990;
+        left: 0px;
+        top: 10px;
+        padding: 7px;
+        padding-bottom: 25px;
+        border: 2px inset grey;
+        margin: 5px;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 1.0);
+        font: 14px Arial, Sans-Serif;
+    }
+
+</style>
+
+<body>
+
+<div id="event-builder" class="controllable">
+
+
+
+</div>
+
+<script>
+
+
+    var DatGuiApp = {
+
+        getArg: function (args, key, fallback) {
+            return args[key] || fallback;
+
+        },
+
+        each:function(object, callback)
+        {
+
+            for(var x in object)
+            {
+
+                callback(x, object[x]);
+
+            }
+
+        },
+
+        objectListToUL: function (keyname, list, iconHtmls) {
+
+            var html = "<ul>";
+
+            if (!iconHtmls instanceof Array) {
+                iconHtmls = [];
+
+            }
+
+            $.each(list, function (ix, item) {
+
+                var icons = [];
+
+                icons = icons.concat(iconHtmls);
+
+                if ((ix + '').indexOf('__') == -1) {
+
+                    var name = item.name || ix;
+
+                    $.each(icons, function (ix, str) {
+                        icons[ix] = str.replace('*', name)
+                    });
+
+                    var k = keyname,
+
+                        ulCl = '.' + k.toLowerCase() + '-' + 'tab-pane';
+
+                    //   alert(ulCl);
+
+                    if (!$("#pane-list-" + keyname + ix).length) {
+
+                        $(ulCl).find('ul').append('<li id="pane-list-' + keyname + ix + '">' + name + icons.join(' ') + '</li>');
+
+                    }
+
+                    html += "<li class='" + keyname + "_member'>" + name + icons.join(' ') + "</li>";
+
+                }
+
+            });
+
+            return html + "</ul>";
+
+        },
+
+        applyControl: function (args) {
+
+            console.log('Found item');
+
+            var parent = this.getArg(args, 'parent', false),
+
+                id = this.getArg(args, 'id', false),
+
+                folders = this.getArg(args, 'folders', []),
+
+                html = this.getArg(args, 'html', false),
+
+                callback = this.getArg(args, 'callback', false),
+
+                clName = $(parent).attr('class'),
+                list = this.getArg(args, 'list', false);
+
+
+            if (parent, id, html, callback) {
+
+                $(html).insertBefore(parent);
+
+                var clName = $(parent).attr('class');
+
+
+                $('#' + id).unbind().click(function () {
+
+                    callback(list, clName, folders);
+
+                });
+
+
+            }
+
+
+        },
+
+
+        selectItem: function (obj) {
+
+            if (obj instanceof Animation) {
+
+                // alert(JSON.stringify(obj));
+
+                var str = JSON.stringify(obj);
+
+                Game.sprites[0].selected_animation = obj;
+
+                obj = Game.sprites[0].selected_animation;
+
+            }
+
+            if (obj instanceof Motion) {
+
+                Game.sprites[0].selected_motion = obj;
+
+                obj = Game.sprites[0].selected_motion;
+
+            }
+
+            if (obj instanceof Projectile) {
+
+                //alert('Projectile');
+
+
+                Game.sprites[0].selected_projectile.line.is_highlighted = false;
+
+                Gamestack.each(Game.sprites[0].projectiles, function (ix, item) {
+
+                    item.line.is_highlighted = false;
+
+                });
+
+                Game.sprites[0].selected_projectile = obj;
+
+                obj = Game.sprites[0].selected_projectile;
+
+                obj.line.is_highlighted = true;
+
+                obj.line.size = new Vector(200, 200);
+                obj.line.position = new Vector(0, 0, 0);
+
+                obj.line.pointDist = 3;
+
+                obj.line.fill(obj.line.size, obj.line.pointDist);
+
+                Game.sprites[0].onUpdate(function () {
+
+                    if (obj.line && obj.line.is_highlighted && obj.line.Highlight) {
+
+                        var origin = new Vector(Game.sprites[0].position);
+
+                        origin.x += Game.sprites[0].size.x / 3;
+
+                        origin.y += Game.sprites[0].size.y / 3;
+
+                        obj.line.Highlight(origin);
+
+                    }
+
+
+                });
+
+
+                // alert(jstr(Game.sprites[0].position));
+
+                // alert(jstr(Game.sprites[0].center()));
+
+
+            }
+            else {
+                //projectiles are not highlighted
+
+                Gamestack.each(Game.sprites[0].projectiles, function (ix, item) {
+
+                    item.line.is_highlighted = false;
+
+                });
+            }
+
+
+            if (obj instanceof Sound) {
+
+                Game.sprites[0].selected_sound = obj;
+
+                obj = Game.sprites[0].selected_sound;
+
+            }
+
+            if (obj instanceof Force) {
+
+                var str = JSON.stringify(obj);
+
+                Game.selected_force = new Force(JSON.parse(str));
+
+                obj = Game.selected_force;
+
+            }
+            ;
+
+            this.selectedItem = obj;
+
+            //load the selectedItem into html tab
+
+            $('#selected-tab').html('<div class="tab-pane fade in selected-object-tab-pane" role="tabpanel" id="tab-1">' +
+
+                '<canvas id="selected-object-canvas" ></canvas>' +
+
+                '</div>');
+
+
+            if (obj.constructor.name == 'Animation') {
+                this.animationPaneDisplay(obj);
+
+            }
+
+
+            if (obj.constructor.name == 'Projectile') {
+                this.projectilePaneDisplay(obj);
+
+            }
+
+            if (obj.constructor.name == 'Motion') {
+                this.selectedItemCanvasInit(obj);
+
+            }
+
+            DatGui.get(this.selectedItem);
+
+            return this.selectedItem;
+
+        }
+
+
+    }
+
+
+    $(document).ready(function()
+    {
+        var MainObject = {
+
+            list1:[],
+
+            list2:[],
+
+            list3:[],
+
+            list4:[]
+
+        };
+
+        var __builderProfile = new ObjectArrayBuilder(MainObject, ['list1', 'list2', 'list3', 'list4'], false);
+
+    });
+
+</script>
+
+</body>
+</html>

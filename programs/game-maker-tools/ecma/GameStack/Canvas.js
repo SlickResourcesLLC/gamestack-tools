@@ -53,6 +53,14 @@ class CanvasLib {
             },
 
 
+
+            drawData:function(x, y, w, h, data, ctx){
+
+                ctx.putImageData(data, x, y, 0, 0, w, h);
+
+            },
+
+
             /*
              * drawPortion:
              *
@@ -60,7 +68,6 @@ class CanvasLib {
              *
              *
              * */
-
 
             drawPortion: function (sprite, ctx) {
 
@@ -120,6 +127,7 @@ class CanvasLib {
                     var frame = sprite.selected_animation.selected_frame;
 
                     if (frame && frame.image && frame.image.data) {
+
                         ctx.putImageData(frame.image.data, x, y);
 
                     }

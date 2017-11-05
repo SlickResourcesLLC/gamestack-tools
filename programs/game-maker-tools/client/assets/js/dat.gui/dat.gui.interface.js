@@ -64,7 +64,9 @@ var DatGui = {
 
             $(dom).parent().find('.c').append('<button id="edit-button" class="edit-button"></button>');
 
-            $(dom).parent().find('.c #edit-button').click(function () {
+            $(dom).parent().find('.c .edit-button').click(function () {
+
+                $('div#message').show('fast');
 
                 App.superSelectOptions("Update Available Types", list, function () {
 
@@ -509,6 +511,42 @@ var DatGui = {
 
     },
 
+    addTweenCurveSelect:function(obj, gui, key, ix, callback)
+    {
+
+        if (!ix) {
+            ix = 0;
+
+        }
+
+        key = key || 'curve';
+
+        var testMotion = new Motion();
+
+        var c = gui.add(obj, key, testMotion.curvesList);
+
+        c.onFinishChange(function (value) {
+
+            var parts = value.split('_');
+
+            obj[key] = TWEEN.Easing[parts[0]][parts[1]];
+
+            var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
+
+            var canvas = testMotion.getGraphCanvas(value.replace('_', '.'), obj[key], canvasDom[ix]);
+
+            if (!canvasDom.length || canvasDom.length < (ix + 1)) {
+                $($(gui.domElement).children('ul')[0]).append(canvas);
+            }
+
+            if(callback){  callback() };
+
+        });
+
+        c.setValue('Linear_None');
+
+    },
+
 
     typeHandlerSpriteMaker: function (ix, obj, parent) {
         var o = obj, type = typeof(obj) == 'object' ? obj.constructor : false;
@@ -843,6 +881,8 @@ var DatGui = {
 
     },
 
+
+
     gameControllerGUI:function()
     {
 
@@ -932,7 +972,6 @@ var DatGui = {
                 $('#' + id).on('change', function (evt) {
 
                     var input = evt.target;
-
 
                     var file = __ServerSideFile.getRawFile(this, function (imagesrc) {
 
@@ -1052,7 +1091,6 @@ var DatGui = {
 
     },
 
-
     updateableAnimationObjectToGui: function (gui, effects) {
 
         var first_gui = $('div.main ul')[0];
@@ -1154,6 +1192,8 @@ var DatGui = {
             var description = gui.add(object, 'description');
 
             DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoSpriteTypes);
+
+            DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
 
             if (create_new) {
                 object.selected_animation = new Animation({
@@ -1340,8 +1380,156 @@ var DatGui = {
 
         // return this.Display(object);
 
+    },
+
+    allCallablesCheckGui:function(linkableObject, objects, title)
+    {
+
+        var gui = new dat.GUI({autoPlace:false});
+
+        var ctrlObject = {
+
+            button:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+
+           stick:[
+               'left', 'right'
+           ]
+        };
+
+        for(var x = 0; x < objects.length; x++)
+        {
+
+            if(objects[x] instanceof Sprite)
+            {
+                var sprite = objects[x];
+
+               for(var y in sprite)
+               {
+
+                   if(sprite[y] instanceof Array)
+                   {
+
+                       for(var z = 0; z < sprite[y].length; z++)
+                       {
+
+                           var obj =sprite[y][z],
+
+                           ctr = obj.constructor.name,
+
+                           key = 'link_' + obj.name;
+
+                           switch(ctr)
+                           {
+
+                               case "Animation":
+
+                                   console.log('We have animation');
+
+                                   obj[key] = false;
+
+                                   gui.add(obj, key);
+
+                                   break;
+
+                               case "Motion":
+
+                                   console.log('We have motion');
+
+                                   obj[key] = false;
+
+                                   gui.add(obj, key);
+                                   break;
+
+
+                               case "Sound":
+
+                                   console.log('We have motion');
+                                   obj[key] = false;
+
+                                   gui.add(obj, key);
+                                   break;
+
+
+                               case "Projectile":
+
+                                   console.log('We have motion');
+                                   obj[key] = false;
+
+                                   gui.add(obj, key);
+                                   break;
+
+
+
+                           }
+
+
+
+                       }
+
+
+                   }
+
+
+               }
+
+
+
+
+            }
+
+
+        }
+
+        $(gui.domElement).addClass('tempGui');
+
+        $(gui.domElement).prepend("<h4 style='background:black'>"+title+" "+linkableObject.name+"<h4><button style='margin-left:-15px; margin-top:-30px; color:darkorange;' class='close'>X</button>")
+
+        $(gui.domElement).css('position', 'absolute');
+
+        $(gui.domElement).css('z-index', '9999');
+
+
+        $(gui.domElement).css('left', '40%');
+
+        $(gui.domElement).css('overflow-y', 'scroll');
+
+
+        $(gui.domElement).css('width', '60%');
+
+
+        $(gui.domElement).css('background', 'black');
+
+
+        $(gui.domElement).css('top', '50px');
+
+        $($(gui.domElement).find('ul')[0]).append('<button style="width:80%;" class="ok">Ok</button>');
+
+        $($(gui.domElement).find('ul')[0]).css('background', 'black');
+
+        $(gui.domElement).find('button.close').on('click', function()
+        {
+
+            $('.tempGui').remove();
+
+
+
+        });
+
+        $(gui.domElement).find('button.ok').on('click', function()
+        {
+
+            alert('TODO: apply the checked objects');
+
+            $('.tempGui').remove();
+
+
+
+        });
+
+        return gui;
+
+
     }
 
 };
-
 

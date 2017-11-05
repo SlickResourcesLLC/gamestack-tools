@@ -1,0 +1,64 @@
+
+
+div.floating-script
+{
+
+    position:absolute;
+
+    z-index:9995;
+
+    width:50%;
+
+    height:70%;
+
+    top:70px;
+
+    right:10%;
+
+    color:black;
+
+    padding:4px;
+
+    display:none;
+}
+
+div.floating-script textarea
+{
+    position:absolute;
+
+    z-index:9998;
+
+    width:50%;
+
+    height:70%;
+
+
+    right:0px;
+
+    color:black;
+
+    padding:4px;
+
+    background: lightgrey;
+
+    border:2px groove lightsteelblue;
+
+    padding-top:30px;
+
+}
+
+
+div.floating-script button.close
+{
+    position:absolute;
+
+    z-index:9999;
+
+    left:100%;
+
+    margin-left:40px;
+
+    margin-top:-5px;
+
+    color:darkblue;
+}

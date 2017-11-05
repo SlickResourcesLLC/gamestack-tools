@@ -852,8 +852,6 @@ $(document).ready( function(){
 
                     $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
 
-                    $('#map-item-space .title').text("Edit Existing Map Item Sprite");
-
                     $('#map-item-space form').show();
 
                     $('#map-item-space  button#close').click(function(){

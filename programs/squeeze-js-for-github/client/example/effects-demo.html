@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effect Generator</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
+
+    <link rel="stylesheet" href="../assets/js/contextMenu/contextMenu.css">
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
+
+    <script src="../assets/js/serverside-file.js"></script>
+
+    <script src="../assets/js/libs/Tween.js"></script>
+
+    <script src="../assets/js/libs/Stats.js"></script>
+
+    <script src="../assets/js/libs/GameStack.js"></script>
+
+    <script src="../dist/js/Squeeze.js"></script>
+
+    <script src="../assets/js/dat.gui/dat.gui.js"></script>
+
+    <script src="../assets/js/dat.gui/dat.gui.interface.js"></script>
+
+    <script src="../assets/js/jquery/jquery.js"></script>
+
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../assets/js/contextMenu/contextMenu.js"></script>
+
+    <script src="../assets/js/jquery/jquery.hotkeys.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+</head>
+
+<style>
+
+    body {
+        background: black;
+
+        position:absolute;
+
+        width:100%;
+        height:100%;
+
+
+    }
+
+canvas
+{
+    height:180px;
+
+}
+
+    #gs-container
+    {
+
+        width:100%;
+
+        height:100%;
+
+    }
+
+    #gs-container .iw-mTrigger {
+        background: transparent;
+        margin-top: 50px;
+
+    }
+
+    .gui-space input[type='file'] {
+        display: none;
+
+    }
+
+    #top-gui {
+
+        position: fixed;
+
+        width: 100%;
+
+        height: 0px;
+
+        z-index: 9991;
+
+        top: 50px;
+
+        overflow: visible;
+
+    }
+
+    canvas#image-test-canvas
+    {
+        max-width:250px;
+        max-height:250px;
+
+    }
+
+
+    button.main-play {
+        position: absolute;
+
+        right: 0px;
+
+        top: 0px;
+
+        height: 30px;
+
+        width: 30px;
+
+        background-image: url(image/play.png);
+        background-position: center center;
+        background-size: 100% auto;
+
+    }
+
+    #dat-gui-gs-container {
+        position: fixed;
+
+        z-index: 9997;
+
+        top: 50px;
+
+        right: 0px;
+
+    }
+
+    div.slider {
+        position: absolute;
+
+        right: 0px;
+
+    }
+
+    canvas.level-maker-canvas {
+        zoom: 1.0;
+    }
+
+    div#gs-container
+    {
+        overflow:hidden;
+
+    }
+
+
+    .object-select-flex-container {
+
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -webkit-align-content: center;
+        -ms-flex-line-pack: center;
+        align-content: center;
+        -webkit-align-items: flex-center;
+        -ms-flex-align: center;
+        align-items: flex-center;
+
+
+        padding:10px;
+
+        padding-left:20px;
+
+        padding-right:15px;
+
+
+    }
+
+    li.object-select-flex-item{
+
+        text-align:center;
+
+        -webkit-align-self: auto;
+        -ms-flex-item-align: auto;
+        align-self: auto;
+
+        color:white;
+
+        text-align:center;
+
+        background: #953E28;
+        -webkit-box-shadow: -23px 66px rgba(0,0,0,.06) inset, -63px 49px rgba(0,0,0,.06) inset, 17px -51px rgba(0,0,0,.06) inset, 2px 5px rgba(0,0,0,.2);
+        box-shadow: -23px 66px rgba(0,0,0,.06) inset, -63px 49px rgba(0,0,0,.06) inset, 17px -51px rgba(0,0,0,.06) inset, 2px 5px rgba(0,0,0,.2);
+
+        border: 1px solid #C5C588;
+
+        border-radius: 12px;
+
+        padding:10px;
+
+        top:50px;
+
+        margin-top:10px;
+
+
+    }
+
+
+    button.object-select-flex-plus{
+
+        float:right;
+
+        text-align:center;
+
+        -webkit-align-self: auto;
+        -ms-flex-item-align: auto;
+        align-self: auto;
+
+        color:white;
+
+
+        background: black;
+
+        border: 1px solid #C5C588;
+
+        border-radius: 5px;
+
+        padding:10px;
+
+        top:50px;
+
+        margin-top:10px;
+
+    }
+
+    button.object-select-flex-plus:hover
+    {
+       border-color:blueviolet;
+
+    }
+
+    #message button.ok, #message button.cancel,  #message button.test
+    {
+
+        left:0;
+
+        top:0;
+
+        color:white;
+
+        border:2px inset grey;
+
+        margin-top:15px;
+
+        position:relative;
+
+        width:125px;
+
+    }
+
+
+
+    #message button.effect-ok, #message button.effect-cancel,  #message button.test
+    {
+        color:white;
+
+        left:0;
+
+        border:2px inset grey;
+
+        position:relative;
+
+    }
+
+
+    button.ok
+    {
+        position:relative;
+
+        left:10%;
+        background-color:#333333;
+
+        color:white;
+
+        border-radius: 4px;
+
+        margin-top:12px;
+
+        background: #45484d; /* Old browsers */
+        background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 15px;
+
+        height:25px;
+
+        width:70px;
+
+        top:25px;
+
+    }
+
+    button.cancel
+    {
+
+        position:relative;
+
+        color:white;
+
+        border-radius: 4px;
+
+        background: #da8452; /* Old browsers */
+        background: -moz-linear-gradient(top, #da8452 0%, #c26732 50%, #d67842 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #da8452 0%,#c26732 50%,#d67842 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #da8452 0%,#c26732 50%,#d67842 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#da8452', endColorstr='#d67842',GradientType=0 ); /* IE6-9 */
+
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 15px;
+
+        height:25px;
+
+        width:70px;
+
+        left:30%;
+
+        top:25px;
+
+    }
+
+    li textarea
+    {
+        position:relative;
+
+        width:100%;
+
+        min-height:150px;
+
+        color:snow;
+
+        background:black;
+
+        padding:4px;
+
+    }
+
+
+</style>
+
+<link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
+
+<link rel="stylesheet" href="../assets/css/tool-shell.css">
+
+<script src="../assets/js/dat.gui/dat.gui.js"></script>
+
+<script src="../assets/js/bottomtabs.js"></script>
+
+<style>
+
+    .dg .c input[type=text] {
+
+        position: relative;
+
+        border-left: 1px solid silver;
+        width: 100%;
+
+        padding: 0px;
+
+        padding-left: 2px;
+
+        padding-right: 2px;
+
+        margin: 0px;
+
+        background: none;
+
+        color:white;
+
+    }
+
+    #logo
+    {
+        width:120px;
+
+        margin-top:4px;
+
+    }
+
+    .dg div.slider {
+        width: 55%;
+    }
+
+
+    div#overlay
+    {
+        position:fixed;
+
+        z-index:9997;
+
+        width:100%;
+
+        min-width:600px;
+
+    }
+
+    .dg.main .folder
+    {
+
+    }
+
+    #myCanvas
+    {
+        background:blue;
+
+    }
+
+</style>
+
+<body>
+
+<script src="../assets/js/jquery/jquery.fileDownload.js"></script>
+
+<input type="file" name="level-file-input" id="level-file-input"/>
+
+<input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
+
+
+<div id="ctrl-space-top">
+    <nav class="top-menu">
+
+        <img id="logo" src="../assets/css/img/logo-effects.png"/>
+
+        <div class="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                    type="button">Effect-List<span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+
+                <li role="presentation"><a href="#" id="new-effect">New Effect</a></li>
+
+                <li role="presentation"><a href="#" class="alt" id="download"><span>Save to JSON-File</span><img
+                        src="../assets/css/img/save.png" alt="save data"></a></li>
+
+                <li role="presentation"><a href="#" class="alt" id="png-generator"><span>Generate PNGs</span><img
+                        src="../assets/css/img/save.png" alt="save data"></a></li>
+</ul>
+
+        </div>
+
+    </nav>
+
+</div>
+
+<style>
+
+    #overlay
+    {
+        position:fixed;
+
+        display:block;
+
+        overflow:auto;
+
+        top:50px;
+
+        bottom:50px;
+
+        overflow-y:scroll;
+
+        border-bottom:2px groove steelblue;
+
+    }
+
+    .dg.main
+    {
+        position:relative;
+
+        display:block;
+
+        overflow:auto;
+
+        left:50%;
+
+        margin-left:-125px;
+
+        max-width:100%;
+
+    }
+
+    .console {
+        position: fixed;
+
+        width: 50%;
+
+        top: 75px;
+
+        z-index: 9999;
+
+    }
+
+    .section-title {
+
+        width: 100%;
+
+        font-size: 115%;
+
+        color: cornflowerblue;
+
+        text-decoration: underline;
+
+    }
+
+    .console-keys span {
+
+        color: darkorange;
+
+        border-left: 1px solid blue;
+        border-right: 2px solid blue;
+
+        padding: 2px;
+
+    }
+
+
+</style>
+
+<div id="gs-container">
+
+    <canvas id="myCanvas" class="level-maker-canvas">
+    </canvas>
+
+</div>
+
+<div id="dat-gui-gs-container">
+
+</div>
+
+<div id="overlay">
+    <div id="message"> <span></span> </div>
+
+</div>
+
+<script>
+
+    Canvas.__levelMaker = true;
+
+    //App{}: a collection of UI functionality
+
+    var App = {
+
+        options:{mix_mode:"SEQUENTIAL", save_as:"PNG"},
+
+        effectSequences:[], //add to this when effect is SAVED
+
+
+        each : function(obj, callback)
+    {
+        for(var x in obj)
+        {
+
+            callback(x, obj[x]);
+
+        }
+
+    },
+
+        addEffect:function(e)
+        {
+
+            alert('adding efffect');
+
+            this.effectSequences.push(e);
+
+            this.clearForm();
+
+        },
+
+        showEffectsInDiv:function(div)
+        {
+
+            $(div).html('');
+
+            $(div).append("<canvas id='image-test-canvas'></canvas><ol class='object-select-flex-container'></ol>");
+
+            var options_gui = DatGui.getEffectSaveOptionsGui();
+
+            $(div).append($(options_gui.domElement));
+
+            var flex = $('.object-select-flex-container');
+
+            var button_save_png = "<button class='effect-save ok' id='center-ok' onclick='App.bakeAndSave();'>Bake and Save</button>";
+
+            $(div).append(button_save_png);
+
+            for(var x =0; x < this.effectSequences.length; x++) {
+
+                var e = this.effectSequences[x];
+
+                $(flex).append("<li class='object-select-flex-item'>" + (e.name || "undefined") + "</li>");
+
+            }
+
+            $(flex).append("<button class='object-select-flex-plus'>+AddEffectSequence</button>");
+
+        },
+
+        clearForm:function()
+        {
+
+            $('.gui-space').html('');
+
+        },
+
+        DEVMODE: false,
+
+        closeMessage:function(callback)
+        {
+            $('#message').hide();
+        },
+
+        bakeAndSave:function(callback)
+        {
+            var effects = App.effectSequences;
+
+            var __inst = this;
+
+            this.each(effects, function(ix, e){
+
+                e = new EffectSequence(e);
+
+               __ServerSideFile.animationPreview(e.animation, e);
+
+              var asyncEffect = new AsyncSteps(e, {
+
+                   error:function(){
+
+                       console.error('error in async steps');
+
+                       } ,
+
+                    chunk:function(canvas /*canvas-result*/, imgData /*data-result*/){
+
+                       console.log('Async chunk');
+
+                    },
+
+                    done:function(){
+
+                        console.log('DONE!!!');
+                    }
+                });
+
+
+            });
+
+        },
+
+        saveEffectList:function(callback)
+        {
+
+            if(App.options.overlay) //overlay all effects
+            {
+
+
+            }
+
+            if(App.options.sequence) //sequence all effects
+            {
+
+
+            }
+
+            if(confirm('is the saveEffectList() function complete?'))
+            {
+                alert('nice job');
+
+            }
+
+        },
+
+        createForm:function(v, confirmable)
+        {
+
+            var btns = confirmable ? "<button class='effect-ok ok' id='message-ok'>OK</button><button class='effect-cancel cancel' id='ok' onclick='App.closeMessage();'>Cancel</button>":"";
+
+            $('#message span').html(v + "<br/><div class='button-space'>"+btns+"</div>");
+
+            $('#message').show();
+
+        },
+
+        message:function(v)
+        {
+
+            $('#message span').html(v + "<br/><button class='ok' id='message-ok' onclick='App.closeMessage();'>OK</button>");
+
+            $('#message').show();
+
+        },
+
+        showSavedEffects:function()
+        {
+            this.createForm("<h4 class='form-title'>EffectList-Output</h4><div class='gui-space'></div>", false);
+
+            this.showEffectsInDiv($('.gui-space'));
+
+        },
+
+        showEffectForm:function(options)
+        {
+           this.createForm("<h4 class='form-title'>Create Effect-Sequence</h4><div class='gui-space'></div>", true);
+
+          var effect_sequence = new EffectSequence({name:"effect_sequence",animation:new Animation(), duration:3000});
+
+          effect_sequence.setEffect('sawtoothripple');
+
+           var __inst = this;
+
+            DatGui.addEffectSequenceGui(effect_sequence, function(){
+
+                $('.gui-space').html('');
+
+                $('.gui-space').append(effect_sequence.gui.domElement);
+
+            });
+
+
+            $('.effect-ok').unbind().click( function(evt){
+
+                App.addEffect(effect_sequence);
+
+                App.showSavedEffects();
+
+                evt.preventDefault();
+
+                return false;
+
+            });
+
+        },
+
+        saveLevel: function (name) {
+
+            if(name == "")
+            {
+                alert('Applying default level name:' + __levelMaker.settings.name);
+                name = false;
+            }
+
+            __levelMaker.settings.name = name || __levelMaker.settings.name;
+
+            if(!__levelMaker.settings.name.endsWith('.json'))
+            {
+                __levelMaker.settings.name += ".json";
+            }
+
+            //onBeforeSave :: take every image reference from the 'uploads' catch, save the image to a permanent folder in
+
+            //assets/game/image/
+
+            var data = __levelMaker.MapData(Game.sprites, __levelMaker.settings, Game.GameWindow.forces);
+
+            data = jstr(data);
+
+            App.triggerDownload(__levelMaker.settings.name, data, function(data){
+
+                data = JSON.parse(data);
+
+                if(data.path)
+                {
+
+                    App.message('file saved to:' + '<a target="_blank" href="file:///'+data.path + '" >'+data.path+'</a>');
+
+                }
+
+            });
+
+        },
+
+        triggerDownload: function (filename, content, callback) {
+
+            $.post("http://localhost:3137/save", {filename: filename, content: content})
+                .done(function (data) {
+
+                    if (typeof(callback) == 'function') {
+
+                        callback(data);
+
+                    }
+
+                    //  alert( "Data Saved: " + data );
+                });
+
+        }
+
+    };
+
+    $(document).ready(function () {
+
+        $('body').css('cursor', 'crosshair');
+
+        $('#new-effect').click(function(){
+
+            App.showEffectForm();
+
+        });
+
+    });
+
+
+    jQuery.expr.filters.offscreen = function (el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            (rect.x + rect.width) < 0
+            || (rect.y + rect.height) < 0
+            || (rect.x > window.innerWidth || rect.y > window.innerHeight)
+        );
+    };
+
+    __gameStack.ready(function (lib) {
+
+
+    });
+
+    /********************************
+     * Game Init / ready
+     *******************************/
+
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.getElementById('gs-container').appendChild(stats.dom);
+
+    function animate(time) {
+
+        stats.begin();
+
+        requestAnimationFrame(animate);
+
+        TWEEN.update(time);
+
+        stats.end();
+
+    };
+
+
+    __gameStack.ready(function (lib) {
+
+        alert('Gamestack ready');
+
+        animate();
+
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

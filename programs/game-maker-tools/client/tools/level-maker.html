@@ -4,6 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+    />
     <title>Level-Element-Maker</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
@@ -26,7 +30,7 @@
 
     <script src="../assets/js/dat.gui/dat.gui.js"></script>
 
-    <script src="../assets/js/lib_interface/dat.gui.interface.js"></script>
+    <script src="../assets/js/dat.gui/dat.gui.interface.js"></script>
 
     <script src="../assets/js/jquery/jquery.js"></script>
 
@@ -37,7 +41,7 @@
 
     <script src="../assets/js/contextMenu/contextMenu.js"></script>
 
-    <script src="../assets/js/contextMenu/right_click_interface.js"></script>
+    <script src="../assets/js/contextMenu/right_click_interface_level.js"></script>
 
     <script src="../assets/js/hot_key_interface.js"></script>
 
@@ -156,6 +160,7 @@
 
     }
 
+
 </style>
 
 <link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
@@ -190,12 +195,33 @@
         width: 55%;
     }
 
+    div#message
+    {
+        position:fixed;
+
+        z-index:9999;
+
+        top:20%;
+
+        left:20%;
+
+        width:60%;
+
+        height:60%;
+
+        background:#333333;
+
+        display:none;
+
+    }
+
+
 
 </style>
 
 <body>
 
-<script src="../assets/js/jquery.fileDownload.js"></script>
+<script src="../assets/js/jquery/jquery.fileDownload.js"></script>
 
 <input type="file" name="level-file-input" id="level-file-input"/>
 
@@ -273,6 +299,54 @@
 
     }
 
+    div#overlay
+    {
+
+        position:absolute;
+
+        z-index:9999;
+
+        overflow:visible;
+
+    }
+
+    div#message button.ok
+    {
+
+      position:relative;
+
+       left:50%;
+
+        margin-left:-50px;
+
+
+    }
+
+    div#just-ok-space button.ok
+    {
+
+        position:relative;
+
+        left:50%;
+
+        margin-left:-50px;
+
+    }
+
+    div.add-list
+    {
+
+
+        position:relative;
+
+
+        left:50%;
+
+        margin-left:-130px;
+
+
+    }
+
 
 </style>
 
@@ -325,7 +399,7 @@
 
     <form id="object-maker" method="GET">
 
-        <h3 id="title">Create Level-Map Sprite</h3>
+        <h3 id="title">Create/Edit Map-Sprite</h3>
 
         <div id="sprite-space" class="sprite-space gui-space"></div>
 
@@ -441,7 +515,7 @@
 
         },
 
-        image_upload: __ServerSideImage.image_upload, /*__ServerSideImage.image_upload(filename, content, callback)*/
+        image_upload: __ServerSideFile.file_upload, /*__ServerSideFile.file_upload(filename, content, callback)*/
 
         superSelectOptions:function(name, options, callback)
         {
@@ -546,6 +620,8 @@
 
 
             });
+
+
 
         },
 
@@ -665,52 +741,7 @@
 
         },
 
-        applyRecentFiles: function () {
-            var files = localStorage.getItem('recent-files');
 
-            App.recent_files = JSON.parse(files);
-
-            if (!App.recent_files instanceof Array) {
-                App.recent_files = [];
-
-            }
-
-        },
-
-        addRecentFile: function (filename) {
-
-            var files = localStorage.getItem('recent-files');
-
-            if (files) {
-
-                App.recent_files = JSON.parse(files);
-
-
-            }
-
-
-            if (App.recent_files instanceof Array) {
-                App.recent_files = [];
-
-            }
-
-            if (filename) {
-
-                App.recent_files.push(filename);
-
-            }
-
-
-            if (App.recent_files.length >= 4) {
-                App.recent_files.shift();
-
-            }
-
-            localStorage.setItem('recent-files', JSON.stringify(App.recent_files));
-
-            //  alert(localStorage.getItem('recent-files'));
-
-        },
 
         closeMessage:function(callback)
         {
@@ -1175,16 +1206,9 @@
 
             var rsgui = new dat.GUI({autoPlace:false});
 
-          //  rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
+            rsgui.add(__levelMaker.assembled_sprite.rot_speed, 'x').min(-50).max(50);
 
-          //  $('.rotation-speed-gui').append($(rsgui.domElement));
-
-            var agui = new dat.GUI({autoPlace: false});
-
-            agui.add(__levelMaker.assembled_sprite.rot_accel, 'x').min(-50).max(50);
-
-            $('.rotation-accel-gui').append($(agui.domElement));
-
+            $('.rotation-speed-gui').append($(rsgui.domElement));
 
         },
 
@@ -1542,12 +1566,6 @@
         });
 
 
-
-
-        $('.squeeze, ul.nav-tabs li').squeeze(function () {
-        });
-
-
     });
 
 
@@ -1625,9 +1643,6 @@
 
         init: function (callback) {
 
-            App.applyRecentFiles();
-
-            var filename = App.recent_files[App.recent_files.length - 1];
 
             App.create_level(false, function () {
 
@@ -1914,7 +1929,7 @@
 
             applySettings: function (data) {
 
-                alert('applying settings');
+             //   alert('applying settings');
 
                 data = data || __levelMaker.settings;
 

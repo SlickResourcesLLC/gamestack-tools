@@ -102,10 +102,8 @@ var GameStackLibrary = function GameStackLibrary() {
                         });
                 },
 
-                getActionablesCheckList: function getActionablesCheckList() {
+                getAllCallables: function getAllCallables() {
                         //every unique sound, animation, tweenmotion in the game
-
-                        var __inst = {};
 
                         var actionables = [];
 
@@ -254,6 +252,8 @@ var GameStackLibrary = function GameStackLibrary() {
                         });
 
                         this.InputEvents.init();
+
+                        this.__running = true;
                 },
 
                 getArg: function getArg(args, key, fallback) {
@@ -285,6 +285,17 @@ var GameStackLibrary = function GameStackLibrary() {
                         if (obj instanceof Sprite) {
 
                                 this.__gameWindow.sprites.push(obj);
+                        }
+
+                        if (obj instanceof GSEvent) {
+
+                                if (__gameStack.__running) {
+
+                                        return console.error('Events can only be added before Gamstack.animate() is called::aka before the main update / loop begins');
+                                } else {
+
+                                        obj.apply();
+                                }
                         }
 
                         this.collect(obj);
@@ -725,10 +736,10 @@ function $Q(selector) {
                                 console.info('TODO: rig property events');
 
                                 var condition = "_",
-                                    key = evt_profile.evt_key;
+                                    key = criterion || evt_profile.evt_key;
 
                                 if (key.indexOf('[') >= 0 || key.indexOf(']') >= 0) {
-                                        key = key.replace('[', '').replace('[', ']');
+                                        key = $Q.between('[', ']', key);
                                 }
 
                                 var evt_parts = [];
@@ -4487,6 +4498,11 @@ var CanvasLib = function CanvasLib() {
                         canvasContextObj.restore();
                 },
 
+                drawData: function drawData(x, y, w, h, data, ctx) {
+
+                        ctx.putImageData(data, x, y, 0, 0, w, h);
+                },
+
                 /*
                  * drawPortion:
                  *
@@ -4545,6 +4561,7 @@ var CanvasLib = function CanvasLib() {
                                 var frame = sprite.selected_animation.selected_frame;
 
                                 if (frame && frame.image && frame.image.data) {
+
                                         ctx.putImageData(frame.image.data, x, y);
                                 } else {
 
@@ -5013,17 +5030,6 @@ var EffectSequence = function () {
 
                                 var effect_select = __inst.gui.add(__inst, 'selected_effect', Object.keys(__inst.effects));
 
-                                $(effect_select.domElement).append('<button style="float:right; color:#333333;  " class="effect-add-button">+</button>');
-
-                                $('.effect-add-button').on('click', function () {
-
-                                        var effect = __inst.effects_list[__inst.effects_list.length - 1];
-
-                                        effect = __inst.effects.triangleripple;
-
-                                        var effect_select_next = __inst.gui.add(__inst, __inst.effects_list[__inst.effects_list.length - 1], Object.keys(__inst.effects));
-                                });
-
                                 if (!effect) {
                                         effect_select.setValue('triangleripple');
 
@@ -5044,7 +5050,7 @@ var EffectSequence = function () {
                                         __inst.loopBack = value;
                                 });
 
-                                DatGui.addMotionCurveSelect(__inst, __inst.gui);
+                                DatGui.addTweenCurveSelect(__inst, __inst.gui);
                         }
 
                         setValues(this.gui);
@@ -5472,6 +5478,8 @@ Gamestack.GravityForce = GravityForce;
  * @returns {GamepadAdapter} object of GamepadAdapter()
  * */
 
+GameStack.gamepads = GameStack.gamepads || __gameInstance.gamepads;
+
 var GamepadAdapter = function () {
         function GamepadAdapter() {
                 _classCallCheck(this, GamepadAdapter);
@@ -5591,7 +5599,14 @@ var GamepadAdapter = function () {
 
                         this.__gamepads.push(gp);
 
+                        Gamestack.gamepads = this.__gamepads;
+
                         return gp;
+                }
+        }, {
+                key: 'getGamepads',
+                value: function getGamepads() {
+                        return Gamestack.gamepads;
                 }
         }, {
                 key: 'process',
@@ -5678,8 +5693,6 @@ var GamepadAdapter = function () {
         return GamepadAdapter;
 }();
 
-;
-
 /**
  * ControllerSetting()
  * takes arguments of button(string) || stick(string), plus event(function),
@@ -5694,13 +5707,7 @@ var GamepadAdapter = function () {
  * *********/
 
 if (!__gameInstance.GamepadAdapter) {
-        __gameInstance.GamepadAdapter = new GamepadAdapter();
-
-        __gameInstance.gamepads = [];
-
-        GameStack.GamepadAdapter = __gameInstance.GamepadAdapter;
-
-        GameStack.gamepads = __gameInstance.gamepads;
+        Gamestack.GamepadAdapter = new GamepadAdapter();
 
         GameStack.GamepadAdapter.on('stick_left', 0, function (x, y) {
 
@@ -5728,7 +5735,126 @@ if (!__gameInstance.GamepadAdapter) {
         });
 
         // __gameInstance.gamepads.push(gamepad);
-};
+}
+
+;
+
+var GSEvent = function () {
+        function GSEvent() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+                _classCallCheck(this, GSEvent);
+
+                this.name = args.name || "blankEvent";
+
+                this.on = args.on || "collision";
+
+                this.object = args.object || {};
+
+                this.gpix = args.gpix || 0;
+
+                this.ix = args.ix || 0; //the button-index OR stick-index
+
+                this.targets = args.targets || [];
+
+                this.triggered = args.triggered || function () {};
+
+                this.statKey = args.statKey || false;
+
+                this.lessThan = args.lessThan || false;
+
+                this.greaterThan = args.greaterThan || false;
+        }
+
+        _createClass(GSEvent, [{
+                key: 'apply',
+                value: function apply() {
+
+                        var __inst = this;
+
+                        switch (this.on) {
+                                case "collision":
+                                case "collide":
+
+                                        $Q(this.object).on('collision', this.targets, function (obj1, obj2) {
+
+                                                __inst.triggered(obj1, obj2);
+                                        });
+
+                                        break;
+
+                                case "button":
+
+                                        //rig the button call
+
+                                        $Q(this.object).on('button' + this.ix, function (pressed) {
+
+                                                __inst.triggered(pressed);
+                                        });
+
+                                        break;
+
+                                case "stick_left":
+                                case "stick_right":
+                                case "right_stick":
+                                case "left_stick":
+
+                                        //rig the stick call
+
+                                        $Q(this.object).on(this.on, function (x, y) {
+
+                                                __inst.triggered(x, y);
+                                        });
+
+                                        break;
+
+                                case "stat":
+
+                                        //rig the stat call
+
+                                        console.error('STAT CALLS ARE NOT SET-UP YET. Please add this to the Gamestack library');
+
+                                        var isStrOrNum = function isStrOrNum(str) {
+                                                return typeof str == 'string' || typeof str == 'number';
+                                        };
+
+                                        var onKey = "[" + this.statKey + (isStrOrNum(this.greaterThan) ? ">" : "") + (isStrOrNum(this.lessThan) ? "<" : "") + (this.greaterThan || this.lessThan);
+
+                                        $Q(this.object).on(onKey, function (x, y) {
+
+                                                __inst.triggered(x, y);
+                                        });
+
+                                        break;
+
+                        }
+                }
+        }, {
+                key: 'triggered',
+                value: function triggered() {} //called when triggered
+
+        }, {
+                key: 'onTriggered',
+                value: function onTriggered(fun) {
+                        this.triggered = function () {
+                                fun();
+                        };
+                } //adds a function argument for triggered
+
+        }, {
+                key: 'rejected',
+                value: function rejected() {}
+        }, {
+                key: 'onRejected',
+                value: function onRejected(fun) {
+                        this.rejected = function () {
+                                fun();
+                        };
+                }
+        }]);
+
+        return GSEvent;
+}();
 
 ;
 /**
@@ -6442,6 +6568,80 @@ var Curves = { //ALL HAVE INPUT AND OUTPUT OF: 0-1.0
 
 Gamestack.Curves = Curves;
 
+var Shapes = {
+
+        circle: function circle(radius, freq) {
+
+                return {
+
+                        radius: radius,
+
+                        points: [],
+
+                        fill: function fill(center, freq) {}
+
+                };
+        },
+
+        square: function square(s, freq) {
+                console.error('STILL NEED TO BUILD THIS SQUARE IN GS-API');
+
+                return {
+
+                        size: new Vector(s, s),
+
+                        width: w,
+
+                        height: h,
+
+                        freq: freq,
+
+                        points: [],
+
+                        fill: function fill(start, freq) {}
+                };
+        },
+
+        rect: function rect(w, h, freq) {
+                console.error('STILL NEED TO BUILD THIS TRIANGLE');
+
+                return {
+
+                        size: new Vector(w, h),
+
+                        width: w,
+
+                        height: h,
+
+                        freq: freq,
+
+                        points: [],
+
+                        fill: function fill(start, freq) {}
+                };
+        },
+
+        triangle: function triangle(base, h, freq) {
+
+                console.error('STILL NEED TO BUILD THIS TRIANGLE');
+
+                return {
+
+                        base: base,
+
+                        height: height,
+
+                        freq: freq,
+
+                        points: [],
+
+                        fill: function fill(start, freq) {}
+                };
+        }
+};
+
+Gamestack.Shapes = Shapes;
+
 /**
  * Takes several args and returns Line object. Intended for curved-line / trajectory of Projectile Object.
  * @param   {Object} args object of arguments
@@ -6538,6 +6738,31 @@ var Line = function () {
                         this.duration = d;
 
                         return this;
+                }
+        }, {
+                key: 'Rotation',
+                value: function Rotation(r) {
+                        this.rotation = r;
+                        return this;
+                }
+        }, {
+                key: 'next',
+                value: function next(position) {
+
+                        var found = false;
+
+                        for (var x = 0; x < this.points.length; x++) {
+
+                                if (position.equals(this.points[x]) && x < this.points.length - 1) {
+                                        found = true;
+                                        return new Vector(this.points[x + 1]);
+                                }
+
+                                if (x == this.points.length - 1 && !found) {
+
+                                        return new Vector(this.points[0]);
+                                }
+                        }
                 }
         }, {
                 key: 'get_curve_from_string',
@@ -7383,6 +7608,8 @@ var Sprite = function () {
 
                         var rot_offset = options.rot_offset || new Vector3(0, 0, 0);
 
+                        var __playerInst = this;
+
                         if (__gameInstance.isAtPlay) {
 
                                 var bx = position.x,
@@ -7416,13 +7643,30 @@ var Sprite = function () {
                                 shot.rotation.x = 0 + rot_offset.x;
 
                                 shot.stats = {
+
                                         damage: 1
 
                                 };
 
-                                shot.speed.x = Math.cos(shot.rotation.x * 3.14 / 180) * speed;
+                                if (!options.line) {
 
-                                shot.speed.y = Math.sin(shot.rotation.x * 3.14 / 180) * speed;
+                                        shot.speed.x = Math.cos(shot.rotation.x * 3.14 / 180) * speed;
+
+                                        shot.speed.y = Math.sin(shot.rotation.x * 3.14 / 180) * speed;
+                                } else {
+                                        options.line.fill(new Vector(500, 500), 4);
+
+                                        var nextPos = new Vector(0, 0, 0);
+
+                                        shot.onUpdate(function (spr) {
+
+                                                nextPos = options.line.next(nextPos);
+
+                                                spr.position = __playerInst.position.add(nextPos);
+
+                                                console.log(spr.position);
+                                        });
+                                }
 
                                 return shot;
                         }
@@ -8033,7 +8277,7 @@ Gamestack.Sprite = Sprite;
 
 var SpriteInitializersOptions = {
 
-        Collideables: {
+        Clastics: {
 
                 top_collideable: function top_collideable(sprite) {
 
@@ -8400,81 +8644,4 @@ var Vector3 = Vector,
 Gamestack.Vector = Vector;
 
 //The above are a list of synonymous expressions for Vector. All of these do the same thing in this library (store x,y,z values)
-;
-
-var InterfaceCallback = function () {
-        function InterfaceCallback(_ref3) {
-                var name = _ref3.name,
-                    description = _ref3.description,
-                    callback = _ref3.callback;
-
-                _classCallCheck(this, InterfaceCallback);
-
-                this.name = name;
-
-                this.description = description;
-
-                this.callback = callback || function () {
-                        console.info('The call was empty');
-                };
-        }
-
-        _createClass(InterfaceCallback, [{
-                key: 'run',
-                value: function run() {
-
-                        this.callback();
-                }
-        }]);
-
-        return InterfaceCallback;
-}();
-
-var SpeechInterfaceStructure = function SpeechInterfaceStructure(_ref4) {
-        var name = _ref4.name,
-            description = _ref4.description;
-
-        _classCallCheck(this, SpeechInterfaceStructure);
-
-        this.name = name || "Program helper.";
-
-        this.description = description || "An interface for the game-builder program.";
-
-        this.options_structure = {
-
-                scroll: function scroll(x, y) {}, //simple scroll controller
-
-
-                create_object_resource: {
-
-                        constructors: Quazar.IF.__allConstructors(),
-
-                        selectedType: false,
-
-                        selectByName: Quazar.IF.selectByName,
-
-                        apply_speech_value: Quazar.IF.applySpeechValue()
-
-                }, //apply each class in the program, with means of creating / instantiating
-
-                save_object_resource: {
-
-                        selected_object: false,
-
-                        confirm: Quazar.IF.confirmation()
-
-                }, //apply each class in the program, with means of saving
-
-                retrieve_object_resource: {}, //retrieve
-
-                browse_object_resources: {}, //browsing
-
-                search_object_resources: {}, //searching
-
-                delete_object_resources: {}, //delete
-
-                apply_value: {} //apply a value to an object resource
-
-        };
-};
 //# sourceMappingURL=GameStack.js.map

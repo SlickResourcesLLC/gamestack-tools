@@ -5,9 +5,9 @@
  */
 module.exports = function (grunt) {
     // Project configuration.
-  
-  require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks 
- 
+
+  require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
+
 grunt.initConfig({
 
     concat: {
@@ -27,6 +27,7 @@ grunt.initConfig({
 
     },
 
+
     babel: {
         options: {
             sourceMap: true,
@@ -42,8 +43,8 @@ grunt.initConfig({
             }
         ]
 
-        }
-        ,
+        },
+
 
         api: {
             files: [
@@ -57,6 +58,18 @@ grunt.initConfig({
         }
 
     },
+
+    uglify: {
+        options: {
+            mangle: false
+        },
+        my_target: {
+            files: {
+                'client/dist/js/GameStack.min.js': ['client/dist/js/GameStack.js']
+            }
+        }
+    },
+
 
     jsdoc : {
         dist : {
@@ -74,14 +87,14 @@ grunt.initConfig({
 
 
 
-    grunt.registerTask('build', ['concat', 'babel']);
+    grunt.registerTask('build', ['concat', 'babel', 'uglify',]);
 
-    grunt.registerTask('default', ['concat', 'babel']);
+    grunt.registerTask('default', ['concat', 'babel', 'uglify',]);
 
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('docs', ['jsdoc']);
 
-    grunt.registerTask('all', ['concat', 'babel', 'jsdoc']);
+    grunt.registerTask('all', ['concat', 'babel', 'uglify', 'jsdoc']);
 
 
 };

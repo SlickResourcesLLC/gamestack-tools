@@ -10,7 +10,7 @@ body, html {
 }
 
 
-div#message, div.panel
+div.panel
 {
     position:relative;
     z-index:9999;
@@ -19,7 +19,9 @@ div#message, div.panel
 
     width:60%;
 
-    display:none;
+    height:60%;
+
+    visibility:hidden;
     text-align:center;
     background: url('img/hash-medium.png');
     background-repeat:repeat;
@@ -353,7 +355,7 @@ button.main-play,button#sound-pane-play,button#motion-pane-play,button#animation
 button#play,button#sound-pane-play,button#motion-pane-play
 {
 
-    position:absolute; right:40px; width:43px; top:10px;   height:40px;
+    position:absolute; right:40px; width:43px; top:5px;   height:40px;
 
     border-radius:50%;
 
@@ -363,18 +365,20 @@ button#play,button#sound-pane-play,button#motion-pane-play
 
     border:none;
 
+    padding:0px;
+
 }
 
 
 button#pause
 {
 
-    position:absolute; right:80px; width:30px; top:2px;   height:30px;
+    position:absolute; right:80px; width:43px; top:10px;   height:40px;
 
     border-radius:50%;
 
 
-    background:url('img/pause_button.png'); /* Old browsers */
+    background:url('img/pause_button.png');
 
 
     background-size: 100% 100%;
@@ -385,15 +389,17 @@ button#pause
 button#stop
 {
 
-    position:absolute; right:120px; width:30px; top:2px;   height:30px;
+    position:absolute; right:100px; width:37px; top:8px;   height:35px;
 
     border-radius:50%;
 
-    background:url('img/stop_button.png'); /* Old browsers */
+    background:url('img/stop_button.png');
 
     background-size: 100% 100%;
 
+    padding:0px;
 
+    border:none;
 }
 
 
@@ -1031,14 +1037,13 @@ div.free-select
 
     position:fixed;
 
-    z-index:997;
+    z-index:9998;
 
     padding: 0;
 
     left:-110%;
 
-    margin-left:10px;
-
+    margin-left:5px;
 
     border:1px inset teal;
 
@@ -1047,6 +1052,8 @@ div.free-select
     overflow-y:scroll;
 
     max-height:50%;
+
+    max-width:23%;
 
     background: url('img/hash-medium.png');
 

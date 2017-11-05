@@ -20,7 +20,7 @@
 <style>
 
     body, html {
-        background: black;
+        background: lightgrey;
 
         height:100%;
 
@@ -56,11 +56,17 @@
 
         margin-right: 20px;
 
+        color:#333333;
+
     }
+
+
 
     .screen-select a:hover {
 
-        border: 1px solid cornflowerblue;
+       background: #508b8a;
+
+        color:white;
 
     }
 
@@ -68,7 +74,7 @@
 
         position: relative;
 
-        color: whitesmoke;
+        color: #333333;
 
         display: block;
 
@@ -90,18 +96,6 @@
         font-weight: 400;
     }
 
-    .fillGradient {
-        background-color: black;
-        background-size: 100%, 100%;
-        opacity: 0.55;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        position: absolute;
-        z-index: -1;
-
-    }
 
     p {
 
@@ -109,7 +103,7 @@
         font-family: "Trebuchet MS", Helvetica, sans-serif;
         font-weight: normal;
 
-        color: whitesmoke;
+        color: #333333;
     }
 
     #linkCase {
@@ -172,7 +166,7 @@
         text-align: center;
         position: relative;
         font-size: 190%;
-        color: white;
+        color: #333333;
         text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
         -1px 1px 0 black;
     }
@@ -234,7 +228,7 @@
 
         position:block;
 
-        color: white;
+        color: #333333;
 
 
         text-align: left;
@@ -306,6 +300,8 @@
 
         text-align:left;
 
+        color:#333333;
+
 
     }
 
@@ -349,7 +345,7 @@
     table, table *
     {
 
-        color:white;
+        color:#333333;
 
     }
 
@@ -390,7 +386,7 @@
     {
         position:relative;
 
-        color:white;
+        color:#333333;
 
         width:100%;
 
@@ -403,17 +399,13 @@
     p.heading
     {
 
-        border-bottom:2px inset lightgrey;
+        border-bottom:1px inset #333333;
 
     }
 
 </style>
 
 <body>
-
-<div class="fillGradient">
-</div>
-
 
 <table style="width:100%">
     <tr>
@@ -465,7 +457,7 @@
 
 
 <div class="app-section"><p class="heading" >Usage examples</p>
-<div class="screen-select"><a class="screenlink" href="examples/side-scroller-level.html"> <img
+<div class="screen-select"><a target="_blank" class="screenlink" href="examples/side-scroller-level.html"> <img
         src="image/spritemaker-shot.png"/> <span>Sprite:from file</span>
     <ul>
         <li class="three">Load A Sprite From File</li>
@@ -482,7 +474,24 @@
 
 
 <div class="screen-select">
-    <a class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png"/> <span>Effects-Builder</span>
+    <a target="_blank" class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png"/> <span>Level-Builder</span>
+
+
+        <ul>
+            <li class="three">Builds tiled levels (point and click)</li>
+
+            <li class="three">Exports Levels and Level-Portions</li>
+
+            <li class="one">Applies Preset-Objects (Platforms, Etc)</li>
+        </ul>
+
+
+
+    </a>
+
+
+    <a target="_blank" class="screenlink" href="tools/effects-inc.html"> <img src="image/levelmaker-shot.png"/>
+        <span>Effects-Builder</span>
 
         <ul>
 
@@ -492,17 +501,7 @@
 
         </ul>
 
-    </a>
 
-
-    <a class="screenlink" href="tools/effects-inc.html"> <img src="image/levelmaker-shot.png"/> <span>Level-Builder</span>
-
-
-    <ul>
-        <li class="three">P+C Level Building</li>
-
-        <li class="one">Export Level Entities</li>
-    </ul>
     </a>
 
 
@@ -514,7 +513,7 @@
 <div class="app-section">
 <div class="screen-select">
 
-    <a class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png"/>
+    <a target="_blank" class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png"/>
         <span>Sprite Maker</span>
     <ul>
         <li class="four">Create Sprite-Objects</li>
@@ -524,7 +523,7 @@
 
     </a>
 
-<a class="screenlink" href="tools/three-js-lab.html"> <img src="image/levelmaker-shot.png"/> <span>Three-JS Object Generator</span>
+<a target="_blank" class="screenlink" href="tools/three-js-lab.html"> <img src="image/levelmaker-shot.png"/> <span>Three-JS Object Generator</span>
 
     <ul>
         <li class="one">Create 3D Object</li>
@@ -533,7 +532,7 @@
 </a>
 
 
-    <a class="screenlink" href="tools/controller-gui.html"> <img src="image/levelmaker-shot.png"/> <span>GameController-Gui</span>
+    <a target="_blank" class="screenlink" href="tools/controller-gui.html"> <img src="image/levelmaker-shot.png"/> <span>GameController-Gui</span>
 
         <ul>
             <li class="one">Rig Controller Input</li>
@@ -544,7 +543,6 @@
 </div>
 
 </div>
-
 
 <div class="app-section">
 
@@ -559,7 +557,6 @@
     </div>
 
 </div>
-
 
         <div class="app-section">
 
