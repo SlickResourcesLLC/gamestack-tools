@@ -1193,14 +1193,18 @@ var DatGui = {
 
             DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoSpriteTypes);
 
-            DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
-
             if (create_new) {
                 object.selected_animation = new Animation({
                     frameSize: new Vector(object.size),
                     frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
                 });
 
+            }
+            else
+            {
+
+
+                DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
             }
 
             var obj = object.selected_animation;
@@ -1267,6 +1271,10 @@ var DatGui = {
 
                                             object.size = new Vector(this.width, this.height, 0);
 
+
+                                            DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
+
+
                                             object.selected_animation = new Animation({
                                                 image: this, frameSize: new Vector(object.size),
                                                 frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
@@ -1275,14 +1283,6 @@ var DatGui = {
 
                                             object.frameSize = object.selected_animation.selected_frame.frameSize;
 
-
-                                            DatGui.addVectorFromProperty(gui, object.size, 'this.size', 0, 1000, function () {
-
-                                                alert('getting object');
-
-                                                DatGui.get(object);
-
-                                            });
 
                                             DatGui.addVectorFromProperty(gui, object.selected_animation.selected_frame.frameSize, 'this.selected_animation::frameSize', 0, 1000, function () {
 

@@ -390,14 +390,6 @@ top: -8px;
 }
 
 
-.service-desc ul.marked li:before {
-
-   content:'\03E0';
-
-    color:lightgreen;
-
-
-}
 
 .container h2
 {

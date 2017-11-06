@@ -387,59 +387,6 @@ var __rightClickInterface = [{
 },
 
     {
-        name: 'Zoom',
-        img: 'image/target-blue.png',
-        title: 'zoom button',
-        id:'zoom',
-
-        subMenu: [{
-            name: '1.0',
-            title: 'zoom_one',
-
-
-            checked:false,
-
-            fun: function () {
-
-                $('.level-maker-canvas').css('zoom', '1.0');
-
-                 rightClickDisplayCalls.showExclusiveCheck(this);
-
-            }
-        },
-
-            {
-                name: '0.5',
-                title: '0.5',
-
-                fun: function () {
-                    $('.level-maker-canvas').css('zoom', '0.5');
-
-
-                    rightClickDisplayCalls.showExclusiveCheck(this);
-
-
-                }
-            },
-
-            {
-                name: '0.2',
-                title: '0.2',
-
-                fun: function () {
-                    $('.level-maker-canvas').css('zoom', '0.2');
-
-                    rightClickDisplayCalls.showExclusiveCheck(this);
-
-                }
-            }
-
-        ]
-
-
-    },
-
-    {
         name: 'Set-Pixel-Snap-Size',
         img: 'image/target-green.png',
         title: 'pixel snap button',
@@ -822,7 +769,7 @@ $(document).ready( function(){
 
             if(confirm('Delete Map_Object:' + __levelMaker.selectedElement.name + '?')){
 
-               alert('TODO: code the deletion');
+              __levelMaker.removeLevelObjectFromUI( __levelMaker.get(__levelMaker.selectedElement.name));
 
             }else{
 
@@ -848,7 +795,7 @@ $(document).ready( function(){
 
                     var sprite = __levelMaker.get(__levelMaker.selectedElement.name);
 
-                    var sprite_gui = DatGui.getLevelObjectGui(__levelMaker.get(__levelMaker.selectedElement.name));
+                    var sprite_gui = DatGui.getLevelObjectGui(__levelMaker.get(__levelMaker.selectedElement.name), false);
 
                     $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
 
@@ -862,9 +809,41 @@ $(document).ready( function(){
 
                     $('#map-item-space  button.ok').click(function(){
 
-                        __levelMaker.addLevelObjectToUI(sprite,true);
+                        var hasLevelObjectName = function(name)
+                        {
 
-                        $('#map-item-space form').hide('fast');
+                            var found = false;
+
+                            $.each(__levelMaker.mapElements, function(ix, item){
+
+                                if(item.name == name)
+                                {
+                                    found = true;
+
+                                }
+
+                            });
+
+                            return found;
+
+                        };
+
+
+                        if(hasLevelObjectName(sprite.name))
+                        {
+
+
+                            return alert('Must have a unique name to create object.');
+
+                        }
+                        else {
+
+
+                            __levelMaker.addLevelObjectToUI(sprite, true);
+
+                            $('#map-item-space form').hide('fast');
+
+                        }
 
                     });
 

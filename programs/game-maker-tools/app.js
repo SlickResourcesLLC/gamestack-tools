@@ -45,7 +45,7 @@ module.exports = function(openNow) {
 
            var filename = req.body.filename;
 
-           var relpath = 'client/assets/uploads/' + filename;
+           var relpath = 'client/assets/file_storage/' + filename;
 
            var dataString = content;
 
@@ -206,7 +206,7 @@ module.exports = function(openNow) {
 
            var filename = req.body.filename;
 
-           fs.rename('client/assets/uploads/' + filename, 'client/assets/system-image-stash/' + filename, function (err) {
+           fs.rename('client/assets/file_storage/' + filename, 'client/assets/system-image-stash/' + filename, function (err) {
                if (err) {
                    if (err.code === 'EXDEV') {
                        copy(oldPath, newPath);

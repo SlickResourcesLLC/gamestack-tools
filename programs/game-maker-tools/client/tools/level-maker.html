@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta
             name='viewport'
             content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
@@ -213,6 +213,8 @@
 
         display:none;
 
+        text-align:center;
+
     }
 
 
@@ -313,12 +315,21 @@
     div#message button.ok
     {
 
-      position:relative;
+        position:relative;
 
-       left:50%;
+        left:0px;
 
-        margin-left:-50px;
+        width:40%;
 
+    }
+
+    div#message button.cancel
+    {
+        position:relative;
+
+       left:2px;
+
+        width:40%;
 
     }
 
@@ -1972,7 +1983,7 @@
                  });
 
 
-                $('button#create_object').click(function () {
+                $('button#create_object').unbind().on('click', function (evt) {
 
                     var hasLevelObjectName = function(name)
                     {
@@ -1997,31 +2008,34 @@
                     if(hasLevelObjectName(__levelMaker.assembled_sprite.name))
                     {
 
+                        evt.preventDefault();
+
                         return alert('Must have a unique name to create object.');
 
                     }
+                    else {
+
+                        var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
+
+                        sprite.animate();
+
+                        sprite.tag = sprite.name;
 
 
-                    var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
+                        __levelMaker.addLevelObjectToUI(sprite);
 
-                    sprite.animate();
-
-                    sprite.tag = sprite.name;
+                        //  alert('last file');
 
 
-                    __levelMaker.addLevelObjectToUI(sprite);
-
-                    //  alert('last file');
-
-
-                    App.dialog(App.map_objects,
-                        0, 120, function () {
-                            console.log('dialog shown');
-                        });
+                        App.dialog(App.map_objects,
+                            0, 120, function () {
+                                console.log('dialog shown');
+                            });
 
 
-                    $('#map-item-space form').hide();
+                        $('#map-item-space form').hide();
 
+                    }
 
                 });
 
@@ -2274,6 +2288,7 @@
 
                         img: img,
                         src: img.src,
+                        size:new Vector3(args.size || args.__mapSize || args.mapSize),
                         __mapScale: args.__mapScale || false,
                         __mapSize: new Vector3(args.__mapSize || args.mapSize || args.size),
                         frameSize: new Vector3(args.frameSize)
@@ -2340,7 +2355,7 @@
 
                         var ix = __inst.mapElements.indexOf(mapElement);
 
-                     if(ix < 0){   __inst.mapElements.push(mapElement); }
+                     if(ix < 0 || !pushNow){   __inst.mapElements.push(mapElement); }
 
                         if (typeof(callback) == 'function') {
                             callback(mapElement);
@@ -2734,6 +2749,39 @@
             },
 
 
+            removeLevelObjectFromUI: function (item) {
+
+                var found = false;
+
+                    $(".free-select li a").each(function(ix, a){
+
+                        if(!found && $(a).prop('id') == item.id)
+                        {
+
+                            $.each( __levelMaker.mapElements, function(ix, mitem){
+
+                                if(!found && mitem.id == item.id)
+                                {
+                                    __levelMaker.mapElements.splice(ix, 1);
+
+                                    App.map_objects.splice(ix, 1);
+
+                                   $(a).parent().remove();
+
+                                   found = true;
+
+                                }
+
+                            });
+
+                        }
+
+                    });
+
+
+            },
+
+
             addLevelObjectToUI: function (item, replace) {
 
                 if(replace)
@@ -2742,7 +2790,6 @@
 
                        if($(a).prop('id') == item.id)
                        {
-                           alert('found id match');
 
                         $.each( __levelMaker.mapElements, function(ix, mitem){
 
