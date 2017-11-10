@@ -14,11 +14,11 @@
 
 <ul>
 
-<li>Sprites, Animations, Sounds</li>
+<li>Sprites, Animations, and Sounds</li>
 
 <li>Controller Input</li>
 
-<li>Movements and Projectiles.</li>
+<li>Motions and Projectiles.</li>
 
 <li>2D-Level-Building</li>
 

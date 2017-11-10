@@ -13,8 +13,8 @@ class Rectangle {
 
     constructor(min, max) {
 
-        this.min = min;
-        this.max = max;
+        this.min = new Vector(min);
+        this.max = new Vector(max);
 
     }
 

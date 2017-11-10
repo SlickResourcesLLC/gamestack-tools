@@ -39,6 +39,8 @@ class Projectile {
 
         this.size = Gamestack.getArg(args, 'size', new Vector());
 
+        this.origin = args.origin ||  new Vector(0, 0);
+
         this.description = Gamestack.getArg(args, 'description', false);
 
         this.duration = Gamestack.getArg(args, 'duration', 500);
@@ -52,6 +54,8 @@ class Projectile {
         this.highlighted = false;
 
         this.sprites = [];
+
+        this.run_ext = args.run_ext || [];
 
     }
 
@@ -99,9 +103,34 @@ class Projectile {
 
     }
 
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
 
     fire(origin)
     {
+
+        for(var x= 0 ; x<this.run_ext.length; x++)
+        {
+
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+        }
+
+        if(!origin)
+        {
+
+            origin = this.origin;
+        }
+
+
+        console.log('FIRING FROM:' + jstr(origin));
 
         var sprite = new Sprite({image:this.animation.image});
 

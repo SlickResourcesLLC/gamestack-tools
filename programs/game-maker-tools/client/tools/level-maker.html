@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
-
     <meta
             name='viewport'
             content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
@@ -218,55 +216,6 @@
     }
 
 
-
-</style>
-
-<body>
-
-<script src="../assets/js/jquery/jquery.fileDownload.js"></script>
-
-<input type="file" name="level-file-input" id="level-file-input"/>
-
-<input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
-
-<div id="ctrl-space-top">
-    <nav class="top-menu">
-
-        <img id="logo" src="image/logo-level.png"/>
-
-        <div class="dropdown">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
-                    type="button">Level<span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu">
-
-                <li role="presentation"><a href="#" id="new-level">New Level</a></li>
-
-                <li role="presentation"><a href="#" id="load-level">Load Level</a></li>
-
-                <li role="presentation"><a href="#" id="load-map-objects">Quick Load Map Images</a></li>
-
-                <li role="presentation"><a href="#" class="alt" id="download"><span>Save to File</span><img
-                        src="image/save.png" alt="save data"></a></li>
-
-                <li role="presentation"><a id="map_settings_show" class="alt" href='#'
-                                           onclick="__levelMaker.settings.show();">Level-Settings<img
-                        src="image/settings_icon.png" alt="settings image"></a></li>
-
-            </ul>
-        </div>
-
-        <button type="button" id="my-objects" class="button-top"><span>Choose-Object</span></button>
-        <button id="create_map_object" class="button-add">+</button>
-
-        <button type="button" id="play" ></button>
-        <button type="button" id="stop" ></button>
-
-    </nav>
-
-</div>
-
-<style>
-
     .console {
         position: fixed;
 
@@ -327,7 +276,7 @@
     {
         position:relative;
 
-       left:2px;
+        left:2px;
 
         width:40%;
 
@@ -359,7 +308,53 @@
     }
 
 
+
 </style>
+
+<body>
+
+<script src="../assets/js/jquery/jquery.fileDownload.js"></script>
+
+<input type="file" name="level-file-input" id="level-file-input"/>
+
+<input type="file" name="multi-map-object-file-input" id="multi-map-object-file-input" multiple/>
+
+<div id="ctrl-space-top">
+    <nav class="top-menu">
+
+        <img id="logo" src="image/logo-level.png"/>
+
+        <div class="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                    type="button">Level<span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+
+                <li role="presentation"><a href="#" id="new-level">New Level</a></li>
+
+                <li role="presentation"><a href="#" id="load-level">Load Level</a></li>
+
+                <li role="presentation"><a href="#" id="load-map-objects">Quick Load Map Images</a></li>
+
+                <li role="presentation"><a href="#" class="alt" id="download"><span>Save to File</span><img
+                        src="image/save.png" alt="save data"></a></li>
+
+                <li role="presentation"><a id="map_settings_show" class="alt" href='#'
+                                           onclick="__levelMaker.settings.show();">Level-Settings<img
+                        src="image/settings_icon.png" alt="settings image"></a></li>
+
+            </ul>
+        </div>
+
+        <button type="button" id="my-objects" class="button-top"><span>Choose-Object</span></button>
+        <button id="create_map_object" class="button-add">+</button>
+
+        <button type="button" id="play" ></button>
+        <button type="button" id="stop" ></button>
+
+    </nav>
+
+</div>
+
 
 <div id="gs-container">
 
@@ -506,7 +501,7 @@
 
             $.each(App.map_objects, function(n, map_item){
 
-                if(map_item.id == item.id)
+                if(map_item && map_item.id == item.id)
                 {
 
                     App.map_objects.splice(n, 1);
@@ -514,7 +509,7 @@
 
             });
 
-            App.map_objects.push(Option_Funx.OptionActionList(item.tag, item, function (err, element) {
+            App.map_objects.push(Option_Funx.OptionActionList(item.name, item, function (err, element) {
 
                 console.log('added 1 map object');
 
@@ -666,6 +661,14 @@
 
             };
 
+            if(data.mapElements && data.mapElements.length > 0)
+            {
+
+                __levelMaker.mapElements = data.mapElements;
+                usingOptFile = false;
+
+            }
+
             if(data && data.gameWindow && data.gameWindow.forces instanceof Array)
             {
 
@@ -715,7 +718,6 @@
 
                     App.loadDefaultMapElements(function () {
 
-
                         $.each(__levelMaker.mapElements, function (ix, item) {
 
                             App.add_map_object(item);
@@ -729,11 +731,33 @@
                 }
                 else {
 
-                    $.each(__levelMaker.mapElements, function (ix, item) {
+                   // App.map_objects = [];
 
-                        App.add_map_object(item);
+                    alert('loading map elements');
+
+                    App.map_objects = [];
+
+                    App.loadMapElements(data.mapElements, function () {
+
+
+                        $.each(__levelMaker.mapElements, function (ix, item) {
+
+
+                            App.add_map_object(item);
+
+                        });
+
+
+
+                        App.dialog(App.map_objects,
+                            0, 120, function () {
+                                console.log('dialog shown');
+                            });
+
 
                     });
+
+
 
 
                 }
@@ -830,7 +854,7 @@
 
             //assets/game/image/
 
-            var data = __levelMaker.MapData(Game.sprites, __levelMaker.settings, Game.GameWindow.forces);
+            var data = __levelMaker.MapData(Game.sprites, __levelMaker.settings, Game.GameWindow.forces, __levelMaker.mapElements);
 
             data = jstr(data);
 
@@ -1011,9 +1035,42 @@
 
         },
 
+
+        loadMapElements: function (list, callback) //load map elements
+        {
+
+                for (var x = 0; x < list.length; x++) {
+
+                    if (list[x].src) {
+
+                        list[x] = __levelMaker.createMapElement(list[x]);
+
+                        //  __gameStack.addImageSrc(elements[x].img.src, elements[x].img_id || false);
+
+                        //  elements[x].img_id = __gameStack.getImageId(elements[x].img.src);
+
+                    }
+
+
+                }
+
+                __levelMaker.mapElements = list;
+
+
+                __levelMaker.selectedElement = __levelMaker.get();
+
+
+                if (typeof(callback) == 'function') {
+                    callback();
+
+                }
+
+        },
+
+
         triggerDownload: function (filename, content, callback) {
 
-            $.post("http://localhost:3137/save", {filename: filename, content: content})
+            $.post("http://localhost:3137/save", {filename: filename, content: content, type:'level'})
                 .done(function (data) {
 
                     if (typeof(callback) == 'function') {
@@ -1293,12 +1350,14 @@
 
                 if(!found) {
 
-                    $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' + item.data.image.domElement.src + '"  /></li>');
+                    var src = item.data.image.src;
+
+                    $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' +  src + '"  /></li>');
 
 
                 }
 
-                    var link = $('.free-select ul li a')[x];
+                    var link = found ? $('.free-select ul li a')[x] : $('#' + cm_id);
 
                     var lparent = $(link).parent();
 
@@ -1322,7 +1381,11 @@
                     });
 
 
+
                     $(lparent).on('click', function () {
+
+
+
                         cmCallback(false, $(link));
 
                         hide();
@@ -2203,9 +2266,9 @@
                 }
             },
 
-            MapData: function (sprites, settings, gameWindow) {
+            MapData: function (sprites, settings, gameWindow, mapElements) {
 
-                return {sprites: sprites, settings: settings, gameWindow:gameWindow};
+                return {sprites: sprites, settings: settings, gameWindow:gameWindow, mapElements:mapElements};
             },
 
             selection_sprite: {},
@@ -2282,10 +2345,8 @@
 
                     img.src = args.src || args.imgPath;
 
-
                     mapElement  = new Sprite({
                         name: args.name || args.tag,
-
                         img: img,
                         src: img.src,
                         size:new Vector3(args.size || args.__mapSize || args.mapSize),
@@ -2671,6 +2732,14 @@
                 }
                 // console.log("Selected Element:" + JSON.stringify(mapElement));
                 var img = mapElement.img || mapElement.image;
+
+                if(mapElement.image.domElement)
+                {
+                    console.log('USED DOMELEMENT');
+                    mapElement.image.domElement
+
+                }
+
                 //  console.log("Img src:" + img.src);
 
                 __levelMaker.selectedElement.id = undefined;

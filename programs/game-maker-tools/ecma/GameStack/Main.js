@@ -99,6 +99,23 @@ let GameStackLibrary = function () {
 
         ,
 
+
+        getObjectById(id){
+
+            for(var x = 0; x < this.all_objects.length; x++)
+            {
+                if(this.all_objects[x].id == id)
+                {
+
+                    return this.all_objects[x];
+
+                }
+
+
+            }
+
+        },
+
         getAllCallables: function () {
             //every unique sound, animation, tweenmotion in the game
 
@@ -166,6 +183,9 @@ let GameStackLibrary = function () {
         }
         ,
 
+
+
+
         //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
         animate: function (time) {
@@ -228,6 +248,44 @@ let GameStackLibrary = function () {
 
         }
         ,
+
+       ExtendEvents:function(extendedObject, extendedKey, extendor, extendorKey, extendorFunc)
+        {
+            function EventLink(extendedObject, extendedKey, extendor, extendorKey)
+            {
+
+                this.parent_id=extendedObject.id,
+
+                this.child_id=extendor.id,
+
+                this.parent_key=extendedKey,
+
+                this.child_key=extendorKey;
+
+            };
+
+            var evtLink =new EventLink(extendedObject, extendedKey, extendor, extendorKey);
+
+            this.all_objects.push(new EventLink(extendedObject, extendedKey, extendor, extendorKey));
+
+            var parent = extendedObject;
+
+            console.log(parent);
+
+            if(parent)
+            {
+                console.log('EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
+
+                if(parent.onRun)
+                {
+                    parent.onRun(extendor, extendorKey);
+
+                }
+
+
+            }
+
+        },
 
         getGameWindow: function () {
 

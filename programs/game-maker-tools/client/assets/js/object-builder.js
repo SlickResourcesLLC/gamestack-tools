@@ -472,7 +472,7 @@ ObjectBuilder.prototype.renderObjectControllable = function(obj, container, opti
 
                         var lastObject = element[element.length - 1];
 
-                        var name = lastObject.name + "*";
+                        var name = lastObject.name + "_c";
 
                         myNewObject = new window[instantiator](lastObject);
 

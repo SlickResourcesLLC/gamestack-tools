@@ -255,8 +255,6 @@ class Sprite {
         return this.id;
     }
 
-
-
     to_map_object(size, framesize) {
 
         this.__mapSize = new Vector3(size || this.size);
@@ -345,9 +343,6 @@ class Sprite {
 
     }
 
-
-
-
     /*****************************
      *  assertSpeed()
      *  -assert the existence of a speed{} object
@@ -361,8 +356,6 @@ class Sprite {
         }
 
     }
-
-
 
     /*****************************
      *  setAnimation(anime)
@@ -1378,10 +1371,17 @@ class Sprite {
                 __inst = new Sprite(data);
 
             });
+        }
+    }
 
+    toJSONString()
+    {
+        for(var x = 0; x < this.motions.length; x++)
+        {
+            this.motions[x].parent = false;
         }
 
-
+        return jstr(this);
     }
 
 }

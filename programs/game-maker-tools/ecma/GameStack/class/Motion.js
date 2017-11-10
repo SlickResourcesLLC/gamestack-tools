@@ -20,13 +20,26 @@ class Motion {
 
         this.getArg = $Q.getArg;
 
-        this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
+        this.distance = new Vector(Gamestack.getArg(args, 'distance', new Vector(0, 0)));
 
         this.curvesList = this.curvesToArray(); //Tween.Easing
 
         this.lineCurvesList = this.lineCurvesToArray();
 
-        this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
+        if(args.parent instanceof Sprite)
+        {
+            this.parent = args.parent;
+
+            this.parent_id = args.parent.id;
+
+        }
+        else
+        {
+            this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
+
+            this.parent = Gamestack.getObjectById(this.parent_id);
+
+        }
 
         this.motion_curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
@@ -51,6 +64,10 @@ class Motion {
         this.duration = Gamestack.getArg(args, 'duration', 500);
 
         this.delay = Gamestack.getArg(args, 'delay', 0);
+
+        this.animation = args.animation || false;
+
+        this.run_ext = args.run_ext || [];
 
     }
 
@@ -212,13 +229,32 @@ class Motion {
 
     }
 
+
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
     engage() {
+
+        //call any function extension that is present
+        for(var x= 0 ; x<this.run_ext.length; x++)
+        {
+
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+        }
+
+
+        var __inst = this;
 
         var tweens = [];
 
         //construct a tween::
-
-        var __inst = this;
 
 
         var objects = {};
@@ -228,6 +264,12 @@ class Motion {
             if (item.id == __inst.parent_id) {
 
                 objects[ix] = item;
+
+                if(__inst.animation)
+                {
+                    objects[ix].selected_animation = __inst.animation;
+
+                }
 
             }
         });

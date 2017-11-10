@@ -74,9 +74,18 @@ class Animation {
 
         this.domElement = this.image.domElement;
 
-        this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
+        this.frameSize = new Vector(args.frameSize || new Vector3(44, 44, 0));
 
-        this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+        if(args.frameBounds)
+        {
+            this.frameBounds = new VectorFrameBounds(args.frameBounds.min, args.frameBounds.max, args.frameBounds.termPoint);
+
+        }
+        else
+        {
+            this.frameBounds =   new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0))
+
+        }
 
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
@@ -95,6 +104,8 @@ class Animation {
         this.duration = args.duration || 2000;
 
         this.seesaw_mode = args.seesaw_mode || false;
+
+        this.run_ext = args.run_ext || [];
 
 
     }
@@ -134,7 +145,10 @@ class Animation {
 
     }
 
+
     apply2DFrames() {
+
+
 
         this.frames = [];
 
@@ -239,15 +253,32 @@ continuous(duration)
 
 }
 
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
 engage(duration, complete)
 {
+    //call any function extension that is present
+    for(var x= 0 ; x<this.run_ext.length; x++)
+    {
+
+        this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+    }
+
+    duration = duration || 2000;
 
     if(this.__frametype == 'single')
     {
         return 0;
 
     }
-
 
     let __inst = this;
 

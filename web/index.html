@@ -11,7 +11,7 @@
 		<!-- Page Title -->
         <title>GameStack | Tools</title>
 		<!-- Meta Description -->
-        <meta name="description" content="Blue One Page Creative HTML5 Template">
+        <meta name="description" content="Gamestack-tools online demo">
         <meta name="keywords" content="one page, single page, onepage, responsive, parallax, creative, business, html5, css3, css3 animation">
         <meta name="author" content="Muhammad Morshed">
 		<!-- Mobile Specific Meta -->
@@ -169,7 +169,7 @@
 
 			li.special
 			{
-				color:lawngreen;
+				color: #dffbfc;
 
 			}
 
@@ -193,10 +193,43 @@
 
 				content:'\263C';
 
-				color:lightgreen;
+				color: #e8701f;
 
 
 			}
+
+
+			.work-filter ul li {
+				display: inline-block;
+				color: #e8701f;
+
+			}
+
+
+
+
+			#features h2
+			{
+				font-weight:200;
+
+				color: #fd9a24;
+				text-shadow:
+						-1px -1px 0 #010714,
+						1px -1px 0 #fa7e31,
+						-1px 1px 0 #bb5f25,
+						1px 1px 0 #010714;
+			}
+
+
+			.work-filter ul li a:hover,
+			.work-filter ul li a.active {
+				background-color: #fa7e31;
+				border-radius: 6px;
+				color: #fff;
+				padding: 5px 17px;
+			}
+
+
 
 		</style>
 
@@ -205,8 +238,6 @@
 	
     <body id="body">
 
-
-	
 		<!-- preloader -->
 		<div id="preloader">
 			<img src="img/preloader.gif" alt="Preloader">
@@ -218,15 +249,11 @@
         ==================================== -->
         <header id="navigation" class="navbar-fixed-top navbar">
             <div class="container">
-
 				<!-- logo -->
-
 				<span  id="logo">
 							<img src="img/logo.png" alt="Brandi">
 						</span>
-
 				<!-- /logo -->
-
 				<div class="navbar-header">
 
 					<!-- responsive nav button -->
@@ -245,11 +272,8 @@
                         <li class="current"><a href="#body">Game-Stack-Tools</a></li>
                         <li><a href="#features">Products</a></li>
 
-                        <li><a href="#examples">Examples</a></li>
+						<li><a target="_blank" href="docs/index.html" onclick="getDocs();" >Documentation</a></li>
 
-						<li><a href="../programs/game-maker-tools/docs/index.html" >Documentation</a></li>
-
-                        <li><a href="#contact">Contact</a></li>
                     </ul>
                 </nav>
 				<!-- /main nav -->
@@ -324,11 +348,11 @@
         ==================================== -->
 		<div class="service-desc service-back">
 
-			<h3>What is Gamestack?</h3>
+			<h3>What is Gamestack.js + tools?</h3>
 
 			<ul class="marked">
 
-				<li>It's a javascript library...</li>
+				<li>It's a javascript library for making 2d games...</li>
 				<li>And it comes with working tools.</li>
 				<li>Developers work faster and write less code.</li>
 
@@ -344,6 +368,22 @@
 			</div>
 
 		</div>
+
+		<div class="service-desc service-back">
+
+			<h3>But, this site is not quite ready for viewing...</h3>
+
+			<ul class="marked">
+
+				<li>This site is in late stages of testing/development.</li>
+				<li>Some of the links might not work (heads up)</li>
+				<li class="special">Check back here later for full access to the Gamestack.js library + tools</li>
+
+			</ul>
+		</div>
+
+
+
 		<!--
         Features
         ==================================== -->
@@ -353,8 +393,8 @@
 				<div class="row">
 				
 					<div class="sec-title text-center mb50 wow bounceInDown animated" data-wow-duration="500ms">
-						<h2 style="font-family: 'PT Sans', sans-serif; color: #0dd87c; opacity:0.7;">Build Games Quickly with our PC-Tools</h2>
-						<h3 style="font-family: 'PT Sans', sans-serif; color: #0dd87c; opacity:0.7;">* Buy any one, and get them all.</h3>
+						<h2 style="font-family: 'PT Sans', sans-serif;  opacity:0.7;">Build Games Quickly with our PC-Tools</h2>
+						<h3 style="font-family: 'PT Sans', sans-serif; color: snow; opacity:0.7;">* Buy any one, and get them all.</h3>
 						<div class="devider"><i class="fa fa-gears fa-lg"></i></div>
 					</div>
 
@@ -769,6 +809,14 @@
 		
 		<script type="text/javascript">
 
+
+			function getDocs()
+			{
+                window.location.href.target = "_blank";
+
+                window.open('docs/index.html', '_blank');
+
+			};
 
 
 		</script>

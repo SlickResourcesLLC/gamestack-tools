@@ -16,7 +16,6 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
 
     var createSubMenuLevel = function(key)
     {
-
         //determine the img path
         var img = key.toLowerCase().indexOf('control') >= 0 ? /*is conroller function*/ 'image/controller_icon.png' : 'image/settings_icon.png';
 
@@ -25,7 +24,6 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
             name: key,
 
             title: key, //must be applicable to sprite.onInit();
-
             img: img,
 
             subMenu:[]
@@ -66,9 +64,7 @@ var spriteInitializersSubMenu = function(obj, spriteGroupGetter)
                             sprites[ix].init();
 
                         }
-
                         // item.onInit(__inst.title);
-
                     });
 
                 }
@@ -236,6 +232,28 @@ var __rightClickInterfaceOnSelectedObject= [
 ];
 
 
+
+var __rightClickInterfaceOnSprite = [
+    {
+        name: 'Edit Sprite Settings',
+        img: 'image/sprite_icon.png',
+        title: 'sprite_settings',
+        id:'sprite_settings',
+
+        fun:function(){
+
+            var gui = DatGui.mainSpriteSettingsGui(Game.sprites[0]);
+
+            App.showGui(gui.domElement);
+
+        }
+    }
+
+];
+
+
+
+
 $(document).ready( function(){
 
     console.log('Applying right-click interface');
@@ -249,8 +267,9 @@ $(document).ready( function(){
         //Calling context menu
         $('#gs-container').contextMenu(__rightClickInterface, {triggerOn: 'contextmenu'});
 
+        $('#controllable ul li').contextMenu(__rightClickInterfaceOnSelectedObject, {triggerOn: 'contextmenu'});
 
-        $('#controllable').contextMenu(__rightClickInterfaceOnSelectedObject, {triggerOn: 'contextmenu'});
+        $('#sprite_settings').contextMenu(__rightClickInterfaceOnSprite, {triggerOn: 'contextmenu'});
 
         //Calling context menu
 

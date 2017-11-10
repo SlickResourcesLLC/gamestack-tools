@@ -49,7 +49,7 @@ var DatGui = {
     addSuperSelectButton:function(gui, object, key, list)
     {
 
-        var type = gui.add(object, 'type', __levelMaker.settings.psuedoSpriteTypes);
+        var type = gui.add(object, 'type', Gamestack.psuedoSpriteTypes);
 
         var dom = type.domElement;
 
@@ -374,8 +374,8 @@ var DatGui = {
 
     },
 
-    arrayToObject: function (list) {
-        var obj = {};
+    arrayToNameKeys: function (list) {
+        var obj = [];
 
         for (var x in list) {
 
@@ -386,12 +386,51 @@ var DatGui = {
         return obj;
     },
 
+    arrayToNameKeyArray: function (list) {
+
+        var obj = [];
+
+        for (var x in list) {
+
+            obj.push(list[x].name);
+
+        }
+
+        return obj;
+    },
+
     mainSpriteAnimationSelect:function(parent, obj)
     {
 
-        var animations = DatGui.arrayToObject(Game.sprites[0].animations);
+        var animations = DatGui.arrayToNameKeyArray(Game.sprites[0].animations);
 
-        DatGui.main_gui.add(obj, 'animation', animations);
+       var anim_select = DatGui.main_gui.add(obj, 'animation', animations);
+
+
+        anim_select.onFinishChange(function(value){
+
+            $.each(Game.sprites[0].animations, function(ix, item){
+
+                if(item.name == value && item instanceof Animation)
+                {
+
+                    alert('SETTING .animation to:' + item.name);
+
+                    obj.animation = new Animation(item);
+
+                }
+
+
+            });
+
+
+        });
+
+        if(obj.animation instanceof Animation)
+            anim_select.setValue(obj.animation.name);
+
+
+
 
     },
 
@@ -650,8 +689,6 @@ var DatGui = {
 
             });
 
-            DatGui.mainSpriteAnimationSelect(parent, obj);
-
             var r = DatGui.main_gui.add(obj.line, 'rotation', -360, 360).step(0.1);
 
             r.onChange(function () {
@@ -777,11 +814,15 @@ var DatGui = {
 
             });
 
+
+
             var desc = fui.add(obj, 'description');
 
             var t = DatGui.main_gui.add(obj, 'targetRotation', -720, 720);
 
             //todo = add folder for min
+
+            DatGui.mainSpriteAnimationSelect(parent, obj);
 
             DatGui.addCurveSelect(obj, DatGui.main_gui, 'motion_curve', 0);
 
@@ -1181,6 +1222,29 @@ var DatGui = {
 
     },
 
+    mainSpriteSettingsGui:function(object)
+    {
+        var gui = new dat.GUI({autoPlace: false});
+
+        $(gui.domElement).addClass('.tempGui');
+
+        var name = gui.add(object, 'name');
+
+        var description = gui.add(object, 'description');
+
+        DatGui.addSuperSelectButton(gui, object, 'type', Gamestack.psuedoSpriteTypes);
+
+        DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
+
+
+        DatGui.addVectorFromProperty(gui, object.position, 'position', -1000, 1000, function(){});
+
+        gui = DatGui.applyTempGuiSettings(gui, 'Basic Settings:', object.name);
+
+        return gui;
+
+    },
+
     getLevelObjectGui: function (object, create_new) { //dat.gui specific to the LevelEditor :: Editing Level (Sprite) Objects
 
         var gui = new dat.GUI({autoPlace: false});
@@ -1191,7 +1255,7 @@ var DatGui = {
 
             var description = gui.add(object, 'description');
 
-            DatGui.addSuperSelectButton(gui, object, 'type', __levelMaker.settings.psuedoSpriteTypes);
+            DatGui.addSuperSelectButton(gui, object, 'type', Gamestack.psuedoSpriteTypes);
 
             if (create_new) {
                 object.selected_animation = new Animation({
@@ -1205,6 +1269,9 @@ var DatGui = {
 
 
                 DatGui.addVectorFromProperty(gui, object.size, 'size', 0, 5000, function(){});
+
+
+
             }
 
             var obj = object.selected_animation;
@@ -1382,107 +1449,11 @@ var DatGui = {
 
     },
 
-    allCallablesCheckGui:function(linkableObject, objects, title)
+    applyTempGuiSettings:function(gui, title, name) //modifier: tempGui
     {
-
-        var gui = new dat.GUI({autoPlace:false});
-
-        var ctrlObject = {
-
-            button:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-
-           stick:[
-               'left', 'right'
-           ]
-        };
-
-        for(var x = 0; x < objects.length; x++)
-        {
-
-            if(objects[x] instanceof Sprite)
-            {
-                var sprite = objects[x];
-
-               for(var y in sprite)
-               {
-
-                   if(sprite[y] instanceof Array)
-                   {
-
-                       for(var z = 0; z < sprite[y].length; z++)
-                       {
-
-                           var obj =sprite[y][z],
-
-                           ctr = obj.constructor.name,
-
-                           key = 'link_' + obj.name;
-
-                           switch(ctr)
-                           {
-
-                               case "Animation":
-
-                                   console.log('We have animation');
-
-                                   obj[key] = false;
-
-                                   gui.add(obj, key);
-
-                                   break;
-
-                               case "Motion":
-
-                                   console.log('We have motion');
-
-                                   obj[key] = false;
-
-                                   gui.add(obj, key);
-                                   break;
-
-
-                               case "Sound":
-
-                                   console.log('We have motion');
-                                   obj[key] = false;
-
-                                   gui.add(obj, key);
-                                   break;
-
-
-                               case "Projectile":
-
-                                   console.log('We have motion');
-                                   obj[key] = false;
-
-                                   gui.add(obj, key);
-                                   break;
-
-
-
-                           }
-
-
-
-                       }
-
-
-                   }
-
-
-               }
-
-
-
-
-            }
-
-
-        }
-
         $(gui.domElement).addClass('tempGui');
 
-        $(gui.domElement).prepend("<h4 style='background:black'>"+title+" "+linkableObject.name+"<h4><button style='margin-left:-15px; margin-top:-30px; color:darkorange;' class='close'>X</button>")
+        $(gui.domElement).prepend("<h4 style='background:black'>"+title+" "+name+"<h4><button style='margin-left:-15px; margin-top:-30px; color:darkorange;' class='close'>X</button>");
 
         $(gui.domElement).css('position', 'absolute');
 
@@ -1515,10 +1486,210 @@ var DatGui = {
 
         });
 
+
+        return gui;
+
+    },
+
+    allCallablesCheckGui:function(linkableObject, objects, title)
+    {
+
+        var gui = new dat.GUI({autoPlace:false});
+
+        var ctrlObject = {
+
+            button:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+
+           stick:[
+               'left', 'right'
+           ]
+        };
+
+
+        var combinables = [];
+
+        for(var x = 0; x < objects.length; x++)
+        {
+
+            if(objects[x] instanceof Sprite)
+            {
+                var sprite = objects[x];
+
+               for(var y in sprite)
+               {
+
+                   if(sprite[y] instanceof Array)
+                   {
+
+                       for(var z = 0; z < sprite[y].length; z++)
+                       {
+
+                           var obj =sprite[y][z],
+
+                           ctr = obj.constructor.name;
+
+                           var keyComplete = obj.name+'-bind-toComplete',
+
+                           keySimultaneous =  obj.name+'-bind-toStart';
+
+                           switch(ctr)
+                           {
+
+                               case "Animation":
+
+                                   combinables.push(obj);
+
+                                   console.log('We have animation');
+
+                                   obj[keyComplete] = false;
+
+                                   obj[keySimultaneous] = false;
+
+                               var c =  gui.add(obj, keyComplete);
+
+                                  var s = gui.add(obj, keySimultaneous);
+
+                                   break;
+
+                               case "Motion":
+
+                                   combinables.push(obj);
+
+
+                                   console.log('We have motion');
+
+
+                                   obj[keyComplete] = false;
+
+                                   obj[keySimultaneous] = false;
+
+                                   var c =  gui.add(obj, keyComplete);
+
+                                   var s = gui.add(obj, keySimultaneous);
+                                   break;
+
+
+                               case "Sound":
+
+                                   combinables.push(obj);
+
+
+                                   console.log('We have motion');
+
+                                   obj[keyComplete] = false;
+
+                                   obj[keySimultaneous] = false;
+
+                                   var c =  gui.add(obj, keyComplete);
+
+                                   var s = gui.add(obj, keySimultaneous);
+                                   break;
+
+
+                               case "Projectile":
+
+                                   combinables.push(obj);
+
+                                   console.log('We have motion');
+
+                                   obj[keyComplete] = false;
+
+                                   obj[keySimultaneous] = false;
+
+                                   var c =  gui.add(obj, keyComplete);
+
+                                   var s = gui.add(obj, keySimultaneous);
+                                   break;
+
+
+
+                           }
+
+
+
+                       }
+
+
+                   }
+
+
+               }
+
+
+
+
+            }
+
+
+        }
+
+        DatGui.applyTempGuiSettings(gui, 'Extend Events:', linkableObject.name);
+
         $(gui.domElement).find('button.ok').on('click', function()
         {
 
-            alert('TODO: apply the checked objects');
+            var propKeysMain = Object.getOwnPropertyNames(linkableObject.constructor.prototype);
+
+
+             for(var ix in combinables) {
+
+                 var obj = combinables[ix], objDone = false;
+
+                 var propKeysExtendor = Object.getOwnPropertyNames(obj.constructor.prototype), found = false;
+
+
+                 if (!found)
+                     for (var q in propKeysMain) {
+                         var x = propKeysMain[q];
+
+                         for (var iz in propKeysExtendor) {
+
+                             var itemz = propKeysExtendor[iz];
+
+                             var keyComplete = obj.name + '-bind-toComplete',
+
+                                 keySimultaneous = obj.name + '-bind-toStart';
+
+                             for (var y in obj) {
+
+                                 if (!found && obj[keySimultaneous] && ['onRun'].indexOf(x) >= 0) {
+
+                                     if (['apply', 'fire', 'start', 'run', 'play', 'engage'].indexOf(itemz) >= 0) {
+
+                                         alert('extending');
+
+                                         found = true;
+
+                                         Gamestack.ExtendEvents(linkableObject, x, obj, itemz);
+
+                                     }
+
+
+                                 }
+
+
+                                 else if (!found && obj[keyComplete] && ['complete'].indexOf(x) >= 0
+                                     && ['apply', 'fire', 'start', 'run', 'play'].indexOf(itemz) >= 0) {
+
+                                  Gamestack.ExtendEvents(linkableObject, x, obj, itemz);
+
+                                     found = true;
+
+
+
+
+                                 }
+
+
+                             }
+
+                         }
+                     }
+             }
+
+
+
+
 
             $('.tempGui').remove();
 

@@ -99,6 +99,23 @@ let GameStackLibrary = function () {
 
         ,
 
+
+        getObjectById(id){
+
+            for(var x = 0; x < this.all_objects.length; x++)
+            {
+                if(this.all_objects[x].id == id)
+                {
+
+                    return this.all_objects[x];
+
+                }
+
+
+            }
+
+        },
+
         getAllCallables: function () {
             //every unique sound, animation, tweenmotion in the game
 
@@ -166,6 +183,9 @@ let GameStackLibrary = function () {
         }
         ,
 
+
+
+
         //animate() : main animation call, run the once and it will recurse with requestAnimationFrame(this.animate);
 
         animate: function (time) {
@@ -228,6 +248,44 @@ let GameStackLibrary = function () {
 
         }
         ,
+
+       ExtendEvents:function(extendedObject, extendedKey, extendor, extendorKey, extendorFunc)
+        {
+            function EventLink(extendedObject, extendedKey, extendor, extendorKey)
+            {
+
+                this.parent_id=extendedObject.id,
+
+                this.child_id=extendor.id,
+
+                this.parent_key=extendedKey,
+
+                this.child_key=extendorKey;
+
+            };
+
+            var evtLink =new EventLink(extendedObject, extendedKey, extendor, extendorKey);
+
+            this.all_objects.push(new EventLink(extendedObject, extendedKey, extendor, extendorKey));
+
+            var parent = extendedObject;
+
+            console.log(parent);
+
+            if(parent)
+            {
+                console.log('EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
+
+                if(parent.onRun)
+                {
+                    parent.onRun(extendor, extendorKey);
+
+                }
+
+
+            }
+
+        },
 
         getGameWindow: function () {
 
@@ -4914,9 +4972,18 @@ class Animation {
 
         this.domElement = this.image.domElement;
 
-        this.frameSize = this.getArg(args, 'frameSize', new Vector3(44, 44, 0));
+        this.frameSize = new Vector(args.frameSize || new Vector3(44, 44, 0));
 
-        this.frameBounds = this.getArg(args, 'frameBounds', new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)));
+        if(args.frameBounds)
+        {
+            this.frameBounds = new VectorFrameBounds(args.frameBounds.min, args.frameBounds.max, args.frameBounds.termPoint);
+
+        }
+        else
+        {
+            this.frameBounds =   new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0))
+
+        }
 
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
@@ -4935,6 +5002,8 @@ class Animation {
         this.duration = args.duration || 2000;
 
         this.seesaw_mode = args.seesaw_mode || false;
+
+        this.run_ext = args.run_ext || [];
 
 
     }
@@ -4974,7 +5043,10 @@ class Animation {
 
     }
 
+
     apply2DFrames() {
+
+
 
         this.frames = [];
 
@@ -5079,15 +5151,32 @@ continuous(duration)
 
 }
 
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
 engage(duration, complete)
 {
+    //call any function extension that is present
+    for(var x= 0 ; x<this.run_ext.length; x++)
+    {
+
+        this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+    }
+
+    duration = duration || 2000;
 
     if(this.__frametype == 'single')
     {
         return 0;
 
     }
-
 
     let __inst = this;
 
@@ -5279,7 +5368,6 @@ class EffectSequence
         this.values =  JSON.parse(jstr(this.startValues));
 
         this.valueRanges = this.selected_effect.valueRanges;
-
 
     }
 
@@ -6422,13 +6510,26 @@ class Motion {
 
         this.getArg = $Q.getArg;
 
-        this.distance = Gamestack.getArg(args, 'distance', Gamestack.getArg(args, 'distances', false));
+        this.distance = new Vector(Gamestack.getArg(args, 'distance', new Vector(0, 0)));
 
         this.curvesList = this.curvesToArray(); //Tween.Easing
 
         this.lineCurvesList = this.lineCurvesToArray();
 
-        this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
+        if(args.parent instanceof Sprite)
+        {
+            this.parent = args.parent;
+
+            this.parent_id = args.parent.id;
+
+        }
+        else
+        {
+            this.parent_id = args.parent_id || args.object_id || "__blank"; //The parent object
+
+            this.parent = Gamestack.getObjectById(this.parent_id);
+
+        }
 
         this.motion_curve = Gamestack.getArg(args, 'curve', TWEEN.Easing.Quadratic.InOut);
 
@@ -6453,6 +6554,10 @@ class Motion {
         this.duration = Gamestack.getArg(args, 'duration', 500);
 
         this.delay = Gamestack.getArg(args, 'delay', 0);
+
+        this.animation = args.animation || false;
+
+        this.run_ext = args.run_ext || [];
 
     }
 
@@ -6614,13 +6719,32 @@ class Motion {
 
     }
 
+
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
     engage() {
+
+        //call any function extension that is present
+        for(var x= 0 ; x<this.run_ext.length; x++)
+        {
+
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+        }
+
+
+        var __inst = this;
 
         var tweens = [];
 
         //construct a tween::
-
-        var __inst = this;
 
 
         var objects = {};
@@ -6630,6 +6754,12 @@ class Motion {
             if (item.id == __inst.parent_id) {
 
                 objects[ix] = item;
+
+                if(__inst.animation)
+                {
+                    objects[ix].selected_animation = __inst.animation;
+
+                }
 
             }
         });
@@ -6959,6 +7089,8 @@ class Projectile {
 
         this.size = Gamestack.getArg(args, 'size', new Vector());
 
+        this.origin = args.origin ||  new Vector(0, 0);
+
         this.description = Gamestack.getArg(args, 'description', false);
 
         this.duration = Gamestack.getArg(args, 'duration', 500);
@@ -6972,6 +7104,8 @@ class Projectile {
         this.highlighted = false;
 
         this.sprites = [];
+
+        this.run_ext = args.run_ext || [];
 
     }
 
@@ -7019,9 +7153,34 @@ class Projectile {
 
     }
 
+    onRun(caller, callkey)
+    {
+
+        this.run_ext = this.run_ext  || [];
+
+        this.run_ext.push({caller:caller, callkey:callkey});
+
+    }
+
 
     fire(origin)
     {
+
+        for(var x= 0 ; x<this.run_ext.length; x++)
+        {
+
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+
+        }
+
+        if(!origin)
+        {
+
+            origin = this.origin;
+        }
+
+
+        console.log('FIRING FROM:' + jstr(origin));
 
         var sprite = new Sprite({image:this.animation.image});
 
@@ -7093,8 +7252,8 @@ class Rectangle {
 
     constructor(min, max) {
 
-        this.min = min;
-        this.max = max;
+        this.min = new Vector(min);
+        this.max = new Vector(max);
 
     }
 
@@ -7946,8 +8105,6 @@ class Sprite {
         return this.id;
     }
 
-
-
     to_map_object(size, framesize) {
 
         this.__mapSize = new Vector3(size || this.size);
@@ -8036,9 +8193,6 @@ class Sprite {
 
     }
 
-
-
-
     /*****************************
      *  assertSpeed()
      *  -assert the existence of a speed{} object
@@ -8052,8 +8206,6 @@ class Sprite {
         }
 
     }
-
-
 
     /*****************************
      *  setAnimation(anime)
@@ -9069,10 +9221,17 @@ class Sprite {
                 __inst = new Sprite(data);
 
             });
+        }
+    }
 
+    toJSONString()
+    {
+        for(var x = 0; x < this.motions.length; x++)
+        {
+            this.motions[x].parent = false;
         }
 
-
+        return jstr(this);
     }
 
 }

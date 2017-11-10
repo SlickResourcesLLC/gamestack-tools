@@ -84,7 +84,6 @@ class EffectSequence
 
         this.valueRanges = this.selected_effect.valueRanges;
 
-
     }
 
     Effect(key)

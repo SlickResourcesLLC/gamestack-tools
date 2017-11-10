@@ -41,9 +41,7 @@ module.exports = function(openNow) {
 
        app.post('/save', function(req, res){
 
-           var content = req.body.content;
-
-           var filename = req.body.filename;
+           var content = req.body.content, filename = req.body.filename, type = req.body.type;
 
            var relpath = 'client/assets/file_storage/' + filename;
 
@@ -82,6 +80,12 @@ module.exports = function(openNow) {
                try
                {
 
+                   if(type && type.toLowerCase() == 'level')
+                   {
+
+                       relpath = relpath.replace('/file_storage/', '/game/json/level/');
+
+                   }
 
                    require('fs').writeFile(relpath, content,
                        function()
