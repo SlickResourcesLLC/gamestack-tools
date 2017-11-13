@@ -1,10 +1,7 @@
 
-
-
-
 import React, { Component } from 'react';
 
-import objectArrayBuilder from "./objectArrayBuilder.js";
+import objectArrayBuilder from "./listview.js";
 
 import ReactDOM from 'react-dom';
 
@@ -13,9 +10,7 @@ class App extends Component
 
 render()
 {
-
-  return  ReactDOM.render(<objectArrayBuilder />, document.getElementById('root'));
-
+  return  ReactDOM.render(<listview />, document.getElementById('root'));
 }
 
 }

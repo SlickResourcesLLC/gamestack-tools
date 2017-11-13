@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game-Builder Tools</title>
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
+    <script src="assets/js/ui/jquery.js"></script>
+
+    <script src="assets/js/ui/game-mini-cms.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+</head>
+
+
+<style>
+
+    body, html {
+        background: lightgrey;
+
+        height:100%;
+
+    }
+
+    video#intro-video
+    {
+        display:none;
+
+    }
+
+    .screen-select img {
+
+        width: 200px;
+
+        height: auto;
+
+        margin-top:7px;
+
+    }
+
+
+
+
+    .screen-select {
+        position: relative;
+
+        padding: 5px;
+
+        float: left;
+
+        width: 220px;
+
+        margin-right: 20px;
+
+        color:#333333;
+
+    }
+
+
+
+    .screen-select a:hover {
+
+       background: #508b8a;
+
+        color:white;
+
+    }
+
+    .screen-select span, .screen-select a {
+
+        position: relative;
+
+        color: #333333;
+
+        display: block;
+
+        text-align: center;
+
+        text-decoration: none;
+
+    }
+
+    @font-face {
+        font-family: round;
+        src: url(font/round.ttf);
+        font-weight: 400;
+    }
+
+    @font-face {
+        font-family: iceDesign;
+        src: url(font/iceDesign.ttf);
+        font-weight: 400;
+    }
+
+
+    p {
+
+        margin: 0px;
+        font-family: "Trebuchet MS", Helvetica, sans-serif;
+        font-weight: normal;
+
+        color: #333333;
+    }
+
+    #linkCase {
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    #linkLeft {
+        position: relative;
+        width: 49%;
+        text-align: right;
+        font-size: 250%;
+        float: left;
+        color: grey;
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
+
+    }
+
+    #linkRight {
+        position: relative;
+        width: 49%;
+        text-align: left;
+        font-size: 250%;
+        float: left;
+        color: grey;
+
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
+    }
+
+    #linkCenter {
+        position: relative;
+        width: 100%;
+        display: block;
+        text-align: center;
+        font-size: 250%;
+        float: left;
+        color: grey;
+
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        font-family: round;
+    }
+
+    #linkLeft:hover, #linkRight:hover, #linkCenter:hover {
+        color: snow;
+    }
+
+    #appTitleMain {
+        width: 100%;
+        margin-top: 9px;
+        display: block;
+        text-align: center;
+        position: relative;
+        font-size: 190%;
+        color: #333333;
+        text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
+        -1px 1px 0 black;
+    }
+
+    .appTitleDef {
+        width: 100%;
+        display: block;
+        text-align: center;
+        position: relative;
+        font-size: 150%;
+        color: snow;
+
+        text-shadow: 1px 1px 0 blue, -1px -1px 0 blue, 1px -1px 0 blue,
+        -1px 1px 0 blue, 3px 3px 5px aqua;
+
+    }
+
+    div.screen-select {
+        display: flex;
+
+        width: 100%;
+
+        flex-wrap: nowrap;
+
+        justify-content: center;
+
+    }
+
+    div.screen-select a {
+
+        margin: 10px;
+
+        padding:10px;
+
+        justify-content: center;
+
+    }
+
+    #appLogo {
+        display: block;
+
+        width: 30%;
+
+        height: auto;
+
+        text-align: center;
+
+    }
+
+    video {
+        width: 100%;
+
+        margin: 0 auto;
+
+    }
+
+    .app-section {
+
+
+        position:block;
+
+        color: #333333;
+
+
+        text-align: left;
+
+        font-size: 130%;
+
+        padding-left: 50px;
+
+        clear:both;
+
+
+    }
+
+    .app-section:after, .app-section-level2:after {
+        width: 100%;
+
+        border-bottom: 1px solid grey;
+
+    }
+
+    .push-right {
+
+        margin-left: 10%;
+
+    }
+
+
+
+    button.create {
+        float: left;
+
+        background: black;
+
+        color: white;
+
+        border: 2px inset grey;
+
+        margin-left: 5px;
+
+        margin-top: 2px;
+
+    }
+
+    p.item-name {
+        width: 100%;
+
+    }
+
+    div.object-region {
+        position: relative;
+
+    }
+
+
+    ul
+    {
+
+        position:relative;
+
+        width:150px;
+
+        left:50%;
+
+        margin-left:-120px;
+
+        color:lightgrey;
+
+        display:block;
+
+        text-align:left;
+
+        color:#333333;
+
+
+    }
+
+    ul li
+    {
+
+      text-decoration: none;
+
+        list-style-type:none;
+
+        font-size:16px;
+
+    }
+
+
+
+   .one:before
+    {
+        content: "\25D4";
+
+    }
+
+   .two:before
+    {
+        content: "\25D1";
+
+    }
+
+   .three:before
+    {
+        content: "\25D5";
+
+    }
+
+    .four:before
+    {
+        content: "\23FA";
+
+    }
+
+    table, table *
+    {
+
+        color:#333333;
+
+    }
+
+    th
+    {
+        text-align:left;
+
+        color:darkorange;
+
+    }
+
+    button.download, button.buy
+    {
+
+        position:relative;
+        min-width:200px;
+
+        background-color: #d86d2a;
+        border-radius: 6px;
+        color: #fff;
+        padding: 5px 17px;
+
+        left:50%;
+
+        margin:15px;
+
+        margin-left:-100px;
+
+    }
+
+
+    .object-container
+    {
+        position:relative;
+
+        color:#333333;
+
+        width:100%;
+
+        min-height:70px;
+
+        background:transparent;
+
+    }
+
+    p.heading
+    {
+
+        border-bottom:1px inset #333333;
+
+    }
+
+</style>
+
+<body>
+
+<table style="width:100%">
+    <tr>
+        <th>Key</th>
+        <th>Definition</th>
+    </tr>
+    <tr>
+        <td class="one">Phase 1</td>
+        <td>Plan and Create Functionality</td>
+    </tr>
+    <tr >
+        <td class="two">Phase 2</td>
+        <td>Complete Functionality, Conduct Tests</td>
+    </tr>
+
+    <tr>
+        <td class="three">Phase 3</td>
+        <td>Refactor and Test Again</td>
+    </tr>
+
+    <tr>
+        <td class="four">Phase 4</td>
+        <td>Final Fixes, and Mark Requirement Complete</td>
+    </tr>
+</table>
+
+<br/>
+
+<video autoplay="true" id="intro-video">
+    <source src="video/intro.mp4"></source>
+</video>
+
+<div class="app-section">
+<img id="appLogo" src="img/logo.png" style="display:none;"/>
+<p class="heading" >Gamestack.js library + Framework</p>
+
+<div><button class="download" >Download Gamestack.js + Tools</button></div>
+
+<div><button class="buy" >Buy Gamestack.js + Tools</button></div>
+
+</div>
+
+
+<div class="app-section"><p class="heading" >Usage examples</p>
+<div class="screen-select"><a target="_blank" class="screenlink" href="examples/side-scroller-level.html"> <img
+        src="image/spritemaker-shot.png"/> <span>Sprite:from file</span>
+    <ul>
+        <li class="three">Load A Sprite From File</li>
+
+        <li class="three">Apply Sprite Behavior (Javascript)</li>
+    </ul>
+</a>
+
+</div>
+
+</div>
+
+<div class="app-section"><p class="heading" >Tools</p>
+
+
+<div class="screen-select">
+    <a target="_blank" class="screenlink" href="tools/level-maker.html"> <img src="image/levelmaker-shot.png"/> <span>Level-Builder</span>
+
+
+        <ul>
+            <li class="three">Builds tiled levels (point and click)</li>
+
+            <li class="three">Exports Levels and Level-Portions</li>
+
+            <li class="one">Applies Preset-Objects (Platforms, Etc)</li>
+        </ul>
+
+
+
+    </a>
+
+
+    <a target="_blank" class="screenlink" href="tools/effects-inc.html"> <img src="image/levelmaker-shot.png"/>
+        <span>Effects-Builder</span>
+
+        <ul>
+
+            <li class="three">Image-Effects/Filters</li>
+
+            <li class="three">Animated Effect-Sequences</li>
+
+        </ul>
+
+
+    </a>
+
+
+</div>
+
+
+</div>
+
+<div class="app-section">
+<div class="screen-select">
+
+    <a target="_blank" class="screenlink" href="tools/sprite-maker.html"> <img src="image/spritemaker-shot.png"/>
+        <span>Sprite Maker</span>
+    <ul>
+        <li class="four">Create Sprite-Objects</li>
+
+        <li class="three">Export Sprite Entities</li>
+    </ul>
+
+    </a>
+
+<a target="_blank" class="screenlink" href="tools/three-js-lab.html"> <img src="image/levelmaker-shot.png"/> <span>Three-JS Object Generator</span>
+
+    <ul>
+        <li class="one">Create 3D Object</li>
+        <li class="one">Animated Maps, T3D_FrameSequences</li>
+    </ul>
+</a>
+
+
+    <a target="_blank" class="screenlink" href="tools/controller-gui.html"> <img src="image/levelmaker-shot.png"/> <span>GameController-Gui</span>
+
+        <ul>
+            <li class="one">Rig Controller Input</li>
+            <li class="one">Save and Retrieve Input</li>
+        </ul>
+    </a>
+
+</div>
+
+</div>
+
+<div class="app-section">
+
+<div class="game-space object-container"  >
+
+  <p class="left">Games</p>
+<button class="create" id="new_game">+</button>
+<div class="object-space game">
+
+</div>
+
+    </div>
+
+</div>
+
+        <div class="app-section">
+
+<div class="sprite-space object-container"  >
+   <p class="left">Sprites</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space game">
+
+    </div>
+    </div>
+</div>
+
+
+        <div class="app-section">
+<div class="motion-space object-container"  >
+   <p class="left">Motions</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space motion">
+
+    </div>
+
+    </div>
+
+</div>
+
+    <div class="app-section">
+    <div class="animation-space object-container"  >
+   <p class="left">Animations</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space animation">
+
+    </div>
+
+    </div>
+
+</div>
+
+    <div class="app-section">
+<div class="projectile-space object-container"  >
+    <p class="left">Projectiles</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space projectile">
+
+    </div>
+</div>
+</div>
+
+    <div class="app-section" >
+
+<div class="particle-space object-container" >
+    <p class="left">Particles</p>
+    <button class="create" id="new_object">+</button>
+    <div class="object-space particle">
+
+    </div>
+
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+    //TODO: check local storage and cookies for member already signed in:
+    var app = {
+
+        __gameBoxCMS:false, //For later interactions with a MINI GAME CMS
+
+        addGameObject: function (constructorName, data, callback) {
+
+            //1. instantiate the object
+
+
+            //2. get callback from server
+
+
+            //4. run the callback to display html (skipping to 4 for testing 08-28-2017)
+
+            if(app.__MiniCMS) {
+
+                app.__gameMiniCMS.request("create/" + constructorName + "?name=" + data.name, function (err, data) {
+
+                    callback(err, data);
+
+                });
+
+            }
+
+        },
+
+        removeObject: function (constructorName, objectName) {
+
+           alert('If you certainly need to remove the ' + constructorName + ": please delete its folder in:" +
+
+           app.__workingDirectory + "/" + constructorName + "/" + objectName);
+
+        },
+
+        showVideo: function (callback) {
+            var elem = document.getElementById('intro-video');
+
+            var loaded = false;
+
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+
+            elem.addEventListener('ended', function () {
+
+                if (callback) {
+                    callback();
+
+                    $('#intro-video').hide('fast');
+
+                    $('#appLogo').show('slow');
+                }
+
+            }, false);
+
+            window.setTimeout(function () {
+
+                if (!loaded) {
+                    if (callback) {
+                        callback();
+                    }
+
+                }
+
+            }, 1000);
+
+        },
+
+        complete: false
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    window.onload = function () {
+
+
+    };
+
+    var addGameHTML = function(name, description, url)
+    {
+
+        var gameHTML = "" +
+
+            '<p   class="app-section" style="clear:left; font-size:90% position:relative; top:7px; left:50px;"  >'+name+'</p>' +
+
+            '<div class="object-region" >' +
+
+            '<div class="screen-select" >' +
+
+            '<a class="screenlink" href="examples/side-scroller-level.html"> <img src="image/spritemaker-shot.png" /> <span >'+description+'</span></a>' +
+
+            '</div>' +
+
+            '</div>';
+
+
+        $('div.object-space.game').append(gameHTML);
+
+
+    };
+
+    $(document).ready(function () {
+
+        if (app.__gameBoxCMS) {
+
+            $('#new_game').click(function () {
+
+                if (confirm("Are you sure you want to instantiate a new Game?")) {
+
+                    //for now: just adding html
+
+                    return addGameHTML("My New Game", "An example game object");
+
+                    app.addGameObject("Game", {name: "myGame", description: "This is a game"}, function (err, data) {
+
+                        alert('Creating Game');
+
+
+
+                    });
+
+                }
+
+            });
+
+
+            app.showVideo(function () {
+
+                $('#linkCenter').click(function () {
+                    app.main();
+                });
+
+            });
+
+
+        }
+
+    });
+
+    var main = function () {
+        //login code: just get the page from site
+        window.location.href = '/main.html';
+    }
+</script>
+
+</body>
+</html>
