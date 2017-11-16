@@ -1,0 +1,30 @@
+{
+  "name": "gs-tools-client-side-javascript-assets",
+  "version": "1.0.0",
+  "description": "Our beautiful client-side javascript code, 'cleaned' regularly with node JSHint",
+  "main": "main.js",
+  "scripts": {
+    "clean": "grunt"
+  },
+  "keywords": [
+    "Javascript",
+    "Client",
+    "JSHint"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-jshint": "latest",
+    "load-grunt-tasks": "^3.5.2"
+  },
+  "dependencies": {
+    "grunt": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "NONE"
+  }
+}
