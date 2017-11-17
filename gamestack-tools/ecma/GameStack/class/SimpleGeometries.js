@@ -219,7 +219,9 @@ class Line
     constructor(args = {})
     {
 
-        this.curve_string = args.curve_string || "Linear_None";
+
+        this.curve_options = Curves;//Curves Object (of functions)
+        this.curve_string = args.curve_string || "linearNone";
 
         this.curve = this.get_curve_from_string(this.curve_string);
 
@@ -230,7 +232,7 @@ class Line
             this.curve = args.curve;
         }
 
-        this.points = [];
+        this.points = args.points || [];
 
         this.position = args.position ||  new Vector();
 
@@ -247,8 +249,6 @@ class Line
         this.iterations = 1;
 
         this.growth = args.growth || 1.2;
-
-        this.curve_options = Curves;
 
     }
 
@@ -327,9 +327,11 @@ class Line
     get_curve_from_string(str)
     {
 
+        console.log('Applying Line():curve:' + str);
+
         for(var x in this.curve_options) {
 
-            if(x.toLowerCase() == str.toLowerCase().replace('_', ''))
+            if(x.toLowerCase() == str.toLowerCase())
             {
                 return this.curve_options[x];
 
@@ -438,8 +440,6 @@ class Line
             var dist = position.sub(start);
 
             var pct = dist.x / size.x;
-
-            console.log(pct);
 
             position.y = Math.round(curveMethod(pct) * size.y);
 

@@ -270,11 +270,11 @@ let GameStackLibrary = function () {
 
             var parent = extendedObject;
 
-            console.log(parent);
+           // console.log(parent);
 
             if(parent)
             {
-                console.log('EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
+                console.log('Gamestack:EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
 
                 if(parent.onRun)
                 {
@@ -1032,7 +1032,7 @@ function $Q(selector) {
                 console.log(e);
             }
 
-            console.info('Processing condition with:' + condition);
+            console.info('Gamestack:Processing condition with:' + condition);
 
             switch(condition)
             {
@@ -1190,7 +1190,7 @@ function $Q(selector) {
 
                   //get all objects according to name=name
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetName =  cleanSelectorString(cparts[1]);
 
@@ -1198,7 +1198,7 @@ function $Q(selector) {
 
               case  "type":
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetType =  cleanSelectorString(cparts[1]);
 
@@ -1218,7 +1218,7 @@ function $Q(selector) {
 
                   //get all objects according to name=name
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetName =  cleanSelectorString(cparts[3]);
 
@@ -1226,7 +1226,7 @@ function $Q(selector) {
 
               case  "type":
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetType =  cleanSelectorString(cparts[3]);
 
@@ -1328,7 +1328,7 @@ $Q.between = function (c1, c2, test_str) {
 };
 
 
-$Q.test_selector_method =  function () {
+$Q.test_selector_method =  function () { //leftover method of hand-testing
     var Q_TestStrings = ['*', '.Sprite', '*[type="enemy_type_0"]', '.Sprite[type="enemy_type_0"]'];
 
     for (var x = 0; x < Q_TestStrings.length; x++) {
@@ -7539,7 +7539,9 @@ class Line
     constructor(args = {})
     {
 
-        this.curve_string = args.curve_string || "Linear_None";
+
+        this.curve_options = Curves;//Curves Object (of functions)
+        this.curve_string = args.curve_string || "linearNone";
 
         this.curve = this.get_curve_from_string(this.curve_string);
 
@@ -7550,7 +7552,7 @@ class Line
             this.curve = args.curve;
         }
 
-        this.points = [];
+        this.points = args.points || [];
 
         this.position = args.position ||  new Vector();
 
@@ -7567,8 +7569,6 @@ class Line
         this.iterations = 1;
 
         this.growth = args.growth || 1.2;
-
-        this.curve_options = Curves;
 
     }
 
@@ -7647,9 +7647,11 @@ class Line
     get_curve_from_string(str)
     {
 
+        console.log('Applying Line():curve:' + str);
+
         for(var x in this.curve_options) {
 
-            if(x.toLowerCase() == str.toLowerCase().replace('_', ''))
+            if(x.toLowerCase() == str.toLowerCase())
             {
                 return this.curve_options[x];
 
@@ -7758,8 +7760,6 @@ class Line
             var dist = position.sub(start);
 
             var pct = dist.x / size.x;
-
-            console.log(pct);
 
             position.y = Math.round(curveMethod(pct) * size.y);
 
@@ -8021,6 +8021,7 @@ class Sprite {
 
         });
 
+
         GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
@@ -8034,6 +8035,12 @@ class Sprite {
 
         });
 
+        if(__inst.projectiles[0])
+        {
+            __inst.selected_projectile = __inst.projectiles[0];
+
+        }
+
         //Apply initializers:
 
         GameStack.each(this.__initializers, function (ix, item) {
@@ -8044,6 +8051,7 @@ class Sprite {
 
 
         if (args.selected_animation) {
+
             this.selected_animation = new Animation(args.selected_animation);
 
         }
@@ -8092,6 +8100,18 @@ class Sprite {
                 obj.origin = obj.origin || this.position;
 
                 this.projectiles.push(obj);
+
+                break;
+
+            case "Motion":
+
+                this.motions.push(obj);
+
+                break;
+
+            case "Sound":
+
+                this.sounds.push(obj);
 
                 break;
 

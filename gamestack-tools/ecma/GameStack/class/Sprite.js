@@ -88,6 +88,7 @@ class Sprite {
 
         });
 
+
         GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
@@ -101,6 +102,12 @@ class Sprite {
 
         });
 
+        if(__inst.projectiles[0])
+        {
+            __inst.selected_projectile = __inst.projectiles[0];
+
+        }
+
         //Apply initializers:
 
         GameStack.each(this.__initializers, function (ix, item) {
@@ -111,6 +118,7 @@ class Sprite {
 
 
         if (args.selected_animation) {
+
             this.selected_animation = new Animation(args.selected_animation);
 
         }
@@ -159,6 +167,18 @@ class Sprite {
                 obj.origin = obj.origin || this.position;
 
                 this.projectiles.push(obj);
+
+                break;
+
+            case "Motion":
+
+                this.motions.push(obj);
+
+                break;
+
+            case "Sound":
+
+                this.sounds.push(obj);
 
                 break;
 

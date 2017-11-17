@@ -270,11 +270,11 @@ let GameStackLibrary = function () {
 
             var parent = extendedObject;
 
-            console.log(parent);
+           // console.log(parent);
 
             if(parent)
             {
-                console.log('EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
+                console.log('Gamestack:EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
 
                 if(parent.onRun)
                 {
@@ -527,6 +527,36 @@ let GameStackLibrary = function () {
 
 
     return lib;
+
+};
+
+
+
+
+
+let GamestackApi =
+{
+    get:function()
+    {
+
+
+    }
+
+    post:function(object)
+    {
+        //TODO decycle the object before saving
+
+        if(!object.id)
+        {
+            object.id = Gamestack.create_id();
+
+        }
+
+        var name = object.name, type = object.constructor.name, contents = jstr(object), id = object.id;
+
+
+
+    }
 
 };
 
@@ -1032,7 +1062,7 @@ function $Q(selector) {
                 console.log(e);
             }
 
-            console.info('Processing condition with:' + condition);
+            console.info('Gamestack:Processing condition with:' + condition);
 
             switch(condition)
             {
@@ -1190,7 +1220,7 @@ function $Q(selector) {
 
                   //get all objects according to name=name
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetName =  cleanSelectorString(cparts[1]);
 
@@ -1198,7 +1228,7 @@ function $Q(selector) {
 
               case  "type":
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetType =  cleanSelectorString(cparts[1]);
 
@@ -1218,7 +1248,7 @@ function $Q(selector) {
 
                   //get all objects according to name=name
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetName =  cleanSelectorString(cparts[3]);
 
@@ -1226,7 +1256,7 @@ function $Q(selector) {
 
               case  "type":
 
-                  console.log('Detected parts in selector:' + jstr(cparts));
+                  console.log('Q():Detected parts in selector:' + jstr(cparts));
 
                   __targetType =  cleanSelectorString(cparts[3]);
 
@@ -1328,7 +1358,7 @@ $Q.between = function (c1, c2, test_str) {
 };
 
 
-$Q.test_selector_method =  function () {
+$Q.test_selector_method =  function () { //leftover method of hand-testing
     var Q_TestStrings = ['*', '.Sprite', '*[type="enemy_type_0"]', '.Sprite[type="enemy_type_0"]'];
 
     for (var x = 0; x < Q_TestStrings.length; x++) {

@@ -75,15 +75,12 @@ module.exports = function(openNow) {
 
            if(filename.indexOf('.json') >= 0)
            {
-
                // Save decoded binary image to disk
                try
                {
-
-                   if(type && type.toLowerCase() == 'level')
+                   if(type && ['Level', 'Sprite', 'Background', 'Terrain', 'Interactive', 'Sound', 'GameImage'].indexOf(type.toLowerCase()))
                    {
-
-                       relpath = relpath.replace('/file_storage/', '/game/json/level/');
+                       relpath = relpath.replace('/file_storage/', '/game/json/' + type.toLowerCase());
 
                    }
 

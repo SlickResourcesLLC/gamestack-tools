@@ -227,7 +227,7 @@
 
             position: relative;
 
-            left: 0px;
+            left: !important;
 
         }
 
@@ -479,13 +479,17 @@
 
         }
 
-        .tempGui {
+        div.dg.main.tempGui {
 
             position: absolute;
 
-            min-width: 50%;
+            min-width: 300px;
+
+            width:40%;
 
             max-height:400px;
+
+            right:50px;
 
             border:1px groove darkblue;
 
@@ -950,7 +954,7 @@
 
                 this.player.add(bullet);
 
-                this.player.selected_projectile = new Projectile(bullet);
+                this.player.selected_projectile = bullet;
 
                 bullet.origin = this.player.position;
 
@@ -1891,7 +1895,7 @@
 
         applyControl: function (args) {
 
-            console.log('Found item');
+           // console.log('Found item');
 
             var parent = this.getArg(args, 'parent', false),
 
@@ -2179,7 +2183,7 @@
 
             App.getRawFile(this, function (result) {
 
-                var sprite = JSON.parse(result);
+                var sprite = JSON.retrocycle(JSON.parse(result));
 
                 Game.sprites[0] = new Sprite(sprite);
 

@@ -253,11 +253,8 @@ var __rightClickInterfaceOnSprite = [
 ];
 
 
-
-
-$(document).ready( function(){
-
-    console.log('Applying right-click interface');
+var __resetRightClicks = function()
+{
 
     if(Gamestack.CONTEXT_MENU) {
 
@@ -280,6 +277,14 @@ $(document).ready( function(){
         //Calling context menu
 
     }
+
+};
+
+$(document).ready( function(){
+
+    console.log('Applying right-click interface');
+
+    __resetRightClicks();
 
 });
 

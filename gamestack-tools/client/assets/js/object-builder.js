@@ -28,6 +28,13 @@ var __arrayBuilderInstance = {};
 
 var ObjectBuilder = function (obj, allowedMembers) {
 
+    if($('.controllable .main').length) {
+
+        $('.controllable .main').remove();
+
+        __resetRightClicks();
+    }
+
     this.selectedIndex = 0;
 
     this.listmemberkeys = allowedMembers;
@@ -480,7 +487,7 @@ ObjectBuilder.prototype.renderObjectControllable = function (obj, container, opt
                 var cl = $(el).attr('class').replace('_member', '');
 
 
-                console.log(list + ' :li click');
+                //console.log(list + ' :li click');
 
                 var prevent = false;
 

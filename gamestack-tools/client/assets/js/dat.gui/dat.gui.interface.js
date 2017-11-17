@@ -1455,17 +1455,21 @@ var DatGui = {
 
         if(!$(dom).find('button.gui-close-button').length) {
 
-            $(dom).prepend("<h4 style=' background:black;'> " + title + " " + name + "<button class='gui-close-button' style='float:right; padding:5px; color:darkorange;' class='close'>X</button><h4>");
+            $(dom).prepend("<h4 style=' font-size:1.2em; background:black;'> " + title + ": &nbsp;&#9655;&nbsp;<span style=' position:absolute; display:inline-block; font-size:1.2em;  color:#c56c00; margin-top:-1px; '>" + name + "</span><button class='gui-close-button' style='float:right; width:23px; height:30px; background:transparent; padding:5px; margin-top:-4px; margin-right:3px; color:darkorange;' class='close'>X</button></h4>");
 
             $(dom).css('position', 'absolute');
 
             $(dom).css('z-index', '9999');
 
-            $(dom).css('left', '40%');
+            $(dom).css('left', '!important');
+
+            $(dom).css('right', '80px');
+
+            $(dom).css('min-width', '400px');
 
             $(dom).css('overflow-y', 'scroll');
 
-            $(dom).css('width', '50%');
+            $(dom).css('width', '40%');
 
             $(dom).css('background', 'black');
 
