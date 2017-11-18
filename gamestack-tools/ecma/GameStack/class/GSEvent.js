@@ -113,3 +113,26 @@ class GSEvent {
     }
 
 }
+
+
+
+function GSEventLink(extendedObject, extendedKey, extendor, extendorKey)
+{
+        this.parent_id=extendedObject.id,
+
+        this.child_id=extendor.id,
+
+        this.parent_key=extendedKey,
+
+        this.child_key=extendorKey;
+};
+
+
+function makeExtendableOverrides(object)
+{
+    if(!object.run_ext instanceof  Array)
+        object.run_ext || [];
+
+
+
+};

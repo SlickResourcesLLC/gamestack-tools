@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sprite-Maker</title>
+    <title>Game-Maker</title>
 
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Search1.css">
@@ -47,7 +47,7 @@
 
     <script src="../assets/js/contextMenu/contextMenu.js"></script>
 
-    <script src="../assets/js/contextMenu/right_click_interface_sprite.js"></script>
+    <script src="../assets/js/contextMenu/right_click_interface_game.js"></script>
 
     <script src="../assets/js/object-builder.js"></script>
     <!--In Process of Creating Dynamic ObjectBuilder for all library objects-->
@@ -527,7 +527,7 @@
 </head>
 <body>
 
-<input type="file" name="sprite-file-input" id="sprite-file-input"/>
+<input type="file" name="game-file-input" id="game-file-input"/>
 
 <div id="overlay">
 
@@ -567,11 +567,11 @@
 
         <form class="dock-form self-close">
 
-            <h3>Sprite-Maker Settings</h3>
+            <h3>Game-Maker Settings</h3>
 
             <div id="special-settings-gui"></div>
 
-            <button id="apply_sprite_settings" class="ok">Apply</button>
+            <button id="apply_game_settings" class="ok">Apply</button>
 
             <button id="cancel_map_settings" class="cancel">Cancel</button>
 
@@ -585,28 +585,28 @@
 <div id="ctrl-space-top">
     <nav class="top-menu">
 
-        <img id="logo" src="image/logo-sprite.png"/>
+        <img id="logo" style="margin-top:4px; " src="image/gamestack-logo.png"/>
 
         <div class="dropdown">
 
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">
-                Sprite<span class="caret"></span></button>
+                Game<span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a href="#" id="new-sprite">New</a></li>
+                <li role="presentation"><a href="#" id="new-game">New</a></li>
 
-                <li role="presentation"><a href="#" id="load-sprite">Load</a></li>
+                <li role="presentation"><a href="#" id="load-game">Load</a></li>
 
                 <li role="presentation"><a href="#" class="alt" id="download"><span>Save to File</span><img
                         src="image/save.png" alt="save data"></a></li>
 
-                <li role="presentation"><a href="#" class="alt">Main Sprite Settings</a></li>
+                <li role="presentation"><a href="#" class="alt">Main Game Settings</a></li>
 
             </ul>
         </div>
     </nav>
 </div>
 
-<span id="mainContainer">
+<div id="mainContainer">
 
     <div id="gs-container">
     </div>
@@ -619,17 +619,9 @@
     <ul id="controllable" class="controllable selected_object">
 
        <span id="*" class="tree-open open">&#9881;</span>
-        <li id="sprite_settings" class="building-heading"> Sprite</li>
+        <li id="game_settings" class="building-heading"> Game</li>
 
     </ul>
-
-    </div>
-
-    <div class="floating-script">
-        <button class="squeeze close closer">X</button>
-        <textarea cols="60" rows="300"> sprite.onUpdate(function(){ &#13; &#10;}); </textarea>
-
-    </div>
 
     </div>
 
@@ -637,9 +629,9 @@
 
     /*************************************
      *
-     * SpriteMaker.html:
+     * GameMaker.html:
      *
-     *  -Build and update a Gamestack.js Sprite() object
+     *  -Build and update a Gamestack.js Game() object
      *
      * ********************************/
 
@@ -663,478 +655,6 @@
 
     selectionImg.src = pathPref + "selection.png";
 
-
-    var Game = {
-
-        url_prefix: '../assets/game/image/',
-
-        GameWindow: {},
-
-        canvas: {},
-
-        ctx: {},
-
-        collective_physics: {},
-
-        sprites: [],
-
-        is_init: false,
-
-        __builderProfile: false, //the main object builder
-
-
-        selection_sprite: new Sprite({name: 'Selection Sprite', description: 'Shows selected area'}),
-
-        fireObject: function (obj) {
-
-            var mainObject = Game.sprites[0];
-
-            App.selectedItem = obj;
-
-            var is_func = function (obj, f) {
-                return typeof(obj) == 'object' && typeof obj[f] == 'function';
-
-            };
-
-            if (is_func(obj, 'start')) {
-                App.selectedItem.start();
-
-            }
-            ;
-
-            if (is_func(obj, 'fire')) {
-
-               // alert('firing:' + jstr(App.selectedItem.animation));
-
-                App.selectedItem.fire(Game.sprites[0].position); //fire from position
-
-            }
-            ;
-
-            if (is_func(obj, 'engage')) {
-                App.selectedItem.engage();
-
-            }
-            ;
-
-            if (is_func(obj, 'play')) {
-                App.selectedItem.play();
-
-            }
-            ;
-
-        },
-
-        fitSizeVector: function (w, h, max_w, max_h) {
-            var ptnw, ptnh;
-
-            if (w > max_w) {
-                while (w > max_w) {
-                    ptnw = w / h;
-
-                    w--;
-
-                    h = w * ptnw;
-
-                }
-
-                while (h > max_h) {
-                    ptnh = h / w;
-
-                    h--;
-
-                    w = h * ptnh;
-
-                }
-
-
-            }
-
-            else if (h > max_h) {
-
-                while (h > max_h) {
-                    ptnh = h / w;
-
-                    h--;
-
-                    w = h * ptnh;
-
-                }
-
-                while (w > max_w) {
-                    ptnw = w / h;
-
-                    w--;
-
-                    h = w * ptnw;
-
-                }
-
-
-            }
-
-            return new Vector(w, h, 0);
-
-        },
-
-        centerScreenPos: function () {
-            return {x: Game.WIDTH / 2, y: Game.HEIGHT / 2};
-
-        },
-
-        centerPos: function (sprite) {
-
-            sprite.position.x = Game.WIDTH / 2 - sprite.size.x / 2;
-            sprite.position.y = Game.HEIGHT / 2 - sprite.size.y / 2;
-
-        },
-
-        size: function (width, height) {
-
-            if (typeof(width) == 'string') {
-
-                //   alert('str r');
-
-                width = parseFloat(width);
-
-            }
-
-            if (typeof(height) == 'string') {
-
-                //  alert('str r');
-
-                height = parseFloat(height);
-
-            }
-
-
-            this.WIDTH = width;
-
-            this.HEIGHT = height;
-
-            this.canvas.width = width;
-
-            this.canvas.height = height;
-
-
-        },
-
-        update: function () {
-
-            // console.log(jstr(Game.selected_force.max));
-
-            Game.selected_force.update();
-
-        },
-
-        render: function () {
-
-            this.update();
-
-            //  console.log('render');
-
-            this.GameWindow.update();
-
-            this.GameWindow.draw();
-
-
-        },
-
-        init: function (sprite) {
-
-            Gamestack.camera = new Camera();
-
-            if (!$('#main-screen').length) {
-
-                $('#gs-container').append("<canvas id='main-screen'></canvas>");
-
-            }
-            // 1. demonstrate that the threejs canvas can be intercepted at runtime
-
-            this.canvas = document.getElementById('main-screen');
-
-            this.ctx = this.canvas.getContext('2d');
-
-            if (sprite) {
-                //   alert('hello');
-
-                this.player = sprite;
-
-            }
-            else {
-
-                //3. the player sprite
-
-                this.player = new Sprite({
-
-                    name: "side_scroller_sprite",
-
-                    description: "basic sidescroller sprite",
-
-                    position: new Vector(100, 120),
-
-                    size: new Vector(100, 120)
-                });
-
-                Gamestack.add(this.player);
-
-                this.player.jump_anime = new Animation({
-                    name: "anime_one",
-                    src: "../assets/game/image/characters/full/frogman1.png",
-
-                    size: new Vector2(100, 120),
-
-                    frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 4)),
-                    duration: 2000,
-                    delay: 7,
-                    tool: true,
-                    frameSize: new Vector(100, 120, 0),
-                    frameBounds: new VectorFrameBounds(new Vector(0, 0, 0), new Vector(4, 0, 0))
-                });
-
-                this.player.jumpmotion = new Motion({
-
-                    name: "jump",
-
-                    description: "the jump movmement.",
-
-                    object_id: this.player.id,
-                    name: "jump",
-
-                    parent: this.player,
-
-                    distance: new Vector(0, -200, 0),
-                    curve: TWEEN.Easing.Bounce.InOut,
-                    line: false,
-                    dispersionAngle: 0,
-                    duration: 400,
-                    delay: 0,
-                    delayPerMember: 0
-                });
-
-                this.player.selected_motion = new Motion(this.player.jumpmotion);
-
-                this.player.animations.push(this.player.jump_anime);
-
-                this.player.motions.push(this.player.jumpmotion);
-
-
-                this.player.selected_animation = new Animation(this.player.jump_anime);
-
-                var shot = new Sound('../assets/game/sound/shot.mp3');
-
-                shot.name = "shot-sound";
-
-
-                shot.play();
-
-                Game.player.sounds.push(shot);
-
-
-                Game.player.selected_sound = new Sound(shot);
-
-                Game.player.selected_sound.play();
-
-
-                Game.test_line = new Line().Pos(this.player.position.add(new Vector(20, 20)))
-                    .Curve(Curves.easeInOutQuadratic)
-                    .Duration(2000)
-                    .Iterations(3).Growth(1.8);
-
-                // Game.test_line.fill(new Size(200, 200));
-
-                var bullet = new Projectile({
-                    line: Game.test_line,
-                    size: new Vector(10, 10, 0),
-                    origin: this.player.position,
-                    animation: Gamestack.test_bullet.main_anime
-                });
-
-                bullet.name = "bullet";
-
-                bullet.setMotionCurve(TWEEN.Easing.Linear.None);
-
-                this.player.add(bullet);
-
-                this.player.selected_projectile = bullet;
-
-                bullet.origin = this.player.position;
-
-            }
-
-            Game.sprites[0] = this.player;
-
-            this.player.update = function (sprite) {
-
-                // this.rotation.x += 0.5;
-
-                sprite.selected_animation.continuous();
-
-
-            };
-
-
-            var size_game = function () {
-
-                var w = $('body').width() - 50, h = 500;
-
-                $(Game.canvas).width(w);
-
-                $(Game.canvas).height(h);
-
-
-                Game.canvas.width = w;
-
-                Game.canvas.height = h;
-
-                Game.WIDTH = w;
-
-                Game.HEIGHT = h;
-
-            };
-
-            size_game();
-
-            var r = function () {
-
-                size_game();
-                var center = Game.centerScreenPos();
-                Game.sprites[0].position = new Vector(center.x * 1.2, center.y - Game.sprites[0].size.y * 2);
-            };
-
-            $(window).resize(function () {
-
-                r();
-
-            });
-
-            Game.forceProfile = {};
-
-            Game.forceProfile.forces = [];
-
-            var center = this.centerScreenPos();
-
-            var wgrav = new Force({
-
-                name: "low_grav",
-
-                accel: 0.3,
-
-                max: new Vector(0, 1.5, 0),
-
-
-                subjects: [Game.sprites[0]],
-
-                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
-
-            });
-
-            Game.forceProfile.forces.push(wgrav);
-
-            var mgrav = new Force({
-
-                name: "medium_grav",
-
-                accel: 0.75,
-
-                max: new Vector(0, 5, 0),
-                subjects: [Game.sprites[0]],
-
-                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
-
-            });
-
-            Game.forceProfile.forces.push(mgrav);
-
-            var sgrav = new Force({
-
-                name: "high_grav",
-
-                accel: 1.0,
-
-                max: new Vector(0, 5, 0),
-                subjects: [Game.sprites[0]],
-
-                clasticObjects: [new Sprite({position: new Vector(-1000, center.y), size: new Vector(3000, 3000)})]
-
-            });
-
-            Game.forceProfile.forces.push(sgrav);
-
-
-            Game.selected_force = new Force(mgrav);
-
-            $('#forceSelect').change(function (evt) {
-
-                var ix = evt.target.selectedIndex;
-
-                Game.selected_force = new Force(Game.forceProfile.forces[ix]);
-
-            });
-
-
-            this.GameWindow = new GameWindow({
-                canvas: this.canvas,
-                ctx: this.ctx,
-                sprites: this.sprites,
-                forces: this.forces
-            }, function () {
-
-                console.log('Game Update passed');
-
-            });
-
-
-            Game.sprites[0].position = new Vector(center.x, center.y - this.sprites[0].size.y * 2);
-
-            this.testObjects = [];
-
-            var selectionImg = document.createElement('IMG');
-
-            var pathPref = '../assets/game/image/';
-
-            selectionImg.src = pathPref + "hover_selection.png";
-
-
-            var fs = new Size(191 * 4, 192 * 4);
-
-            this.selection_sprite.setAnimation(new Animation({
-                src: selectionImg.src,
-                size: new Vector(50, 50, 0),
-                frameSize: fs,
-                frameBounds: new VectorFrameBounds(new Vector(0, 0), new Vector(0, 0))
-            }));
-
-            //select the first animation
-
-            window.setTimeout(function () {
-
-                App.selectItem(App.selected_item || Game.sprites[0].animations[0]);
-
-            }, 1000);
-
-            var __inst = this;
-
-            //create the gui / Builder
-            this.__builderProfile = new ObjectArrayBuilder(Game.sprites[0], ['animations', 'motions', 'projectiles', 'sounds'], false),
-
-                this.is_init = true;
-
-            this.refreshBuilder = function () {
-
-                $('.controllable div').html('');
-                //create the gui / Builder
-                __inst.__builderProfile.refresh(Game.sprites[0]);
-
-                __resetRightClicks();
-
-            };
-
-
-        }
-
-    };
-
     /******************
      *
      * App:
@@ -1144,10 +664,35 @@
      *
      * **********************/
 
+
+    var Game = new GamestackModel();
+
     var App = {
 
         locked: false,
 
+        start:function()
+        {
+
+            var __inst = this;
+
+            //create the gui / Builder
+            this.__builderProfile = new ObjectArrayBuilder(Game, ['sprites', 'animations','motions', 'backgrounds', 'terrains', 'interactives', 'images', 'sounds'], false),
+
+                this.is_init = true;
+
+            this.refreshBuilder = function () {
+
+                $('.controllable div').html('');
+                //create the gui / Builder
+                __inst.__builderProfile.refresh(Game);
+
+                __resetRightClicks();
+
+            };
+
+
+        },
 
         showGui:function(content){
 
@@ -1394,19 +939,19 @@
 
         },
 
-        beginSpriteSave: function () {
+        beginGameSave: function () {
 
             $('#message span').html("Enter File Name" +
 
                 "<br/><input id='message-file-name' type='text' value='" + Game.sprites[0].name + "' class='message-file'  />" +
 
-                "<br/><button class='ok' onclick='App.applySpriteSave();'>OK</button><button class='cancel' onclick='App.closeMessage();'>Cancel</button>");
+                "<br/><button class='ok' onclick='App.applyGameSave();'>OK</button><button class='cancel' onclick='App.closeMessage();'>Cancel</button>");
 
             $('#message').show();
 
         },
 
-        saveSprite: function (name) {
+        saveGame: function (name) {
 
             if (name == "") {
                 name = "undefined_name_sprite";
@@ -1747,7 +1292,7 @@
 
         },
 
-        createNewSprite: function () {
+        createNewGame: function () {
 
             window.location.reload();
 
@@ -2064,88 +1609,14 @@
             });
 
 
-        },
+            this.start();
 
-        initTestSprites: function () {
-
-            Gamestack.point_highlighter = new Sprite({
-
-                name: "gs_point_highlighter",
-
-                description: "highlight points on a line",
-
-                position: new Vector(0, 0),
-                size: new Vector(4, 4)
-            });
-
-
-            Gamestack.point_highlighter.main_anime = new Animation({
-                name: "anime_one",
-                src: "../tools/image/point_highlighter.png",
-
-                size: new Vector2(4, 4),
-
-                frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
-
-                delay: 0,
-                tool: true,
-                frameSize: new Vector(50, 50, 0)
-            });
-
-
-            Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
-
-
-            Gamestack.test_bullet = new Sprite({
-
-                name: "test_bullet",
-
-                description: "test_bullet for Projectile class",
-
-                position: new Vector(0, 0),
-                size: new Vector(10, 10)
-            });
-
-
-            Gamestack.test_bullet.main_anime = new Animation({
-                name: "anime_one",
-                src: "../tools/image/test-bullet.png",
-
-                size: new Vector2(10, 10),
-
-                frameBounds: new VectorFrameBounds(new Vector2(0, 0), new Vector2(0, 0)),
-
-                delay: 0,
-                tool: true,
-                frameSize: new Vector(50, 50, 0)
-            });
-
-
-            Gamestack.point_highlighter.setAnimation(Gamestack.point_highlighter.main_anime);
-
-
-            Gamestack.test_bullet.setAnimation(Gamestack.test_bullet.main_anime);
 
         }
 
-    }
-
-
-    function animate(time) {
-
-        TWEEN.update(time);
-
-        requestAnimationFrame(animate);
-
-        Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
-
-        Game.render();
-
-    }
+    };
 
     Gamestack.ready(function (lib) {
-
-        App.initTestSprites();
 
         //add jquery function
         $.fn.animateRotate = function (startAngle, angle, duration, easing, complete) {
@@ -2162,50 +1633,8 @@
             });
         };
 
-        Game.init();
 
         App.init();
-
-        animate();
-
-        $('#new-sprite').click(function () {
-
-            if (confirm('Start over with a new Sprite()?')) {
-                App.createNewSprite();
-
-            }
-
-        });
-
-        $('#sprite-file-input').change(function () {
-
-            App.getRawFile(this, function (result) {
-
-                var sprite = JSON.retrocycle(JSON.parse(result));
-
-                Game.sprites[0] = new Sprite(sprite);
-
-                Gamestack.add(Game.sprites[0]);
-
-                Game.sprites[0].selected_animation.image.domElement.onload = function () {
-
-                    var name = Game.sprites[0].selected_animation.name;
-
-                    Game.init(Game.sprites[0]);
-                    App.init(Game.sprites[0]);
-
-                };
-
-            });
-
-        });
-
-        $('#load-sprite').click(function () {
-
-            $('#sprite-file-input').click();
-
-        });
-
 
         var __bottomOpen = true;
 
@@ -2241,16 +1670,6 @@
 
         App.selfClosablesInit();
 
-
-        $(document).on('click', '#download', function () {
-
-            App.beginSpriteSave(function (bool) {
-
-                console.log('Level Saved:' + bool);
-
-            });
-
-        });
 
     });
 

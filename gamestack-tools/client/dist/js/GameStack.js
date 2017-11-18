@@ -211,15 +211,10 @@ var GameStackLibrary = function GameStackLibrary() {
                         this._gameWindow = gameWindow;
                 },
 
-                ExtendEvents: function ExtendEvents(extendedObject, extendedKey, extendor, extendorKey, extendorFunc) {
-                        function EventLink(extendedObject, extendedKey, extendor, extendorKey) {
+                ExtendEvents: function ExtendEvents(extendedObject, extendedKey, extendor, extendorKey) {
+                        var evtLink = new GSEventLink(extendedObject, extendedKey, extendor, extendorKey);
 
-                                this.parent_id = extendedObject.id, this.child_id = extendor.id, this.parent_key = extendedKey, this.child_key = extendorKey;
-                        };
-
-                        var evtLink = new EventLink(extendedObject, extendedKey, extendor, extendorKey);
-
-                        this.all_objects.push(new EventLink(extendedObject, extendedKey, extendor, extendorKey));
+                        this.all_objects.push(new GSEventLink(extendedObject, extendedKey, extendor, extendorKey));
 
                         var parent = extendedObject;
 
@@ -228,9 +223,14 @@ var GameStackLibrary = function GameStackLibrary() {
                         if (parent) {
                                 console.log('Gamestack:EXTENDING EVENTS:' + extendedKey + ":" + extendorKey);
 
-                                if (parent.onRun) {
-                                        parent.onRun(extendor, extendorKey);
-                                }
+                                if (parent.onRun) //Any extendable object has an onRun ... OR
+                                        {
+                                                parent.onRun(extendor, extendorKey);
+                                        }
+                                if (parent.onComplete) //object has an onComplete
+                                        {
+                                                parent.onComplete(extendor, extendorKey);
+                                        }
                         }
                 },
 
@@ -301,24 +301,33 @@ var GameStackLibrary = function GameStackLibrary() {
                 add: function add(obj) {
                         //1: if Sprite(), Add object to the existing __gameWindow
 
-                        if (obj instanceof GameWindow) {
+                        var __inst = this;
 
-                                this.__gameWindow = obj;
-                        }
+                        function isWindow() {
+                                return __inst.hasOwnProperty('__gameWindow') && __inst.__gameWindow instanceof GameWindow;
+                        };
 
-                        if (obj instanceof Force) {
+                        if (isWindow()) {
 
-                                this.__gameWindow.forces.push(obj);
-                        }
+                                if (obj instanceof GameWindow) {
 
-                        if (obj instanceof Camera) {
+                                        this.__gameWindow = obj;
+                                }
 
-                                this.__gameWindow.camera = obj;
-                        }
+                                if (obj instanceof Force) {
 
-                        if (obj instanceof Sprite) {
+                                        this.__gameWindow.forces.push(obj);
+                                }
 
-                                this.__gameWindow.sprites.push(obj);
+                                if (obj instanceof Camera) {
+
+                                        this.__gameWindow.camera = obj;
+                                }
+
+                                if (obj instanceof Sprite) {
+
+                                        this.__gameWindow.sprites.push(obj);
+                                }
                         }
 
                         if (obj instanceof GSEvent) {
@@ -413,6 +422,24 @@ var GameStackLibrary = function GameStackLibrary() {
         return lib;
 };
 
+var GamestackApi = {
+        get: function get() {},
+
+        post: function post(object) {
+                //TODO decycle the object before saving
+
+                if (!object.id) {
+                        object.id = Gamestack.create_id();
+                }
+
+                var name = object.name,
+                    type = object.constructor.name,
+                    contents = jstr(object),
+                    id = object.id;
+        }
+
+};
+
 /**
  * Simple Sound object:: implements Jquery: Audio()
  * @param   {string} src : source path / name of the targeted sound-file
@@ -439,6 +466,7 @@ var Sound = function () {
 
                         this.src = src;
                 }
+
                 if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) == 'object') {
                         for (var x in data) {
                                 if (x !== 'sound') {
@@ -4660,14 +4688,17 @@ var Animation = function () {
 
                         duration: 1000,
 
-                        size: new Vector3(20, 20, 20)
+                        size: new Vector3(20, 20, 20),
+
+                        reverse_frames: false
                 };
 
                 for (var x in this.defaultArgs) {
                         if (!args.hasOwnProperty(x)) {
                                 args[x] = this.defaultArgs[x];
                         }
-                };
+                }
+                ;
 
                 for (var x in this.args) {
                         this[x] = args[x];
@@ -4693,11 +4724,10 @@ var Animation = function () {
 
                 this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
-                this.extras = this.getArg(args, 'extras', false);
-
                 if ((typeof args === 'undefined' ? 'undefined' : _typeof(args)) == 'object' && args.frameBounds && args.frameSize) {
                         this.apply2DFrames(args.parent || {});
-                };
+                }
+                ;
 
                 this.flipX = this.getArg(args, 'flipX', false);
 
@@ -4711,10 +4741,59 @@ var Animation = function () {
 
                 this.seesaw_mode = args.seesaw_mode || false;
 
+                this.reverse_frames = args.reverse_frames || false;
+
                 this.run_ext = args.run_ext || [];
+
+                this.complete_ext = args.complete_ext || [];
         }
 
+        /*****
+        * Overridable / Extendable functions
+        * -allows stacking of external object-function calls
+        ******/
+
         _createClass(Animation, [{
+                key: 'onRun',
+                value: function onRun(caller, callkey) {
+                        this.run_ext = this.run_ext || [];
+
+                        if (this.run_ext.indexOf(caller[callkey]) == -1) {
+                                this.run_ext.push({ caller: caller, callkey: callkey });
+                        }
+                }
+        }, {
+                key: 'onComplete',
+                value: function onComplete(caller, callkey) {
+                        this.complete_ext = this.complete_ext || [];
+
+                        if (this.complete_ext.indexOf(caller[callkey]) == -1) {
+                                this.complete_ext.push({ caller: caller, callkey: callkey });
+                        }
+                }
+        }, {
+                key: 'call_on_run',
+                value: function call_on_run() {
+                        //call any function extension that is present
+                        for (var x = 0; x < this.run_ext.length; x++) {
+                                this.run_ext[x].caller[this.run_ext[x].callkey]();
+                        }
+                }
+        }, {
+                key: 'call_on_complete',
+                value: function call_on_complete() {
+                        //call any function extension that is present
+                        for (var x = 0; x < this.complete_ext.length; x++) {
+                                this.complete_ext[x].caller[this.complete_ext[x].callkey]();
+                        }
+                }
+        }, {
+                key: 'reverseFrames',
+                value: function reverseFrames() {
+
+                        this.frames.reverse();
+                }
+        }, {
                 key: 'singleFrame',
                 value: function singleFrame(frameSize, size) {
                         this.__frametype = 'single';
@@ -4758,7 +4837,10 @@ var Animation = function () {
 
                                 for (var _x4 = this.frameBounds.min.x; _x4 <= this.frameBounds.max.x; _x4++) {
 
-                                        var framePos = { x: _x4 * this.frameSize.x + this.frameOffset.x, y: y * this.frameSize.y + this.frameOffset.y };
+                                        var framePos = {
+                                                x: _x4 * this.frameSize.x + this.frameOffset.x,
+                                                y: y * this.frameSize.y + this.frameOffset.y
+                                        };
 
                                         this.frames.push({ image: this.image, frameSize: this.frameSize, framePos: framePos });
 
@@ -4790,15 +4872,11 @@ var Animation = function () {
 
                                 this.frames = this.frames.concat(frames_reversed);
                         }
+                        if (this.reverse_frames) {
+                                this.reverseFrames();
+                        }
 
                         // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
-                }
-        }, {
-                key: 'resetFrames',
-                value: function resetFrames() //special reset function:: frames are re-rendered each reset()
-                {
-
-                        this.apply2DFrames();
                 }
         }, {
                 key: 'update',
@@ -4810,7 +4888,7 @@ var Animation = function () {
                 key: 'reset',
                 value: function reset() {
 
-                        this.resetFrames();
+                        this.apply2DFrames();
 
                         this.cix = 0;
                 }
@@ -4833,22 +4911,9 @@ var Animation = function () {
                         }
                 }
         }, {
-                key: 'onRun',
-                value: function onRun(caller, callkey) {
-
-                        this.run_ext = this.run_ext || [];
-
-                        this.run_ext.push({ caller: caller, callkey: callkey });
-                }
-        }, {
                 key: 'engage',
                 value: function engage(duration, complete) {
-                        //call any function extension that is present
-                        for (var x = 0; x < this.run_ext.length; x++) {
-
-                                this.run_ext[x].caller[this.run_ext[x].callkey]();
-                        }
-
+                        this.call_on_run();
                         duration = duration || 2000;
 
                         if (this.__frametype == 'single') {
@@ -4861,10 +4926,6 @@ var Animation = function () {
 
                         var duration = duration || typeof this.duration == 'number' ? this.duration : this.frames.length * 20;
 
-                        if (this.cix == 0 && this.extras) {
-                                this.extras.call(); //fire any extras attached
-                        }
-
                         //we have a target
                         this.tween = new TWEEN.Tween(this).easing(__inst.curve || TWEEN.Easing.Linear.None).to({ cix: __inst.frames.length - 1 }, duration).onUpdate(function () {
                                 //console.log(objects[0].position.x,objects[0].position.y);
@@ -4875,10 +4936,7 @@ var Animation = function () {
                         }).onComplete(function () {
                                 //console.log(objects[0].position.x, objects[0].position.y);
 
-                                if (__inst.complete) {
-
-                                        __inst.complete();
-                                }
+                                __inst.call_on_complete();
 
                                 __inst.cix = 0;
 
@@ -4886,11 +4944,6 @@ var Animation = function () {
                         });
 
                         this.tween.start();
-                }
-        }, {
-                key: 'onComplete',
-                value: function onComplete(fun) {
-                        this.complete = fun;
                 }
         }, {
                 key: 'animate',
@@ -4902,12 +4955,8 @@ var Animation = function () {
 
                         if (this.delay == 0 || this.timer % this.delay == 0) {
 
-                                if (this.cix == 0 && this.extras) {
-                                        this.extras.call(); //fire any extras attached
-                                }
-
-                                if (this.cix >= this.frames.length - 1 && typeof this.complete == 'function') {
-                                        this.complete(this);
+                                if (this.cix >= this.frames.length - 1) {
+                                        this.call_on_complete();
                                 }
 
                                 this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
@@ -4922,11 +4971,75 @@ var Animation = function () {
 
 ;
 
-Gamestack.Animation = Animation;; /**
-                                  * Camera : has simple x, y, z, position / Vector values
-                                  *
-                                  * @returns {Vector}
-                                  */
+Gamestack.Animation = Animation;;
+var Background = function () {
+        function Background(type, contents, speedFloat) {
+                _classCallCheck(this, Background);
+
+                this.type = type || "parallax" || "basic" || false;
+
+                if (contents instanceof Object) {
+                        contents = [contents]; //encapsulate in array (always) for simplistic processing
+                }
+
+                this.contents = contents;
+
+                this.speedFloat = speedFloat || 1.0;
+        }
+
+        _createClass(Background, [{
+                key: 'scroll',
+                value: function scroll(speedX, speedY) {
+
+                        Gamestack.each(this.contents, function (ix, element) {
+
+                                element.position.x += speedX * this.speedFloat;
+                                element.position.y += speedY * this.speedFloat;
+                        });
+                }
+        }, {
+                key: 'scrollX',
+                value: function scrollX(speed) {
+                        Gamestack.each(this.contents, function (ix, element) {
+
+                                element.position.x += speed * this.speedFloat;
+                        });
+                }
+        }, {
+                key: 'scrollY',
+                value: function scrollY(speed) {
+                        Gamestack.each(this.contents, function (ix, element) {
+
+                                element.position.y += speed * this.speedFloat;
+                        });
+                }
+        }, {
+                key: 'add',
+                value: function add(object) {
+                        var cleanCheck = object instanceof Sprite || object instanceof Array && object[0] instanceof Sprite;
+
+                        if (!cleanCheck) {
+                                return console.error('Must have: valid contents (Sprite OR [] of Sprite())');
+                        }
+
+                        if (object instanceof Array) {
+                                this.contents.cancat(object);
+                        } else {
+                                this.contents.push(object);
+                        }
+
+                        return this;
+                }
+        }]);
+
+        return Background;
+}();
+
+; /**
+  * Camera : has simple x, y, z, position / Vector values
+  *
+  * @returns {Vector}
+  */
 
 var Camera = function Camera(args) {
         _classCallCheck(this, Camera);
@@ -5344,65 +5457,6 @@ var EffectSequence = function () {
         }]);
 
         return EffectSequence;
-}();
-
-;
-
-var Extras = function () {
-        function Extras(args) {
-                _classCallCheck(this, Extras);
-
-                this.items = args || [];
-
-                if (_typeof(this.items) == 'object') {
-                        this.items = [this.items]; //assert array from single object
-                }
-
-                var allowedTypes = ['Sound', 'GameText', 'StatDisplay', 'Menu'];
-
-                if (!(this.items instanceof Array)) {
-
-                        return console.error('Quick2d.Extras.call(), needs array argument');
-                }
-        }
-
-        _createClass(Extras, [{
-                key: 'call',
-                value: function call() {
-                        var items = this.items;
-                        //a callable item can be one-time executed: it will have any of the following functions attached
-
-                        for (var x = 0; x < items.length; x++) {
-                                var item = items[x];
-
-                                if (typeof item.play == 'function') {
-                                        item.play();
-                                }
-
-                                if (typeof item.engage == 'function') {
-                                        item.engage();
-                                }
-
-                                if (typeof item.fire == 'function') {
-                                        item.fire();
-                                }
-
-                                if (typeof item.start == 'function') {
-                                        item.start();
-                                }
-
-                                if (typeof item.run == 'function') {
-                                        item.run();
-                                }
-
-                                if (typeof item.process == 'function') {
-                                        item.process();
-                                }
-                        }
-                }
-        }]);
-
-        return Extras;
 }();
 
 ;
@@ -5860,6 +5914,123 @@ if (!__gameInstance.GamepadAdapter) {
 
 ;
 
+var GamestackModel = function () {
+        function GamestackModel() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+                _classCallCheck(this, GamestackModel);
+
+                this.__isMaster = args.master || args.isMaster || false;
+
+                this.images = args.images || [];
+
+                this.sounds = args.sounds || [];
+
+                this.motions = args.motions || [];
+
+                this.sprites = args.sprites || [];
+
+                this.backgrounds = args.backgrounds || [];
+
+                this.terrains = args.terrains || [];
+
+                this.interactives = args.interactives || [];
+        }
+
+        _createClass(GamestackModel, [{
+                key: 'add',
+                value: function add(object) {
+                        var isAllOfAny = function isAllOfAny(list, types) {
+                                for (var x = 0; x < list.length; x++) {
+                                        if (![types].indexOf(list[x].constructor.name) >= 0) {
+                                                return false;
+                                        }
+                                }
+                                return true;
+                        };
+
+                        if (object instanceof object) {
+                                object = [object];
+                        }
+
+                        var cleanCheck = isAllOfAny(object, ['Sprite', 'Background', 'Terrain', 'Motion', 'Projectile', 'GameImage', 'Sound']);
+
+                        if (!cleanCheck) {
+                                return console.error('Must have: valid contents (Sprite OR [] of Sprite())');
+                        }
+
+                        var __inst = this;
+
+                        Gamestack.each(object, function (ix, item) {
+
+                                switch (item.constructor.name) {
+                                        case "Sprite":
+
+                                                __inst.sprites.push(item);
+
+                                                break;
+
+                                        case "Background":
+
+                                                __inst.background.push(item);
+
+                                                break;
+
+                                        case "Terrain":
+
+                                                __inst.terrains.push(item);
+
+                                                break;
+
+                                        case "Interactive":
+
+                                                __inst.interactives.push(item);
+
+                                                break;
+
+                                        case "Sound":
+
+                                                __inst.sounds.push(item);
+
+                                                break;
+
+                                        case "Motion":
+
+                                                __inst.motions.push(item);
+
+                                                break;
+
+                                        case "Projectile":
+
+                                                __inst.projectiles.push(item);
+
+                                                break;
+
+                                        case "GameImage":
+
+                                                __inst.images.push(item);
+
+                                                break;
+
+                                        default:
+
+                                                console.log('GamestackModel.add():UNKNOWN TYPE');
+                                }
+
+                                return;
+                        });
+
+                        this.contents.concat(object);
+
+                        return this;
+                }
+        }]);
+
+        return GamestackModel;
+}();
+
+;;
+
 var GSEvent = function () {
         function GSEvent() {
                 var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -5977,7 +6148,13 @@ var GSEvent = function () {
         return GSEvent;
 }();
 
-;
+function GSEventLink(extendedObject, extendedKey, extendor, extendorKey) {
+        this.parent_id = extendedObject.id, this.child_id = extendor.id, this.parent_key = extendedKey, this.child_key = extendorKey;
+};
+
+function makeExtendableOverrides(object) {
+        if (!object.run_ext instanceof Array) object.run_ext || [];
+};;
 /**
  * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
 
@@ -6024,6 +6201,8 @@ var Motion = function () {
 
                 this.rotation = Gamestack.getArg(args, 'rotation', 0);
 
+                this.size = Gamestack.getArg(args, 'size', new Vector(0, 0, 0));
+
                 this.targetRotation = Gamestack.getArg(args, 'targetRotation', 0);
 
                 this.name = Gamestack.getArg(args, 'name', "__");
@@ -6042,12 +6221,53 @@ var Motion = function () {
 
                 this.delay = Gamestack.getArg(args, 'delay', 0);
 
-                this.animation = args.animation || false;
+                this.object = this.getParent();
 
                 this.run_ext = args.run_ext || [];
+
+                this.complete_ext = args.complete_ext || [];
         }
 
+        /*****
+         * Overridable / Extendable functions
+         * -allows stacking of external object-function calls
+         ******/
+
         _createClass(Motion, [{
+                key: 'onRun',
+                value: function onRun(caller, callkey) {
+                        this.run_ext = this.run_ext || [];
+
+                        if (this.run_ext.indexOf(caller[callkey]) == -1) {
+                                this.run_ext.push({ caller: caller, callkey: callkey });
+                        }
+                }
+        }, {
+                key: 'onComplete',
+                value: function onComplete(caller, callkey) {
+                        this.complete_ext = this.complete_ext || [];
+
+                        if (this.complete_ext.indexOf(caller[callkey]) == -1) {
+                                this.complete_ext.push({ caller: caller, callkey: callkey });
+                        }
+                }
+        }, {
+                key: 'call_on_run',
+                value: function call_on_run() {
+                        //call any function extension that is present
+                        for (var x = 0; x < this.run_ext.length; x++) {
+                                this.run_ext[x].caller[this.run_ext[x].callkey]();
+                        }
+                }
+        }, {
+                key: 'call_on_complete',
+                value: function call_on_complete() {
+                        //call any function extension that is present
+                        for (var x = 0; x < this.complete_ext.length; x++) {
+                                this.complete_ext[x].caller[this.complete_ext[x].callkey]();
+                        }
+                }
+        }, {
                 key: 'curvesToArray',
                 value: function curvesToArray() {
 
@@ -6192,74 +6412,81 @@ var Motion = function () {
                         this.run_ext.push({ caller: caller, callkey: callkey });
                 }
         }, {
+                key: 'getParent',
+                value: function getParent() {
+
+                        var object = {},
+                            __inst = this;
+
+                        $.each(Gamestack.all_objects, function (ix, item) {
+
+                                if (item.id == __inst.parent_id) {
+
+                                        object = item;
+                                }
+                        });
+
+                        if (!this.size) {
+                                this.size = new Vector(object.size);
+                        }
+
+                        return object;
+                }
+        }, {
                 key: 'engage',
                 value: function engage() {
-
-                        //call any function extension that is present
-                        for (var x = 0; x < this.run_ext.length; x++) {
-
-                                this.run_ext[x].caller[this.run_ext[x].callkey]();
-                        }
 
                         var __inst = this;
 
                         var tweens = [];
 
-                        //construct a tween::
+                        var object = this.getParent();
 
+                        var targetPosition = {
 
-                        var objects = {};
-
-                        $.each(Game.sprites, function (ix, item) {
-
-                                if (item.id == __inst.parent_id) {
-
-                                        objects[ix] = item;
-
-                                        if (__inst.animation) {
-                                                objects[ix].selected_animation = __inst.animation;
-                                        }
-                                }
-                        });
-
-                        var target = {
-
-                                x: __inst.distance.x + objects[0].position.x,
-                                y: __inst.distance.y + objects[0].position.y,
-                                z: __inst.distance.z + objects[0].position.z
+                                x: __inst.distance.x + object.position.x,
+                                y: __inst.distance.y + object.position.y,
+                                z: __inst.distance.z + object.position.z
 
                         };
 
-                        if (__inst.targetRotation > 0 || __inst.targetRotation < 0) {
+                        var targetR = __inst.targetRotation + object.rotation.x,
+                            targetSize = __inst.size;
 
-                                var targetR = __inst.targetRotation + objects[0].rotation.x;
+                        __inst.call_on_run(); //call any on-run extensions
 
-                                //we have a target
-                                tweens[0] = new TWEEN.Tween(objects[0].rotation).easing(__inst.curve || __inst.motion_curve).to({ x: targetR }, __inst.duration).onUpdate(function () {
-                                        //console.log(objects[0].position.x,objects[0].position.y);
-
-
-                                }).onComplete(function () {
-                                        //console.log(objects[0].position.x, objects[0].position.y);
-                                        if (__inst.complete) {
-
-                                                __inst.complete();
-                                        }
-                                });
-                        }
-
-                        //we have a target
-                        tweens.push(new TWEEN.Tween(objects[0].position).easing(__inst.motion_curve).to(target, __inst.duration).onUpdate(function () {
+                        //we always have a targetPosition
+                        //construct a tween::
+                        tweens.push(new TWEEN.Tween(object.position).easing(__inst.curve || __inst.motion_curve).to(targetPosition, __inst.duration).onUpdate(function () {
                                 //console.log(objects[0].position.x,objects[0].position.y);
 
 
                         }).onComplete(function () {
                                 //console.log(objects[0].position.x, objects[0].position.y);
-
                                 if (__inst.complete) {
 
-                                        __inst.complete();
+                                        __inst.call_on_complete(); //only call once
                                 }
+                        }));
+
+                        //we have a target
+                        tweens.push(new TWEEN.Tween(object.size).easing(__inst.curve || __inst.motion_curve).to(targetSize, __inst.duration).onUpdate(function () {
+                                //console.log(objects[0].position.x,objects[0].position.y);
+
+
+                        }).onComplete(function () {
+                                //console.log(objects[0].position.x, objects[0].position.y);
+                                if (__inst.complete) {}
+                        }));
+
+                        //we have a target
+                        tweens.push(new TWEEN.Tween(object.rotation).easing(__inst.curve || __inst.motion_curve).to({ x: targetR }, __inst.duration).onUpdate(function () {
+                                //console.log(objects[0].position.x,objects[0].position.y);
+
+
+                        }).onComplete(function () {
+                                //console.log(objects[0].position.x, objects[0].position.y);
+                                if (__inst.complete) {}
                         }));
 
                         __inst.delay = !isNaN(__inst.delay) && __inst.delay > 0 ? __inst.delay : 0;
@@ -6462,35 +6689,6 @@ var Motion = function () {
 }();
 
 Gamestack.Motion = Motion;
-
-;
-
-var Parallax = function () {
-        function Parallax(options) {
-                _classCallCheck(this, Parallax);
-
-                this.grid = options.grid;
-
-                this.position = options.position || new Vector();
-
-                this.scrollCall = options.callback || options.scrollCall || options.scrollCallback || function () {};
-
-                this.focus = options.object || options.focus || options.sprite || function () {};
-        }
-
-        _createClass(Parallax, [{
-                key: 'scrollX',
-                value: function scrollX() {}
-        }, {
-                key: 'scrollY',
-                value: function scrollY() {}
-        }, {
-                key: 'scroll',
-                value: function scroll() {}
-        }]);
-
-        return Parallax;
-}();
 
 ; /**
   * Takes an object of arguments and returns Projectile() object. Projectile fires a shot from the parent sprite, with specified offset, rotation, motion_curve, line_curve
@@ -8752,6 +8950,25 @@ var SpriteInitializersOptions = {
 Gamestack.options = Gamestack.options || {};
 
 Gamestack.options.SpriteInitializers = SpriteInitializersOptions;;
+
+var Terrain = function () {
+        function Terrain(type, chunks) {
+                _classCallCheck(this, Terrain);
+
+                this.chunks = args.chunks || [];
+
+                this.type = args.type || "FULL_COLLIDE" || "TOP_COLLIDE" || "NO_COLLIDE";
+        }
+
+        _createClass(Terrain, [{
+                key: 'onCollide',
+                value: function onCollide() {}
+        }]);
+
+        return Terrain;
+}();
+
+;
 /**
  * Takes arguments of x, y, and (optionally) z, instantiates Vector object
 

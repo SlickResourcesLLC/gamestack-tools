@@ -1,7 +1,7 @@
 
 class GamestackModel {
 
-    constructor(args) {
+    constructor(args={}) {
 
         this.__isMaster = args.master || args.isMaster || false;
 
@@ -21,15 +21,9 @@ class GamestackModel {
 
     }
 
-    save(callback)
-    {
-
-
-    }
-
     add(object)
     {
-        var isAllOfAny(list, types)
+        var isAllOfAny = function(list, types)
         {
             for(var x = 0; x < list.length; x++)
             {

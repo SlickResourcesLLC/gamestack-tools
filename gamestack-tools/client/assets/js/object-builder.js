@@ -177,6 +177,9 @@ ObjectBuilder.prototype.objectMembers = function () {
 
 
 ObjectBuilder.prototype.createGui = function () {
+
+    $('#object-builder').remove();
+
     var gui = DatGui.gui();
 
     $(gui.domElement).attr('id', 'object-builder');

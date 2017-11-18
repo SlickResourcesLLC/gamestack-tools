@@ -80,7 +80,7 @@ module.exports = function(openNow) {
                {
                    if(type && ['Level', 'Sprite', 'Background', 'Terrain', 'Interactive', 'Sound', 'GameImage'].indexOf(type.toLowerCase()))
                    {
-                       relpath = relpath.replace('/file_storage/', '/game/json/' + type.toLowerCase());
+                       relpath = relpath.replace('/file_storage/', '/game/json/' + type.toLowerCase() + "/");
 
                    }
 

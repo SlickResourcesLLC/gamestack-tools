@@ -15,6 +15,7 @@
  */
 
 class Animation {
+
     constructor(args = {}) {
 
         args = args || {};
@@ -23,46 +24,47 @@ class Animation {
 
         this.defaultArgs = {
 
-            name:"my-animation",
+            name: "my-animation",
 
-            description:"my-description",
+            description: "my-description",
 
-            frames:[],
+            frames: [],
 
-            type:"none",
+            type: "none",
 
-            delay:0,
+            delay: 0,
 
-            frameSize:new Vector3(44, 44, 0),
+            frameSize: new Vector3(44, 44, 0),
 
-            frameBounds:new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
+            frameBounds: new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
 
-            frameOffset:new Vector3(0, 0, 0),
+            frameOffset: new Vector3(0, 0, 0),
 
-            flipX:false,
+            flipX: false,
 
-            duration:1000,
+            duration: 1000,
 
-            size:new Vector3(20, 20, 20)
+            size: new Vector3(20, 20, 20),
+
+            reverse_frames: false
         };
 
-        for(var x in this.defaultArgs)
-        {
-            if(!args.hasOwnProperty(x))
-            {
+        for (var x in this.defaultArgs) {
+            if (!args.hasOwnProperty(x)) {
                 args[x] = this.defaultArgs[x]
 
             }
 
-        };
+        }
+        ;
 
-        for(var x in this.args)
-        {
-           this[x] = args[x];
+        for (var x in this.args) {
+            this[x] = args[x];
 
         }
 
         this.name = args.name || "__animationName";
+
 
         this.description = args.description || "__animationDesc";
 
@@ -74,22 +76,21 @@ class Animation {
 
         this.frameSize = new Vector(args.frameSize || new Vector3(44, 44, 0));
 
-        if(args.frameBounds)
-        {
+        if (args.frameBounds) {
             this.frameBounds = new VectorFrameBounds(args.frameBounds.min, args.frameBounds.max, args.frameBounds.termPoint);
 
         }
-        else
-        {
-            this.frameBounds =   new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0))
+        else {
+            this.frameBounds = new VectorFrameBounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0))
 
         }
 
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
-        this.extras = this.getArg(args, 'extras', false);
-
-      if(typeof(args) == 'object' && args.frameBounds && args.frameSize){ this.apply2DFrames(args.parent || {}) };
+        if (typeof(args) == 'object' && args.frameBounds && args.frameSize) {
+            this.apply2DFrames(args.parent || {})
+        }
+        ;
 
         this.flipX = this.getArg(args, 'flipX', false);
 
@@ -103,12 +104,56 @@ class Animation {
 
         this.seesaw_mode = args.seesaw_mode || false;
 
+        this.reverse_frames = args.reverse_frames || false;
+
         this.run_ext = args.run_ext || [];
+
+        this.complete_ext = args.complete_ext || [];
 
     }
 
-    singleFrame(frameSize, size)
-    {
+    /*****
+    * Overridable / Extendable functions
+    * -allows stacking of external object-function calls
+    ******/
+
+    onRun(caller, callkey) {
+        this.run_ext = this.run_ext || [];
+
+        if (this.run_ext.indexOf(caller[callkey]) == -1) {
+            this.run_ext.push({caller: caller, callkey: callkey});
+        }
+    }
+
+    onComplete(caller, callkey) {
+        this.complete_ext = this.complete_ext || [];
+
+        if (this.complete_ext.indexOf(caller[callkey]) == -1) {
+            this.complete_ext.push({caller: caller, callkey: callkey});
+        }
+    }
+
+    call_on_run() {
+        //call any function extension that is present
+        for (var x = 0; x < this.run_ext.length; x++) {
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+        }
+    }
+
+    call_on_complete() {
+        //call any function extension that is present
+        for (var x = 0; x < this.complete_ext.length; x++) {
+            this.complete_ext[x].caller[this.complete_ext[x].callkey]();
+        }
+    }
+
+    reverseFrames() {
+
+        this.frames.reverse();
+
+    }
+
+    singleFrame(frameSize, size) {
         this.__frametype = 'single';
 
         this.frameSize = frameSize;
@@ -152,12 +197,14 @@ class Animation {
 
             for (let x = this.frameBounds.min.x; x <= this.frameBounds.max.x; x++) {
 
-                let framePos = {x: x * this.frameSize.x + this.frameOffset.x, y: y * this.frameSize.y + this.frameOffset.y};
+                let framePos = {
+                    x: x * this.frameSize.x + this.frameOffset.x,
+                    y: y * this.frameSize.y + this.frameOffset.y
+                };
 
                 this.frames.push({image: this.image, frameSize: this.frameSize, framePos: framePos});
 
-                if( x >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y)
-                {
+                if (x >= this.frameBounds.termPoint.x && y >= this.frameBounds.termPoint.y) {
 
                     quitLoop = true;
 
@@ -166,7 +213,7 @@ class Animation {
 
                 fcount += 1;
 
-                if(quitLoop)
+                if (quitLoop)
                     break;
 
             }
@@ -174,14 +221,13 @@ class Animation {
         }
 
         this.frames[0] = !this.frames[0] ? {
-                image: this.image,
-                frameSize: this.frameSize,
-                framePos: {x: this.frameBounds.min.x, y: this.frameBounds.min.y}
-            } : this.frames[0];
+            image: this.image,
+            frameSize: this.frameSize,
+            framePos: {x: this.frameBounds.min.x, y: this.frameBounds.min.y}
+        } : this.frames[0];
 
 
-        if(this.seesaw_mode)
-        {
+        if (this.seesaw_mode) {
             console.log('ANIMATION: applying seesaw');
 
             var frames_reversed = this.frames.slice().reverse();
@@ -191,15 +237,11 @@ class Animation {
             this.frames = this.frames.concat(frames_reversed);
 
         }
+        if (this.reverse_frames) {
+            this.reverseFrames();
+        }
 
-       // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
-
-    }
-
-    resetFrames() //special reset function:: frames are re-rendered each reset()
-    {
-
-        this.apply2DFrames();
+        // this.selected_frame = this.frames[this.cix % this.frames.length] || this.frames[0];
 
     }
 
@@ -209,116 +251,80 @@ class Animation {
 
     }
 
-    reset()
-{
+    reset() {
 
-    this.resetFrames();
+        this.apply2DFrames();
 
-    this.cix = 0;
-
-}
-
-continuous(duration)
-{
-
-    if(this.__frametype == 'single')
-    {
-        return 0;
+        this.cix = 0;
 
     }
 
-  this.apply2DFrames();
+    continuous(duration) {
 
-    //update once:
-    this.update();
+        if (this.__frametype == 'single') {
+            return 0;
 
-    if(this.cix == 0)
-  {
+        }
 
-      this.engage();
+        this.apply2DFrames();
 
-  }
+        //update once:
+        this.update();
 
+        if (this.cix == 0) {
 
-}
+            this.engage();
 
-    onRun(caller, callkey)
-    {
+        }
 
-        this.run_ext = this.run_ext  || [];
-
-        this.run_ext.push({caller:caller, callkey:callkey});
 
     }
 
-engage(duration, complete)
-{
-    //call any function extension that is present
-    for(var x= 0 ; x<this.run_ext.length; x++)
-    {
+    engage(duration, complete) {
+        this.call_on_run();
+        duration = duration || 2000;
 
-        this.run_ext[x].caller[this.run_ext[x].callkey]();
+        if (this.__frametype == 'single') {
+            return 0;
+
+        }
+
+        let __inst = this;
+
+        this.complete = complete || this.complete || function () {
+            };
+
+        var duration = duration || typeof(this.duration) == 'number' ? this.duration : this.frames.length * 20;
+
+
+        //we have a target
+        this.tween = new TWEEN.Tween(this)
+            .easing(__inst.curve || TWEEN.Easing.Linear.None)
+
+            .to({cix: __inst.frames.length - 1}, duration)
+            .onUpdate(function () {
+                //console.log(objects[0].position.x,objects[0].position.y);
+
+                //   __inst.cix = Math.ceil(__inst.cix);
+
+                __inst.update();
+
+            })
+            .onComplete(function () {
+                //console.log(objects[0].position.x, objects[0].position.y);
+
+               __inst.call_on_complete();
+
+                __inst.cix = 0;
+
+                __inst.isComplete = true;
+
+            });
+
+        this.tween.start();
 
     }
 
-    duration = duration || 2000;
-
-    if(this.__frametype == 'single')
-    {
-        return 0;
-
-    }
-
-    let __inst = this;
-
-    this.complete = complete || this.complete || function(){  };
-
-    var duration = duration || typeof(this.duration) == 'number' ? this.duration : this.frames.length * 20;
-
-    if(this.cix == 0 && this.extras)
-    {
-        this.extras.call(); //fire any extras attached
-
-    }
-
-    //we have a target
-  this.tween = new TWEEN.Tween(this)
-        .easing(__inst.curve || TWEEN.Easing.Linear.None)
-
-        .to({cix:__inst.frames.length - 1}, duration)
-        .onUpdate(function() {
-            //console.log(objects[0].position.x,objects[0].position.y);
-
-         //   __inst.cix = Math.ceil(__inst.cix);
-
-        __inst.update();
-
-        })
-        .onComplete(function() {
-            //console.log(objects[0].position.x, objects[0].position.y);
-
-            if(__inst.complete)
-            {
-
-                __inst.complete();
-
-            }
-
-            __inst.cix = 0;
-
-            __inst.isComplete = true;
-
-        });
-
-  this.tween.start();
-
-}
-
-onComplete(fun)
-{
-    this.complete = fun;
-
-}
 
     animate() {
 
@@ -326,28 +332,22 @@ onComplete(fun)
 
         this.timer += 1;
 
-        if(this.delay == 0 || this.timer % this.delay == 0) {
+        if (this.delay == 0 || this.timer % this.delay == 0) {
 
-                if(this.cix == 0 && this.extras)
-                {
-                    this.extras.call(); //fire any extras attached
+            if (this.cix >= this.frames.length - 1) {
+                this.call_on_complete();
 
-                }
+            }
 
-                if(this.cix >= this.frames.length - 1 && typeof(this.complete) == 'function')
-                {
-                    this.complete(this);
+            this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
 
-                }
-
-                this.cix = this.cix >= this.frames.length - 1 ? this.frameBounds.min.x : this.cix + 1;
-
-                this.update();
+            this.update();
 
         }
 
     }
 
-};
+}
+;
 
 Gamestack.Animation = Animation;

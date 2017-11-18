@@ -47,6 +47,8 @@ class Motion {
 
         this.rotation = Gamestack.getArg(args, 'rotation', 0);
 
+        this.size = Gamestack.getArg(args, 'size', new Vector(0, 0, 0));
+
         this.targetRotation = Gamestack.getArg(args, 'targetRotation', 0);
 
         this.name = Gamestack.getArg(args, 'name', "__");
@@ -65,11 +67,49 @@ class Motion {
 
         this.delay = Gamestack.getArg(args, 'delay', 0);
 
-        this.animation = args.animation || false;
-
+        this.object = this.getParent();
+        
         this.run_ext = args.run_ext || [];
 
+        this.complete_ext = args.complete_ext || [];
+
     }
+
+    /*****
+     * Overridable / Extendable functions
+     * -allows stacking of external object-function calls
+     ******/
+
+    onRun(caller, callkey) {
+        this.run_ext = this.run_ext || [];
+
+        if (this.run_ext.indexOf(caller[callkey]) == -1) {
+            this.run_ext.push({caller: caller, callkey: callkey});
+        }
+    }
+
+    onComplete(caller, callkey) {
+        this.complete_ext = this.complete_ext || [];
+
+        if (this.complete_ext.indexOf(caller[callkey]) == -1) {
+            this.complete_ext.push({caller: caller, callkey: callkey});
+        }
+    }
+
+    call_on_run() {
+        //call any function extension that is present
+        for (var x = 0; x < this.run_ext.length; x++) {
+            this.run_ext[x].caller[this.run_ext[x].callkey]();
+        }
+    }
+
+    call_on_complete() {
+        //call any function extension that is present
+        for (var x = 0; x < this.complete_ext.length; x++) {
+            this.complete_ext[x].caller[this.complete_ext[x].callkey]();
+        }
+    }
+
 
     curvesToArray() {
 
@@ -239,84 +279,58 @@ class Motion {
 
     }
 
-    engage() {
+    getParent()
+    {
 
-        //call any function extension that is present
-        for(var x= 0 ; x<this.run_ext.length; x++)
+        var object = {}, __inst = this;
+
+        $.each(Gamestack.all_objects, function (ix, item) {
+
+            if (item.id == __inst.parent_id) {
+
+                object = item;
+            }
+        });
+
+        if(!this.size)
         {
-
-            this.run_ext[x].caller[this.run_ext[x].callkey]();
+            this.size = new Vector(object.size);
 
         }
 
+        return object;
+
+    }
+
+    engage() {
 
         var __inst = this;
 
         var tweens = [];
 
-        //construct a tween::
 
+        var object = this.getParent();
 
-        var objects = {};
+        var targetPosition = {
 
-        $.each(Game.sprites, function (ix, item) {
-
-            if (item.id == __inst.parent_id) {
-
-                objects[ix] = item;
-
-                if(__inst.animation)
-                {
-                    objects[ix].selected_animation = __inst.animation;
-
-                }
-
-            }
-        });
-
-
-        var target = {
-
-            x: __inst.distance.x + objects[0].position.x,
-            y: __inst.distance.y + objects[0].position.y,
-            z: __inst.distance.z + objects[0].position.z
+            x: __inst.distance.x + object.position.x,
+            y: __inst.distance.y + object.position.y,
+            z: __inst.distance.z + object.position.z
 
         };
 
-        if (__inst.targetRotation > 0 || __inst.targetRotation < 0) {
+        var targetR = __inst.targetRotation + object.rotation.x,
 
+        targetSize = __inst.size;
 
-            var targetR = __inst.targetRotation + objects[0].rotation.x;
+        __inst.call_on_run(); //call any on-run extensions
 
-            //we have a target
-            tweens[0] = new TWEEN.Tween(objects[0].rotation)
-                .easing(__inst.curve || __inst.motion_curve)
+        //we always have a targetPosition
+        //construct a tween::
+        tweens.push(new TWEEN.Tween(object.position)
+            .easing(__inst.curve || __inst.motion_curve)
 
-                .to({x: targetR}, __inst.duration)
-                .onUpdate(function () {
-                    //console.log(objects[0].position.x,objects[0].position.y);
-
-
-                })
-                .onComplete(function () {
-                    //console.log(objects[0].position.x, objects[0].position.y);
-                    if (__inst.complete) {
-
-                        __inst.complete();
-
-                    }
-
-
-                });
-
-
-        }
-
-        //we have a target
-        tweens.push(new TWEEN.Tween(objects[0].position)
-            .easing(__inst.motion_curve)
-
-            .to(target, __inst.duration)
+            .to(targetPosition, __inst.duration)
             .onUpdate(function () {
                 //console.log(objects[0].position.x,objects[0].position.y);
 
@@ -324,15 +338,57 @@ class Motion {
             })
             .onComplete(function () {
                 //console.log(objects[0].position.x, objects[0].position.y);
-
                 if (__inst.complete) {
 
-                    __inst.complete();
+                    __inst.call_on_complete(); //only call once
 
                 }
 
 
             }));
+
+        //we have a target
+        tweens.push(new TWEEN.Tween(object.size)
+            .easing(__inst.curve || __inst.motion_curve)
+
+            .to(targetSize, __inst.duration)
+            .onUpdate(function () {
+                //console.log(objects[0].position.x,objects[0].position.y);
+
+
+            })
+            .onComplete(function () {
+                //console.log(objects[0].position.x, objects[0].position.y);
+                if (__inst.complete) {
+
+
+
+                }
+
+
+            }));
+
+        //we have a target
+        tweens.push(new TWEEN.Tween(object.rotation)
+            .easing(__inst.curve || __inst.motion_curve)
+
+            .to({x: targetR}, __inst.duration)
+            .onUpdate(function () {
+                //console.log(objects[0].position.x,objects[0].position.y);
+
+
+            })
+            .onComplete(function () {
+                //console.log(objects[0].position.x, objects[0].position.y);
+                if (__inst.complete) {
+
+
+
+                }
+
+
+            }));
+
 
 
         __inst.delay = !isNaN(__inst.delay) && __inst.delay > 0 ? __inst.delay : 0;
@@ -546,7 +602,6 @@ class Motion {
 
         return points;
     }
-
 }
 
 

@@ -140,7 +140,7 @@ function __getSelectedRightClickItemSubMenu()
     return[
 
         {
-            name: 'bind_to_object_events...',
+            name: 'bind_object_events...',
             title: 'bind main-call of item to an object-event',
             img: 'image/settings_icon.png',
             id:'bind_object_events',
@@ -262,7 +262,6 @@ var __resetRightClicks = function()
 
         });
 
-
         window.setTimeout(function(){
 
             //Calling context menu
@@ -272,7 +271,7 @@ var __resetRightClicks = function()
 
             $('#sprite_settings').contextMenu(__rightClickInterfaceOnSprite, {triggerOn: 'contextmenu'});
 
-        }, 1000); //give timeout for other events to be ready
+        }, 400); //give timeout for other events to be ready
 
         //Calling context menu
 

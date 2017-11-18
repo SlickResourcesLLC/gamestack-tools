@@ -249,24 +249,11 @@ let GameStackLibrary = function () {
         }
         ,
 
-       ExtendEvents:function(extendedObject, extendedKey, extendor, extendorKey, extendorFunc)
+       ExtendEvents:function(extendedObject, extendedKey, extendor, extendorKey)
         {
-            function EventLink(extendedObject, extendedKey, extendor, extendorKey)
-            {
+            var evtLink =new GSEventLink(extendedObject, extendedKey, extendor, extendorKey);
 
-                this.parent_id=extendedObject.id,
-
-                this.child_id=extendor.id,
-
-                this.parent_key=extendedKey,
-
-                this.child_key=extendorKey;
-
-            };
-
-            var evtLink =new EventLink(extendedObject, extendedKey, extendor, extendorKey);
-
-            this.all_objects.push(new EventLink(extendedObject, extendedKey, extendor, extendorKey));
+            this.all_objects.push(new GSEventLink(extendedObject, extendedKey, extendor, extendorKey));
 
             var parent = extendedObject;
 
@@ -276,9 +263,14 @@ let GameStackLibrary = function () {
             {
                 console.log('Gamestack:EXTENDING EVENTS:' + extendedKey +":" + extendorKey);
 
-                if(parent.onRun)
+                if(parent.onRun) //Any extendable object has an onRun ... OR
                 {
                     parent.onRun(extendor, extendorKey);
+
+                }
+                if(parent.onComplete) //object has an onComplete
+                {
+                    parent.onComplete(extendor, extendorKey);
 
                 }
 
@@ -377,29 +369,40 @@ let GameStackLibrary = function () {
         add: function (obj) {
             //1: if Sprite(), Add object to the existing __gameWindow
 
-            if (obj instanceof GameWindow) {
+            var __inst = this;
 
-                this.__gameWindow = obj;
+            function isWindow()
+            {
+                return __inst.hasOwnProperty('__gameWindow') && __inst.__gameWindow instanceof GameWindow;
+            };
 
-            }
+            if(isWindow()) {
 
-            if (obj instanceof Force) {
+                if (obj instanceof GameWindow) {
 
-                this.__gameWindow.forces.push(obj);
+                    this.__gameWindow = obj;
 
-            }
+                }
+
+                if (obj instanceof Force ) {
+
+                    this.__gameWindow.forces.push(obj);
+
+                }
 
 
-            if (obj instanceof Camera) {
+                if (obj instanceof Camera ) {
 
-                this.__gameWindow.camera = obj;
+                    this.__gameWindow.camera = obj;
 
-            }
+                }
 
 
-            if (obj instanceof Sprite) {
+                if (obj instanceof Sprite ) {
 
-                this.__gameWindow.sprites.push(obj);
+                    this.__gameWindow.sprites.push(obj);
+
+                }
 
             }
 
@@ -540,7 +543,7 @@ let GamestackApi =
     {
 
 
-    }
+    },
 
     post:function(object)
     {
@@ -593,6 +596,7 @@ class Sound {
             this.src = src;
 
         }
+
        if(typeof(data)=='object') {
            for (var x in data) {
                if (x !== 'sound') {

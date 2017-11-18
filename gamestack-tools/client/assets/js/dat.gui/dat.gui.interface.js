@@ -467,11 +467,8 @@ var DatGui = {
                 if (obj.curve_options[x] == value) {
 
                     obj[key] = obj.curve_options[x];
-
                 }
-
             }
-
 
             var canvasDom = $(gui.domElement).parent().find('canvas.motion-curve');
 
@@ -601,6 +598,8 @@ var DatGui = {
 
             var fuisize = DatGui.main_gui.addFolder('size');
 
+            alert('adding');
+
             var max = DatGui.addEachNumeric(o.size, fuisize);
 
         }
@@ -651,6 +650,15 @@ var DatGui = {
                 seesaw.onChange(function (v) {
 
                     parent.resetFrames();
+
+                });
+
+                var reverseFrames = this.main_gui.add(parent, 'reverse_frames');
+
+                reverseFrames.onChange(function (v) {
+
+                    parent.resetFrames();
+                    //happens automatically in Animation() class
 
                 });
 
@@ -816,6 +824,12 @@ var DatGui = {
             var fuidist = DatGui.main_gui.addFolder('distance');
 
             var d = DatGui.addEachNumeric(o.distance, fuidist);
+
+            var fuisize = DatGui.main_gui.addFolder('size');
+
+            var s = DatGui.addEachNumeric(o.size, fuisize);
+
+            return true;
 
         }
 
@@ -1455,7 +1469,7 @@ var DatGui = {
 
         if(!$(dom).find('button.gui-close-button').length) {
 
-            $(dom).prepend("<h4 style=' font-size:1.2em; background:black;'> " + title + ": &nbsp;&#9655;&nbsp;<span style=' position:absolute; display:inline-block; font-size:1.2em;  color:#c56c00; margin-top:-1px; '>" + name + "</span><button class='gui-close-button' style='float:right; width:23px; height:30px; background:transparent; padding:5px; margin-top:-4px; margin-right:3px; color:darkorange;' class='close'>X</button></h4>");
+            $(dom).prepend("<h4 style=' font-size:1.2em; padding:2px; background:black;'> " + title + ": &nbsp;&#9655;&nbsp;<span style=' position:absolute; display:inline-block; font-size:1.2em;  color:#c56c00; margin-top:-3px; '>" + name + "</span><button class='gui-close-button' style='float:right; width:23px; height:30px; background:transparent; padding:5px; margin-top:-4px; margin-right:3px; color:darkorange;' class='close'>X</button></h4>");
 
             $(dom).css('position', 'absolute');
 
@@ -1474,6 +1488,8 @@ var DatGui = {
             $(dom).css('background', 'black');
 
             $(dom).css('top', '50px');
+
+            $(dom).css('font-size', '80%');
 
             $($(dom).find('ul')[0]).append('<button style="width:80%;" class="ok">Ok</button>');
 
@@ -1531,6 +1547,18 @@ var DatGui = {
 
     allObjectEventsCheckGui: function (linkableObject, objects, title) {
 
+        function startKey(obj)
+        {
+
+            return obj.constructor.name + '():' + obj.name + '@Start';
+        };
+
+        function endKey(obj)
+        {
+
+            return obj.constructor.name + '():' + obj.name + '@Complete';
+        };
+
         var gui = new dat.GUI({autoPlace: false});
 
         var combinables = [];
@@ -1550,9 +1578,9 @@ var DatGui = {
 
                                 ctr = obj.constructor.name;
 
-                            var keyComplete = obj.name + '-bind-toComplete',
+                            var keyComplete = endKey(obj),
 
-                                keySimultaneous = obj.name + '-bind-toStart';
+                                keySimultaneous = startKey(obj);
 
                             switch (ctr) {
 
@@ -1660,9 +1688,9 @@ var DatGui = {
 
                             var itemz = propKeysExtendor[iz];
 
-                            var keyComplete = obj.name + '-bind-toComplete',
+                            var keyComplete = endKey(obj),
 
-                                keySimultaneous = obj.name + '-bind-toStart';
+                                keySimultaneous = startKey(obj);
 
                             for (var y in obj) {
 
