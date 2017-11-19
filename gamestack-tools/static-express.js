@@ -48,7 +48,7 @@ module.exports = function(portNumber, callback) {
             // Allow some files to be server over HTTP
             this.app.use(this.express.static(__dirname + '/client'));
 
-            console.log("Express Server / SlickApi was initialized: Listening on port:" + this.port);
+            console.log("Express Server / GamestackApi was initialized: Listening on port:" + this.port);
 
             this.isInit = true;
 

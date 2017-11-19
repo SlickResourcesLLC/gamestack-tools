@@ -6155,6 +6155,34 @@ function GSEventLink(extendedObject, extendedKey, extendor, extendorKey) {
 function makeExtendableOverrides(object) {
         if (!object.run_ext instanceof Array) object.run_ext || [];
 };;
+
+var Level = function () {
+        function Level() {
+                var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+                _classCallCheck(this, Level);
+
+                this.sprites = args.sprites || [];
+
+                this.backgrounds = args.backgrounds || [];
+
+                this.terrains = args.terrains || [];
+
+                this.interactives = args.interactives || [];
+        }
+
+        _createClass(Level, [{
+                key: 'add',
+                value: function add() {}
+        }, {
+                key: 'add_all_to_game',
+                value: function add_all_to_game() {}
+        }]);
+
+        return Level;
+}();
+
+;
 /**
  * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
 

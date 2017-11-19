@@ -6706,6 +6706,37 @@ function makeExtendableOverrides(object)
 
 
 };;
+
+
+class Level
+{
+    constructor(args={})
+    {
+        this.sprites = args.sprites || [];
+
+        this.backgrounds = args.backgrounds || [];
+
+        this.terrains = args.terrains || [];
+
+        this.interactives = args.interactives || [];
+
+    }
+
+    add()
+    {
+
+
+    }
+
+    add_all_to_game()
+    {
+
+
+
+    }
+}
+
+;
 /**
  * Takes an object of arguments and returns Motion() object. Motion animates movement of position and rotation properties for any Sprite()
 
@@ -6775,7 +6806,7 @@ class Motion {
         this.delay = Gamestack.getArg(args, 'delay', 0);
 
         this.object = this.getParent();
-        
+
         this.run_ext = args.run_ext || [];
 
         this.complete_ext = args.complete_ext || [];

@@ -43,6 +43,8 @@
 
     <script src="../assets/js/hot_key_interface.js"></script>
 
+    <script src="../assets/js/object-builder.js"></script>
+
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
 
@@ -307,6 +309,12 @@
 
     }
 
+    ul#controllable
+    {
+
+        top:55px;
+
+    }
 
 
 </style>
@@ -360,6 +368,15 @@
 
     <canvas id="myCanvas" class="level-maker-canvas">
     </canvas>
+
+
+    <ul id="controllable" class="controllable selected_object">
+
+        <span id="*" class="tree-open open">&#9881;</span>
+        <li id="sprite_settings" class="building-heading"> Level</li>
+
+    </ul>
+
 
 </div>
 
@@ -465,6 +482,8 @@
 
     Canvas.__levelMaker = true;
 
+    var __LEVEL = new Level();
+
     //App{}: a collection of UI functionality
 
     var App = {
@@ -472,7 +491,6 @@
         TESTGAME:true,
 
         DEVMODE: false,
-
 
         replace_map_object:function(item) {
 
@@ -495,6 +513,138 @@
                 }
 
             });
+        },
+
+
+        objectListToUL: function (keyname, list, iconHtmls) {
+
+            var html = "<ul>";
+
+            if (!iconHtmls instanceof Array) {
+                iconHtmls = [];
+
+            }
+
+            $.each(list, function (ix, item) {
+
+                var icons = [];
+
+                item.guid = Gamestack.create_id();
+
+                icons = icons.concat(iconHtmls);
+
+                if ((ix + '').indexOf('__') == -1) {
+
+                    var name = item.name || ix;
+
+                    $.each(icons, function (ix, str) {
+                        icons[ix] = str.replace('*', name)
+                    });
+
+                    var k = keyname,
+
+                        ulCl = '.' + k.toLowerCase() + '-' + 'tab-pane';
+
+                    //   alert(ulCl);
+
+                    if (!$("#pane-list-" + keyname + ix).length) {
+
+                        $(ulCl).find('ul').append('<li id="pane-list-' + keyname + ix + '">' + name + icons.join(' ') + '</li>');
+
+                    }
+
+                    html += "<li id='" + (item.guid || "__blank") + "' class='" + keyname + "_member'>" + name + icons.join(' ') + "</li>";
+
+
+                    $('body').on('contextmenu', '#' + item.guid, function (evt) {
+
+                        App.selectedRightClickItem = item;
+
+                        var my_guid = $(evt.target).attr('id');
+
+                        if (my_guid) {
+
+                            console.log('found correct id');
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+            return html + "</ul>";
+
+        },
+
+
+        hint: function (element, hintText) {
+
+            var hint = $('#floating-hint');
+
+            var enter = function (evt) {
+
+                    $(hint).css('left', evt.clientX + 150);
+
+                    $(hint).css('top', evt.clientY - 15);
+
+                    $(hint).text(hintText);
+
+                    $(hint).show('fast');
+
+                },
+                out = function () {
+
+                    $(hint).hide('fast');
+                };
+
+
+            $(element).hover(enter, out);
+
+        },
+
+
+        getArg: function (args, key, fallback) {
+            return args[key] || fallback;
+
+        },
+
+        applyControl: function (args) {
+
+            // console.log('Found item');
+
+            var parent = this.getArg(args, 'parent', false),
+
+                id = this.getArg(args, 'id', false),
+
+                folders = this.getArg(args, 'folders', []),
+
+                html = this.getArg(args, 'html', false),
+
+                callback = this.getArg(args, 'callback', false),
+
+                clName = $(parent).attr('class'),
+                list = this.getArg(args, 'list', false);
+
+
+            if (parent, id, html, callback) {
+
+                $(html).insertBefore(parent);
+
+                var clName = $(parent).attr('class');
+
+
+                $('#' + id).unbind().click(function () {
+
+                    callback(list, clName, folders);
+
+                });
+
+                this.hint($('#' + id)[0], 'Add ' + clName + ' to GTUI');
+
+            }
+
         },
 
             add_map_object:function(item){
@@ -1821,6 +1971,24 @@
                 return false;
 
             });
+
+            var __inst = this;
+
+            //create the gui / Builder
+            this.__builderProfile = new ObjectArrayBuilder(__LEVEL, ['sprites', 'backgrounds', 'terrains', 'interactives'], false),
+
+                this.is_init = true;
+
+            this.refreshBuilder = function () {
+
+                $('.controllable div').html('');
+                //create the gui / Builder
+                __inst.__builderProfile.refresh(Game.sprites[0]);
+
+                __resetRightClicks();
+
+            };
+
 
         }
 

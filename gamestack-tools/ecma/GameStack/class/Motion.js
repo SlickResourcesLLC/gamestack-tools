@@ -68,7 +68,7 @@ class Motion {
         this.delay = Gamestack.getArg(args, 'delay', 0);
 
         this.object = this.getParent();
-        
+
         this.run_ext = args.run_ext || [];
 
         this.complete_ext = args.complete_ext || [];

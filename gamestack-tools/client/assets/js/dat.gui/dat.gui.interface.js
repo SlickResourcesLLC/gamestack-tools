@@ -667,6 +667,29 @@ var DatGui = {
         }
 
 
+        if (isType(Background)) {
+
+            function addAnimation(obj)
+            {
+
+                obj.animations.push(new Animation);
+
+            };
+
+            DatGui.updateableAnimationObjectToGui(DatGui.main_gui, o.animations[o.animations.length -1]);
+
+            //todo = add folder for min
+
+            var images = [
+
+                DatGui.main_gui.addFolder('size')
+
+            ]
+
+        }
+
+
+
         if (isType(Projectile)) {
             projectile = true;
 
@@ -1119,13 +1142,11 @@ var DatGui = {
 
     },
 
-    updateableAnimationObjectToGui: function (gui, effects) {
+    updateableAnimationObjectToGui: function (gui, animation) {
 
         var first_gui = $('div.main ul')[0];
 
         var fname;
-
-        effects.animation = new Animation();
 
         if (effects.animation.image.domElement.src) {
 
@@ -1175,21 +1196,21 @@ var DatGui = {
 
                         $('file_special' + id).text(relpath);
 
-                        // effects.animation = new Animation({src:relpath});
+                        // animation = new Animation({src:relpath});
 
-                        effects.animation.src = relpath;
+                        animation.src = relpath;
 
                         effects.src = relpath;
 
-                        effects.animation.image = new GameImage(relpath);
+                        animation.image = new GameImage(relpath);
 
-                        effects.animation.image.domElement.onload = function () {
+                        animation.image.domElement.onload = function () {
 
-                            effects.animation.frameSize = new Vector(effects.animation.image.domElement.width, effects.animation.image.domElement.height, 0);
+                            animation.frameSize = new Vector(animation.image.domElement.width, animation.image.domElement.height, 0);
 
-                            effects.animation.animate();
+                            animation.animate();
 
-                            __ServerSideFile.animationPreview(effects.animation, effects);
+                            __ServerSideFile.animationPreview(animation, effects);
 
                         };
                     });

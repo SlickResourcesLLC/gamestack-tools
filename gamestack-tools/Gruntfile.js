@@ -21,11 +21,6 @@ grunt.initConfig({
         options: {
             separator: ';',
         },
-        api:{
-
-            src: ['ecma/Protocol/rest/*.js'],
-            dest: 'ecma/Protocol/concat/Protocol.js',
-        },
 
         game_lib:{
             src: [ 'ecma/GameStack/Main.js', 'ecma/GameStack/class/dep/jsmanipulate.js', 'ecma/GameStack/Canvas.js', 'ecma/GameStack/EffectSequence.js',  'ecma/GameStack/Geometry.js', 'ecma/GameStack/class/*.js', 'ecma/GameStack/class/sub/*.js'],
@@ -50,20 +45,7 @@ grunt.initConfig({
             }
         ]
 
-        },
-
-
-        api: {
-            files: [
-                {
-                    expand: true,
-                    cwd: 'ecma/Protocol/concat',
-                    src: ['Protocol.js'],
-                    dest: 'client/dist/js'
-                }
-            ]
         }
-
     },
 
     uglify: {
@@ -83,7 +65,7 @@ grunt.initConfig({
             src: ['ecma/GameStack/README.md', 'ecma/GameStack/concat/GameStack.js'],
             jsdoc: './node_modules/.bin/jsdoc',
             options: {
-                destination: './docs/outputhtml',
+                destination: './docs',
                 configure: './node_modules/ink-docstrap/template/jsdoc.conf.json',
                 template: './node_modules/ink-docstrap/template'
             }
