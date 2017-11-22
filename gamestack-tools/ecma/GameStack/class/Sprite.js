@@ -11,8 +11,6 @@
  * @param   {Vector} args.position the position of the Sprite
  * @param   {Vector} args.padding the 'float-type' Vector of x and y padding to use when processing collision on the Sprite. A padding of new Vector(0.2, 0.2) will result in 1/5 of Sprite size for padding
 
-
-
  * @param   {Animation} args.selected_animation the selected_animation of the Sprite:: pass during creation or use Sprite.setAnimation after created
  *
  * @returns {Sprite} a Sprite object
@@ -28,7 +26,7 @@ class Sprite {
 
         this.active = true; //active sprites are visible
 
-        this.name = args.name || "__spriteName";
+        this.name = args.name || "__blankName";
 
         this.description = args.description || "__spriteDesc";
 
@@ -88,7 +86,6 @@ class Sprite {
 
         });
 
-
         GameStack.each(this.animations, function (ix, item) {
 
             __inst.animations[ix] = new Animation(item);
@@ -117,12 +114,7 @@ class Sprite {
         });
 
 
-        if (args.selected_animation) {
-
-            this.selected_animation = new Animation(args.selected_animation);
-
-        }
-        else {
+        this.selected_animation = new Animation(args.selected_animation || {});
 
             this.image.domElement.onload = function(){
 
@@ -138,8 +130,6 @@ class Sprite {
                     }));
 
             };
-
-        }
 
     }
 
@@ -352,10 +342,10 @@ class Sprite {
      * @memberof Sprite
      **********/
 
-   getCappedSizeXY(mx, my, currentSize)
+   getSizeByMax(mx, my)
     {
 
-        var size = new Vector3(currentSize || this.size);
+        var size = new Vector3(this.size);
 
         var wth = size.y /  size.x;
 

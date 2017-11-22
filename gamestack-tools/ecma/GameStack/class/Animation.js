@@ -74,6 +74,15 @@ class Animation {
 
         this.domElement = this.image.domElement;
 
+        var __inst = this;
+
+        this.domElement.onload = function()
+        {
+
+        __inst.__isValid = true;
+
+        };
+
         this.frameSize = new Vector(args.frameSize || new Vector3(44, 44, 0));
 
         if (args.frameBounds) {
@@ -88,7 +97,7 @@ class Animation {
         this.frameOffset = this.getArg(args, 'frameOffset', new Vector3(0, 0, 0));
 
         if (typeof(args) == 'object' && args.frameBounds && args.frameSize) {
-            this.apply2DFrames(args.parent || {})
+            this.apply2DFrames();
         }
         ;
 
@@ -96,7 +105,7 @@ class Animation {
 
         this.cix = 0;
 
-        this.selected_frame = this.frames[0];
+        this.selected_frame = this.frames[0] || {};
 
         this.timer = 0;
 
@@ -156,7 +165,7 @@ class Animation {
     singleFrame(frameSize, size) {
         this.__frametype = 'single';
 
-        this.frameSize = frameSize;
+        this.frameSize = frameSize || this.frameSize;
 
         this.size = size || this.frameSize;
 
@@ -324,7 +333,6 @@ class Animation {
         this.tween.start();
 
     }
-
 
     animate() {
 

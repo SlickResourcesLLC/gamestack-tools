@@ -1,6 +1,4 @@
 
-
-
 class Level
 {
     constructor(args={})
@@ -12,6 +10,8 @@ class Level
         this.terrains = args.terrains || [];
 
         this.interactives = args.interactives || [];
+
+        this.threes = args.threes || []; //3d objects
 
     }
 

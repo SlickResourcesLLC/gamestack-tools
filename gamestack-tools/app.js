@@ -43,7 +43,7 @@ module.exports = function(openNow) {
 
            var content = req.body.content, filename = req.body.filename, type = req.body.type;
 
-           var relpath = 'client/assets/file_storage/' + filename;
+           var relpath = 'client/assets/file_temp/' + filename;
 
            var dataString = content;
 
@@ -80,7 +80,7 @@ module.exports = function(openNow) {
                {
                    if(type && ['Level', 'Sprite', 'Background', 'Terrain', 'Interactive', 'Sound', 'GameImage'].indexOf(type.toLowerCase()))
                    {
-                       relpath = relpath.replace('/file_storage/', '/game/json/' + type.toLowerCase() + "/");
+                       relpath = relpath.replace('/file_temp/', '/game/json/' + type.toLowerCase() + "/");
 
                    }
 
@@ -207,13 +207,12 @@ module.exports = function(openNow) {
 
            var filename = req.body.filename;
 
-           fs.rename('client/assets/file_storage/' + filename, 'client/assets/system-image-stash/' + filename, function (err) {
+           fs.rename('client/assets/file_temp/' + filename, 'client/assets/file_storage/' + filename, function (err) {
                if (err) {
                    if (err.code === 'EXDEV') {
                        copy(oldPath, newPath);
 
                        res.end(JSON.stringify({relpath: relpath, content: content}));
-
 
                    } else {
 
@@ -237,111 +236,6 @@ module.exports = function(openNow) {
 
 
        });
-
-       app.post('/save-object', function (req, res) {
-
-           console.log('received post request:/save-object');
-
-           var data = req.body.data;
-
-           console.log(JSON.stringify(data));
-
-           console.log(data);
-
-           var data_test = {};
-
-           if (data && data.type && data.name && data.object) {
-
-               console.log('had params');
-
-               try {
-
-                   data.name = data.name.replace('.json', '');
-
-                   var path = __dirname +
-
-                       '/client/assets/json/' + data.type + '/' + data.name + '.json';
-
-                   fs.writeFile(path, data.object, function (err) {
-                       if (err) return console.log(err);
-                       console.log('File:' + path + ' was saved');
-
-                       res.end('done');
-
-                   });
-
-               }
-
-               catch(e)
-               {
-
-                   console.log(e);
-
-
-
-                   res.end('failed');
-
-               }
-
-           }
-           else
-           {
-
-               res.end('failed params');
-
-           }
-
-       });
-
-       app.post('/save-map-options', function (req, res) {
-
-            var data = req.body.data;
-
-            var data_test = {};
-
-            if (data) {
-                try {
-
-                    data_test = JSON.parse(data);
-
-                    var path = __dirname + '/client/assets/system-data/level-maker-2d-options.json';
-
-                    fs.writeFile(path, data, function (err) {
-                        if (err) return console.log(err);
-                        console.log('File:' + path + ' was saved');
-
-                        res.end('done');
-
-                    });
-
-
-
-
-                }
-
-                catch(e)
-                {
-
-                    console.log(e);
-
-
-
-                    res.end('failed');
-
-                }
-
-
-
-            }
-            else
-            {
-                res.end('failed');
-
-            }
-
-
-
-        });
 
        console.log('listening at:' + 'http://localhost:3137/main.html');
 

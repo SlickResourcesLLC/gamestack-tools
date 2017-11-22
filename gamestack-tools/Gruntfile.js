@@ -6,6 +6,8 @@
 module.exports = function (grunt) {
     // Project configuration.
 
+    var fs = require('fs');
+
   require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
 
 grunt.initConfig({
@@ -23,12 +25,11 @@ grunt.initConfig({
         },
 
         game_lib:{
-            src: [ 'ecma/GameStack/Main.js', 'ecma/GameStack/class/dep/jsmanipulate.js', 'ecma/GameStack/Canvas.js', 'ecma/GameStack/EffectSequence.js',  'ecma/GameStack/Geometry.js', 'ecma/GameStack/class/*.js', 'ecma/GameStack/class/sub/*.js'],
-            dest: 'ecma/GameStack/concat/GameStack.js'
+            src: [ 'ecma/Gamestack/Main.js', 'ecma/Gamestack/Canvas.js','ecma/Gamestack/Geometry.js', 'ecma/Gamestack/class/*.js', 'ecma/Gamestack/class/sub/*.js'],
+            dest: 'ecma/Gamestack/concat/Gamestack.js'
         },
 
     },
-
 
     babel: {
         options: {
@@ -39,8 +40,8 @@ grunt.initConfig({
           files: [
             {
                 expand: true,
-                cwd: 'ecma/GameStack/concat',
-                src: ['GameStack.js'],
+                cwd: 'ecma/Gamestack/concat',
+                src: ['Gamestack.js'],
                 dest: 'client/dist/js'
             }
         ]
@@ -54,7 +55,7 @@ grunt.initConfig({
         },
         my_target: {
             files: {
-                'client/dist/js/GameStack.min.js': ['client/dist/js/GameStack.js']
+                'client/dist/js/Gamestack.min.js': ['client/dist/js/Gamestack.js']
             }
         }
     },
@@ -62,7 +63,7 @@ grunt.initConfig({
 
     jsdoc : {
         dist : {
-            src: ['ecma/GameStack/README.md', 'ecma/GameStack/concat/GameStack.js'],
+            src: ['ecma/Gamestack/README.md', 'ecma/Gamestack/concat/Gamestack.js'],
             jsdoc: './node_modules/.bin/jsdoc',
             options: {
                 destination: './docs',
@@ -75,15 +76,27 @@ grunt.initConfig({
 });
 
 
+    grunt.registerTask('package', 'apply intro and outro for closed context ', function() { //NOT USING as of 11-20-2017
 
-    grunt.registerTask('build', ['concat', 'babel', 'uglify',]);
+        var INTRO_CODE = fs.readFileSync('ecma/Gamestack/intro.js'),
+        OUTRO_CODE = fs.readFileSync('ecma/Gamestack/outro.js');//read existing contents into data
 
-    grunt.registerTask('default', ['concat', 'babel', 'uglify',]);
+        var data = fs.readFileSync('ecma/Gamestack/concat/Gamestack.js', 'utf-8');
+
+        data = INTRO_CODE + "\r\n" +  data  + "\r\n" +  OUTRO_CODE;
+
+        fs.writeFileSync('ecma/Gamestack/concat/Gamestack.js', data, 'utf-8');
+
+    });
+
+    grunt.registerTask('build', ['concat',  'babel',  'uglify']);
+
+    grunt.registerTask('default', ['concat', 'babel',  'uglify']);
 
     grunt.registerTask('doc', ['jsdoc']);
     grunt.registerTask('docs', ['jsdoc']);
 
-    grunt.registerTask('all', ['concat', 'babel', 'uglify', 'jsdoc']);
+    grunt.registerTask('all', ['concat', 'babel', 'uglify',  'jsdoc']);
 
 
 };

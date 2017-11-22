@@ -1,0 +1,6 @@
+
+
+
+LevelMaker : fix 'eye' image
+
+LevelMaker : validate Sprite before plantSprite() X-Done

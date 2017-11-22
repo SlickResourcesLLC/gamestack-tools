@@ -42,14 +42,21 @@
                 explosion1:new Animation({
                     src:"../assets/game/image/end-user/explosions/Explosion0000.png",
                     frameSize: new Vector3(128, 128, 0),
-                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(5, 4)),
-                    extras:new Extras(new Sound('../assets/game/sound/explosion.mp3').volume(0.4))
+                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(5, 4))
                 })
             }
 
         };
 
         var __GameWindow = lib.add(new GameWindow({}));
+
+        GameAssets.damage_animations.explosion1.onRun(function(){
+
+         var sound = sound ||   new Sound('../assets/game/sound/explosion.mp3').volume(0.4);
+
+         sound.play();
+
+        });
 
 
         /**
@@ -131,7 +138,6 @@
 
                 this.position.y += 1;
 
-
             }
             else
             {
@@ -142,14 +148,11 @@
 
                     this.accelX(0.2, 8);
 
-
                 }
                 else
                 {
 
-
                     this.accelX(0.2, -8);
-
 
                 }
 
@@ -177,7 +180,6 @@
                     size:explosionSize,
 
                     position:new Vector3(this.position)
-
 
                 });
 

@@ -138,7 +138,7 @@ var __ServerSideFile = {
             content = cleanContent(content);
         }
 
-        console.log(content);
+       // console.log(content); //*Too much for logging at once
 
         // Assign handlers immediately after making the request,
         // and remember the jqxhr object for this request

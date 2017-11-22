@@ -9,9 +9,9 @@
     <title>Level-Element-Maker</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
+    <link rel="stylesheet" href="../assets/js/libs/dat.gui/dat.gui.css">
 
-    <link rel="stylesheet" href="../assets/js/contextMenu/contextMenu.css">
+    <link rel="stylesheet" href="../assets/js/libs/contextMenu/contextMenu.css">
     <!-- Insert this line above script imports  -->
     <script>if (typeof module === 'object') {
         window.module = module;
@@ -20,26 +20,28 @@
 
     <script src="../assets/js/serverside-file.js"></script>
 
+    <script src="../assets/js/libs/three/three.js"></script>
+
     <script src="../assets/js/libs/Tween.js"></script>
 
     <script src="../assets/js/libs/Stats.js"></script>
 
     <script src="../dist/js/GameStack.js"></script>
 
-    <script src="../assets/js/dat.gui/dat.gui.js"></script>
+    <script src="../assets/js/libs/dat.gui/dat.gui.js"></script>
 
-    <script src="../assets/js/dat.gui/dat.gui.interface.js"></script>
+    <script src="../assets/js/libs/dat.gui/dat.gui.interface.js"></script>
 
-    <script src="../assets/js/jquery/jquery.js"></script>
+    <script src="../assets/js/libs/jquery/jquery.js"></script>
 
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
 
-    <script src="../assets/js/jquery/jquery.hotkeys.js"></script>
+    <script src="../assets/js/libs/jquery/jquery.hotkeys.js"></script>
 
-    <script src="../assets/js/contextMenu/contextMenu.js"></script>
+    <script src="../assets/js/libs/contextMenu/contextMenu.js"></script>
 
-    <script src="../assets/js/contextMenu/right_click_interface_level.js"></script>
+    <script src="../assets/js/libs/contextMenu/right_click_interface_level.js"></script>
 
     <script src="../assets/js/hot_key_interface.js"></script>
 
@@ -51,273 +53,15 @@
 
 </head>
 
-<style>
-
-    body {
-        background: black;
-
-        overflow:scroll;
-
-    }
-
-    #gs-container .iw-mTrigger {
-        background: transparent;
-        margin-top: 50px;
-
-    }
-
-    .gui-space input[type='file'] {
-        display: none;
-
-    }
-
-    #top-gui {
-
-        position: fixed;
-
-        width: 100%;
-
-        height: 0px;
-
-        z-index: 9991;
-
-        top: 50px;
-
-        overflow: visible;
-
-    }
-
-    #forceSelect {
-        position: absolute;
-
-        z-index: 9999;
-
-        left: 0;
-
-        top: 0;
-
-        margin: 0;
-
-        background: #4c4c4c; /* Old browsers */
-        background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0);
-        color: white;
-
-    }
-
-    #forceSelect option {
-
-        background: black; /* Old browsers */
-
-        color: white;
-
-    }
-
-    button.main-play {
-        position: absolute;
-
-        right: 0px;
-
-        top: 0px;
-
-        height: 30px;
-
-        width: 30px;
-
-        background-image: url(image/play.png);
-        background-position: center center;
-        background-size: 100% auto;
-
-    }
-
-    #dat-gui-gs-container {
-        position: fixed;
-
-        z-index: 9997;
-
-        top: 50px;
-
-        right: 0px;
-
-    }
-
-    div.slider {
-        position: absolute;
-
-        right: 0px;
-
-    }
-
-    canvas.level-maker-canvas {
-        zoom: 1.0;
-    }
-
-    div#gs-container
-    {
-        overflow:hidden;
-
-    }
-
-
-</style>
-
-<link rel="stylesheet" href="../assets/js/dat.gui/dat.gui.css">
+<link rel="stylesheet" href="../assets/js/libs/dat.gui/dat.gui.css">
 
 <link rel="stylesheet" href="../assets/css/tool-shell.css">
 
-<script src="../assets/js/dat.gui/dat.gui.js"></script>
+<script src="../assets/js/libs/dat.gui/dat.gui.js"></script>
 
 
-<style>
+<link rel="stylesheet" href="../assets/css/level-maker.css">
 
-    .dg .c input[type=text] {
-
-        position: relative;
-
-        border-left: 1px solid silver;
-        width: 100%;
-
-        padding: 0px;
-
-        padding-left: 2px;
-
-        padding-right: 2px;
-
-        margin: 0px;
-
-        background: none;
-
-    }
-
-    .dg div.slider {
-        width: 55%;
-    }
-
-    div#message
-    {
-        position:fixed;
-
-        z-index:9999;
-
-        top:20%;
-
-        left:20%;
-
-        width:60%;
-
-        height:60%;
-
-        background:#333333;
-
-        display:none;
-
-        text-align:center;
-
-    }
-
-
-    .console {
-        position: fixed;
-
-        width: 50%;
-
-        top: 75px;
-
-        z-index: 9999;
-
-    }
-
-    .section-title {
-
-        width: 100%;
-
-        font-size: 115%;
-
-        color: cornflowerblue;
-
-        text-decoration: underline;
-
-    }
-
-    .console-keys span {
-
-        color: darkorange;
-
-        border-left: 1px solid blue;
-        border-right: 2px solid blue;
-
-        padding: 2px;
-
-    }
-
-    div#overlay
-    {
-
-        position:absolute;
-
-        z-index:9999;
-
-        overflow:visible;
-
-    }
-
-    div#message button.ok
-    {
-
-        position:relative;
-
-        left:0px;
-
-        width:40%;
-
-    }
-
-    div#message button.cancel
-    {
-        position:relative;
-
-        left:2px;
-
-        width:40%;
-
-    }
-
-    div#just-ok-space button.ok
-    {
-
-        position:relative;
-
-        left:50%;
-
-        margin-left:-50px;
-
-    }
-
-    div.add-list
-    {
-
-
-        position:relative;
-
-
-        left:50%;
-
-        margin-left:-130px;
-
-
-    }
-
-    ul#controllable
-    {
-
-        top:55px;
-
-    }
-
-
-</style>
 
 <body>
 
@@ -480,6 +224,8 @@
 
 <script>
 
+    alert('WORKING @function:' + 'DatGui.levelMakerShowObjectGui(object);');
+
     Canvas.__levelMaker = true;
 
     var __LEVEL = new Level();
@@ -491,6 +237,90 @@
         TESTGAME:true,
 
         DEVMODE: false,
+
+        showGui:function(content, callback){
+
+            //remove 'ok' button
+
+            $('.tempGui').remove();
+
+            if(!callback) {
+
+                $(content).find('button.ok').remove();
+
+            }
+            else
+            {
+                $(content).find('button.ok').unbind().click(function(){
+
+                   alert('clicked');
+
+                   callback(true);
+
+
+                });
+            }
+
+            $('body').append(content);
+
+        },
+
+
+        selectItem:function(object)
+        {
+
+
+          App.showGui(DatGui.levelMakerAnyObjectGui(object).domElement);
+
+        },
+
+
+        animationPreview: function (gui, spriteWithAnime) {
+
+            var canvas = $(gui.domElement).find('canvas.image-test-canvas')[0], ctx = canvas.getContext('2d');
+
+            var main_canvas_padding = new Vector(10, 10);
+
+            var sprite = new  spriteWithAnime.constructor(spriteWithAnime);
+
+           sprite.setSize(sprite.getSizeByMax(canvas.width, canvas.height));
+
+            var update = function () {
+
+                canvas.width = $(canvas).width();
+                canvas.height = $(canvas).height();
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                sprite.setSize(sprite.getSizeByMax(canvas.width, canvas.height));
+
+
+                if(sprite.three_update)
+                {
+                sprite.three_update();
+                }
+
+                Canvas.draw(sprite, ctx);
+
+            };
+
+            if (Game.animationPaneUpdate) {
+
+                window.clearInterval(Game.animationPaneUpdate);
+
+            }
+
+            Game.animationPaneUpdate = window.setInterval(function () {
+
+                if($(canvas).is(':visible')) {
+
+                    update();
+
+                }
+
+            }, 50);
+
+        },
 
         replace_map_object:function(item) {
 
@@ -677,7 +507,7 @@
         {
             var addListHTML = '<div class="add-list">' +
 
-                '<label>'+name+'</label>' +
+                '<label class="center">'+name+'</label>' +
 
                 '<button type="button" class="add-list add">+</button>' +
 
@@ -783,7 +613,7 @@
 
             __levelMaker.mapElements = [];
 
-            var usingOptFile = true;
+            var usingOptFile = false;
 
             if(data && data.settings)
             {
@@ -860,53 +690,31 @@
                 __inst.is_init = true;
 
 
-                if (usingOptFile) {
-
-                    App.loadDefaultMapElements(function () {
-
-                        $.each(__levelMaker.mapElements, function (ix, item) {
-
-                            App.add_map_object(item);
-
-                        });
-
-
-                    });
-
-
-                }
-                else {
-
                    // App.map_objects = [];
 
-                    alert('loading map elements');
+                   App.map_objects = [];
 
-                    App.map_objects = [];
-
-                    App.loadMapElements(data.mapElements, function () {
-
-
-                        $.each(__levelMaker.mapElements, function (ix, item) {
+                    if(data && data.mapElements instanceof Array) {
+                        App.loadMapElements(data.mapElements, function () {
 
 
-                            App.add_map_object(item);
-
-                        });
+                            $.each(__levelMaker.mapElements, function (ix, item) {
 
 
+                                App.add_map_object(item);
 
-                        App.dialog(App.map_objects,
-                            0, 120, function () {
-                                console.log('dialog shown');
                             });
 
 
-                    });
+                            App.dialog(App.map_objects,
+                                0, 120, function () {
+                                    console.log('dialog shown');
+                                });
 
 
+                        });
 
-
-                }
+                    }
 
 
                 if (typeof(callback) == 'function') {
@@ -932,7 +740,7 @@
         collectNumber:function(min, max, inputValueCallback)
         {
 
-          this.message("<input type='number' value='0' min='"+min+"'  max='"+max+"'   />");
+          this.message("<input style='color:black; margin-top:10px;' type='number' value='0' min='"+min+"'  max='"+max+"'   />");
 
           $('button#message-ok').unbind().click(function(){
 
@@ -996,6 +804,13 @@
             //onBeforeSave :: take every image reference from the 'uploads' catch, save the image to a permanent folder in
 
             //assets/game/image/
+
+            for(var x in Game.sprites)
+            {
+
+                Game.sprites[x].__gsClassTag =Game.sprites[x].constructor.name;
+
+            }
 
             var data = __levelMaker.MapData(Game.sprites, __levelMaker.settings, Game.GameWindow.forces, __levelMaker.mapElements);
 
@@ -1493,7 +1308,7 @@
 
                 if(!found) {
 
-                    var src = item.data.image.src;
+                    var src = item.data.image.src || item.data.selected_animation.image.src;
 
                     $('.free-select ul').append('<li ><a id="' + cm_id + '">' + cmText + '</a><img  src="' +  src + '"  /></li>');
 
@@ -1775,6 +1590,25 @@
 
             var x = 0, y = 120;
 
+            for(var p in __LEVEL)
+            {
+                for(var q in __LEVEL[p])
+                {
+
+                    if(['Sprite', 'Background', 'Interactive', 'Terrain', 'Three'].indexOf(__LEVEL[p][q].constructor.name) >= 0)
+                    {
+                        alert('adding map object');
+
+                        App.add_map_object(__levelMaker.createMapElement(__LEVEL[p][q]));
+
+
+                    }
+
+
+                }
+
+            }
+
             App.dialog(App.map_objects,
                 x, y, function () {
                     console.log('dialog shown');
@@ -1975,7 +1809,7 @@
             var __inst = this;
 
             //create the gui / Builder
-            this.__builderProfile = new ObjectArrayBuilder(__LEVEL, ['sprites', 'backgrounds', 'terrains', 'interactives'], false),
+            this.__builderProfile = new ObjectArrayBuilder(__LEVEL, ['sprites', 'backgrounds', 'terrains', 'interactives', 'threes'], false),
 
                 this.is_init = true;
 
@@ -2192,82 +2026,72 @@
 
                 __levelMaker.assembled_sprite =  new Sprite().to_map_object();
 
-                var sprite_gui = DatGui.getLevelObjectGui( __levelMaker.assembled_sprite, true);
+                var sprite_gui = DatGui.levelMakerAnyObjectGui( __levelMaker.assembled_sprite);
 
-                $('#map-item-space form .sprite-space').append($(sprite_gui.domElement));
+                App.showGui(sprite_gui.domElement, function(ok){
 
-               // $('#map-item-space .title').text("Create Map Item Sprite");
-
-                $('#map-item-space form').show();
-
-                 $('#map-item-space  button#close').click(function(){
-
-                     $('#map-item-space form').hide('fast');
-
-                 });
-
-
-                $('button#create_object').unbind().on('click', function (evt) {
-
-                    var hasLevelObjectName = function(name)
+                    if(ok)
                     {
 
-                        var found = false;
+                        var hasLevelObjectName = function(name)
+                        {
 
-                        $.each(__levelMaker.mapElements, function(ix, item){
+                            var found = false;
 
-                            if(item.name == name)
-                            {
-                                found = true;
+                            $.each(__levelMaker.mapElements, function(ix, item){
 
-                            }
+                                if(item.name == name)
+                                {
+                                    found = true;
 
-                        });
+                                }
 
-                        return found;
-
-                    };
-
-
-                    if(hasLevelObjectName(__levelMaker.assembled_sprite.name))
-                    {
-
-                        evt.preventDefault();
-
-                        return alert('Must have a unique name to create object.');
-
-                    }
-                    else {
-
-                        var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
-
-                        sprite.animate();
-
-                        sprite.tag = sprite.name;
-
-
-                        __levelMaker.addLevelObjectToUI(sprite);
-
-                        //  alert('last file');
-
-
-                        App.dialog(App.map_objects,
-                            0, 120, function () {
-                                console.log('dialog shown');
                             });
 
+                            return found;
 
-                        $('#map-item-space form').hide();
+                        };
+
+                        var validObject = function()
+                        {
+                          return  __levelMaker.assembled_sprite.selected_animation.__isValid;
+                        };
+
+                        if(hasLevelObjectName(__levelMaker.assembled_sprite.name) ||
+                        !validObject())
+                        {
+
+                            return alert('Must have a unique name and valid arguments to create object.');
+
+                        }
+                        else {
+
+                            var sprite = __levelMaker.createMapElement(__levelMaker.assembled_sprite, false, true);
+
+                            sprite.animate();
+
+                            sprite.tag = sprite.name;
+
+
+                            __levelMaker.addLevelObjectToUI(sprite);
+
+                            //  alert('last file');
+
+
+                            App.dialog(App.map_objects,
+                                0, 120, function () {
+                                    console.log('dialog shown');
+                                });
+
+
+                            $('#map-item-space form').hide();
+
+                        }
+
 
                     }
 
                 });
-
-
-                $('#map-item-space #ok-cancel-space').show();
-
-                $('#map-item-space #just-ok-space').hide();
-
 
             },
 
@@ -2282,68 +2106,6 @@
 
             image_preview_interval:false,
 
-            imagePreview: function (sprite_object) {
-
-                Canvas.__levelMaker = true;
-
-               // alert(jstr(sprite_object.selected_animation));
-
-                var canvas = document.getElementById('image-test-canvas');
-
-                var ctx = canvas.getContext('2d');
-
-                sprite_object.active = true;
-
-
-
-
-                if(this.image_preview_interval)
-                {
-                    window.clearInterval(this.image_preview_interval);
-
-                }
-
-
-                    this.image_preview_interval = window.setInterval(function(){
-
-
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-                        var minScale = canvas.width / sprite_object.size.x ;
-
-                        var minScaleY = canvas.height / sprite_object.size.y ;
-
-                        if(minScaleY < minScale)
-                        {
-                            minScale = minScaleY;
-
-                        }
-
-                        minScale = Math.round(minScale * 10) / 10;
-
-                        ctx.save();
-
-                        ctx.scale(minScale,minScale);
-
-                        sprite_object.position.x = canvas.width  / 2  - sprite_object.size.x *minScale  / 2;
-
-                        sprite_object.position.y = canvas.height  / 2 - sprite_object.size.y * minScale  / 2;
-
-
-                        __levelMaker.selection_sprite.position = new Vector3(sprite_object.position);
-
-                        __levelMaker.selection_sprite.size = new Vector3(sprite_object.size);
-
-                        Canvas.draw(sprite_object, ctx);
-
-                        Canvas.draw(__levelMaker.selection_sprite, ctx);
-
-                        ctx.restore();
-
-                    }, 500);
-
-            },
 
             getRawImageFile: function (input, callback) {
 
@@ -2516,7 +2278,7 @@
                         frameSize: new Vector3(args.frameSize)
                     });
 
-                    mapElement.setSize(mapElement.__mapSize);
+                    mapElement.setSize(mapElement.__mapSize || mapElement.size);
 
                 }
 
@@ -2883,50 +2645,26 @@
 
             plantMapSprite: function (mapElement, x, y) {
 
-                if (!mapElement.hasOwnProperty('__mapSize')) {
-                    mapElement.__mapSize = mapElement.mapSize;
 
-                }
-
-                if (!mapElement) {
-                    return false;
-                }
-                // console.log("Selected Element:" + JSON.stringify(mapElement));
-                var img = mapElement.img || mapElement.image;
-
-                if(mapElement.image.domElement)
-                {
-                    console.log('USED DOMELEMENT');
-                    mapElement.image.domElement
-
-                }
-
-                //  console.log("Img src:" + img.src);
-
-                __levelMaker.selectedElement.id = undefined;
-
+                console.log(jstr(mapElement));
                 var sprite = new Sprite(JSON.parse(JSON.stringify(__levelMaker.selectedElement)));
 
                 sprite.active = true;
 
-
                 var fs = mapElement.frameSize;
 
-                sprite.setSize(mapElement.size || mapElement.__mapSize || mapElement.mapSize);
+                sprite.setSize(mapElement.__mapSize || mapElement.mapSize || mapElement.size );
 
-
-                sprite.setAnimation(new Animation({
-                    src: img,
-                    frameSize: fs,
-                    frameBounds: new VectorFrameBounds(new Vector3(0, 0), new Vector3(0, 0))
-                }));
-
-                console.log(sprite);
 
                 sprite.init();
 
                 sprite.position.x = Math.floor(x - sprite.size.x / 2);
                 sprite.position.y = Math.floor(y - $(Game.canvas).offset().top - sprite.size.y / 2);
+
+                //  console.log("Img src:" + img.src);
+
+                __levelMaker.selectedElement.id = undefined;
+
 
                // sprite.position.x = sprite.position.x - ( sprite.position.x % __levelMaker.settings.pixelSnap);
 
@@ -3388,6 +3126,43 @@
 
         };
 
+        $(document).on('click', 'button.gui-close-button', function (evt) {
+
+            $('.tempGui').remove();
+
+        });
+
+        $(document).on('click', 'img.tree-edit', function (evt) {
+
+            $('img.tree-edit').hide();
+
+            $(evt.target).show('fast');
+
+            $(evt.target).css('visibility', 'visible');
+
+            var prt = $(evt.target).parent(), parentObjectName = $(prt).prop('class');
+
+            parentObjectName = parentObjectName.replace('_member', '');
+
+            //  alert(parentObjectName);
+
+            var index = $(prt).index();
+
+            //  alert('Got click on edit button for::' + parentObjectName + ': member number::' + index);
+
+            var selectedObject = __LEVEL[parentObjectName],
+
+                sprop = selectedObject[index];
+
+            App.selectItem(sprop);
+
+            evt.preventDefault();
+
+            return false;
+
+            // if(sprop){alert('we have an object of:' + sprop.constructor.name);}
+
+        });
 
         window.setTimeout(function () {
 

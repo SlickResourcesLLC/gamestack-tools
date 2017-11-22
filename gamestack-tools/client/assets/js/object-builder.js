@@ -390,14 +390,22 @@ ObjectBuilder.prototype.renderObjectControllable = function (obj, container, opt
 
                     }
 
-                    App.lock_events();
+                   if(App.lock_events instanceof Function){ App.lock_events();}
 
                     var instantiator;
 
                     var tp_inst = false;
 
+                   var getConst = function(clName)
+                   {
+
+                       return clName[0].toUpperCase() + clName.substring(1, clName.length - 1)
+                   };
+
+                   var name = getConst(clName);
+
                     if (element instanceof Array) {
-                        instantiator = element[0] && element[0].constructor ? element[0].constructor.name : false;
+                        instantiator = element[0] && element[0].constructor ? element[0].constructor.name : name;
 
                     }
                     else {
@@ -411,7 +419,6 @@ ObjectBuilder.prototype.renderObjectControllable = function (obj, container, opt
                     var addElement = function () {
 
                         if (element instanceof (Array)) {
-
 
                             element.push(myNewObject);
 
@@ -446,13 +453,13 @@ ObjectBuilder.prototype.renderObjectControllable = function (obj, container, opt
                     };
 
 
-                    if (window[instantiator]) {
+                    if (window[instantiator] && confirm('create a new object of type:' + name + "?")) {
 
                         // alert('adding the object');
 
-                        var lastObject = element[element.length - 1];
+                        var lastObject = element[element.length - 1] || new window[instantiator]();
 
-                        var name = lastObject.name + "_c";
+                        var name = (lastObject.name || name) + "_c";
 
                         myNewObject = new window[instantiator](lastObject);
 
